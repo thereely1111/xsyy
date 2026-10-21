@@ -1,0 +1,106 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "沏茶：洗水壶1、接水1、烧水8、洗茶杯2、找茶叶1、沏茶1，最少几分钟？",
+  "prompt": "沏茶：洗水壶1、接水1、烧水8、洗茶杯2、找茶叶1、沏茶1，最少几分钟？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "e1d9b398-d837-43e5-899a-0095ea96a9b7",
+  "generated_at": "2026-09-28T06:29:17.955211Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "沏茶统筹",
+  "title_quality": "ok",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "工序统筹求最短时间"
+  },
+  "tags_updated_at": "2026-09-28T06:29:17.955211Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "四上",
+    "main_tag": "优化",
+    "sub_tags": [
+      "沏茶问题与烙饼问题"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-28T06:29:17.993672Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "primary_school",
+    "domain": "图形与几何",
+    "display_class": "geometry",
+    "grade": "四上",
+    "tags": {
+      "main_tag": "优化",
+      "sub_tags": [
+        "沏茶问题与烙饼问题"
+      ],
+      "second_tag": null
+    },
+    "question_type": "",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "primary_geometry",
+      "steps_min": 3,
+      "steps_max": 5,
+      "motion_policy": "playful",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": true,
+    "parts": [
+      {
+        "label": "（1）",
+        "text": "1、接水",
+        "domain": "图形与几何",
+        "display_class": "geometry",
+        "question_type": ""
+      },
+      {
+        "label": "（1）",
+        "text": "1、烧水",
+        "domain": "图形与几何",
+        "display_class": "geometry",
+        "question_type": ""
+      },
+      {
+        "label": "（8）",
+        "text": "8、洗茶杯",
+        "domain": "图形与几何",
+        "display_class": "geometry",
+        "question_type": ""
+      },
+      {
+        "label": "（2）",
+        "text": "2、找茶叶",
+        "domain": "图形与几何",
+        "display_class": "geometry",
+        "question_type": ""
+      },
+      {
+        "label": "（1）",
+        "text": "1、沏茶1，最少几分钟？",
+        "domain": "图形与几何",
+        "display_class": "geometry",
+        "question_type": ""
+      }
+    ],
+    "domains": [
+      "geometry"
+    ]
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  }
+}

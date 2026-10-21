@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>动画模板全库 · 测试入口</title>
+<style>
+  :root{
+    --paper:#fdfbf7; --ink:#2b2b2b; --ink-2:#57534e;
+    --cinnabar:#8a1c1c; --cinnabar-2:#a83232; --gold:#c8901a;
+    --line:#e7e5e4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Source Han Serif SC","Noto Serif SC","Songti SC",SimSun,serif;
+    min-height:100vh; padding:36px 20px 60px;
+  }
+  .wrap{max-width:1080px;margin:0 auto}
+  header{margin-bottom:28px}
+  header .kicker{
+    display:inline-block; font-size:12px; letter-spacing:.35em; color:var(--cinnabar);
+    border:1px solid rgba(138,28,28,.35); border-radius:999px; padding:4px 14px; margin-bottom:14px;
+  }
+  header h1{font-size:26px; font-weight:700; margin-bottom:8px}
+  header h1 em{font-style:normal; color:var(--cinnabar)}
+  header p{font-size:14px; color:var(--ink-2); line-height:1.8}
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px}
+  .famhead{
+    grid-column:1 / -1; display:flex; align-items:baseline; gap:10px;
+    margin-top:14px; border-bottom:1px solid var(--line); padding-bottom:6px;
+  }
+  .famhead b{font-size:16px}
+  .famhead span{font-size:12px; color:var(--ink-2)}
+  .card{
+    background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px;
+    box-shadow:0 6px 18px rgba(43,43,43,.05); display:flex; flex-direction:column; gap:10px;
+  }
+  .card .tag{
+    align-self:flex-start; font-size:11px; letter-spacing:.12em; color:var(--gold);
+    border:1px solid rgba(200,144,26,.4); border-radius:999px; padding:2px 10px;
+  }
+  .card h2{font-size:17px; font-weight:700; line-height:1.5}
+  .card p{font-size:13px; color:var(--ink-2); line-height:1.75; flex:1}
+  .card .ops{display:flex; gap:10px}
+  .btn{
+    flex:1; text-align:center; font-size:13px; padding:8px 0; border-radius:999px;
+    border:1px solid var(--line); background:#fff; color:var(--ink); cursor:pointer;
+    font-family:inherit; text-decoration:none; transition:all .18s;
+  }
+  .btn:hover{border-color:var(--cinnabar); color:var(--cinnabar)}
+  .btn.main{background:var(--cinnabar); border-color:var(--cinnabar); color:#fff}
+  .btn.main:hover{background:var(--cinnabar-2); color:#fff}
+  .preview{
+    grid-column:1 / -1; display:none; border:1px solid var(--line); border-radius:16px;
+    background:#fff; overflow:hidden; box-shadow:0 10px 26px rgba(43,43,43,.08);
+  }
+  .preview.on{display:block}
+  .preview .bar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 16px; border-bottom:1px solid var(--line); background:#faf8f2;
+    font-size:13px; color:var(--ink-2);
+  }
+  .preview .bar b{color:var(--ink)}
+  .preview iframe{width:100%; height:640px; border:0; display:block; background:#fff}
+  footer{margin-top:30px; font-size:12px; color:var(--ink-2); line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="kicker">模板库 · 内测</span>
+    <h1>动画模板全库测试入口 <em>· 24 族 105 模板</em></h1>
+    <p>所有模板均自包含（KaTeX 字体内联，无需构建），直接由后端静态目录提供，按族分组。每个模板 4~8 步讲解 + 滑块/翻页交互，第 1 步即可动手。</p>
+  </header>
+
+  <div class="grid" id="grid">
+      <div class="famhead"><b>数与式</b><span>12 个模板</span></div>
+      <div class="card">
+        <span class="tag">分式</span>
+        <h2>分式化简 · 约去公因式</h2>
+        <p>化简：(x²−9)÷(x²+6x+9)</p>
+        <div class="ops">
+          <a class="btn main" href="n01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n01', '分式化简 · 约去公因式')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">分式</span>
+        <h2>分式化简 · 约去公因式（换一道）</h2>
+        <p>化简：(x²−25)÷(x²+10x+25)</p>
+        <div class="ops">
+          <a class="btn main" href="n01b.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n01b', '分式化简 · 约去公因式（换一道）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">整式</span>
+        <h2>合并同类项 · 系数相加</h2>
+        <p>合并同类项：3x+2y−5x+y</p>
+        <div class="ops">
+          <a class="btn main" href="n02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n02', '合并同类项 · 系数相加')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">整式</span>
+        <h2>去括号 · 括号前是负号</h2>
+        <p>去括号并化简：2(x+3)−3(x−1)</p>
+        <div class="ops">
+          <a class="btn main" href="n03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n03', '去括号 · 括号前是负号')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">乘法公式</span>
+        <h2>平方差公式 · 两数和乘两数差</h2>
+        <p>计算：(x+3)(x−3)</p>
+        <div class="ops">
+          <a class="btn main" href="n04.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n04', '平方差公式 · 两数和乘两数差')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">乘法公式</span>
+        <h2>完全平方公式 · 两数和的平方</h2>
+        <p>计算：(x+3)²</p>
+        <div class="ops">
+          <a class="btn main" href="n05.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n05', '完全平方公式 · 两数和的平方')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">因式分解</span>
+        <h2>因式分解 · 提公因式</h2>
+        <p>分解因式：6x²+9x</p>
+        <div class="ops">
+          <a class="btn main" href="n06.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n06', '因式分解 · 提公因式')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">分式运算</span>
+        <h2>分式的加减 · 通分</h2>
+        <p>计算：1/(x+1)+1/(x−1)</p>
+        <div class="ops">
+          <a class="btn main" href="n07.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n07', '分式的加减 · 通分')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">二次根式</span>
+        <h2>二次根式 · 化简</h2>
+        <p>化简：√(18x²)（其中x&gt;0）</p>
+        <div class="ops">
+          <a class="btn main" href="n08.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n08', '二次根式 · 化简')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">因式分解</span>
+        <h2>因式分解 · 公式法（完全平方）</h2>
+        <p>分解因式：x²−6x+9</p>
+        <div class="ops">
+          <a class="btn main" href="n09.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n09', '因式分解 · 公式法（完全平方）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">分式方程</span>
+        <h2>解分式方程</h2>
+        <p>解方程：2/(x−3)=3/(x+1)</p>
+        <div class="ops">
+          <a class="btn main" href="n10.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n10', '解分式方程')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">因式分解</span>
+        <h2>因式分解 · 十字相乘法</h2>
+        <p>分解因式：x²+5x+6</p>
+        <div class="ops">
+          <a class="btn main" href="n11.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('n11', '因式分解 · 十字相乘法')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>几何</b><span>2 个模板</span></div>
+      <div class="card">
+        <span class="tag">勾股定理</span>
+        <h2>勾股定理 · 已知两条直角边求斜边</h2>
+        <p>在直角三角形ABC中，∠C=90°，AC=6，BC=8，求斜边AB的长。</p>
+        <div class="ops">
+          <a class="btn main" href="g01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('g01', '勾股定理 · 已知两条直角边求斜边')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">勾股定理</span>
+        <h2>勾股定理 · 5-12-13</h2>
+        <p>在直角三角形ABC中，∠C=90°，AC=5，BC=12，求斜边AB的长。</p>
+        <div class="ops">
+          <a class="btn main" href="g01b.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('g01b', '勾股定理 · 5-12-13')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>函数</b><span>14 个模板</span></div>
+      <div class="card">
+        <span class="tag">二次函数最值</span>
+        <h2>二次函数 · 定价多少，月利润最大</h2>
+        <p>某产品每件成本10元。定价30元时每月可卖出500件；售价每提高2元，月销量就减少20件。定价定为多少元时，每月利润最大？最</p>
+        <div class="ops">
+          <a class="btn main" href="f01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f01', '二次函数 · 定价多少，月利润最大')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">反比例函数</span>
+        <h2>反比例函数 · 双曲线与矩形面积</h2>
+        <p>反比例函数y=6/x的图象上有一点P。过P向两条坐标轴作垂线，与坐标轴围成矩形。这个矩形的面积是多少？再画直线y=x+1，求</p>
+        <div class="ops">
+          <a class="btn main" href="f02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f02', '反比例函数 · 双曲线与矩形面积')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">一次函数</span>
+        <h2>一次函数 · k 与 b 分别管什么</h2>
+        <p>画出一次函数y=2x−1的图象，并结合图象说明b和k分别有什么意义。</p>
+        <div class="ops">
+          <a class="btn main" href="f03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f03', '一次函数 · k 与 b 分别管什么')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">二次函数图象与性质</span>
+        <h2>二次函数 · 抛物线与 x 轴的交点（判别式）</h2>
+        <p>抛物线y=x²−2x+c与x轴有几个交点？c取什么值时有两个、一个（相切）、没有？用判别式说明。</p>
+        <div class="ops">
+          <a class="btn main" href="f04.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f04', '二次函数 · 抛物线与 x 轴的交点（判别式）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">一次函数与二元一次方程组</span>
+        <h2>一次函数 · 两图象的交点就是方程组的解</h2>
+        <p>在同一坐标系中画出y=x+1与y=−x+3的图象，写出交点坐标，并说明它与方程组{y=x+1,y=−x+3}的解之间的关系。</p>
+        <div class="ops">
+          <a class="btn main" href="f05.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f05', '一次函数 · 两图象的交点就是方程组的解')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">二次函数图象与性质</span>
+        <h2>二次函数 · 抛物线的平移 y = (x−h)² + k</h2>
+        <p>抛物线y=x²经过怎样的平移得到y=(x−h)²+k？平移后顶点在哪里？</p>
+        <div class="ops">
+          <a class="btn main" href="f06.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f06', '二次函数 · 抛物线的平移 y = (x−h)² + k')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">一次函数与绝对值</span>
+        <h2>绝对值函数 · y = |x−h| 的 V 形图象</h2>
+        <p>画出y=|x|的图象，说明y=|x−h|的图象与它的关系，并指出顶点坐标。</p>
+        <div class="ops">
+          <a class="btn main" href="f07.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f07', '绝对值函数 · y = |x−h| 的 V 形图象')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">一次函数的应用</span>
+        <h2>一次函数 · 两方案比大小，交点定分界</h2>
+        <p>方案一：y=2x+20；方案二：y=4x。x取何值时两个方案费用相等？x在什么范围选方案一更省？</p>
+        <div class="ops">
+          <a class="btn main" href="f08.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f08', '一次函数 · 两方案比大小，交点定分界')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">铅垂高求面积</span>
+        <h2>二次函数 · 铅垂法求图形面积最大</h2>
+        <p>抛物线y=−x²+6x与直线y=x相交于A、B两点。在抛物线上任取一点P，连接PA、PB得到△PAB。P在哪个位置时，△PA</p>
+        <div class="ops">
+          <a class="btn main" href="f09.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f09', '二次函数 · 铅垂法求图形面积最大')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">运动轨迹</span>
+        <h2>二次函数 · 运动轨迹建模</h2>
+        <p>一个小球斜向上抛出，水平速度7.071、竖直初速度7.071、重力加速度10（单位略）。它的运动轨迹是一条抛物线y=x−0.</p>
+        <div class="ops">
+          <a class="btn main" href="f10.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f10', '二次函数 · 运动轨迹建模')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">指数函数</span>
+        <h2>指数函数 · 底数 a 对图象的影响</h2>
+        <p>函数y=a^x（a&gt;1）图象有什么特点？底数a变大时，图象怎么变？它是否一定经过某个固定点？</p>
+        <div class="ops">
+          <a class="btn main" href="f11.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f11', '指数函数 · 底数 a 对图象的影响')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">一次函数的应用</span>
+        <h2>分段函数 · 分段计费求用水量</h2>
+        <p>为鼓励节约用水，某市水费标准：每户每月用水20吨以内（含20吨）按每吨2.5元收费，超过20吨的部分按每吨3.5元收费。小明</p>
+        <div class="ops">
+          <a class="btn main" href="f12.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f12', '分段函数 · 分段计费求用水量')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">二次函数图象与性质</span>
+        <h2>二次函数 · 抛物线的开口、对称轴、顶点与最值</h2>
+        <p>已知抛物线y=x²−6x+5。指出它的开口方向，并求对称轴、顶点坐标与最小值。</p>
+        <div class="ops">
+          <a class="btn main" href="f13.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f13', '二次函数 · 抛物线的开口、对称轴、顶点与最值')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">二次函数综合</span>
+        <h2>二次函数 · 抛物线三问综合（顶点与对称轴 / 与 x 轴交点 / 平移相切）</h2>
+        <p>已知抛物线y=x²−2x−3。(1)求它的对称轴和顶点坐标；(2)求它与x轴的交点坐标；(3)把它向上平移k个单位后，与x轴</p>
+        <div class="ops">
+          <a class="btn main" href="f14.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('f14', '二次函数 · 抛物线三问综合（顶点与对称轴 / 与 x 轴交点 / 平移相切）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>行程</b><span>9 个模板</span></div>
+      <div class="card">
+        <span class="tag">行程问题</span>
+        <h2>行程问题 · 追及（与相遇）</h2>
+        <p>甲每秒跑5m，乙每秒跑3m，乙在甲前方24m，两人同向而行。甲几秒追上乙？</p>
+        <div class="ops">
+          <a class="btn main" href="t1.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('t1', '行程问题 · 追及（与相遇）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">行程问题</span>
+        <h2>行程问题 · 火车过隧道</h2>
+        <p>一列火车长12m，以8m/s通过一条长60m的隧道。从车头进洞到车尾离洞，共需几秒？</p>
+        <div class="ops">
+          <a class="btn main" href="t2.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('t2', '行程问题 · 火车过隧道')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">行程问题</span>
+        <h2>行程问题 · 环形跑道（反向相遇）</h2>
+        <p>环形跑道一圈长400m。甲每秒跑6m、乙每秒跑4m，两人从同地同时反向出发，几秒后相遇？</p>
+        <div class="ops">
+          <a class="btn main" href="t3.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('t3', '行程问题 · 环形跑道（反向相遇）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">行程问题</span>
+        <h2>行程问题 · 流水行船（顺流）</h2>
+        <p>轮船在静水中每秒航行10m，水流速度3m/s。它顺流航行120m的单程，需要几秒？</p>
+        <div class="ops">
+          <a class="btn main" href="t4.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('t4', '行程问题 · 流水行船（顺流）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">行程问题</span>
+        <h2>行程问题 · 错车与超车</h2>
+        <p>甲车长120m、每秒12m，乙车长80m、每秒8m。两车相向错车，几秒完全错开？若同向行驶甲车从后追上乙车，几秒完全超过？</p>
+        <div class="ops">
+          <a class="btn main" href="t5.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('t5', '行程问题 · 错车与超车')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">行程问题</span>
+        <h2>行程问题 · 多次相遇（往返）</h2>
+        <p>A、B两地相距120m。甲每秒走6m、乙每秒走4m，两人从两端同时出发相向而行，到端点立即掉头。第3次相遇时共用了几秒？</p>
+        <div class="ops">
+          <a class="btn main" href="t6.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('t6', '行程问题 · 多次相遇（往返）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">行程问题</span>
+        <h2>行程问题 · 发车间隔</h2>
+        <p>一路公交车匀速发车。小明同向走时，每10分钟被一辆车从身后超过；对面来的车每8分钟与他相遇一次。这路公交的发车间隔是几分钟？</p>
+        <div class="ops">
+          <a class="btn main" href="t7.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('t7', '行程问题 · 发车间隔')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">行程问题</span>
+        <h2>行程问题 · 时钟追及（重合）</h2>
+        <p>3点整，时针与分针成90°。经过多少分钟，分针与时针第一次重合？</p>
+        <div class="ops">
+          <a class="btn main" href="t8.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('t8', '行程问题 · 时钟追及（重合）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">行程问题</span>
+        <h2>工程问题 · 合做（效率版）</h2>
+        <p>一项工程，甲单独做需10天，乙单独做需15天。两人合做，几天完成？</p>
+        <div class="ops">
+          <a class="btn main" href="t9.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('t9', '工程问题 · 合做（效率版）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>静态兜底</b><span>1 个模板</span></div>
+      <div class="card">
+        <span class="tag">统计量</span>
+        <h2>静态分步 · 平均数求解</h2>
+        <p>求数据4、8、6、2的平均数</p>
+        <div class="ops">
+          <a class="btn main" href="sb01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('sb01', '静态分步 · 平均数求解')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>替换假设</b><span>1 个模板</span></div>
+      <div class="card">
+        <span class="tag">假设法</span>
+        <h2>替换·假设 · 鸡兔同笼</h2>
+        <p>笼里鸡和兔共35个头、94条腿，问鸡、兔各有多少只？</p>
+        <div class="ops">
+          <a class="btn main" href="th01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('th01', '替换·假设 · 鸡兔同笼')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>线段图</b><span>2 个模板</span></div>
+      <div class="card">
+        <span class="tag">按比例分配</span>
+        <h2>线段图 · 比例分配</h2>
+        <p>把100个苹果按2:3:5分给甲、乙、丙，丙分得几个？</p>
+        <div class="ops">
+          <a class="btn main" href="xd01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('xd01', '线段图 · 比例分配')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">和倍</span>
+        <h2>线段图 · 和倍问题</h2>
+        <p>甲乙共有48个，甲的数量是乙的3倍，乙有几个？</p>
+        <div class="ops">
+          <a class="btn main" href="xd02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('xd02', '线段图 · 和倍问题')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>几何最值</b><span>1 个模板</span></div>
+      <div class="card">
+        <span class="tag">几何最值</span>
+        <h2>将军饮马</h2>
+        <p>将军从A出发，到河边l上任一点P饮马，再前往B地。求最短总路程。</p>
+        <div class="ops">
+          <a class="btn main" href="jz01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('jz01', '将军饮马')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>面积割补</b><span>9 个模板</span></div>
+      <div class="card">
+        <span class="tag">面积割补</span>
+        <h2>平行四边形面积公式</h2>
+        <p>用面积割补/等积变形求图形面积：把图形切分、平移、旋转后拼成规则形；或利用同底等高、等积区域互相转化；或在方格点上用皮克公式</p>
+        <div class="ops">
+          <a class="btn main" href="mg01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('mg01', '平行四边形面积公式')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">面积割补</span>
+        <h2>等底等高的三角形面积相等</h2>
+        <p>如图，两个三角形等底等高（底都是6、高都是4），比较它们的面积。</p>
+        <div class="ops">
+          <a class="btn main" href="mg02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('mg02', '等底等高的三角形面积相等')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">面积割补</span>
+        <h2>皮克定理求格点多边形面积</h2>
+        <p>如图，网格中是一个矩形，顶点都在格点上。用皮克定理求它的面积。</p>
+        <div class="ops">
+          <a class="btn main" href="mg03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('mg03', '皮克定理求格点多边形面积')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">面积割补</span>
+        <h2>赵爽弦图证勾股定理</h2>
+        <p>赵爽弦图：四个全等直角三角形围出中间小正方形，证明a²+b²=c²。</p>
+        <div class="ops">
+          <a class="btn main" href="mg04.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('mg04', '赵爽弦图证勾股定理')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">面积割补</span>
+        <h2>出入相补：三角形与补形拼成长方形</h2>
+        <p>一个直角三角形，把它的补形（另一半）平移过来，正好拼成一个长方形。</p>
+        <div class="ops">
+          <a class="btn main" href="mg05.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('mg05', '出入相补：三角形与补形拼成长方形')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">面积割补</span>
+        <h2>鸟头模型（共角定理）</h2>
+        <p>两个三角形共一个顶角A，鸟头模型中面积比等于夹边乘积之比。</p>
+        <div class="ops">
+          <a class="btn main" href="mg06.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('mg06', '鸟头模型（共角定理）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">面积割补</span>
+        <h2>蝴蝶模型（四边形对角线分四三角）</h2>
+        <p>四边形两条对角线相交，分成四个三角形，蝴蝶模型中相对两三角形面积乘积相等。</p>
+        <div class="ops">
+          <a class="btn main" href="mg07.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('mg07', '蝴蝶模型（四边形对角线分四三角）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">面积割补</span>
+        <h2>燕尾模型（共底两三角形）</h2>
+        <p>两个三角形共底边BC，一个顶点在上、一个在下，燕尾模型中面积比等于高之比。</p>
+        <div class="ops">
+          <a class="btn main" href="mg08.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('mg08', '燕尾模型（共底两三角形）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">面积割补</span>
+        <h2>相似模型（面积比=相似比平方）</h2>
+        <p>两个相似三角形，相似比为2，面积比等于相似比的平方。</p>
+        <div class="ops">
+          <a class="btn main" href="mg09.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('mg09', '相似模型（面积比=相似比平方）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>图形变换</b><span>4 个模板</span></div>
+      <div class="card">
+        <span class="tag">图形变换</span>
+        <h2>图形平移作图</h2>
+        <p>把一个图形沿指定向量平移：平移后图形的形状、大小不变，只是位置改变；对应点连线平行（或共线）且相等。例如：把△ABC沿向量(</p>
+        <div class="ops">
+          <a class="btn main" href="bh01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('bh01', '图形平移作图')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">图形变换</span>
+        <h2>图形旋转作图</h2>
+        <p>把一个图形绕某点按指定方向和角度旋转：旋转前后图形全等，对应点到旋转中心的距离相等，对应点与旋转中心连线的夹角等于旋转角。例</p>
+        <div class="ops">
+          <a class="btn main" href="bh02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('bh02', '图形旋转作图')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">图形变换</span>
+        <h2>图形轴对称作图</h2>
+        <p>把一个图形沿某条直线（对称轴）翻折：翻折前后图形全等，对应点连线被对称轴垂直平分。例如：把△ABC关于y轴（直线x=0）轴对</p>
+        <div class="ops">
+          <a class="btn main" href="bh03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('bh03', '图形轴对称作图')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">图形变换</span>
+        <h2>用旋转设计图案</h2>
+        <p>利用平移、旋转、轴对称等变换，把一个基本图形（种子）重复摆放，组合成美观的图案。例如：将一个直角三角形绕中心O依次旋转90°</p>
+        <div class="ops">
+          <a class="btn main" href="bh04.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('bh04', '用旋转设计图案')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>全等相似</b><span>3 个模板</span></div>
+      <div class="card">
+        <span class="tag">全等相似</span>
+        <h2>全等三角形证明</h2>
+        <p>两个三角形若三组对应边相等（SSS），则它们全等：形状、大小完全相同，可经平移/旋转/翻折完全重合。对应顶点连成的虚线表示三</p>
+        <div class="ops">
+          <a class="btn main" href="dx01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('dx01', '全等三角形证明')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">全等相似</span>
+        <h2>相似三角形（共享顶点）</h2>
+        <p>两个三角形共享一个顶点，且一组对应边平行时，它们相似：对应边的比相等（相似比k），对应角相等。CD∥AB时△PAB∽△PCD</p>
+        <div class="ops">
+          <a class="btn main" href="dx02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('dx02', '相似三角形（共享顶点）')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">全等相似</span>
+        <h2>手拉手模型</h2>
+        <p>两个三角形共一个顶点A，其中一个由另一个绕A旋转得到：AB=AD、AC=AE、∠BAC=∠DAE。对应顶点B↔D、C↔E用虚</p>
+        <div class="ops">
+          <a class="btn main" href="dx03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('dx03', '手拉手模型')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>统计图表</b><span>4 个模板</span></div>
+      <div class="card">
+        <span class="tag">条形图</span>
+        <h2>条形统计图：六(1)班最喜欢的运动</h2>
+        <p>下面是六(1)班同学最喜欢的运动项目统计：足球12人、篮球9人、游泳6人、其他5人。全班一共多少人？喜欢哪种运动的人最多？</p>
+        <div class="ops">
+          <a class="btn main" href="s01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('s01', '条形统计图：六(1)班最喜欢的运动')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">扇形图</span>
+        <h2>扇形统计图：零花钱都花在哪了</h2>
+        <p>小明这个月的零花钱：文具12元、零食9元、书籍6元、其他5元，共32元。用扇形统计图表示各项支出占总支出的百分比。</p>
+        <div class="ops">
+          <a class="btn main" href="s02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('s02', '扇形统计图：零花钱都花在哪了')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">折线图</span>
+        <h2>折线统计图：一周气温变化</h2>
+        <p>某地一周每天的最高气温（℃）：周一20、周二22、周三26、周四25、周五23、周六21、周日19。哪天气温最高？这一周的平</p>
+        <div class="ops">
+          <a class="btn main" href="s03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('s03', '折线统计图：一周气温变化')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">图表误读</span>
+        <h2>两幅统计图的误导：纵轴不从 0 开始</h2>
+        <p>A、B两家书店上半年的月销量（本）：A店50、52、51、53、52、54；B店48、50、49、51、50、52。有人说「</p>
+        <div class="ops">
+          <a class="btn main" href="s09.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('s09', '两幅统计图的误导：纵轴不从 0 开始')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>树状图</b><span>4 个模板</span></div>
+      <div class="card">
+        <span class="tag">树状图</span>
+        <h2>树状图求概率：抛两枚硬币</h2>
+        <p>抛一枚质地均匀的硬币两次，两次都是正面朝上的概率是多少？</p>
+        <div class="ops">
+          <a class="btn main" href="s06.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('s06', '树状图求概率：抛两枚硬币')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">频率估计概率</span>
+        <h2>频率估计概率：抛硬币试验</h2>
+        <p>同学们做抛硬币试验：随着抛的次数越来越多，正面朝上的频率会怎样变化？这说明频率与概率有什么关系？</p>
+        <div class="ops">
+          <a class="btn main" href="s07.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('s07', '频率估计概率：抛硬币试验')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">摸球与骰子</span>
+        <h2>摸球模型：有放回摸两次</h2>
+        <p>袋中有1个红球、1个白球，除颜色外都相同。从中随机摸出1个球记下颜色后放回，搅匀再摸1次。两次都摸到红球的概率是多少？</p>
+        <div class="ops">
+          <a class="btn main" href="s08.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('s08', '摸球模型：有放回摸两次')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">公平性判断</span>
+        <h2>公平性判断：配紫色游戏</h2>
+        <p>甲、乙两人做游戏：同时抛两枚均匀硬币，若两枚颜色相同（同正或同反）则甲赢，若一正一反则乙赢。这个游戏公平吗？</p>
+        <div class="ops">
+          <a class="btn main" href="s10.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('s10', '公平性判断：配紫色游戏')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>离散点阵</b><span>6 个模板</span></div>
+      <div class="card">
+        <span class="tag">植树问题</span>
+        <h2>植树问题：两端都栽</h2>
+        <p>一条小路的一端到另一端，每隔4米栽一棵树，一共栽了5棵（两端都栽）。这条小路有多长？</p>
+        <div class="ops">
+          <a class="btn main" href="d01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('d01', '植树问题：两端都栽')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">植树问题</span>
+        <h2>植树问题：只栽一端</h2>
+        <p>学校跑道旁的一条直路，每隔5米栽一棵树，只在一端栽（另一端是路口不栽），一共栽了4棵。这条路长多少米？</p>
+        <div class="ops">
+          <a class="btn main" href="d02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('d02', '植树问题：只栽一端')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">植树问题</span>
+        <h2>植树问题：两端都不栽</h2>
+        <p>两栋教学楼之间的一条30米小路，每隔6米栽一棵树，两端（楼门口）都不栽。一共栽多少棵？</p>
+        <div class="ops">
+          <a class="btn main" href="d03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('d03', '植树问题：两端都不栽')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">方阵问题</span>
+        <h2>方阵问题：最外层人数</h2>
+        <p>同学们排成一个每边4人的实心方阵。最外层一共有多少人？整个方阵一共有多少人？</p>
+        <div class="ops">
+          <a class="btn main" href="d04.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('d04', '方阵问题：最外层人数')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">排队问题</span>
+        <h2>排队问题：人与人之间的间隔</h2>
+        <p>一排同学共6人站成一队，每两人之间间隔1米。从第1个人到最后一个同学，一共多少米？</p>
+        <div class="ops">
+          <a class="btn main" href="d05.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('d05', '排队问题：人与人之间的间隔')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">间隔应用</span>
+        <h2>锯木头 / 爬楼梯</h2>
+        <p>一根木头锯成5段，每锯一次要3分钟。锯完一共要多少分钟？</p>
+        <div class="ops">
+          <a class="btn main" href="d06.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('d06', '锯木头 / 爬楼梯')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>分支展开</b><span>5 个模板</span></div>
+      <div class="card">
+        <span class="tag">搭配问题</span>
+        <h2>搭配问题：2 件上衣 × 3 件下装</h2>
+        <p>小美有2件上衣（红、蓝）和3件下装（裙、裤、裙白），一件上衣配一件下装，一共有多少种不同的穿法？</p>
+        <div class="ops">
+          <a class="btn main" href="b01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('b01', '搭配问题：2 件上衣 × 3 件下装')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">排列问题</span>
+        <h2>排列问题：3 人排成一排照相</h2>
+        <p>甲、乙、丙3个同学排成一排照相，一共有多少种不同的排法？</p>
+        <div class="ops">
+          <a class="btn main" href="b02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('b02', '排列问题：3 人排成一排照相')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">组合问题</span>
+        <h2>组合问题：4 支球队单循环赛</h2>
+        <p>A、B、C、D四支球队进行单循环赛（每两队恰好赛一场），一共要安排多少场比赛？</p>
+        <div class="ops">
+          <a class="btn main" href="b03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('b03', '组合问题：4 支球队单循环赛')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">找次品</span>
+        <h2>找次品：9 个球里 1 个偏重</h2>
+        <p>有9个外观一样的乒乓球，其中1个偏重（次品）。只用一架天平，至少称几次保证能找出它？</p>
+        <div class="ops">
+          <a class="btn main" href="b04.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('b04', '找次品：9 个球里 1 个偏重')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">对策问题</span>
+        <h2>田忌赛马：对策问题</h2>
+        <p>齐王和田忌各有上、中、下三等马各一匹，同等级齐王的马都更快。三局两胜，田忌怎样对阵才能2:1取胜？</p>
+        <div class="ops">
+          <a class="btn main" href="b05.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('b05', '田忌赛马：对策问题')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>天平</b><span>3 个模板</span></div>
+      <div class="card">
+        <span class="tag">天平与等式性质</span>
+        <h2>天平解一元一次方程</h2>
+        <p>解方程x+3=11。</p>
+        <div class="ops">
+          <a class="btn main" href="e01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('e01', '天平解一元一次方程')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">天平与等式性质</span>
+        <h2>等式两边同加同减</h2>
+        <p>解方程3x+2=2x+7。</p>
+        <div class="ops">
+          <a class="btn main" href="e02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('e02', '等式两边同加同减')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">天平与等式性质</span>
+        <h2>去分母：两边同时乘同一个数</h2>
+        <p>解方程(x+1)÷2=3。</p>
+        <div class="ops">
+          <a class="btn main" href="e03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('e03', '去分母：两边同时乘同一个数')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>时间轴</b><span>3 个模板</span></div>
+      <div class="card">
+        <span class="tag">时间轴与统筹</span>
+        <h2>沏茶问题：最少几分钟</h2>
+        <p>小明给客人沏茶：洗水壶1分、接水1分、烧水8分、洗茶杯2分、找茶叶1分、沏茶1分。烧水的时候可以做别的事，全部做完最少要几分</p>
+        <div class="ops">
+          <a class="btn main" href="m01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('m01', '沏茶问题：最少几分钟')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">时间轴与统筹</span>
+        <h2>烙饼问题：锅一直不空着</h2>
+        <p>一口锅一次最多能烙2张饼，每面要烙3分钟。烙3张饼最少要几分钟？</p>
+        <div class="ops">
+          <a class="btn main" href="m02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('m02', '烙饼问题：锅一直不空着')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">时间轴与统筹</span>
+        <h2>统筹安排：机器转着，人别干等</h2>
+        <p>妈妈用洗衣机洗衣服：先把衣服放进去2分钟，机器自动洗12分钟。放好衣服后妈妈还要擦桌子3分钟、拖地6分钟，衣服洗完再收衣服2</p>
+        <div class="ops">
+          <a class="btn main" href="m03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('m03', '统筹安排：机器转着，人别干等')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>集合</b><span>2 个模板</span></div>
+      <div class="card">
+        <span class="tag">集合与表格</span>
+        <h2>容斥原理</h2>
+        <p>三(1)班同学每人至少会游泳、滑冰中的一样。会游泳的有6人，会滑冰的有8人，两种都会的有3人。一共有多少人？</p>
+        <div class="ops">
+          <a class="btn main" href="v01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('v01', '容斥原理')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">集合与表格</span>
+        <h2>逻辑推理·列表排除</h2>
+        <p>甲、乙、丙、丁四人赛跑，名次恰好是第1~4名。已知：乙是第3名，丁是第1名，丙不是第2名。甲是第几名？</p>
+        <div class="ops">
+          <a class="btn main" href="v02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('v02', '逻辑推理·列表排除')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>割线</b><span>2 个模板</span></div>
+      <div class="card">
+        <span class="tag">导数与切线</span>
+        <h2>导数与切线：割线的极限位置</h2>
+        <p>曲线y=x²上有一点P(1,1)。在曲线上另取一点Q，直线PQ叫做这条曲线的&lt;b&gt;割线&lt;/b&gt;。当Q沿着曲线无限靠近P时，割</p>
+        <div class="ops">
+          <a class="btn main" href="l01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('l01', '导数与切线：割线的极限位置')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">割线取极限</span>
+        <h2>割线取极限：从平均变化率到瞬时变化率</h2>
+        <p>曲线y=−x²+4上有一点P(1,3)。在曲线上另取一点Q(1+t,4−(1+t)²)，割线PQ的斜率就是这段的平均变化率Δ</p>
+        <div class="ops">
+          <a class="btn main" href="l02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('l02', '割线取极限：从平均变化率到瞬时变化率')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>单位圆</b><span>2 个模板</span></div>
+      <div class="card">
+        <span class="tag">三角函数图象</span>
+        <h2>三角函数图象 · 单位圆上的点画出正弦波</h2>
+        <p>单位圆上一点P从(1,0)出发，逆时针转过θ弧度后，它的纵坐标是多少？让θ从0转到2π，这个纵坐标会画出一条什么曲线？</p>
+        <div class="ops">
+          <a class="btn main" href="u01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('u01', '三角函数图象 · 单位圆上的点画出正弦波')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">单位圆与正弦波</span>
+        <h2>单位圆与正弦波 · θ 与它的正弦值</h2>
+        <p>单位圆上一点P由角θ决定，它的纵坐标y就是sinθ。让θ从0转到2π：这条曲线长什么样？最大值、最小值、周期各是多少？</p>
+        <div class="ops">
+          <a class="btn main" href="u02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('u02', '单位圆与正弦波 · θ 与它的正弦值')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>四边形</b><span>3 个模板</span></div>
+      <div class="card">
+        <span class="tag">四边形</span>
+        <h2>四边形动态变形·平行四边形</h2>
+        <p>A、B、C三点钉住，D在对边那条线上滑动。拖一拖D，看它走到哪里ABCD才是平行四边形？</p>
+        <div class="ops">
+          <a class="btn main" href="q01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('q01', '四边形动态变形·平行四边形')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">四边形</span>
+        <h2>四边形动态变形·矩形菱形正方形</h2>
+        <p>平行四边形ABCD中AB=4，AD的长和∠DAB都能拖。拖到什么时候它是矩形、菱形、正方形？</p>
+        <div class="ops">
+          <a class="btn main" href="q02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('q02', '四边形动态变形·矩形菱形正方形')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">四边形</span>
+        <h2>四边形动态变形·中点四边形</h2>
+        <p>E、F、M、N分别是四边形ABCD各边的中点。拖一拖D，看四边形EFMN的形状会不会变？</p>
+        <div class="ops">
+          <a class="btn main" href="q03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('q03', '四边形动态变形·中点四边形')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>数轴</b><span>4 个模板</span></div>
+      <div class="card">
+        <span class="tag">数轴</span>
+        <h2>数轴上的有理数加减·混合运算</h2>
+        <p>计算−4+6−3+2。把它搬到数轴上走一走：向右走是加、向左走是减，走完落在哪个刻度，和就是几。</p>
+        <div class="ops">
+          <a class="btn main" href="z01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('z01', '数轴上的有理数加减·混合运算')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">数轴</span>
+        <h2>位值尺与科学记数法</h2>
+        <p>250000每个数位上的数字分别是多少？把它写成科学记数法a×10的n次方，指数n是几？</p>
+        <div class="ops">
+          <a class="btn main" href="z02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('z02', '位值尺与科学记数法')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">数轴</span>
+        <h2>不等式解集在数轴上的表示</h2>
+        <p>解不等式x−3≥−1，并把解集在数轴上表示出来：边界取得到要用实心点，取不到用空心点。</p>
+        <div class="ops">
+          <a class="btn main" href="z03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('z03', '不等式解集在数轴上的表示')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">数轴</span>
+        <h2>数轴上的动点·绝对值的几何意义</h2>
+        <p>点A在数轴上表示−1，点P表示x。拖一拖滑块让P动起来，看看|x+1|是怎么跟着变的。</p>
+        <div class="ops">
+          <a class="btn main" href="z04.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('z04', '数轴上的动点·绝对值的几何意义')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>圆</b><span>4 个模板</span></div>
+      <div class="card">
+        <span class="tag">圆</span>
+        <h2>圆的切线·切线长</h2>
+        <p>PA、PB是⊙O的两条切线，A、B是切点。已知⊙O的半径是3，OP=5，求切线长PA。</p>
+        <div class="ops">
+          <a class="btn main" href="y01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('y01', '圆的切线·切线长')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">圆</span>
+        <h2>圆周角定理</h2>
+        <p>A、B、C是⊙O上的三点。已知圆心角∠AOB=140°，求同弧所对的圆周角∠ACB。</p>
+        <div class="ops">
+          <a class="btn main" href="y02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('y02', '圆周角定理')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">圆</span>
+        <h2>射门角模型·张角最大</h2>
+        <p>球门AB立在x=0处（A在上、B在下），运动员P沿跑道向右跑。站在哪个位置，射门的张角∠APB最大？</p>
+        <div class="ops">
+          <a class="btn main" href="y03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('y03', '射门角模型·张角最大')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">圆</span>
+        <h2>四点共圆·对角互补</h2>
+        <p>A、B、C、D依次是⊙O上的四点。已知∠A=80°，求与它相对的另一个角∠C。</p>
+        <div class="ops">
+          <a class="btn main" href="y04.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('y04', '四点共圆·对角互补')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="famhead"><b>立体</b><span>5 个模板</span></div>
+      <div class="card">
+        <span class="tag">立体</span>
+        <h2>立体图形与三视图·长方体</h2>
+        <p>长方体长4、宽2、高3，从正面、左面、上面各看一次，画出三视图并求主视图的面积</p>
+        <div class="ops">
+          <a class="btn main" href="k01.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('k01', '立体图形与三视图·长方体')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">立体</span>
+        <h2>正方体展开图·一共几种</h2>
+        <p>把正方体沿棱剪开摊平，一共能摊出多少种不一样的展开图？（旋转、翻面以后一样的算同一种）</p>
+        <div class="ops">
+          <a class="btn main" href="k02.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('k02', '正方体展开图·一共几种')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">立体</span>
+        <h2>面动成体·矩形旋转生成圆柱</h2>
+        <p>矩形绕虚线轴转一圈扫出一个圆柱，底面半径2、高3，求这个圆柱的体积</p>
+        <div class="ops">
+          <a class="btn main" href="k03.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('k03', '面动成体·矩形旋转生成圆柱')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">立体</span>
+        <h2>制作立体模型·圆柱的侧面展开图</h2>
+        <p>把圆柱的侧面沿一条母线剪开摊平，会得到一个矩形，这个矩形的长和宽各是多少？</p>
+        <div class="ops">
+          <a class="btn main" href="k04.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('k04', '制作立体模型·圆柱的侧面展开图')">内嵌预览</button>
+        </div>
+      </div>
+      <div class="card">
+        <span class="tag">立体</span>
+        <h2>还原与计数·数小正方体</h2>
+        <p>三摞小正方体码在桌面上，第一摞3层、第二摞2层、第三摞2层，一共多少个？</p>
+        <div class="ops">
+          <a class="btn main" href="k05.html" target="_blank" rel="noopener">整页打开</a>
+          <button class="btn" onclick="openPreview('k05', '还原与计数·数小正方体')">内嵌预览</button>
+        </div>
+      </div>
+  </div>
+
+  <div class="preview" id="preview">
+    <div class="bar"><b id="pvTitle"></b><button class="btn" style="flex:none;padding:6px 18px" onclick="closePreview()">收起</button></div>
+    <iframe id="pvFrame" title="模板预览"></iframe>
+  </div>
+
+  <footer>
+    访问路径：<code>/anim_templates/</code>（本地 <code>http://127.0.0.1:8000/anim_templates/</code>）。
+    来源：<code>改造\模板库\_产物</code>，2026-09-28 全量回归全绿（105 产物 + 骨架一致性 + 二十三组负面用例）后由 <code>同步_生产卡片.js</code> 全量同步。
+  </footer>
+</div>
+
+<script>
+  function openPreview(id, title){
+    var pv = document.getElementById('preview');
+    document.getElementById('pvTitle').textContent = title;
+    document.getElementById('pvFrame').src = id + '.html';
+    pv.classList.add('on');
+    pv.scrollIntoView({ behavior:'smooth', block:'start' });
+  }
+  function closePreview(){
+    document.getElementById('preview').classList.remove('on');
+    document.getElementById('pvFrame').src = 'about:blank';
+  }
+</script>
+</body>
+</html>

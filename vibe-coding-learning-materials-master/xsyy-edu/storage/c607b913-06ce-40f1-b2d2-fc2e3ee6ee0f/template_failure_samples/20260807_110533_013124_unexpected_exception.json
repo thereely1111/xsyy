@@ -1,0 +1,17 @@
+{
+  "failure_stage": "unexpected_exception",
+  "error_message": "模板动态片段生成失败，已重试 2 次，最终错误: Error code: 403 - {'error': {'message': 'token quota is not enough, token remain quota: $0.156926, need quota: $0.167202 (request id: 202608070305346852894484BscTseyR3gdcEIs)', 'type': 'new_api_error', 'param': '', 'code': 'pre_consume_token_quota_failed'}}",
+  "generated_at": "2026-08-07T11:05:33.013171Z",
+  "task_id": "c607b913-06ce-40f1-b2d2-fc2e3ee6ee0f",
+  "debug_info": {
+    "error_stage": "unexpected_exception",
+    "exception_type": "PermissionDeniedError",
+    "exception_message": "Error code: 403 - {'error': {'message': 'token quota is not enough, token remain quota: $0.156926, need quota: $0.167202 (request id: 202608070305346852894484BscTseyR3gdcEIs)', 'type': 'new_api_error', 'param': '', 'code': 'pre_consume_token_quota_failed'}}",
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "question": "一个三角形的三条边长分别是 3 厘米、4 厘米和 5 厘米，求这个三角形的周长。",
+    "title": "三角形周长计算",
+    "task_id": "c607b913-06ce-40f1-b2d2-fc2e3ee6ee0f",
+    "max_output_tokens": 131072
+  }
+}

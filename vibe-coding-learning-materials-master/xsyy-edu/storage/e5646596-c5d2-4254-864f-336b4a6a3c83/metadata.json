@@ -1,0 +1,23 @@
+{
+  "question": "贝贝上学期期末考试时,语文和数学这两门的平均分是89分,要想语、数、外三门平均分达到92分,外语必须考____分。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\e5646596-c5d2-4254-864f-336b4a6a3c83\\ScreenShot_2026-01-13_101405_176.png",
+  "task_id": "e5646596-c5d2-4254-864f-336b4a6a3c83",
+  "generated_at": "2026-01-13T10:16:26.414651Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "平均数目标计算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "题目核心考察平均数的计算和应用。",
+    "main_tag": "数据意识",
+    "sub_tags": [
+      "模型意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-13T10:16:26.414651Z",
+  "preview_image": "Preview.webp"
+}

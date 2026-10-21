@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标签管理 - 管理后台</title>
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+    </script>
+    <style>
+        .knowledge-tag-table.table-container table {
+            min-width: 1180px;
+            table-layout: auto;
+        }
+
+        .knowledge-tag-table.table-container th,
+        .knowledge-tag-table.table-container td {
+            white-space: normal;
+            word-break: break-word;
+            vertical-align: top;
+        }
+
+        .knowledge-tag-table .cell-id {
+            width: 72px;
+            min-width: 72px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .knowledge-tag-table .cell-domain {
+            min-width: 120px;
+            font-weight: 600;
+        }
+
+        .knowledge-tag-table .cell-grade {
+            min-width: 78px;
+            white-space: nowrap;
+        }
+
+        .knowledge-tag-table .cell-main,
+        .knowledge-tag-table .cell-sub,
+        .knowledge-tag-table .cell-keyword {
+            line-height: 1.65;
+        }
+
+        .knowledge-tag-table .cell-main {
+            min-width: 150px;
+            max-width: 220px;
+        }
+
+        .knowledge-tag-table .cell-sub {
+            min-width: 220px;
+            max-width: 320px;
+        }
+
+        .knowledge-tag-table .cell-keyword {
+            min-width: 260px;
+            max-width: 420px;
+            color: #555;
+            font-size: 13px;
+        }
+
+        .knowledge-tag-table .cell-date {
+            min-width: 150px;
+            white-space: nowrap;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .knowledge-tag-table .cell-actions {
+            width: 150px;
+            min-width: 150px;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .knowledge-tag-table .tag-text-block {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: #f7f8fa;
+            border: 1px solid #eceff3;
+        }
+
+        .knowledge-tag-table .keyword-empty {
+            color: #999;
+        }
+
+        .knowledge-tag-table .action-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
+
+        .knowledge-tag-table .action-row .btn {
+            margin-right: 0 !important;
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
+
+    </style>
+    <link rel="stylesheet" href="css/theme-override.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>管理后台</h2>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html">仪表盘</a></li>
+                    <li><a href="teachings.html">教学内容</a></li>
+                    <li><a href="users.html">用户管理</a></li>
+                    <li><a href="tags.html" class="active">标签管理</a></li>
+                    <li><a href="recharge_requests.html">订单管理</a></li>
+                    <li><a href="feedbacks.html">用户反馈</a></li>
+                    <li><a href="settings.html">系统配置</a></li>
+                    <li><a href="logs.html">网站日志</a></li>
+                    <li><a href="invite-quota.html">邀请与额度</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>知识点标签管理</h1>
+                <div class="user-info">
+                    <span>管理员：<span id="userInfo">-</span></span>
+                    <a href="../index.html?v=3" class="btn-home">返回首页</a>
+                    <button class="btn-logout" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+
+            <!-- 搜索和筛选 -->
+            <div class="card">
+                <div class="search-bar">
+                    <select id="filterVersion" style="padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px;">
+                        <option value="">全部知识域</option>
+                    </select>
+                    <select id="filterGrade" style="padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px;">
+                        <option value="">全部年级</option>
+                    </select>
+                    <select id="filterMainTag" style="padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px;">
+                        <option value="">全部章/单元</option>
+                    </select>
+                    <button onclick="loadTags(1)">筛选</button>
+                    <button onclick="resetFilters()" style="background: var(--ink-grey); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">重置</button>
+                    <button onclick="openAgentTestModal()" style="background: #fff; color: var(--primary-blue); border: 1px solid var(--primary-blue); padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-left: auto;">智能体测试</button>
+                    <button onclick="window.location.href='tag_review.html'" style="background: #fff; color: var(--primary-blue); border: 1px solid var(--primary-blue); padding: 8px 16px; border-radius: 6px; cursor: pointer;">标签智能体审核</button>
+                    <button onclick="openAddModal()" style="background: var(--primary-blue); color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">+ 添加标签</button>
+                </div>
+            </div>
+
+            <!-- 标签列表 -->
+            <div class="card">
+                <div id="tagsList" class="loading">加载中...</div>
+            </div>
+
+            <!-- 分页 -->
+            <div class="pagination" id="pagination"></div>
+        </main>
+    </div>
+
+    <div id="agentTestModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closeAgentTestModal()"></div>
+        <div class="modal-content" style="max-width: 860px; width: calc(100vw - 48px);">
+            <div class="modal-header">
+                <h3>智能体标签识别测试</h3>
+                <button class="modal-close" onclick="closeAgentTestModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:flex; flex-direction:column; gap:16px;">
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 6px;">题目文本</label>
+                        <textarea id="agentTestQuestion" placeholder="输入题目内容，用于测试智能体标签识别结果" style="width:100%; min-height:140px; padding:10px 12px; border:1px solid #d9d9d9; border-radius:6px; resize:vertical;"></textarea>
+                    </div>
+                    <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                        <input type="text" id="agentTestQuestionId" placeholder="题目ID（可选）" style="width:220px; padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px;">
+                        <button onclick="runAgentTest()" style="background: var(--primary-blue); color:#fff; border:none; padding:8px 18px; border-radius:6px; cursor:pointer;">开始测试</button>
+                        <span id="agentTestStatus" style="color:#666; font-size:13px;"></span>
+                    </div>
+                    <div id="agentTestSummary" style="display:none; padding:12px 14px; background:#f7f8fa; border:1px solid #eceff3; border-radius:6px;"></div>
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 6px;">识别结果</label>
+                        <div id="agentTestTags" style="min-height:88px; padding:12px; border:1px solid #d9d9d9; border-radius:6px; background:#fff;"></div>
+                    </div>
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 6px;">原始返回</label>
+                        <pre id="agentTestRaw" style="margin:0; min-height:180px; max-height:320px; overflow:auto; padding:12px; background:#0f172a; color:#e2e8f0; border-radius:6px; font-size:12px; line-height:1.5;">等待测试...</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加/编辑标签弹窗 -->
+    <div id="tagModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closeTagModal()"></div>
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3 id="tagModalTitle">添加标签</h3>
+                <button class="modal-close" onclick="closeTagModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="tagId">
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 6px;">知识域 <span style="color: var(--primary-red);">*</span></label>
+                    <input type="text" id="tagVersion" placeholder="例如：图形与几何" style="width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px;">
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 6px;">年级 <span style="color: var(--primary-red);">*</span></label>
+                    <input type="text" id="tagGrade" placeholder="例如：八上" style="width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px;">
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 6px;">章/单元 <span style="color: var(--primary-red);">*</span></label>
+                    <input type="text" id="tagMainTag" placeholder="例如：三角形" style="width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px;">
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 6px;">知识点标签（模块级） <span style="color: var(--primary-red);">*</span></label>
+                    <input type="text" id="tagSubTag" placeholder="例如：三角形内角和与外角" style="width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px;">
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 6px;">强特征关键词</label>
+                    <input type="text" id="tagKeyword" placeholder="例如：内角和, 外角, 180度" style="width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px;">
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                    <button onclick="closeTagModal()" style="padding: 8px 20px; border: 1px solid #d9d9d9; border-radius: 6px; cursor: pointer; background: #fff;">取消</button>
+                    <button onclick="saveTag()" style="padding: 8px 20px; border: none; border-radius: 6px; cursor: pointer; background: var(--primary-blue); color: #fff;">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-nav.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('../js/math-symbol-panel.js') + '"><\/script>');
+    </script>
+    <script>
+        let currentPage = 1;
+        const pageSize = 20;
+        let hierarchyData = {}; // 保存层级数据用于筛选
+        const gradeOrder = ['一上', '一下', '二上', '二下', '三上', '三下', '四上', '四下', '五上', '五下', '六上', '六下', '七上', '七下', '八上', '八下', '九上', '九下'];
+
+        function parseTagDate(dateStr) {
+            if (!dateStr) return null;
+            const value = String(dateStr).trim();
+            if (!value) return null;
+            const normalized = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(value)
+                ? value
+                : `${value}Z`;
+            const date = new Date(normalized);
+            return isNaN(date.getTime()) ? null : date;
+        }
+
+        // 初始化认证
+        initAdminAuth();
+
+        // 加载框架数据（用于筛选下拉框，含级联联动）
+        async function loadFramework() {
+            try {
+                const data = await apiRequest('/api/knowledge-tag-framework');
+                // 保存hierarchy数据：{知识域:{年级:{章/单元:[知识点]}}}
+                hierarchyData = data.hierarchy || {};
+                // 初始化三个下拉框（全量，后续随选择联动裁剪）
+                updateVersionSelect(true);
+                updateGradeSelect(true);
+                updateMainTagSelect();
+            } catch (error) {
+                console.error('加载框架数据失败:', error);
+            }
+        }
+
+        // 填充知识域下拉框；若已选年级，则只显示包含该年级的知识域（双向联动）
+        function updateVersionSelect(initAll = false) {
+            const versionSelect = document.getElementById('filterVersion');
+            const grade = document.getElementById('filterGrade').value;
+            const prev = versionSelect.value;
+            const versions = Object.keys(hierarchyData);
+            const available = (grade && !initAll)
+                ? versions.filter(v => hierarchyData[v] && hierarchyData[v][grade])
+                : versions;
+            versionSelect.innerHTML = '<option value="">全部知识域</option>';
+            available.forEach(v => {
+                versionSelect.innerHTML += `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`;
+            });
+            versionSelect.value = available.includes(prev) ? prev : '';
+        }
+
+        // 填充年级下拉框；若已选知识域，则只显示包含该知识域的年级（双向联动）
+        function updateGradeSelect(initAll = false) {
+            const version = document.getElementById('filterVersion').value;
+            const gradeSelect = document.getElementById('filterGrade');
+            const prev = gradeSelect.value;
+            const allGrades = new Set();
+            if (version && hierarchyData[version]) {
+                Object.keys(hierarchyData[version]).forEach(g => allGrades.add(g));
+            } else {
+                Object.values(hierarchyData).forEach(vObj => Object.keys(vObj).forEach(g => allGrades.add(g)));
+            }
+            const sortedGrades = Array.from(allGrades).sort((a, b) => {
+                const ai = gradeOrder.indexOf(a), bi = gradeOrder.indexOf(b);
+                if (ai === -1 && bi === -1) return String(a).localeCompare(String(b), 'zh-CN');
+                if (ai === -1) return 1;
+                if (bi === -1) return -1;
+                return ai - bi;
+            });
+            gradeSelect.innerHTML = '<option value="">全部年级</option>';
+            sortedGrades.forEach(g => {
+                gradeSelect.innerHTML += `<option value="${escapeHtml(g)}">${escapeHtml(g)}</option>`;
+            });
+            gradeSelect.value = sortedGrades.includes(prev) ? prev : '';
+        }
+
+        // 根据知识域和年级更新章/单元下拉框
+        function updateMainTagSelect() {
+            const versionSelect = document.getElementById('filterVersion');
+            const gradeSelect = document.getElementById('filterGrade');
+            const mainTagSelect = document.getElementById('filterMainTag');
+
+            const selectedVersion = versionSelect.value;
+            const selectedGrade = gradeSelect.value;
+
+            // 获取可用的章/单元
+            const availableTags = getAvailableMainTags(selectedGrade, selectedVersion);
+
+            // 更新章/单元下拉框
+            mainTagSelect.innerHTML = '<option value="">全部章/单元</option>';
+            availableTags.forEach(m => {
+                mainTagSelect.innerHTML += `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`;
+            });
+        }
+
+        // 根据年级和知识域获取可用的章/单元
+        function getAvailableMainTags(grade, version, allMainTags) {
+            const availableTags = new Set();
+            // 都没有选：收集所有章/单元
+            if (!grade && !version) {
+                Object.values(hierarchyData).forEach(vObj => Object.values(vObj).forEach(gObj => Object.keys(gObj).forEach(m => availableTags.add(m))));
+                return Array.from(availableTags).sort();
+            }
+            // 选了知识域没选年级：该知识域下所有章/单元
+            if (version && !grade) {
+                if (hierarchyData[version]) {
+                    Object.values(hierarchyData[version]).forEach(gObj => Object.keys(gObj).forEach(m => availableTags.add(m)));
+                }
+            }
+            // 选了年级没选知识域：该年级下所有章/单元
+            else if (grade && !version) {
+                Object.keys(hierarchyData).forEach(v => {
+                    if (hierarchyData[v][grade]) Object.keys(hierarchyData[v][grade]).forEach(m => availableTags.add(m));
+                });
+            }
+            // 同时选了：交集
+            else if (version && grade && hierarchyData[version] && hierarchyData[version][grade]) {
+                Object.keys(hierarchyData[version][grade]).forEach(m => availableTags.add(m));
+            }
+            return Array.from(availableTags).sort();
+        }
+
+        // 知识域变化 → 联动年级 + 章/单元，并刷新列表
+        document.getElementById('filterVersion').addEventListener('change', function() {
+            updateGradeSelect();
+            updateMainTagSelect();
+            loadTags(1);
+        });
+
+        // 年级变化 → 联动知识域 + 章/单元，并刷新列表
+        document.getElementById('filterGrade').addEventListener('change', function() {
+            updateVersionSelect();
+            updateMainTagSelect();
+            loadTags(1);
+        });
+
+        // 章/单元变化 → 刷新列表
+        document.getElementById('filterMainTag').addEventListener('change', function() {
+            loadTags(1);
+        });
+
+        // 加载标签列表
+        async function loadTags(page = 1) {
+            currentPage = page;
+            const version = document.getElementById('filterVersion').value;
+            const grade = document.getElementById('filterGrade').value;
+            const mainTag = document.getElementById('filterMainTag').value;
+
+            const listElement = document.getElementById('tagsList');
+            listElement.innerHTML = '<div class="loading">加载中...</div>';
+
+            try {
+                // 构建查询参数
+                const queryParams = new URLSearchParams();
+                queryParams.append('page', page);
+                queryParams.append('page_size', pageSize);
+                if (version) queryParams.append('version', version);
+                if (grade) queryParams.append('grade', grade);
+                if (mainTag) queryParams.append('main_tag', mainTag);
+
+                const result = await apiRequest(`/api/admin/knowledge-tag-framework?${queryParams.toString()}`);
+
+                if (!result.data || result.data.length === 0) {
+                    listElement.innerHTML = '<div class="empty-state"><p>暂无标签数据</p></div>';
+                    document.getElementById('pagination').innerHTML = '';
+                    return;
+                }
+
+                // 渲染表格
+                let tableHTML = `
+                    <div class="table-container knowledge-tag-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>知识域</th>
+                                    <th>年级</th>
+                                    <th>章/单元</th>
+                                    <th>知识点标签</th>
+                                    <th>强特征关键词</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                result.data.forEach(tag => {
+                    const date = parseTagDate(tag.created_at);
+                    tableHTML += `
+                        <tr>
+                            <td class="cell-id">${tag.id}</td>
+                            <td class="cell-domain"><span class="tag-text-block">${escapeHtml(tag.version || '-')}</span></td>
+                            <td class="cell-grade">${escapeHtml(tag.grade || '-')}</td>
+                            <td class="cell-main"><span class="tag-text-block">${escapeHtml(tag.main_tag || '-')}</span></td>
+                            <td class="cell-sub"><span class="tag-text-block">${escapeHtml(tag.sub_tag || '-')}</span></td>
+                            <td class="cell-keyword">${tag.keyword ? `<span class="tag-text-block">${escapeHtml(tag.keyword)}</span>` : '<span class="keyword-empty">-</span>'}</td>
+                            <td class="cell-date">${date ? date.toLocaleString('zh-CN', { hour12: false }) : '-'}</td>
+                            <td class="cell-actions">
+                                <div class="action-row">
+                                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;"
+                                        onclick="openEditModal(${tag.id}, '${escapeHtml(tag.version || '')}', '${escapeHtml(tag.grade || '')}', '${escapeHtml(tag.main_tag || '')}', '${escapeHtml(tag.sub_tag || '')}', '${escapeHtml(tag.keyword || '')}')">
+                                    编辑
+                                </button>
+                                <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;"
+                                        onclick="deleteTag(${tag.id}, '${escapeHtml(tag.sub_tag || tag.main_tag || '')}')">
+                                    删除
+                                </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                listElement.innerHTML = tableHTML;
+
+                // 渲染分页
+                renderPagination(result.total_pages, result.page);
+            } catch (error) {
+                console.error('加载标签列表失败:', error);
+                listElement.innerHTML = `<div class="error-message show">加载失败: ${error.message}</div>`;
+            }
+        }
+
+        // 渲染分页
+        function renderPagination(totalPages, current) {
+            const pagination = document.getElementById('pagination');
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+
+            // 上一页
+            html += `<button onclick="loadTags(${current - 1})" ${current === 1 ? 'disabled' : ''}>上一页</button>`;
+
+            // 页码
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= current - 2 && i <= current + 2)) {
+                    html += `<button onclick="loadTags(${i})" class="${i === current ? 'active' : ''}">${i}</button>`;
+                } else if (i === current - 3 || i === current + 3) {
+                    html += `<span>...</span>`;
+                }
+            }
+
+            // 下一页
+            html += `<button onclick="loadTags(${current + 1})" ${current === totalPages ? 'disabled' : ''}>下一页</button>`;
+
+            pagination.innerHTML = html;
+        }
+
+        // 重置筛选条件
+        function resetFilters() {
+            document.getElementById('filterVersion').value = '';
+            document.getElementById('filterGrade').value = '';
+            document.getElementById('filterMainTag').value = '';
+            // 恢复全量选项并刷新
+            updateVersionSelect(true);
+            updateGradeSelect(true);
+            updateMainTagSelect();
+            loadTags(1);
+        }
+
+        function openAgentTestModal() {
+            document.getElementById('agentTestModal').style.display = 'flex';
+            document.getElementById('agentTestStatus').textContent = '';
+        }
+
+        function closeAgentTestModal() {
+            document.getElementById('agentTestModal').style.display = 'none';
+        }
+
+        async function runAgentTest() {
+            const question = document.getElementById('agentTestQuestion').value.trim();
+            const questionId = document.getElementById('agentTestQuestionId').value.trim();
+            const statusEl = document.getElementById('agentTestStatus');
+            const summaryEl = document.getElementById('agentTestSummary');
+            const tagsEl = document.getElementById('agentTestTags');
+            const rawEl = document.getElementById('agentTestRaw');
+
+            if (!question) {
+                showToast('请先输入题目文本', 'warn');
+                return;
+            }
+
+            statusEl.textContent = '测试中...';
+            summaryEl.style.display = 'none';
+            summaryEl.innerHTML = '';
+            tagsEl.innerHTML = '识别中...';
+            rawEl.textContent = '请求中...';
+
+            const startedAt = performance.now();
+            try {
+                const result = await apiRequest('/tag-agent/recognize', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        question,
+                        question_id: questionId,
+                        creator_id: ''
+                    })
+                });
+                const elapsedMs = Math.round(performance.now() - startedAt);
+                const tags = Array.isArray(result.knowledge_tags) ? result.knowledge_tags : [];
+
+                statusEl.textContent = `测试完成，耗时 ${elapsedMs} ms`;
+                summaryEl.style.display = 'block';
+                summaryEl.innerHTML = `识别标签数：<strong>${tags.length}</strong>${result.trace_id ? `　Trace ID：<strong>${escapeHtml(result.trace_id)}</strong>` : ''}`;
+
+                if (!tags.length) {
+                    tagsEl.innerHTML = '<span style="color:#999;">未识别到标签</span>';
+                } else {
+                    tagsEl.innerHTML = tags.map(tag => {
+                        const domain = escapeHtml(tag.version || '-');
+                        const grade = escapeHtml(tag.grade || '-');
+                        const chapter = escapeHtml(tag.main_tag || '-');
+                        const name = escapeHtml(tag.sub_tag || '-');
+                        const source = escapeHtml(tag.tag_source || '-');
+                        return `<div style="padding:10px 12px; border:1px solid #eceff3; border-radius:6px; background:#f7f8fa; margin-bottom:8px;"><div style="font-weight:600; margin-bottom:4px;">${name}</div><div style="font-size:13px; color:#555;">${domain} / ${grade} / ${chapter}</div><div style="font-size:12px; color:#666; margin-top:4px;">来源：${source}</div></div>`;
+                    }).join('');
+                }
+
+                rawEl.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                statusEl.textContent = '测试失败';
+                summaryEl.style.display = 'block';
+                summaryEl.innerHTML = `<span style="color:#c62828;">${escapeHtml(error.message || '请求失败')}</span>`;
+                tagsEl.innerHTML = '<span style="color:#999;">无结果</span>';
+                rawEl.textContent = String(error.message || error);
+            }
+        }
+
+        // 打开添加标签弹窗
+        function openAddModal() {
+            document.getElementById('tagModalTitle').textContent = '添加标签';
+            document.getElementById('tagId').value = '';
+            document.getElementById('tagVersion').value = '';
+            document.getElementById('tagGrade').value = '';
+            document.getElementById('tagMainTag').value = '';
+            document.getElementById('tagSubTag').value = '';
+            document.getElementById('tagKeyword').value = '';
+            document.getElementById('tagModal').style.display = 'flex';
+        }
+
+        // 打开编辑标签弹窗
+        function openEditModal(id, version, grade, mainTag, subTag, keyword) {
+            document.getElementById('tagModalTitle').textContent = '编辑标签';
+            document.getElementById('tagId').value = id;
+            document.getElementById('tagVersion').value = version;
+            document.getElementById('tagGrade').value = grade;
+            document.getElementById('tagMainTag').value = mainTag;
+            document.getElementById('tagSubTag').value = subTag;
+            document.getElementById('tagKeyword').value = keyword || '';
+            document.getElementById('tagModal').style.display = 'flex';
+        }
+
+        // 关闭弹窗
+        function closeTagModal() {
+            document.getElementById('tagModal').style.display = 'none';
+        }
+
+        // 保存标签（添加或编辑）
+        async function saveTag() {
+            const id = document.getElementById('tagId').value;
+            const version = document.getElementById('tagVersion').value.trim();
+            const grade = document.getElementById('tagGrade').value.trim();
+            const mainTag = document.getElementById('tagMainTag').value.trim();
+            const subTag = document.getElementById('tagSubTag').value.trim();
+            const keyword = document.getElementById('tagKeyword').value.trim();
+
+            if (!version || !grade || !mainTag || !subTag) {
+                showToast('请填写所有必填字段', 'warn');
+                return;
+            }
+
+            try {
+                if (id) {
+                    // 编辑标签
+                    await apiRequest(`/api/admin/knowledge-tag-framework/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({ version, grade, main_tag: mainTag, sub_tag: subTag, keyword })
+                    });
+                    showToast('标签更新成功', 'success');
+                } else {
+                    // 添加标签
+                    await apiRequest('/api/admin/knowledge-tag-framework', {
+                        method: 'POST',
+                        body: JSON.stringify({ version, grade, main_tag: mainTag, sub_tag: subTag, keyword })
+                    });
+                    showToast('标签添加成功', 'success');
+                }
+                closeTagModal();
+                loadTags(currentPage);
+                // 刷新筛选下拉框
+                loadFramework();
+            } catch (error) {
+                showToast('保存失败: ' + error.message, 'error');
+            }
+        }
+
+        // 删除标签
+        async function deleteTag(id, name) {
+            if (!confirm(`确定要删除标签 "${name}" 吗？此操作不可恢复！`)) {
+                return;
+            }
+
+            try {
+                await apiRequest(`/api/admin/knowledge-tag-framework/${id}`, {
+                    method: 'DELETE'
+                });
+                showToast('删除成功', 'success');
+                loadTags(currentPage);
+                // 刷新筛选下拉框
+                loadFramework();
+            } catch (error) {
+                showToast('删除失败: ' + error.message, 'error');
+            }
+        }
+
+        // 页面加载时加载数据
+        loadFramework();
+        loadTags();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,239 @@
+/* ============================================================
+   共享弹窗水墨主题（index / video 两站共用，2026-09-02）
+   覆盖：首页精准筛选弹窗 / 视频页错误提示 / 分享面板等
+   （登录/注册弹窗不在覆盖范围）
+   引入：各页 </head> 前 <link css/modal-theme.20260902.css>
+   ============================================================ */
+
+/* ---------- 精准筛选（首页）---------- */
+.advanced-filter-overlay {
+    background: rgba(24, 22, 18, 0.52) !important;
+    backdrop-filter: blur(3px);
+}
+
+.advanced-filter-dialog {
+    background: #FDFBF4 !important;
+    border: 1px solid #E4DECE !important;
+    border-radius: 16px !important;
+    box-shadow: 0 20px 55px rgba(30, 27, 22, 0.20) !important;
+}
+
+.advanced-filter-header {
+    background: linear-gradient(180deg, #F7F0E1, #F1E9D8) !important;
+    border-bottom: 1px solid #EADFC6 !important;
+    padding: 16px 22px !important;
+}
+
+.advanced-filter-header h3 {
+    font-family: var(--font-serif, "Songti SC", SimSun, STSong, serif) !important;
+    letter-spacing: 3px !important;
+    color: #3E382E !important;
+}
+
+.advanced-filter-header .close-btn,
+.advanced-filter-close {
+    color: #9C9382 !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.35) !important;
+    transition: color 0.2s ease, transform 0.25s ease !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+}
+
+.advanced-filter-header .close-btn:hover,
+.advanced-filter-close:hover {
+    color: #B83B43 !important;
+    transform: rotate(90deg);
+    background: rgba(184, 59, 67, 0.08) !important;
+}
+
+.advanced-filter-footer {
+    background: #F8F2E6 !important;
+    border-top: 1px solid #EADFC6 !important;
+    padding: 12px 22px !important;
+}
+
+.advanced-filter-footer .btn-clear {
+    background: transparent !important;
+    color: #6B6557 !important;
+    border: 1px solid #CFC6B0 !important;
+}
+
+.advanced-filter-footer .btn-apply {
+    background: #3E5C76 !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+.advanced-filter-footer .btn-apply:hover {
+    background: #2E4C66 !important;
+}
+
+/* 筛选弹窗内按钮与输入框对齐 */
+.advanced-filter-sync .filter-btn,
+.advanced-filter-body .filter-btn {
+    border-color: #D8D0BC !important;
+    background: #fff !important;
+    color: #5B554A !important;
+    border-radius: 8px !important;
+    font-family: var(--font-serif, "Songti SC", SimSun, serif) !important;
+}
+
+.advanced-filter-sync .filter-btn.active,
+.advanced-filter-body .filter-btn.active {
+    background: #1A1917 !important;
+    border-color: #1A1917 !important;
+    color: #F3E7C8 !important;
+}
+
+.filter-search-box input {
+    border-color: #D8D0BC !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+}
+
+.filter-search-box input:focus {
+    border-color: #3E5C76 !important;
+    box-shadow: 0 0 0 3px rgba(62, 92, 118, 0.12) !important;
+    outline: none;
+}
+
+/* ---------- 视频页错误提示弹窗 ---------- */
+.error-modal {
+    background: rgba(24, 22, 18, 0.52) !important;
+}
+
+.error-modal-content {
+    background: #FDFBF4 !important;
+    border: 1px solid #E4DECE !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 48px rgba(30, 27, 22, 0.20) !important;
+}
+
+.error-modal-header {
+    background: linear-gradient(180deg, #F7F0E1, #F1E9D8) !important;
+    border-bottom: 1px solid #EADFC6 !important;
+}
+
+.error-modal-header h3,
+.error-modal-header .title {
+    font-family: var(--font-serif, "Songti SC", SimSun, serif) !important;
+    letter-spacing: 2px !important;
+    color: #3E382E !important;
+}
+
+.error-modal-btn {
+    border-radius: 8px !important;
+    border: 1px solid #CFC6B0 !important;
+    background: #fff !important;
+    color: #6B6557 !important;
+}
+
+.error-modal-btn-primary {
+    background: #3E5C76 !important;
+    border-color: #3E5C76 !important;
+    color: #fff !important;
+}
+
+.error-modal-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(43, 43, 43, 0.14);
+}
+
+/* ---------- 视频页分享/微信面板 ---------- */
+.xs-share-sheet,
+.xs-open-wx-sheet {
+    background: #FDFBF4 !important;
+    border-radius: 16px 16px 0 0 !important;
+}
+
+.xs-share-sheet h3,
+.xs-share-sheet .sheet-title,
+.xs-open-wx-sheet h3,
+.xs-open-wx-sheet .sheet-title {
+    font-family: var(--font-serif, "Songti SC", SimSun, serif) !important;
+    letter-spacing: 2px !important;
+    color: #3E382E !important;
+}
+
+/* 通用：弹出层整体淡入升级 */
+@keyframes modalThemeIn {
+    from { opacity: 0; transform: translateY(10px) scale(0.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.advanced-filter-dialog,
+.error-modal-content,
+.xs-share-sheet,
+.xs-open-wx-sheet {
+    animation: modalThemeIn 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ============================================================
+   弹窗内控件同步美化（2026-09-03 追加）
+   —— 精准筛选等弹窗内 主/子标签卡片、普通按钮 统一为水墨体系
+   ============================================================ */
+
+/* 精准筛选：主/子标签卡片（原残留蓝紫 #667eea/#764ba2 → 统一黛蓝/墨） */
+.tag-card {
+    border: 1px solid #D8D0BC !important;
+    background: #fff !important;
+    color: #4A4438 !important;
+    border-radius: 10px !important;
+    box-shadow: none !important;
+    transition: transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1),
+        border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.tag-card:hover {
+    border-color: #1A1917 !important;
+    color: #1A1917 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(43, 43, 43, 0.10) !important;
+}
+
+.advanced-filter-left .tag-card.selected,
+.advanced-filter-right .tag-card.selected,
+.tag-card.selected {
+    background: #3E5C76 !important;
+    border-color: #3E5C76 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(62, 92, 118, 0.25) !important;
+    transform: translateY(-1px);
+}
+
+/* 弹窗内按钮：几何/动效统一（不推翻各按钮原有配色语义） */
+.advanced-filter-dialog .btn-clear,
+.advanced-filter-dialog .btn-apply,
+.advanced-filter-dialog button,
+.error-modal-content button,
+.xs-share-sheet button,
+.xs-open-wx-sheet button {
+    border-radius: 8px;
+    transition: transform 0.2s cubic-bezier(0.22, 0.61, 0.36, 1),
+        box-shadow 0.22s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.advanced-filter-dialog button:hover,
+.error-modal-content button:hover,
+.xs-share-sheet button:hover,
+.xs-open-wx-sheet button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(43, 43, 43, 0.14);
+}
+
+.advanced-filter-dialog button:active,
+.error-modal-content button:active,
+.xs-share-sheet button:active,
+.xs-open-wx-sheet button:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: none;
+}
+
+/* 弹窗内次要按钮（清除/取消类）统一中性描边 */
+.advanced-filter-dialog .btn-clear,
+.error-modal-content .error-modal-btn:not(.error-modal-btn-primary) {
+    background: #fff !important;
+    color: #6B6557 !important;
+    border: 1px solid #CFC6B0 !important;
+}

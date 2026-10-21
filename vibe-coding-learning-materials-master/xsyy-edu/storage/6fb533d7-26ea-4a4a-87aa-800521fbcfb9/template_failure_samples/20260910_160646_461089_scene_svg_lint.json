@@ -1,0 +1,43 @@
+{
+  "failure_stage": "scene_svg_lint",
+  "error_message": "【动画与完整解题（动态片段）生成失败】模板动态片段生成失败，已重试 2 次，最终错误: 模板动态片段生成失败：SVG 纪律 Lint 未通过\n请检查并修正以下纪律违规，然后重新输出完整 JSON：\n- [persistent_min_range] 持久层元素（sceneStep >= N）仅 2 个，要求至少 3 个；题目主体/基础图形/轴/固定标签应跨步保留\n（另有告警，建议一并优化：\n  - [text_on_shape_warn] 文字 @373,238 与 <rect> @325,220 交叠 73×16px 且未完全落入图形内；若文字是图形内标签请整体移入，否则请移到图形外侧避让\n）（stage=scene_svg_lint）",
+  "generated_at": "2026-09-10T08:06:46.461089Z",
+  "task_id": "6fb533d7-26ea-4a4a-87aa-800521fbcfb9",
+  "debug_info": {
+    "question": "学校给新生分配宿舍，如果每间住5人，则有14人没有床位；如果每间住7人，则多出4个床位。请问宿舍有多少间？新生有多少人？",
+    "title": "宿舍分配问题",
+    "model_name": "gpt-5.5",
+    "end_marker": "<!--PARTS_END-->",
+    "attempts": [
+      {
+        "round_idx": 0,
+        "round_max_tokens": 32768,
+        "finish_reason": "stop",
+        "streaming": true,
+        "response_text_preview": "{\"title\":\"宿舍分配问题\",\"summary\":\"用两种入住方案求宿舍间数和新生人数\",\"scene_svg\":\"<g font-family=\\\"Arial, Microsoft YaHei, sans-serif\\\" fill=\\\"#2b2b2b\\\">\\n  <g id=\\\"room-model\\\" x-show=\\\"sceneStep >= 1\\\">\\n    <rect id=\\\"room-model-title\\\" class=\\\"svg-elem\\\" x=\\\"325\\\" y=\\\"220\\\" width=\\\"170\\\" height=\\\"34\\\" rx=\\\"17\\\" fill=\\\"#f4efe3\\\" stroke=\\\"#b9ad95\\\" stroke-width=\\\"2\\\"/>\\n    <text id=\\\"room-model-title-text\\\" x=\\\"410\\\" y=\\\"243\\\" text-anchor=\\\"middle\\\" font-size=\\\"18\\\">宿舍模型</text>\\n    <rect id=\\\"room-one\\\" class=\\\"svg-elem\\\" x=\\\"190\\\" y=\\\"275\\\" width=\\\"90\\\" height=\\\"125\\\" rx=\\\"8\\\" fill=\\\"#f4efe3\\\" stroke=\\\"#2b2b2b\\\" stroke-width=\\\"3\\\"/>\\n    <rect id=\\\"room-two\\\" class=\\\"svg-elem\\\" x=\\\"365\\\" y=\\\"275\\\" width=\\\"90\\\" height=\\\"125\\\" rx=\\\"8\\\" fill=\\\"#f4efe3\\\" stroke=\\\"#2b2b2b\\\" stroke-width=\\\"3\\\"/>\\n    <rect id=\\\"room-three\\\" class=\\\"svg-elem\\\" x=\\\"540\\\" y=\\\"275\\\" width=\\\"90\\\" height=\\\"125\\\" rx=\\\"8\\\" fill=\\\"#f4efe3\\\" stroke=\\\"#2b2b2b\\\" stroke-width=\\\"3\\\"/>\\n    <text id=\\\"room-one-label\\\" x=\\\"235\\\" y=\\\"342\\\" text-anchor=\\\"middle\\\" font-size=\\\"18\\\">宿舍</text>\\n    <text id=\\\"room-two-label\\\" x=\\\"410\\\" y=\\\"342\\\" text-anchor=\\\"middle\\\" font-size=\\\"18\\\">宿舍</text>\\n    <text id=\\\"room-three-label\\\" x=\\\"585\\\" y=",
+        "combined_preview": ""
+      }
+    ],
+    "error_stage": "scene_svg_lint",
+    "scene_svg_preview": "<g font-family=\"Arial, Microsoft YaHei, sans-serif\" fill=\"#2b2b2b\">\n  <g id=\"room-model\" x-show=\"sceneStep >= 1\">\n    <rect id=\"room-model-title\" class=\"svg-elem\" x=\"325\" y=\"220\" width=\"170\" height=\"34\" rx=\"17\" fill=\"#f4efe3\" stroke=\"#b9ad95\" stroke-width=\"2\"/>\n    <text id=\"room-model-title-text\" x=\"410\" y=\"243\" text-anchor=\"middle\" font-size=\"18\">宿舍模型</text>\n    <rect id=\"room-one\" class=\"svg-elem\" x=\"190\" y=\"275\" width=\"90\" height=\"125\" rx=\"8\" fill=\"#f4efe3\" stroke=\"#2b2b2b\" stroke-width=\"3\"/>\n    <rect id=\"room-two\" class=\"svg-elem\" x=\"365\" y=\"275\" width=\"90\" height=\"125\" rx=\"8\" fill=\"#f4efe3\" stroke=\"#2b2b2b\" stroke-width=\"3\"/>\n    <rect id=\"room-three\" class=\"svg-elem\" x=\"540\" y=\"275\" width=\"90\" height=\"125\" rx=\"8\" fill=\"#f4efe3\" stroke=\"#2b2b2b\" stroke-width=\"3\"/>\n    <text id=\"room-one-label\" x=\"235\" y=\"342\" text-anchor=\"middle\" font-size=\"18\">宿舍</text>\n    <text id=\"room-two-label\" x=\"410\" y=\"342\" text-anchor=\"middle\" font-size=\"18\">宿舍</text>\n    <text id=\"room-three-label\" x=\"585\" y=\"342\" text-anchor=\"middle\" font-size=\"18\">宿舍</text>\n    <text id=\"room-ellipsis\" x=\"410\" y=\"425\" text-anchor=\"middle\" font-size=\"24\" fill=\"#b9ad95\">… 共 x 间</text>\n  </g>\n  <g x-show=\"sceneStep === 1\">\n    <rect id=\"step1-card\" class=\"svg-elem\" x=\"210\" y=\"55\" width=\"400\" height=\"90\" rx=\"12\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"2\"/>\n    <text id=\"step1-text\" x=\"410\" y=\"90\" text-anchor=\"middle\" font-size=\"22\" fill=\"#d6432f\">设宿舍 x 间，新生 y 人</text>\n    <text id=\"step1-note\" x=\"410\" y=\"122\" text-anchor=\"middle\" font-size=\"16\">x、y 均为正整数</text>\n    <line id=\"guide-1\" class=\"svg-elem\" x1=\"410\" y1=\"145\" x2=\"410\" y2=\"220\" stroke=\"#d6432f\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\" opacity=\"0.7\"/>\n    <rect id=\"step1-focus\" class=\"svg-elem\" x=\"175\" y=\"260\" width=\"470\" height=\"155\" rx=\"14\" fill=\"none\" stroke=\"#d6432f\" stroke-width=\"3\"/>\n  </g>\n  <g x-show=\"sceneStep === 2\">\n    <rect id=\"step2-card\" class=\"svg-elem\" x=\"145\" y=\"55\" width=\"530\" height=\"90\" rx=\"12\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"2\"/>\n    <text id=\"step2-text\" x=\"410\" y=\"90\" text-anchor=\"middle\" font-size=\"22\" fill=\"#d6432f\">每间住 5 人，还差 14 张床</text>\n    <text id=\"step2-formula\" x=\"410\" y=\"122\" text-anchor=\"middle\" font-size=\"20\" fill=\"#d6432f\">y = 5x + 14</text>\n    <line id=\"guide-2\" class=\"svg-elem\" x1=\"280\" y1=\"145\" x2=\"235\" y2=\"337\" stroke=\"#d6432f\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\" opacity=\"0.7\"/>\n    <rect id=\"step2-count\" class=\"svg-elem\" x=\"230\" y=\"445\" width=\"360\" height=\"52\" rx=\"12\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"2\"/>\n    <text id=\"step2-count-text\" x=\"410\" y=\"478\" text-anchor=\"middle\" font-size=\"20\" fill=\"#d6432f\">实际人数 = 5x + 14</text>\n  </g>\n  <g x-show=\"sceneStep === 3\">\n    <rect id=\"step3-card\" class=\"svg-elem\" x=\"145\" y=\"55\" width=\"530\" height=\"90\" rx=\"12\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"2\"/>\n    <text id=\"step3-text\" x=\"410\" y=\"90\" text-anchor=\"middle\" font-size=\"22\" fill=\"#d6432f\">每间住 7 人，多出 4 张床</text>\n    <text id=\"step3-formula\" x=\"410\" y=\"122\" text-anchor=\"middle\" font-size=\"20\" fill=\"#d6432f\">y = 7x − 4</text>\n    <line id=\"guide-3\" class=\"svg-elem\" x1=\"540\" y1=\"145\" x2=\"585\" y2=\"337\" stroke=\"#d6432f\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\" opacity=\"0.7\"/>\n    <rect id=\"step3-count\" class=\"svg-elem\" x=\"230\" y=\"445\" width=\"360\" height=\"52\" rx=\"12\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"2\"/>\n    <text id=\"step3-count-text\" x=\"410\" y=\"478\" text-anchor=\"middle\" font-size=\"20\" fill=\"#d6432f\">实际人数 = 7x − 4</text>\n  </g>\n  <g x-show=\"sceneStep === 4\">\n    <rect id=\"step4-card\" class=\"svg-elem\" x=\"120\" y=\"55\" width=\"580\" height=\"90\" rx=\"12\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"2\"/>\n    <text id=\"step4-text\" x=\"410\" y=\"90\" text-anchor=\"middle\" font-size=\"20\" fill=\"#d6432f\">同一批新生人数相等</text>\n    <text id=\"step4-formula\" x=\"410\" y=\"124\" text-anchor=\"middle\" font-size=\"22\" fill=\"#d6432f\">5x + 14 = 7x − 4</text>\n    <line id=\"guide-4\" class=\"svg-elem\" x1=\"410\" y1=\"145\" x2=\"410\" y2=\"471\" stroke=\"#d6432f\" s",
+    "lint_report": {
+      "passed": false,
+      "hard": [
+        {
+          "rule": "persistent_min_range",
+          "message": "持久层元素（sceneStep >= N）仅 2 个，要求至少 3 个；题目主体/基础图形/轴/固定标签应跨步保留"
+        }
+      ],
+      "warnings": [
+        {
+          "rule": "text_on_shape_warn",
+          "message": "文字 @373,238 与 <rect> @325,220 交叠 73×16px 且未完全落入图形内；若文字是图形内标签请整体移入，否则请移到图形外侧避让"
+        }
+      ]
+    },
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "task_id": "6fb533d7-26ea-4a4a-87aa-800521fbcfb9",
+    "max_output_tokens": 32768
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "question": "下图中每个小方格的边长为 1, 将这个图形沿格线剪两刀(剪出的小块只能旋转, 不能翻转), 然后拼成一个正方形. 该正方形的边长是____.",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\876f9957-f790-46db-b44a-57ab910f41a4\\ScreenShot_2026-01-31_103749_816.png",
+  "task_id": "876f9957-f790-46db-b44a-57ab910f41a4",
+  "generated_at": "2026-01-31T11:24:35.822489Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "图形剪拼求边长",
+  "has_pic": true,
+  "tags": {
+    "reasoning": "主要考察几何图形的面积计算与平面剪拼重组。",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "空间观念",
+      "推理意识",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-31T11:24:35.822489Z",
+  "preview_image": "Preview.webp"
+}

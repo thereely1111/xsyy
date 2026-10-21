@@ -1,0 +1,239 @@
+/* 标签手动选择弹窗样式 —— 新中式主题（宣纸白 / 黛蓝 / 朱砂红） */
+.tag-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(43, 43, 43, 0.55);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: tagDialogFadeIn 0.2s ease;
+}
+
+@keyframes tagDialogFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.tag-dialog {
+    background: #F6F1E6;
+    /* 宣纸白 */
+    border: 1px solid #E4DECE;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(62, 92, 118, 0.25);
+    width: 520px;
+    max-width: 90vw;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: tagDialogSlideIn 0.25s ease;
+    font-family: "Songti SC", "Noto Serif SC", "SimSun", "STSong", serif;
+}
+
+@keyframes tagDialogSlideIn {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.tag-dialog-header {
+    padding: 20px 24px 14px;
+    border-bottom: 1px solid #E4DECE;
+    background: linear-gradient(180deg, #F7F5F0 0%, #F2EEE6 100%);
+    border-radius: 8px 8px 0 0;
+}
+
+.tag-dialog-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #3E5C76;
+    /* 黛蓝 */
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-family: "Songti SC", "Noto Serif SC", "SimSun", "STSong", serif;
+}
+
+.tag-dialog-header p {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: #5A6A76;
+    /* 黛灰 */
+    font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+}
+
+.tag-dialog-body {
+    padding: 22px 24px;
+}
+
+.tag-dialog-field {
+    margin-bottom: 18px;
+}
+
+.tag-dialog-field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #3E5C76;
+    /* 黛蓝 */
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+    font-family: "Songti SC", "Noto Serif SC", "SimSun", "STSong", serif;
+}
+
+.tag-dialog-field label .required {
+    color: #B83B43;
+    /* 朱砂红 */
+    margin-left: 2px;
+}
+
+.tag-dialog-field select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1.5px solid #E4DECE;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #2B2B2B;
+    /* 墨色 */
+    background: #FFFFFF;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+}
+
+.tag-dialog-field select:hover {
+    border-color: #3E5C76;
+}
+
+.tag-dialog-field select:focus {
+    outline: none;
+    border-color: #3E5C76;
+    box-shadow: 0 0 0 3px rgba(62, 92, 118, 0.12);
+}
+
+.tag-dialog-field select:disabled {
+    background: #EDE9E0;
+    color: #8A8378;
+    cursor: not-allowed;
+}
+
+/* 子标签多选区域 */
+.tag-dialog-subtags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    border: 1.5px solid #E4DECE;
+    border-radius: 5px;
+    max-height: 120px;
+    overflow-y: auto;
+    background: #FFFFFF;
+}
+
+.tag-dialog-subtags:empty::before {
+    content: "请先选择主标签";
+    color: #A89F92;
+    font-size: 13px;
+    font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+}
+
+.tag-dialog-subtag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 11px;
+    border: 1.5px solid #E4DECE;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #2B2B2B;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    background: #F6F1E6;
+    font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+}
+
+.tag-dialog-subtag:hover {
+    border-color: #3E5C76;
+    color: #3E5C76;
+    background: #FFFFFF;
+}
+
+.tag-dialog-subtag.selected {
+    background: #3E5C76;
+    /* 黛蓝 */
+    border-color: #3E5C76;
+    color: #F7F5F0;
+    /* 宣纸白文字 */
+}
+
+.tag-dialog-footer {
+    padding: 14px 24px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #E4DECE;
+    margin-top: 8px;
+}
+
+.tag-dialog-btn {
+    padding: 8px 22px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+    letter-spacing: 1px;
+}
+
+.tag-dialog-btn-cancel {
+    background: #EDE9E0;
+    color: #5A6A76;
+    border: 1px solid #E4DECE;
+}
+
+.tag-dialog-btn-cancel:hover {
+    background: #E4DECE;
+    color: #2B2B2B;
+}
+
+.tag-dialog-btn-save {
+    background: #B83B43;
+    /* 朱砂红 */
+    color: #F7F5F0;
+}
+
+.tag-dialog-btn-save:hover {
+    background: #9e2f37;
+}
+
+.tag-dialog-btn-save:disabled {
+    background: #C9BFB0;
+    cursor: not-allowed;
+    color: #F7F5F0;
+}
+
+/* 手动选择按钮（页面上的触发按钮） */
+.tag-manual-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border: 1.5px solid #E4DECE;
+    border-radius: 4px;
+    background: #F6F1E6;
+    color: #3E5C76;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+}
+
+.tag-manual-btn:hover {
+    border-color: #B83B43;
+    color: #B83B43;
+    background: #FFFFFF;
+}

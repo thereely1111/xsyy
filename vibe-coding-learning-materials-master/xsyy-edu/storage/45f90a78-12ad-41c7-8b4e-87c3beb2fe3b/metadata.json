@@ -1,0 +1,25 @@
+{
+  "question": "甲、乙两人在周长为220米的环形跑道的两处背向而行练习跑步,出发点相距110米,两人同时出发,已知甲的速度是每秒6米,乙的速度是每秒4米,到甲、乙两人第十次相遇共用了___秒。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\45f90a78-12ad-41c7-8b4e-87c3beb2fe3b\\ScreenShot_2026-02-03_002348_221.png",
+  "task_id": "45f90a78-12ad-41c7-8b4e-87c3beb2fe3b",
+  "generated_at": "2026-02-03T00:26:59.225209Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "环形跑道相遇问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的应用题，涉及行程和复杂情境建模。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "量感",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-02-03T00:26:59.225209Z",
+  "preview_image": "Preview.webp"
+}

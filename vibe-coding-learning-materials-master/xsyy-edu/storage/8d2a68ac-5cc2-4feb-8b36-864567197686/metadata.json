@@ -1,0 +1,36 @@
+{
+  "question": "解方程组：x + y = 7\n                 2x - y = 5",
+  "prompt": "解方程组：x + y = 7\n                 2x - y = 5",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "8d2a68ac-5cc2-4feb-8b36-864567197686",
+  "generated_at": "2026-08-14T11:36:39.348087Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "二元一次方程组",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "题目要求解含两个未知数的方程组，属于二元一次方程组求解。",
+    "main_tag": "二元一次方程组",
+    "sub_tags": [
+      "二元一次方程组",
+      "加减消元法"
+    ]
+  },
+  "tags_updated_at": "2026-08-14T11:36:39.348087Z",
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "七下",
+    "main_tag": "二元一次方程组",
+    "sub_tags": [
+      "二元一次方程组解法"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-01T02:38:30.691884Z",
+  "preview_image": "Preview.webp",
+  "knowledge_tags_confirmed": true,
+  "second_tag": null
+}

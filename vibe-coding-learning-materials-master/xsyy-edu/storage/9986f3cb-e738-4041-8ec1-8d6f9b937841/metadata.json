@@ -1,0 +1,23 @@
+{
+  "question": "例 5:有两盒图钉,甲盒有72只,乙盒有48只,从甲盒拿出多少只放入乙盒,才能使两盒中的图钉相等?",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\9986f3cb-e738-4041-8ec1-8d6f9b937841\\pasted-image-1766561915439.png",
+  "task_id": "9986f3cb-e738-4041-8ec1-8d6f9b937841",
+  "generated_at": "2025-12-24T15:40:07.368923Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "移多补少应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "根据生活情境构建数学模型解题。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2025-12-24T15:40:07.368923Z",
+  "preview_image": "Preview.webp"
+}

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移多补少应用题 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">移多补少应用题</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('甲盒 $72$ 只、乙盒 $48$ 只，甲盒比乙盒多 $24$ 只，把多出的部分除以 $2$，即 $24\\div2=12$ 只，就是要从甲盒移入乙盒的数量。')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <!-- ========== 第1步：基础场景，两盒图钉 ========== -->
+                            <g x-show="sceneStep >= 1">
+                                <!-- 甲盒 -->
+                                <rect x="60" y="240" width="260" height="190" rx="12" fill="#fef3c7" stroke="#92400e" stroke-width="2.5"/>
+                                <text x="190" y="228" text-anchor="middle" font-size="24" font-weight="bold" fill="#92400e">甲盒</text>
+                                <!-- 甲盒图钉 4列x3行 -->
+                                <circle cx="105" cy="285" r="11" fill="#b45309"/>
+                                <circle cx="160" cy="285" r="11" fill="#b45309"/>
+                                <circle cx="215" cy="285" r="11" fill="#b45309"/>
+                                <circle cx="270" cy="285" r="11" fill="#b45309"/>
+                                <circle cx="105" cy="330" r="11" fill="#b45309"/>
+                                <circle cx="160" cy="330" r="11" fill="#b45309"/>
+                                <circle cx="215" cy="330" r="11" fill="#b45309"/>
+                                <circle cx="270" cy="330" r="11" fill="#b45309"/>
+                                <circle cx="105" cy="375" r="11" fill="#b45309"/>
+                                <circle cx="160" cy="375" r="11" fill="#b45309"/>
+                                <circle cx="215" cy="375" r="11" fill="#b45309"/>
+                                <circle cx="270" cy="375" r="11" fill="#b45309"/>
+                                <!-- 乙盒 -->
+                                <rect x="480" y="240" width="260" height="190" rx="12" fill="#dbeafe" stroke="#1e40af" stroke-width="2.5"/>
+                                <text x="610" y="228" text-anchor="middle" font-size="24" font-weight="bold" fill="#1e40af">乙盒</text>
+                                <!-- 乙盒图钉 4列x2行 -->
+                                <circle cx="525" cy="300" r="11" fill="#1d4ed8"/>
+                                <circle cx="580" cy="300" r="11" fill="#1d4ed8"/>
+                                <circle cx="635" cy="300" r="11" fill="#1d4ed8"/>
+                                <circle cx="690" cy="300" r="11" fill="#1d4ed8"/>
+                                <circle cx="525" cy="350" r="11" fill="#1d4ed8"/>
+                                <circle cx="580" cy="350" r="11" fill="#1d4ed8"/>
+                                <circle cx="635" cy="350" r="11" fill="#1d4ed8"/>
+                                <circle cx="690" cy="350" r="11" fill="#1d4ed8"/>
+                                <!-- 原始数量标注（第5步之前显示） -->
+                                <g x-show="sceneStep >= 1 && sceneStep < 5">
+                                    <foreignObject x="105" y="392" width="170" height="34">
+                                        <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-lg font-bold text-amber-800" x-html="renderMath('$72$ 只')"></div>
+                                    </foreignObject>
+                                    <foreignObject x="525" y="392" width="170" height="34">
+                                        <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-lg font-bold text-blue-800" x-html="renderMath('$48$ 只')"></div>
+                                    </foreignObject>
+                                </g>
+                            </g>
+
+                            <!-- ========== 第2步：求两盒相差多少 ========== -->
+                            <g x-show="sceneStep >= 2" x-transition:enter="transition ease-out duration-500">
+                                <!-- 对比条：甲盒长度 -->
+                                <rect x="60" y="80" width="260" height="22" rx="4" fill="#f59e0b" opacity="0.85"/>
+                                <!-- 对比条：乙盒长度 -->
+                                <rect x="60" y="112" width="173" height="22" rx="4" fill="#3b82f6" opacity="0.85"/>
+                                <!-- 多出的部分（红色高亮） -->
+                                <rect x="233" y="80" width="87" height="22" rx="4" fill="#dc2626" opacity="0.55" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3"/>
+                                <text x="40" y="97" font-size="14" fill="#92400e" font-weight="bold">甲</text>
+                                <text x="40" y="129" font-size="14" fill="#1e40af" font-weight="bold">乙</text>
+                                <text x="276" y="70" text-anchor="middle" font-size="14" fill="#dc2626" font-weight="bold">多 24 只</text>
+                                <foreignObject x="60" y="140" width="290" height="34">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-base font-bold text-red-700" x-html="renderMath('$72 - 48 = 24$（只）')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- ========== 第3步：把多出的部分平均分成两份 ========== -->
+                            <g x-show="sceneStep >= 3" x-transition:enter="transition ease-out duration-500">
+                                <!-- 平分线 -->
+                                <line x1="276" y1="76" x2="276" y2="106" stroke="#7f1d1d" stroke-width="2.5"/>
+                                <text x="254" y="70" text-anchor="middle" font-size="13" fill="#7f1d1d" font-weight="bold">12</text>
+                                <text x="298" y="70" text-anchor="middle" font-size="13" fill="#7f1d1d" font-weight="bold">12</text>
+                                <foreignObject x="60" y="172" width="310" height="34">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-base font-bold text-red-900" x-html="renderMath('$24 \\div 2 = 12$（只）')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- ========== 第4步：移动12只图钉（虚线轨迹 + 移动中的图钉） ========== -->
+                            <g x-show="sceneStep >= 4" x-transition:enter="transition ease-out duration-700">
+                                <!-- 虚线移动轨迹 -->
+                                <path d="M 285 300 C 350 210, 450 210, 515 300" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="10 7" marker-end="url(#arrow)"/>
+                                <!-- 正在移动的图钉 -->
+                                <circle cx="330" cy="252" r="9" fill="#dc2626"/>
+                                <circle cx="400" cy="237" r="9" fill="#dc2626"/>
+                                <circle cx="470" cy="252" r="9" fill="#dc2626"/>
+                                <foreignObject x="325" y="180" width="160" height="34">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-base font-bold text-red-700" x-html="renderMath('移走 $12$ 只')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- ========== 第5步：验证结果 ========== -->
+                            <g x-show="sceneStep >= 5" x-transition:enter="transition ease-out duration-500">
+                                <!-- 移动后的新数量 -->
+                                <foreignObject x="80" y="392" width="220" height="34">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-lg font-bold text-amber-800" x-html="renderMath('$60$ 只')"></div>
+                                </foreignObject>
+                                <foreignObject x="500" y="392" width="220" height="34">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-lg font-bold text-blue-800" x-html="renderMath('$60$ 只')"></div>
+                                </foreignObject>
+                                <!-- 验算式 -->
+                                <foreignObject x="60" y="445" width="260" height="34">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-sm font-semibold text-stone-700" x-html="renderMath('甲盒：$72 - 12 = 60$')"></div>
+                                </foreignObject>
+                                <foreignObject x="480" y="445" width="260" height="34">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-sm font-semibold text-stone-700" x-html="renderMath('乙盒：$48 + 12 = 60$')"></div>
+                                </foreignObject>
+                                <!-- 相等确认 -->
+                                <foreignObject x="310" y="483" width="180" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-xl font-bold text-green-700" x-html="renderMath('$60 = 60$ ✓')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- ========== 第6步：方法二（先求总数再平均分） ========== -->
+                            <g x-show="sceneStep >= 6" x-transition:enter="transition ease-out duration-500">
+                                <rect x="430" y="55" width="330" height="130" rx="10" fill="#ffffff" opacity="0.92" stroke="#a8a29e" stroke-width="1.5"/>
+                                <text x="450" y="80" font-size="15" font-weight="bold" fill="#44403c">方法二：先求总数再平均分</text>
+                                <foreignObject x="445" y="88" width="300" height="92">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-sm text-stone-700 leading-6" x-html="renderMath('总数：$72 + 48 = 120$（只）<br>每盒：$120 \\div 2 = 60$（只）<br>移动：$72 - 60 = 12$（只）')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- ========== 第7步：写出答案 ========== -->
+                            <g x-show="sceneStep >= 7" x-transition:enter="transition ease-out duration-500">
+                                <rect x="170" y="535" width="460" height="52" rx="26" fill="#8a1c1c"/>
+                                <text x="400" y="568" text-anchor="middle" font-size="21" fill="#ffffff" font-weight="bold">答：从甲盒拿出 12 只放入乙盒</text>
+                            </g>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+                    {
+                        "title": "审题：找出已知条件",
+                        "description": "已知：甲盒有 $72$ 只图钉，乙盒有 $48$ 只图钉。<br>问题：从甲盒拿出几只放入乙盒，两盒才相等？",
+                        "bubbleText": "先看清题目：甲盒多、乙盒少。我们要从多的甲盒拿一些给少的乙盒，让两盒变得一样多。",
+                        "bubblePos": {"x": 250, "y": 50}
+                    },
+                    {
+                        "title": "求两盒相差多少",
+                        "description": "$72 - 48 = 24$（只）<br>甲盒比乙盒多 $24$ 只。",
+                        "bubbleText": "用减法算出两盒的差距：甲盒比乙盒多出 24 只。这多出来的 24 只，就是两盒不相等的原因。",
+                        "bubblePos": {"x": 310, "y": 55}
+                    },
+                    {
+                        "title": "理解“移多补少”",
+                        "description": "把多出的 $24$ 只平均分成 $2$ 份：<br>$24 \\div 2 = 12$（只）",
+                        "bubbleText": "关键一步！多出的 24 只如果全给乙盒，乙盒就反超了。所以只能把多出的部分分一半给乙盒：$24\\div2=12$ 只。",
+                        "bubblePos": {"x": 310, "y": 90}
+                    },
+                    {
+                        "title": "动手移一移",
+                        "description": "从甲盒拿出 $12$ 只，放入乙盒。",
+                        "bubbleText": "看动画：12 只图钉沿着虚线从甲盒飞到乙盒。甲盒越来越少，乙盒越来越多，两盒慢慢就相等了。",
+                        "bubblePos": {"x": 320, "y": 130}
+                    },
+                    {
+                        "title": "验证结果",
+                        "description": "甲盒：$72 - 12 = 60$（只）<br>乙盒：$48 + 12 = 60$（只）<br>$60 = 60$，两盒相等！",
+                        "bubbleText": "验算一下：甲盒剩下 60 只，乙盒变成 60 只，两边果然相等！说明移动 12 只是正确的。",
+                        "bubblePos": {"x": 260, "y": 430}
+                    },
+                    {
+                        "title": "方法二：先求总数",
+                        "description": "总数：$72 + 48 = 120$（只）<br>每盒：$120 \\div 2 = 60$（只）<br>移动：$72 - 60 = 12$（只）",
+                        "bubbleText": "还可以这样想：两盒一共 120 只，平均分给两个盒子，每盒应是 60 只。甲盒从 72 变成 60，正好拿出 12 只。",
+                        "bubblePos": {"x": 130, "y": 190}
+                    },
+                    {
+                        "title": "写出答案",
+                        "description": "答：从甲盒拿出 $12$ 只放入乙盒，两盒中的图钉就相等了。",
+                        "bubbleText": "记住口诀：移多补少，移动数量 = 相差数 $\\div$ 2。本题答案就是 12 只！",
+                        "bubblePos": {"x": 250, "y": 80}
+                    }
+                ],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

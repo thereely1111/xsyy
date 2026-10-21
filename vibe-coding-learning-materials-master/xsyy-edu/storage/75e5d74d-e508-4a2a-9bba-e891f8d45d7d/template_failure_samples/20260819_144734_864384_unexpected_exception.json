@@ -1,0 +1,17 @@
+{
+  "failure_stage": "unexpected_exception",
+  "error_message": "模板动态片段生成失败，已重试 2 次，最终错误: Error code: 403 - {'error': {'message': '预扣费额度失败, 用户剩余额度: $0.009144, 需要预扣费额度: $0.167192 (request id: 20260819064752337929764ZXDMpnGI311r5w2f)', 'type': 'new_api_error', 'param': '', 'code': 'insufficient_user_quota'}}",
+  "generated_at": "2026-08-19T06:47:34.864384Z",
+  "task_id": "75e5d74d-e508-4a2a-9bba-e891f8d45d7d",
+  "debug_info": {
+    "error_stage": "unexpected_exception",
+    "exception_type": "PermissionDeniedError",
+    "exception_message": "Error code: 403 - {'error': {'message': '预扣费额度失败, 用户剩余额度: $0.009144, 需要预扣费额度: $0.167192 (request id: 20260819064752337929764ZXDMpnGI311r5w2f)', 'type': 'new_api_error', 'param': '', 'code': 'insufficient_user_quota'}}",
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "question": "一个直角三角形，两条直角边的长分别为 9 和 12。求斜边上的高。",
+    "title": "几何面积周长问题",
+    "task_id": "75e5d74d-e508-4a2a-9bba-e891f8d45d7d",
+    "max_output_tokens": 131072
+  }
+}

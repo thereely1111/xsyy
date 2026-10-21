@@ -1,0 +1,18 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "五上",
+    "main_tag": "植树",
+    "sub_tags": [
+      "间隔数关系"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-01T06:19:58.525355Z",
+  "preview_image": "Preview.webp",
+  "question": "在一条长 100米 的小路一旁种树，每隔 5米 种一棵（两端都种）。一共需要种多少棵树？",
+  "prompt": "在一条长 100米 的小路一旁种树，每隔 5米 种一棵（两端都种）。一共需要种多少棵树？",
+  "title": "植树问题",
+  "knowledge_tags_confirmed": true
+}

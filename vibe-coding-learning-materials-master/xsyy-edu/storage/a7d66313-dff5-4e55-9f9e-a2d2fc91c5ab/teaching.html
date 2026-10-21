@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鸡兔同笼应用题 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">鸡兔同笼应用题</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('设普通兔子x只、变异兔子y只，联立头数方程x+3y=53与脚数方程4x+2y=102，解得y=11、x=20，故兔子总数为31只。')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+
+                            <!-- Step 1: 认识两种兔子 -->
+                            <g x-show="sceneStep >= 1" x-transition:enter="transition ease-out duration-500">
+                                <!-- 普通兔子 -->
+                                <g transform="translate(130, 120)">
+                                    <ellipse cx="0" cy="45" rx="32" ry="22" fill="#fef9ef" stroke="#a8a29e" stroke-width="1.5"/>
+                                    <circle cx="0" cy="10" r="16" fill="#fef9ef" stroke="#a8a29e" stroke-width="1.5"/>
+                                    <ellipse cx="-6" cy="-12" rx="4" ry="13" fill="#fef9ef" stroke="#a8a29e" stroke-width="1.2"/>
+                                    <ellipse cx="6" cy="-12" rx="4" ry="13" fill="#fef9ef" stroke="#a8a29e" stroke-width="1.2"/>
+                                    <circle cx="-5" cy="7" r="2.5" fill="#1f2937"/>
+                                    <circle cx="5" cy="7" r="2.5" fill="#1f2937"/>
+                                    <circle cx="0" cy="14" r="2" fill="#f9a8d4"/>
+                                    <line x1="-18" y1="63" x2="-18" y2="82" stroke="#78716c" stroke-width="2.5" stroke-linecap="round"/>
+                                    <line x1="-7" y1="65" x2="-7" y2="84" stroke="#78716c" stroke-width="2.5" stroke-linecap="round"/>
+                                    <line x1="7" y1="65" x2="7" y2="84" stroke="#78716c" stroke-width="2.5" stroke-linecap="round"/>
+                                    <line x1="18" y1="63" x2="18" y2="82" stroke="#78716c" stroke-width="2.5" stroke-linecap="round"/>
+                                </g>
+                                <foreignObject x="60" y="215" width="150" height="55">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:13px; color:#44403c; font-weight:bold; line-height:1.6;">
+                                        普通兔子<br/>1 个头 · 4 只脚
+                                    </div>
+                                </foreignObject>
+
+                                <!-- 变异兔子 -->
+                                <g transform="translate(600, 110)">
+                                    <ellipse cx="0" cy="50" rx="35" ry="24" fill="#f0e6ff" stroke="#7c3aed" stroke-width="1.5"/>
+                                    <circle cx="-20" cy="12" r="13" fill="#f0e6ff" stroke="#7c3aed" stroke-width="1.3"/>
+                                    <circle cx="0" cy="5" r="14" fill="#f0e6ff" stroke="#7c3aed" stroke-width="1.3"/>
+                                    <circle cx="20" cy="12" r="13" fill="#f0e6ff" stroke="#7c3aed" stroke-width="1.3"/>
+                                    <ellipse cx="-3" cy="-14" rx="4" ry="11" fill="#f0e6ff" stroke="#7c3aed" stroke-width="1"/>
+                                    <ellipse cx="5" cy="-14" rx="4" ry="11" fill="#f0e6ff" stroke="#7c3aed" stroke-width="1"/>
+                                    <circle cx="-23" cy="10" r="2" fill="#1f2937"/>
+                                    <circle cx="-3" cy="3" r="2.5" fill="#1f2937"/>
+                                    <circle cx="3" cy="3" r="2.5" fill="#1f2937"/>
+                                    <circle cx="17" cy="10" r="2" fill="#1f2937"/>
+                                    <circle cx="23" cy="10" r="2" fill="#1f2937"/>
+                                    <line x1="-10" y1="70" x2="-10" y2="90" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/>
+                                    <line x1="10" y1="70" x2="10" y2="90" stroke="#7c3aed" stroke-width="2.5" stroke-linecap="round"/>
+                                </g>
+                                <foreignObject x="525" y="215" width="155" height="55">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:13px; color:#5b21b6; font-weight:bold; line-height:1.6;">
+                                        变异兔子<br/>3 个头 · 2 只脚
+                                    </div>
+                                </foreignObject>
+
+                                <!-- 中间已知条件 -->
+                                <rect x="300" y="100" width="200" height="90" rx="12" fill="#fffbeb" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 2"/>
+                                <foreignObject x="305" y="108" width="190" height="78">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:14px; color:#92400e; font-weight:bold; line-height:2;">
+                                        已知条件<br/>共 53 个头<br/>共 102 只脚
+                                    </div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 2: 设未知数 -->
+                            <g x-show="sceneStep >= 2" x-transition:enter="transition ease-out duration-500">
+                                <rect x="75" y="275" width="120" height="36" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+                                <foreignObject x="80" y="279" width="110" height="30">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:14px; color:#991b1b; font-weight:bold;" x-html="renderMath('设：普通兔 $x$ 只')"></div>
+                                </foreignObject>
+                                <rect x="545" y="275" width="130" height="36" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+                                <foreignObject x="550" y="279" width="120" height="30">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:14px; color:#5b21b6; font-weight:bold;" x-html="renderMath('变异兔 $y$ 只')"></div>
+                                </foreignObject>
+                                <line x1="135" y1="270" x2="135" y2="275" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrow)"/>
+                                <line x1="610" y1="270" x2="610" y2="275" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#arrow)"/>
+                            </g>
+
+                            <!-- Step 3: 头数方程 -->
+                            <g x-show="sceneStep >= 3" x-transition:enter="transition ease-out duration-500">
+                                <rect x="200" y="330" width="400" height="50" rx="10" fill="#fefce8" stroke="#ca8a04" stroke-width="1.5"/>
+                                <foreignObject x="210" y="337" width="380" height="38">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:16px; color:#854d0e; font-weight:bold;" x-html="renderMath('头数方程：$x + 3y = 53$')"></div>
+                                </foreignObject>
+                                <circle cx="230" cy="355" r="8" fill="#fde68a" stroke="#ca8a04" stroke-width="1"/>
+                                <circle cx="250" cy="355" r="8" fill="#fde68a" stroke="#ca8a04" stroke-width="1"/>
+                                <circle cx="270" cy="355" r="8" fill="#fde68a" stroke="#ca8a04" stroke-width="1"/>
+                            </g>
+
+                            <!-- Step 4: 脚数方程 -->
+                            <g x-show="sceneStep >= 4" x-transition:enter="transition ease-out duration-500">
+                                <rect x="200" y="395" width="400" height="50" rx="10" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                                <foreignObject x="210" y="402" width="380" height="38">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:16px; color:#1e40af; font-weight:bold;" x-html="renderMath('脚数方程：$4x + 2y = 102$')"></div>
+                                </foreignObject>
+                                <line x1="232" y1="430" x2="232" y2="440" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="242" y1="430" x2="242" y2="440" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="252" y1="430" x2="252" y2="440" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="262" y1="430" x2="262" y2="440" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+                            </g>
+
+                            <!-- Step 5: 代入消元（含虚线轨迹） -->
+                            <g x-show="sceneStep >= 5" x-transition:enter="transition ease-out duration-500">
+                                <path d="M 600 355 C 660 355, 680 390, 680 420 C 680 450, 650 470, 600 470"
+                                      fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+                                <rect x="180" y="460" width="440" height="50" rx="10" fill="#fdf2f8" stroke="#db2777" stroke-width="1.5"/>
+                                <foreignObject x="190" y="466" width="420" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:15px; color:#9d174d; font-weight:bold;" x-html="renderMath('代入：$4(53-3y) + 2y = 102$')"></div>
+                                </foreignObject>
+                                <foreignObject x="615" y="380" width="130" height="35">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:12px; color:#dc2626; font-weight:bold;" x-html="renderMath('$x=53-3y$')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 6: 解方程求y -->
+                            <g x-show="sceneStep >= 6" x-transition:enter="transition ease-out duration-500">
+                                <rect x="180" y="520" width="440" height="65" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+                                <foreignObject x="190" y="524" width="420" height="58">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:14px; color:#166534; font-weight:bold; line-height:1.8;" x-html="renderMath('$212-12y+2y=102$ → $10y=110$ → $y=11$')"></div>
+                                </foreignObject>
+                                <rect x="530" y="535" width="70" height="32" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                                <foreignObject x="533" y="538" width="64" height="28">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:15px; color:#166534; font-weight:bold;" x-html="renderMath('$y=11$')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 7: 求x和总数 -->
+                            <g x-show="sceneStep >= 7" x-transition:enter="transition ease-out duration-700">
+                                <rect x="220" y="30" width="360" height="60" rx="14" fill="#fef2f2" stroke="#8a1c1c" stroke-width="2.5"/>
+                                <foreignObject x="230" y="38" width="340" height="46">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:17px; color:#8a1c1c; font-weight:bold;" x-html="renderMath('$x=53-33=20$，总数 $=20+11=31$ 只')"></div>
+                                </foreignObject>
+                                <foreignObject x="310" y="555" width="200" height="35">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:13px; color:#16a34a; font-weight:bold;">
+                                        ✓ 验证：20+33=53头 ✓ 80+22=102脚
+                                    </div>
+                                </foreignObject>
+                                <circle cx="240" cy="55" r="4" fill="#f59e0b"/>
+                                <circle cx="560" cy="50" r="3" fill="#ef4444"/>
+                                <circle cx="250" cy="75" r="3" fill="#8b5cf6"/>
+                                <circle cx="555" cy="78" r="4" fill="#10b981"/>
+                            </g>
+
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [{"title":"认识两种兔子","description":"普通兔子：$1$ 个头、$4$ 只脚<br>变异兔子：$3$ 个头、$2$ 只脚<br>总共：$53$ 个头、$102$ 只脚","bubbleText":"我们先看清楚题目里的两种兔子：普通兔子1个脑袋4条腿，变异兔子3个脑袋2条腿。它们混在一起，一共数出53个头、102条腿。我们的目标是算出兔子一共有多少只。","bubblePos":{"x":280,"y":20}},{"title":"设未知数","description":"设普通兔子有 $x$ 只，变异兔子有 $y$ 只","bubbleText":"遇到不知道的数量，我们就用字母来代替。设普通兔子有x只，变异兔子有y只。有了字母，后面就能列算式了。","bubblePos":{"x":280,"y":240}},{"title":"列头数方程","description":"每只普通兔贡献 $1$ 个头，每只变异兔贡献 $3$ 个头：<br>$x + 3y = 53$","bubbleText":"先数头：每只普通兔子1个头，x只就是x个头；每只变异兔子3个头，y只就是3y个头。全部加起来一共53个头，所以列出方程 x + 3y = 53。","bubblePos":{"x":350,"y":290}},{"title":"列脚数方程","description":"每只普通兔贡献 $4$ 只脚，每只变异兔贡献 $2$ 只脚：<br>$4x + 2y = 102$","bubbleText":"再数脚：每只普通兔子4条腿，x只就是4x条；每只变异兔子2条腿，y只就是2y条。全部加起来102条腿，所以列出方程 4x + 2y = 102。","bubblePos":{"x":350,"y":355}},{"title":"代入消元","description":"由头方程变形：$x = 53 - 3y$<br>代入脚方程：$4(53-3y) + 2y = 102$","bubbleText":"两个方程两个未知数，我们用代入法。从头方程变出 x = 53 - 3y，然后把它塞进脚方程里替换掉x，这样脚方程就只剩y一个未知数，就能解了。","bubblePos":{"x":300,"y":420}},{"title":"解出变异兔子数","description":"$212 - 12y + 2y = 102$<br>$212 - 10y = 102$<br>$10y = 110$<br>$y = 11$","bubbleText":"展开括号：4乘53得212，4乘3y得12y，所以是212减12y再加2y等于102。合并同类项：212减10y等于102。移项：10y等于110。两边除以10：y等于11。变异兔子有11只！","bubblePos":{"x":300,"y":480}},{"title":"求出总数并验证","description":"$x = 53 - 3 \\times 11 = 53 - 33 = 20$<br>兔子总数 $= x + y = 20 + 11 = 31$（只）<br>验证：头 $20+33=53$ ✓，脚 $80+22=102$ ✓","bubbleText":"把y=11代回去：x = 53 - 3×11 = 53 - 33 = 20，普通兔子有20只。最后加起来：20 + 11 = 31只。验算一下：头数20+3×11=53没问题，脚数4×20+2×11=102也没问题。答案就是31只！","bubblePos":{"x":250,"y":100}}],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

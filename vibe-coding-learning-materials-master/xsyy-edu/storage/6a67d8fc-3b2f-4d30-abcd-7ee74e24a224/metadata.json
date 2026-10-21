@@ -1,0 +1,31 @@
+{
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "八上",
+    "main_tag": "数与代数·综合基础",
+    "sub_tags": [
+      "性质与运算"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-26T07:42:19.901700Z",
+  "question": "已知(x+4)^5=a0+a1(x+2)+a2(x+2)^2+a3(x+2)^3+a4(x+2)^4+a5(x+2)^5，则a1+2a2+3a3+4a4+5a5=____。",
+  "prompt": "已知(x+4)^5=a0+a1(x+2)+a2(x+2)^2+a3(x+2)^3+a4(x+2)^4+a5(x+2)^5，则a1+2a2+3a3+4a4+5a5=____。",
+  "title": "二项式展开系数",
+  "knowledge_tags_confirmed": true,
+  "preview_image": "Preview.webp",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "6a67d8fc-3b2f-4d30-abcd-7ee74e24a224",
+  "generated_at": "2026-08-25T09:04:44.353945Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "has_pic": false,
+  "tags": {
+    "reasoning": "考查二项式展开与系数关系"
+  },
+  "tags_updated_at": "2026-08-25T09:04:44.353945Z",
+  "second_tag": null
+}

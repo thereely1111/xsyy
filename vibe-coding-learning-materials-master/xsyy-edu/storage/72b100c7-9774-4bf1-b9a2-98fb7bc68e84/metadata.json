@@ -1,0 +1,18 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "七上",
+    "main_tag": "一元一次方程",
+    "sub_tags": [
+      "和倍差问题"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-01T07:01:55.013910Z",
+  "question": "爸爸对儿子说：“我像你这么大的时候，你才4岁；当你像我这么大的时候，我就79岁了。”问爸爸和儿子现在各是多少岁？",
+  "prompt": "爸爸对儿子说：“我像你这么大的时候，你才4岁；当你像我这么大的时候，我就79岁了。”问爸爸和儿子现在各是多少岁？",
+  "title": "年龄差问题",
+  "knowledge_tags_confirmed": true
+}

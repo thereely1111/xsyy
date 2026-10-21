@@ -1,0 +1,29 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "有两个相同的容器，容器A中装满了水，容器B中只有一半的水。现在需要将容器A中的水倒入容器B，使得容器B中的水正好装满。问应该倒入容器B的水量是容器A中的多少？",
+  "prompt": "有两个相同的容器，容器A中装满了水，容器B中只有一半的水。现在需要将容器A中的水倒入容器B，使得容器B中的水正好装满。问应该倒入容器B的水量是容器A中的多少？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "11910edc-c686-43c6-a478-150176cdecfe",
+  "generated_at": "2026-08-21T09:18:04.038724Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "分数应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及数量关系"
+  },
+  "tags_updated_at": "2026-08-21T09:18:04.038724Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "六上",
+    "main_tag": "分数乘法 / 分数除法",
+    "sub_tags": [
+      "分数乘法与除法"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-21T09:18:04.090075Z"
+}

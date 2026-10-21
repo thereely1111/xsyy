@@ -1,0 +1,17 @@
+{
+  "failure_stage": "unexpected_exception",
+  "error_message": "模板动态片段生成失败，已重试 2 次，最终错误: Error code: 403 - {'error': {'message': 'token quota is not enough, token remain quota: $0.160258, need quota: $0.167186 (request id: 202608070229566387361154BscTseyPrnw0zfK)', 'type': 'new_api_error', 'param': '', 'code': 'pre_consume_token_quota_failed'}}",
+  "generated_at": "2026-08-07T10:29:54.994274Z",
+  "task_id": "6fb9cefe-cb97-4633-b486-3e537ccabd94",
+  "debug_info": {
+    "error_stage": "unexpected_exception",
+    "exception_type": "PermissionDeniedError",
+    "exception_message": "Error code: 403 - {'error': {'message': 'token quota is not enough, token remain quota: $0.160258, need quota: $0.167186 (request id: 202608070229566387361154BscTseyPrnw0zfK)', 'type': 'new_api_error', 'param': '', 'code': 'pre_consume_token_quota_failed'}}",
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "question": "一个正方形的边长是 6 厘米，求这个正方形的周长和面积。",
+    "title": "正方形周长面积",
+    "task_id": "6fb9cefe-cb97-4633-b486-3e537ccabd94",
+    "max_output_tokens": 131072
+  }
+}

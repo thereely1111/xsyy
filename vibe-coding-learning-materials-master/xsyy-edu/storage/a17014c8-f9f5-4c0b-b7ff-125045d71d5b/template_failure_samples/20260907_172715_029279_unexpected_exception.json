@@ -1,0 +1,17 @@
+{
+  "failure_stage": "unexpected_exception",
+  "error_message": "【动画与完整解题（动态片段）生成失败】模板动态片段生成失败，已重试 2 次，最终错误: Error code: 524 - {'error': {'message': 'The origin web server did not return a complete response within the 120-second Proxy Read Timeout window. The connection was established, but the origin took too long to respond.', 'type': 'bad_response_status_code', 'param': '', 'code': 'bad_response_status_code'}}（stage=unexpected_exception）",
+  "generated_at": "2026-09-07T09:27:15.029279Z",
+  "task_id": "a17014c8-f9f5-4c0b-b7ff-125045d71d5b",
+  "debug_info": {
+    "error_stage": "unexpected_exception",
+    "exception_type": "InternalServerError",
+    "exception_message": "Error code: 524 - {'error': {'message': 'The origin web server did not return a complete response within the 120-second Proxy Read Timeout window. The connection was established, but the origin took too long to respond.', 'type': 'bad_response_status_code', 'param': '', 'code': 'bad_response_status_code'}}",
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "question": "在平面直角坐标系中，反比例函数 y = k/x（k > 0）的图象经过点 A(2, 4)。将直线 OA 向上平移 3 个单位长度后，与反比例函数图象在第一象限交于点 B，与 x 轴交于点 C。求三角形 OBC 的面积。",
+    "title": "函数图象问题",
+    "task_id": "a17014c8-f9f5-4c0b-b7ff-125045d71d5b",
+    "max_output_tokens": 32768
+  }
+}

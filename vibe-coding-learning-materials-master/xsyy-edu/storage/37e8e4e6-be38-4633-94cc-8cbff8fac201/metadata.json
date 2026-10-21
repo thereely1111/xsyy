@@ -1,0 +1,16 @@
+{
+  "knowledge_tags": {
+    "version": "函数",
+    "grade": "八下",
+    "main_tag": "一次函数",
+    "sub_tags": [
+      "一次函数与方程/不等式及实际应用"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T09:04:22.993785Z",
+  "knowledge_tags_confirmed": true,
+  "title": "一次函数图象面积",
+  "question": "一次函数y=3x-6的图象与x轴、y轴分别交于A、B两点，O为原点，求三角形AOB的面积。",
+  "prompt": "一次函数y=3x-6的图象与x轴、y轴分别交于A、B两点，O为原点，求三角形AOB的面积。"
+}

@@ -1,0 +1,10 @@
+{
+  "question": "将如图所示图形沿格线剪成两块，拼成一个正方形，剪切的方法如图（ ）所示。",
+  "title": "图形切割拼组",
+  "plan": {
+    "steps": []
+  },
+  "is_math_problem": true,
+  "has_pic": true,
+  "preview_image": "preview.webp"
+}

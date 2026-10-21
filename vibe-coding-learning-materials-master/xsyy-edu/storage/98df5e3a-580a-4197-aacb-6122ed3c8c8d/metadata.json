@@ -1,0 +1,17 @@
+{
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "七上",
+    "main_tag": "一元一次方程",
+    "sub_tags": [
+      "一元一次方程应用题"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-31T00:59:53.180216Z",
+  "knowledge_tags_confirmed": true,
+  "title": "一元一次方程",
+  "question": "一个数加上6，再乘以4，结果是100。这个数是多少？",
+  "prompt": "一个数加上6，再乘以4，结果是100。这个数是多少？"
+}

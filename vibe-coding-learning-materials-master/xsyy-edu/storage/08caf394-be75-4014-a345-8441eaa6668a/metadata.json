@@ -1,0 +1,23 @@
+{
+  "question": "把下面图形分成三个部分，最后都拼在一起，成为一个正方形，下面不可行的剪法是（）。A. B. C.",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\08caf394-be75-4014-a345-8441eaa6668a\\ScreenShot_2026-01-31_103819_900.png",
+  "task_id": "08caf394-be75-4014-a345-8441eaa6668a",
+  "generated_at": "2026-01-31T11:24:11.665376Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "图形分割拼凑",
+  "has_pic": true,
+  "tags": {
+    "reasoning": "考查平面图形的面积守恒与形状重组。",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "空间观念"
+    ]
+  },
+  "tags_updated_at": "2026-01-31T11:24:11.666917Z",
+  "preview_image": "Preview.webp"
+}

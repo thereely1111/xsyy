@@ -1,0 +1,35 @@
+{
+  "question": "三角形的内角和怎么算",
+  "prompt": "三角形的内角和怎么算",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "27613d2c-6021-4383-bfb5-f95a60326e20",
+  "generated_at": "2026-08-05T16:17:21.278481Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "三角形内角和",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "平面几何图形性质",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "推理意识",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-08-05T16:17:21.278499Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "一下",
+    "main_tag": "认识图形",
+    "sub_tags": [
+      "图形辨认"
+    ]
+  },
+  "preview_image": "Preview.webp",
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T09:13:51.777525Z",
+  "knowledge_tags_confirmed": true
+}

@@ -1,0 +1,34 @@
+{
+  "question": "一个长方形的长是 12 厘米，宽是 8 厘米，求这个长方形的周长。",
+  "prompt": "一个长方形的长是 12 厘米，宽是 8 厘米，求这个长方形的周长。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "253d3f87-b1cb-4435-9498-9f2d13c4cf04",
+  "generated_at": "2026-08-03T16:24:08.039423Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "长方形周长计算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "平面图形周长计算",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "推理意识",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-08-03T16:24:08.039423Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "八下",
+    "main_tag": "平行四边形",
+    "sub_tags": [
+      "矩形、菱形与正方形"
+    ]
+  },
+  "preview_image": "preview.webp",
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-17T08:39:50.715417Z"
+}

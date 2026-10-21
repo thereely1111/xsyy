@@ -1,0 +1,68 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "由已知条件可知，一张桌子比一把椅子多的288元，正好是一把椅子价钱的（10-1）倍，由此可求得一把椅子的价钱。再根据椅子的价钱，就可求得一张桌子的价钱。",
+  "prompt": "由已知条件可知，一张桌子比一把椅子多的288元，正好是一把椅子价钱的（10-1）倍，由此可求得一把椅子的价钱。再根据椅子的价钱，就可求得一张桌子的价钱。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "E:\\象数演易\\1\\xsyy\\vibe-coding-learning-materials-master\\xsyy-edu\\storage\\2349fc70-6dad-435e-84ec-435acdc5dc0c\\pasted-image-1789112410132.png",
+  "task_id": "2349fc70-6dad-435e-84ec-435acdc5dc0c",
+  "generated_at": "2026-09-11T07:46:44.503291Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "差倍问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "内容为数学应用题的解析文字，包含明确的数量关系（差288元、倍数10），属差倍问题；图中仅有文字无独立图形。"
+  },
+  "tags_updated_at": "2026-09-11T07:46:44.503291Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "四上",
+    "main_tag": "差倍问题",
+    "sub_tags": [
+      "已知差与倍数关系求两数"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-11T07:46:44.529316Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "primary_school",
+    "domain": "数与式",
+    "display_class": "numbers",
+    "grade": "四上",
+    "tags": {
+      "main_tag": "差倍问题",
+      "sub_tags": [
+        "已知差与倍数关系求两数"
+      ],
+      "second_tag": null
+    },
+    "question_type": "",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "primary_numbers",
+      "steps_min": 3,
+      "steps_max": 5,
+      "motion_policy": "playful",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.96,
+    "engine": "agent",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "agent",
+    "action": "create_pending_chain",
+    "confidence": 0.96
+  }
+}

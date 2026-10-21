@@ -1,0 +1,24 @@
+{
+  "question": "有规格尺寸相同的5种颜色的袜子各15只混装在箱内，试问不论如何取，从箱中至少取出多少只就能保证有3双袜子（袜子无左、右之分）？",
+  "prompt": "有规格尺寸相同的5种颜色的袜子各15只混装在箱内，试问不论如何取，从箱中至少取出多少只就能保证有3双袜子（袜子无左、右之分）？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "a86f8014-9e34-4314-b436-75de97772b57",
+  "generated_at": "2026-07-31T15:56:01.062844Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "抽屉原理问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及最不利原则和抽屉原理",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "运算能力",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-07-31T15:56:01.062844Z",
+  "preview_image": "Preview.webp"
+}

@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "stage": "primary_school",
+  "domain": "数与式",
+  "display_class": "numbers",
+  "grade": "四上",
+  "tags": {
+    "main_tag": "差倍问题",
+    "sub_tags": [
+      "已知差与倍数关系求两数"
+    ],
+    "second_tag": null
+  },
+  "question_type": "",
+  "figure_info": {
+    "has_figure": false,
+    "figures": []
+  },
+  "visual_requirements": {
+    "style_key": "primary_numbers",
+    "steps_min": 3,
+    "steps_max": 5,
+    "motion_policy": "playful",
+    "must_show": []
+  },
+  "method_lock": null,
+  "is_math_problem": true,
+  "confidence": 0.96,
+  "engine": "agent",
+  "is_composite": false,
+  "parts": [],
+  "domains": []
+}

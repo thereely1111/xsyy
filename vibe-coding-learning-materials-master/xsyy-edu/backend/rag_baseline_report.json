@@ -1,0 +1,32 @@
+{
+  "report_type": "rag_lexical_offline",
+  "generated_at": "2026-08-27T09:46:22.903644",
+  "index_size": 954,
+  "eval_size": 43,
+  "summary": {
+    "total": 43,
+    "has_title": 43,
+    "title_coverage": 1.0,
+    "global_top3_hit_rate": 0.163,
+    "global_top5_hit_rate": 0.233,
+    "domain_top3_hit_rate": 0.395,
+    "domain_top5_hit_rate": 0.465,
+    "prescreen_direct_rate": 0.488,
+    "prescreen_correct_rate": 0.048,
+    "prescreen_main_tag_correct_rate": 0.571,
+    "title_affects_rate": 0.558
+  },
+  "counts": {
+    "total": 43,
+    "has_title": 43,
+    "global_top3": 7,
+    "global_top5": 10,
+    "domain_top3": 17,
+    "domain_top5": 20,
+    "prescreen_hit": 21,
+    "prescreen_correct": 1,
+    "prescreen_main_tag_correct": 12,
+    "title_affects": 24,
+    "errors": []
+  }
+}

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组合计数问题 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">组合计数问题</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('计算十人两两之间比赛一次的总场数')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <defs><linearGradient id='riceGrad' x1='0' y1='0' x2='0' y2='1'><stop offset='0%' stop-color='#f7f3e9'/><stop offset='100%' stop-color='#e2d9c8'/></linearGradient><linearGradient id='redGrad' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#c14b4b'/><stop offset='100%' stop-color='#9b2627'/></linearGradient><filter id='softShadow' x='-50%' y='-50%' width='200%' height='200%'><feDropShadow dx='0' dy='3' stdDeviation='3' flood-color='#3a3a3a' flood-opacity='0.25'/></filter><filter id='redGlow' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceGraphic' stdDeviation='3' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><marker id='arrow' viewBox='0 0 10 10' refX='9' refY='5' markerWidth='6' markerHeight='6' orient='auto-start-reverse'><path d='M0,0 L10,5 L0,10 z' fill='#b83a3a'/></marker></defs><style>:root{--ink:#3a3a3a;--cinnabar:#b83a3a;--rice:#f7f3e9;--stone:#d4cdc0;}.svg-elem{transition:all .7s cubic-bezier(.4,0,.2,1);}.transition-all{transition-property:all;}.duration-700{transition-duration:700ms;}.duration-1000{transition-duration:1000ms;}.ease-out{transition-timing-function:cubic-bezier(0,0,.2,1);}.ease-in{transition-timing-function:cubic-bezier(.4,0,1,1);}.opacity-0{opacity:0;}.opacity-100{opacity:1;}.translate-y-4{transform:translateY(16px);}.translate-y-0{transform:translateY(0);}.scale-90{transform:scale(.9);}.scale-100{transform:scale(1);}.scale-75{transform:scale(.75);}.zoom-up-start{opacity:0;transform:translateY(16px) scale(.9);}.zoom-up-end{opacity:1;transform:translateY(0) scale(1);}.zoom-up-out-start{opacity:1;transform:translateY(0) scale(1);}.zoom-up-out-end{opacity:0;transform:translateY(-16px) scale(.9);}.player-token{fill:url(#riceGrad);stroke:var(--ink);stroke-width:2;filter:url(#softShadow);transform-box:fill-box;transform-origin:center;}.player-label{font-family:'Noto Serif SC','Songti SC',serif;font-size:15px;fill:var(--ink);text-anchor:middle;dominant-baseline:central;font-weight:700;pointer-events:none;}.highlight-ring{fill:none;stroke:var(--cinnabar);stroke-width:3;opacity:.9;transform-box:fill-box;transform-origin:center;}.dashed-line{fill:none;stroke:var(--cinnabar);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:8 6;opacity:.85;animation:dash-flow 1.8s linear infinite;}.complete-line{fill:none;stroke:var(--cinnabar);stroke-width:1.3;opacity:.35;}.formula-box{background:rgba(247,243,233,.94);border:1.5px solid var(--cinnabar);border-radius:10px;padding:12px 20px;color:var(--ink);font-family:'Noto Serif SC',serif;font-size:24px;font-weight:700;box-shadow:0 5px 15px rgba(0,0,0,.12);display:inline-block;text-align:center;white-space:nowrap;}.annotation{font-family:'Noto Serif SC',serif;font-size:17px;fill:var(--ink);}.seal{fill:var(--cinnabar);filter:url(#softShadow);transform-box:fill-box;transform-origin:center;}.seal-text{font-family:'Noto Serif SC',serif;font-size:20px;fill:var(--rice);text-anchor:middle;dominant-baseline:central;font-weight:700;}@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}@keyframes heartbeat{0%,100%{transform:scale(1);}50%{transform:scale(1.13);}}@keyframes dash-flow{to{stroke-dashoffset:-28;}}@keyframes shimmer{0%,100%{opacity:.35;}50%{opacity:.55;}}.float-anim{animation:float 3s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}.pulse-anim{animation:heartbeat 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}.shimmer-anim{animation:shimmer 2.5s ease-in-out infinite;}</style><g id='players' x-show='sceneStep &gt;= 1' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 scale-90' x-transition:enter-end='opacity-100 scale-100' class='svg-elem'><g transform='translate(400,80)'><circle r='22' class='player-token float-anim' style='animation-delay:0s'/><text class='player-label'>甲</text></g><g transform='translate(529,122)'><circle r='22' class='player-token float-anim' style='animation-delay:.2s'/><text class='player-label'>乙</text></g><g transform='translate(609,232)'><circle r='22' class='player-token float-anim' style='animation-delay:.4s'/><text class='player-label'>丙</text></g><g transform='translate(609,368)'><circle r='22' class='player-token float-anim' style='animation-delay:.6s'/><text class='player-label'>丁</text></g><g transform='translate(529,478)'><circle r='22' class='player-token float-anim' style='animation-delay:.8s'/><text class='player-label'>戊</text></g><g transform='translate(400,520)'><circle r='22' class='player-token float-anim' style='animation-delay:1s'/><text class='player-label'>己</text></g><g transform='translate(271,478)'><circle r='22' class='player-token float-anim' style='animation-delay:1.2s'/><text class='player-label'>庚</text></g><g transform='translate(191,368)'><circle r='22' class='player-token float-anim' style='animation-delay:1.4s'/><text class='player-label'>辛</text></g><g transform='translate(191,232)'><circle r='22' class='player-token float-anim' style='animation-delay:1.6s'/><text class='player-label'>壬</text></g><g transform='translate(271,122)'><circle r='22' class='player-token float-anim' style='animation-delay:1.8s'/><text class='player-label'>癸</text></g></g><g id='highlight' x-show='sceneStep === 1 || sceneStep === 3' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 scale-75' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-75' class='svg-elem'><circle cx='400' cy='80' r='28' class='highlight-ring pulse-anim'/></g><g id='radial' x-show='sceneStep === 1' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0' x-transition:enter-end='opacity-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0' class='svg-elem'><line class='dashed-line' x1='400' y1='80' x2='529' y2='122'/><line class='dashed-line' x1='400' y1='80' x2='609' y2='232'/><line class='dashed-line' x1='400' y1='80' x2='609' y2='368'/><line class='dashed-line' x1='400' y1='80' x2='529' y2='478'/><line class='dashed-line' x1='400' y1='80' x2='400' y2='520'/><line class='dashed-line' x1='400' y1='80' x2='271' y2='478'/><line class='dashed-line' x1='400' y1='80' x2='191' y2='368'/><line class='dashed-line' x1='400' y1='80' x2='191' y2='232'/><line class='dashed-line' x1='400' y1='80' x2='271' y2='122'/></g><g id='multiply' x-show='sceneStep === 2 || sceneStep === 3' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 translate-y-4' x-transition:enter-end='opacity-100 translate-y-0' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 translate-y-0' x-transition:leave-end='opacity-0 translate-y-4' class='svg-elem'><foreignObject x='260' y='250' width='280' height='80'><div xmlns='http://www.w3.org/1999/xhtml' class='formula-box'>10 × 9 = 90</div></foreignObject></g><g id='duplicate' x-show='sceneStep === 3' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0' x-transition:enter-end='opacity-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0' class='svg-elem'><path class='dashed-line' d='M400 58 Q465 10 529 100' marker-end='url(#arrow)'/><path class='dashed-line' d='M529 144 Q465 190 400 102' marker-end='url(#arrow)'/><text x='465' y='35' class='annotation' text-anchor='middle'>同一场比赛被算两次</text></g><g id='divide' x-show='sceneStep &gt;= 5' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 translate-y-4' x-transition:enter-end='opacity-100 translate-y-0' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 translate-y-0' x-transition:leave-end='opacity-0 translate-y-4' class='svg-elem'><foreignObject x='260' y='250' width='280' height='80'><div xmlns='http://www.w3.org/1999/xhtml' class='formula-box'>90 ÷ 2 = 45</div></foreignObject></g><g id='combination' x-show='sceneStep &gt;= 6' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 scale-90' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-1000 ease-in' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-90' class='svg-elem'><foreignObject x='300' y='20' width='200' height='60'><div xmlns='http://www.w3.org/1999/xhtml' class='formula-box' style='font-size:20px;padding:8px 16px;'>C(10,2) = 45</div></foreignObject></g><g id='complete' x-show='sceneStep &gt;= 7' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0' x-transition:enter-end='opacity-100' x-transition:leave='transition-all duration-1000 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0' class='svg-elem'><path class='complete-line shimmer-anim' d='M400 80 L529 122 M400 80 L609 232 M400 80 L609 368 M400 80 L529 478 M400 80 L400 520 M400 80 L271 478 M400 80 L191 368 M400 80 L191 232 M400 80 L271 122 M529 122 L609 232 M529 122 L609 368 M529 122 L529 478 M529 122 L400 520 M529 122 L271 478 M529 122 L191 368 M529 122 L191 232 M529 122 L271 122 M609 232 L609 368 M609 232 L529 478 M609 232 L400 520 M609 232 L271 478 M609 232 L191 368 M609 232 L191 232 M609 232 L271 122 M609 368 L529 478 M609 368 L400 520 M609 368 L271 478 M609 368 L191 368 M609 368 L191 232 M609 368 L271 122 M529 478 L400 520 M529 478 L271 478 M529 478 L191 368 M529 478 L191 232 M529 478 L271 122 M400 520 L271 478 M400 520 L191 368 M400 520 L191 232 M400 520 L271 122 M271 478 L191 368 M271 478 L191 232 M271 478 L271 122 M191 368 L191 232 M191 368 L271 122 M191 232 L271 122'/></g><g id='accum' x-show='sceneStep &gt;= 8' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 translate-y-4' x-transition:enter-end='opacity-100 translate-y-0' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 translate-y-0' x-transition:leave-end='opacity-0 translate-y-4' class='svg-elem'><foreignObject x='30' y='510' width='340' height='70'><div xmlns='http://www.w3.org/1999/xhtml' class='formula-box' style='font-size:18px;padding:10px 16px;'>9 + 8 + 7 + … + 1 = 45</div></foreignObject></g><g id='verify' x-show='sceneStep &gt;= 9' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 scale-90' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-1000 ease-in' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-90' class='svg-elem'><g transform='translate(620,120)'><circle r='40' class='seal pulse-anim'/><text class='seal-text'>验</text></g><text x='620' y='180' class='annotation' text-anchor='middle'>无遗漏 · 无重复</text></g><g id='final' x-show='sceneStep &gt;= 10' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='zoom-up-start' x-transition:enter-end='zoom-up-end' x-transition:leave='transition-all duration-1000 ease-in' x-transition:leave-start='zoom-up-out-start' x-transition:leave-end='zoom-up-out-end' class='svg-elem'><foreignObject x='250' y='260' width='300' height='80'><div xmlns='http://www.w3.org/1999/xhtml' class='formula-box' style='font-size:28px;padding:14px 28px;'>一共 45 场</div></foreignObject></g>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+    {
+        "title": "问题引入",
+        "description": "十位选手围坐赛场，每位选手都要和其他九人各赛一场，先观察整体对阵关系。",
+        "bubbleText": "十位选手，两两交锋，共需多少场？",
+        "bubblePos": {
+            "x": 400,
+            "y": 80
+        }
+    },
+    {
+        "title": "聚焦一人",
+        "description": "先固定选手“甲”，他需要和其余九位选手各赛一场，因此仅从他出发就有9场比赛。",
+        "bubbleText": "甲要打9场！",
+        "bubblePos": {
+            "x": 400,
+            "y": 140
+        }
+    },
+    {
+        "title": "初步相乘",
+        "description": "每位选手都要赛9场，10位选手初步计算得到 10×9=90 场。",
+        "bubbleText": "10 × 9 = 90",
+        "bubblePos": {
+            "x": 400,
+            "y": 280
+        }
+    },
+    {
+        "title": "发现重复",
+        "description": "但“甲对乙”和“乙对甲”是同一场比赛，上述乘法把每一场都计算了两次。",
+        "bubbleText": "每场比赛被算了两次",
+        "bubblePos": {
+            "x": 480,
+            "y": 100
+        }
+    },
+    {
+        "title": "去重除二",
+        "description": "因此将总数除以2，得到实际比赛场数：90÷2=45 场。",
+        "bubbleText": "90 ÷ 2 = 45",
+        "bubblePos": {
+            "x": 400,
+            "y": 280
+        }
+    },
+    {
+        "title": "组合公式",
+        "description": "这等价于从10人中任选2人组成一场比赛，即 C(10,2)=45。",
+        "bubbleText": "C(10,2)=45",
+        "bubblePos": {
+            "x": 400,
+            "y": 60
+        }
+    },
+    {
+        "title": "完全图视角",
+        "description": "把选手看作点、比赛看作连线，10个顶点的完全图共有45条边。",
+        "bubbleText": "10个点的完全图有45条边",
+        "bubblePos": {
+            "x": 400,
+            "y": 300
+        }
+    },
+    {
+        "title": "累加验证",
+        "description": "也可按顺序累加：第一位赛9场，第二位赛8场……直到最后1场，即 9+8+…+1=45。",
+        "bubbleText": "9+8+…+1=45",
+        "bubblePos": {
+            "x": 200,
+            "y": 500
+        }
+    },
+    {
+        "title": "答案核验",
+        "description": "45 场比赛正好覆盖所有不同的两人组合，没有遗漏也没有重复。",
+        "bubbleText": "验证通过：共45场",
+        "bubblePos": {
+            "x": 400,
+            "y": 300
+        }
+    },
+    {
+        "title": "最终结论",
+        "description": "综上所述，10位选手每两人赛一场，一共需要进行 45 场比赛。",
+        "bubbleText": "答案：45场",
+        "bubblePos": {
+            "x": 400,
+            "y": 520
+        }
+    }
+],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

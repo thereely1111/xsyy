@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教学内容管理 - 管理后台</title>
+    <!-- 教材版本颜色与知识标签渲染模块（带版本参数防缓存滞留旧文件，避免标签全部显示为棕色） -->
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('../css/tag-selection-dialog.20260902.css') + '">');
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('../css/version-colors.css') + '">');
+        document.write('<script src="' + window.addVersionToUrl('../js/knowledge-tag-render.js') + '"><\/script>');
+    </script>
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('../js/tag-selection-dialog.js') + '"><\/script>');
+    </script>
+    <style>
+        /* 标签编辑弹窗（单标签组） */
+        .tag-group-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:10000; display:flex; align-items:center; justify-content:center; }
+        .tag-group-modal { background:#fff; border-radius:12px; width:90%; max-width:900px; max-height:85vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+        .tag-group-modal-header { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; border-bottom:1px solid #eee; }
+        .tag-group-modal-header h3 { margin:0; font-size:18px; color:#1a1a2e; }
+        .tag-group-modal-close { background:none; border:none; font-size:24px; cursor:pointer; color:#999; padding:0; line-height:1; }
+        .tag-group-modal-close:hover { color:#333; }
+        .tag-group-modal-body { display:flex; flex:1; min-height:0; overflow:hidden; }
+        .tag-group-modal-right { width:70%; display:flex; flex-direction:column; padding:20px; overflow-y:auto; }
+        .tag-group-editor { display:flex; flex-direction:column; gap:14px; }
+        .tag-group-editor label { font-weight:600; font-size:13px; color:#555; display:block; margin-bottom:4px; }
+        .tag-group-editor select, .tag-group-editor input { width:100%; padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px; font-size:13px; box-sizing:border-box; }
+        .tag-group-editor select:focus { border-color:#3E5C76; outline:none; box-shadow:0 0 0 2px rgba(62,92,118,0.15); }
+        .tag-group-subtags { display:flex; flex-wrap:wrap; gap:6px; padding:8px 0; }
+        .tag-group-subtag { display:inline-block; padding:4px 12px; border-radius:30px; font-size:12px; cursor:pointer; border:1px solid #d9d9d9; color:#555; transition:all 0.15s; }
+        .tag-group-subtag:hover { border-color:#3E5C76; color:#3E5C76; }
+        .tag-group-subtag.selected { background:#3E5C76; color:#fff; border-color:#3E5C76; }
+        .tag-group-empty-hint { display:flex; align-items:center; justify-content:center; height:100%; color:#999; font-size:14px; flex-direction:column; gap:8px; }
+        .tag-group-empty-hint .icon { font-size:40px; opacity:0.3; }
+        .tag-group-modal-footer { display:flex; justify-content:flex-end; gap:10px; padding:14px 24px; border-top:1px solid #eee; }
+        .tag-group-modal-footer button { padding:8px 24px; border-radius:6px; cursor:pointer; font-size:14px; border:none; }
+        .tag-group-modal-footer .btn-cancel { background:#f0f0f0; color:#666; }
+        .tag-group-modal-footer .btn-cancel:hover { background:#e0e0e0; }
+        .tag-group-modal-footer .btn-save-all { background:var(--primary-blue, #3E5C76); color:#fff; }
+        .tag-group-modal-footer .btn-save-all:hover { opacity:0.9; }
+        .tag-main.comp, .tag-sub.comp { background:#8B7355; color:#fff; }
+        /* ===== 标签 v3 同步（2026-09-02：与首页教学卡片一致 —— 年级色 pill / 章·主标签墨 pill / 知识域色字）===== */
+        .atag-pill {
+            display: inline-flex;
+            align-items: center;
+            height: 20px;
+            padding: 0 9px;
+            border-radius: 5px;
+            font-size: 12px;
+            line-height: 1;
+            font-weight: 600;
+            font-family: "Songti SC", "Noto Serif SC", SimSun, STSong, serif;
+            white-space: nowrap;
+            background: #fff;
+            border: 1px solid;
+            box-sizing: border-box;
+            vertical-align: middle;
+        }
+        .atag-pill.grade { font-weight: 500; }
+        .atag-pill.main { color: #1A1917; border-color: #1A1917; background: #fff; }
+        .atag-domain { font-weight: 700; font-size: 13px; font-family: "Songti SC", "Noto Serif SC", SimSun, STSong, serif; }
+        .tag-second-pop .atag-pill { height: 22px; }
+        /* 第二标签悬浮卡：白底微调为暖纸色 + 圆角，贴近主题 */
+        .tag-second-pop { border-radius: 8px; background: #FDFBF4; border-color: #E0DCD3; }
+        /* 章节列左移10px、操作列左移5px（用 transform 作用于内容，边框不断裂） */
+        .table-container td:nth-child(3), .table-container th:nth-child(3) { padding-left:40px; }
+        .table-container td:nth-child(6), .table-container th:nth-child(6) { padding-left:6px; }
+        .table-container td:nth-child(9), .table-container th:nth-child(9) { padding-left:11px; }
+        .table-container td:nth-child(6) > *, .table-container th:nth-child(6) > * { display:inline-block; transform:translateX(-10px); }
+        .table-container td:nth-child(9) > *, .table-container th:nth-child(9) > * { display:inline-block; transform:translateX(-5px); }
+        /* 异常案例整行警告 */
+        .teaching-error-row { background:#fff1f1 !important; color:#a12626; }
+        .teaching-error-row td { border-top:1px solid #f1b5b5; border-bottom:1px solid #f1b5b5; }
+        .teaching-error-hint { display:block; color:#c0392b; font-size:11px; margin-top:4px; line-height:1.4; }
+        .pin-manager-overlay { position:fixed; inset:0; z-index:10002; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.45); }
+        .pin-manager-modal { width:92%; max-width:680px; max-height:82vh; overflow:auto; background:#fff; border-radius:10px; box-shadow:0 18px 50px rgba(0,0,0,.25); padding:22px; }
+        .pin-manager-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+        .pin-manager-head h3 { margin:0; color:#1a1a2e; }
+        .pin-manager-item { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid #eee; }
+        .pin-manager-item-title { min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .pin-manager-limit { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+        .pin-manager-limit input { width:90px; padding:7px 9px; border:1px solid #ccd4df; border-radius:5px; }
+        /* 点赞列（第7列）右移20px */
+        .table-container td:nth-child(7), .table-container th:nth-child(7) { padding-left:20px; }
+        /* 章/单元列“+”第二标签悬停标记（与主站详情页同款） */
+        .tag-second-toggle {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            margin-left: 6px;
+            vertical-align: middle;
+            cursor: pointer;
+            outline: none;
+        }
+        .tag-second-plus {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 4px;
+            border-radius: 50%;
+            background: #f0f4ff;
+            color: var(--primary-blue, #3E5C76);
+            border: 1px solid #c6d8f5;
+            font-weight: 700;
+            font-size: 13px;
+            line-height: 1;
+        }
+        .tag-second-toggle:hover .tag-second-plus,
+        .tag-second-toggle:focus .tag-second-plus,
+        .tag-second-toggle:focus-within .tag-second-plus {
+            background: #e3edff;
+        }
+        .tag-second-pop {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            z-index: 60;
+            white-space: nowrap;
+            padding: 6px 8px;
+            background: #fff;
+            border: 1px solid #e3e8f0;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+        .tag-second-toggle:hover .tag-second-pop,
+        .tag-second-toggle:focus .tag-second-pop,
+        .tag-second-toggle:focus-within .tag-second-pop {
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        /* ===== 编辑内容弹窗 ===== */
+        .content-edit-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:10001; display:flex; align-items:center; justify-content:center; }
+        .content-edit-modal { background:#fff; border-radius:12px; width:94%; max-width:1040px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+        .content-edit-header { display:flex; align-items:center; justify-content:space-between; padding:16px 24px; border-bottom:1px solid #eee; }
+        .content-edit-header h3 { margin:0; font-size:18px; color:#1a1a2e; }
+        .content-edit-close { background:none; border:none; font-size:24px; cursor:pointer; color:#999; padding:0; line-height:1; }
+        .content-edit-close:hover { color:#333; }
+        .content-edit-body { padding:18px 24px; overflow-y:auto; display:flex; flex-direction:column; gap:18px; }
+        .edit-section { display:flex; flex-direction:column; gap:8px; }
+        .edit-label { font-weight:600; font-size:13px; color:#444; }
+        .edit-hint { font-weight:400; color:#999; font-size:12px; }
+        .edit-input, .edit-textarea { width:100%; padding:9px 12px; border:1px solid #d9d9d9; border-radius:6px; font-size:14px; box-sizing:border-box; font-family:inherit; resize:vertical; }
+        .edit-input:focus, .edit-textarea:focus { border-color:#3E5C76; outline:none; box-shadow:0 0 0 2px rgba(62,92,118,0.15); }
+        .tag-edit-panel { border:1px solid #eee; border-radius:8px; padding:14px; background:#fafbfc; }
+
+        /* 展示框 + 操作按钮 行布局 */
+        .box-row { display:flex; gap:16px; align-items:stretch; }
+        .box-col { flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; }
+        .box-actions { width:180px; display:flex; align-items:center; justify-content:center; }
+        .display-box { border:1px solid #e3e3e3; border-radius:8px; background:#f7f8fa; height:340px; overflow:hidden; }
+        .display-frame { width:100%; height:100%; border:none; background:#fff; }
+        .box-status { font-size:12px; color:#888; }
+        .box-status.ok { color:#2e9e5b; font-weight:600; }
+        .box-status.err { color:#d9534f; font-weight:600; }
+        .box-status.warn { color:#e0a800; font-weight:600; }
+        .box-status.running { color:#3E5C76; font-weight:600; }
+
+        .btn-regen { display:flex; flex-direction:column; align-items:center; gap:4px; width:100%; padding:14px 10px; border:none; border-radius:8px; background:var(--primary-blue, #3E5C76); color:#fff; cursor:pointer; font-size:14px; line-height:1.3; }
+        .btn-regen:hover { opacity:0.92; }
+        .btn-regen:disabled { opacity:0.55; cursor:not-allowed; }
+        .btn-regen.loading { position:relative; }
+        .btn-regen-title { font-weight:700; }
+        .btn-regen-sub { font-size:12px; opacity:0.9; }
+        .btn-reidentify-tag { display:inline-flex; align-items:center; gap:4px; padding:6px 12px; border:none; border-radius:6px; background:#f0f4ff; color:var(--primary-blue, #3E5C76); border:1px solid #c6d8f5; cursor:pointer; font-size:12px; font-weight:600; }
+        .btn-reidentify-tag:hover { background:#e3edff; }
+        .btn-reidentify-tag:disabled { opacity:0.55; cursor:not-allowed; }
+
+
+        .content-edit-footer { display:flex; justify-content:flex-end; gap:10px; padding:14px 24px; border-top:1px solid #eee; }
+        .content-edit-footer button { padding:8px 24px; border-radius:6px; cursor:pointer; font-size:14px; border:none; }
+        .content-edit-footer .btn-cancel { background:#f0f0f0; color:#666; }
+        .content-edit-footer .btn-cancel:hover { background:#e0e0e0; }
+        .content-edit-footer .btn-save-all { background:var(--primary-blue, #3E5C76); color:#fff; }
+        .content-edit-footer .btn-save-all:hover { opacity:0.9; }
+    </style>
+    <link rel="stylesheet" href="css/theme-override.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>管理后台</h2>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html">仪表盘</a></li>
+                    <li><a href="teachings.html" class="active">教学内容</a></li>
+                    <li><a href="users.html">用户管理</a></li>
+                    <li><a href="tags.html">标签管理</a></li>
+                    <li><a href="recharge_requests.html">订单管理</a></li>
+                    <li><a href="feedbacks.html">用户反馈</a></li>
+                    <li><a href="settings.html">系统配置</a></li>
+                    <li><a href="logs.html">网站日志</a></li>
+                    <li><a href="invite-quota.html">邀请与额度</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>教学内容管理</h1>
+                <div class="user-info">
+                    <span>管理员：<span id="userInfo">-</span></span>
+                    <a href="../index.html?v=3" class="btn-home">返回首页</a>
+                    <button class="btn-logout" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+
+            <!-- 搜索和筛选 -->
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="搜索标题或题目内容...">
+                    <button onclick="loadTeachings()">搜索</button>
+                    <select id="versionFilter">
+                        <option value="">全部知识域</option>
+                    </select>
+                    <select id="gradeFilter">
+                        <option value="">全部年级</option>
+                    </select>
+                    <select id="sortBy">
+                        <option value="generated_at">按创建时间</option>
+                        <option value="view_count">按观看次数</option>
+                        <option value="title">按标题</option>
+                    </select>
+                    <select id="sortOrder">
+                        <option value="desc">降序</option>
+                        <option value="asc">升序</option>
+                    </select>
+                    <button onclick="resetFilters()">重置</button>
+                </div>
+            </div>
+
+            <!-- 教学内容列表 -->
+            <div class="card">
+                <div style="display:flex; justify-content:flex-end; margin-bottom:12px;">
+                    <button class="btn btn-primary" onclick="openPinManager()">置顶管理</button>
+                </div>
+                <div id="teachingsList" class="loading">加载中...</div>
+            </div>
+
+            <!-- 分页 -->
+            <div class="pagination" id="pagination"></div>
+        </main>
+    </div>
+
+    <!-- 置顶管理弹窗 -->
+    <div id="pinManagerModal" class="pin-manager-overlay" style="display:none;" onclick="if(event.target===this) closePinManager();">
+        <div class="pin-manager-modal">
+            <div class="pin-manager-head">
+                <h3>置顶管理</h3>
+                <button class="content-edit-close" onclick="closePinManager()">&times;</button>
+            </div>
+            <div class="pin-manager-limit">
+                <label for="pinLimitInput">最多置顶数量</label>
+                <input id="pinLimitInput" type="number" min="5" step="1">
+                <button class="btn btn-primary" onclick="savePinLimit()">保存上限</button>
+                <span id="pinCountText" class="edit-hint"></span>
+            </div>
+            <div id="pinnedTeachingsList">加载中...</div>
+        </div>
+    </div>
+
+    <!-- 编辑内容弹窗（标题 / 标签 / 题目 / 动画） -->
+    <div id="contentEditModal" class="content-edit-overlay" style="display:none;">
+        <div class="content-edit-modal">
+            <div class="content-edit-header">
+                <h3>编辑内容</h3>
+                <button class="content-edit-close" onclick="closeContentEditModal()">&times;</button>
+            </div>
+            <div class="content-edit-body">
+                <!-- 标题编辑区 -->
+                <section class="edit-section">
+                    <label class="edit-label">标题</label>
+                    <input type="text" id="editTitle" class="edit-input" placeholder="请输入标题" />
+                </section>
+
+                <!-- 标签编辑区 -->
+                <section class="edit-section">
+                    <div style="display:flex; align-items:center; justify-content:space-between;">
+                        <label class="edit-label" style="margin:0;">知识点标签
+                            <span class="edit-hint">（识别结果可继续手动调整）</span>
+                        </label>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <button id="reidentifyTagBtn" class="btn-reidentify-tag" onclick="reidentifyTags()" title="调用标签识别模型，根据当前题目内容重新识别知识点标签">
+                                <span>🤖 重新识别标签</span>
+                            </button>
+                            <button id="secondTagBtn" class="btn-reidentify-tag" onclick="toggleSecondTag()" title="为多知识点题目添加或切换到第二标签（每个知识域最多一个标签，与主标签知识域不同）">
+                                <span id="secondTagBtnLabel">添加第二标签</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="tagSlotIndicator" class="edit-hint" style="margin:2px 0 4px; display:none;"></div>
+                    <div id="tagGroupEditorPanel" class="tag-edit-panel">
+                        <div class="tag-group-empty-hint">
+                            <div class="icon">📋</div>
+                            <div>加载中...</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 题目编辑区 -->
+                <section class="edit-section">
+                    <label class="edit-label">题目内容
+                        <span class="edit-hint">（动画基于此题目重新生成）</span>
+                    </label>
+                    <textarea id="editQuestion" class="edit-textarea" rows="4" placeholder="请输入题目内容"></textarea>
+                    <!-- 数学公式实时预览：粘贴的多行题目自动换行展示 -->
+                    <div id="questionPreview" class="edit-preview" style="display:none; margin-top:8px; padding:10px 12px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:6px; font-size:14px; line-height:1.8; word-break:break-word; white-space:pre-wrap; overflow-wrap:anywhere;"></div>
+                </section>
+
+                <!-- 封面展示框 + 重新生成按钮（查看封面是否正常生成，可调用封面生成模型重新生成） -->
+                <section class="edit-section">
+                    <div class="box-row">
+                        <div class="box-col">
+                            <label class="edit-label">封面预览（查看封面是否正常生成）</label>
+                            <div class="display-box">
+                                <img id="coverImage" class="display-frame cover-image" alt="封面预览" style="object-fit:contain; background:#f0f1f3;" />
+                            </div>
+                            <div id="coverStatus" class="box-status">—</div>
+                        </div>
+                        <div class="box-actions">
+                            <button class="btn-regen" id="regenCoverBtn" onclick="regenerateCover()">
+                                <span class="btn-regen-title">调用封面生成模型</span>
+                                <span class="btn-regen-sub">重新生成封面</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 动画展示框 + 重新生成按钮 -->
+                <section class="edit-section">
+                    <div class="box-row">
+                        <div class="box-col">
+                            <label class="edit-label">动画预览（查看动画是否已生成）</label>
+                            <div class="display-box">
+                                <iframe id="animationFrame" class="display-frame"></iframe>
+                            </div>
+                            <div id="animationStatus" class="box-status">—</div>
+                        </div>
+                        <div class="box-actions">
+                            <button class="btn-regen" id="regenAnimationBtn" onclick="regenerateAnimation()">
+                                <span class="btn-regen-title">调用动画生成模型</span>
+                                <span class="btn-regen-sub">重新生成动画</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 错误信息输入区 -->
+                <section class="edit-section">
+                    <label class="edit-label">错误信息（可选）
+                        <span class="edit-hint">手动填写模型哪里错了，模型将据此直接修正</span>
+                    </label>
+                    <textarea id="editErrorFeedback" class="edit-textarea" rows="3"
+                              placeholder="例如：第三步的进位计算错误，正确应为 1+1+1=3；或动画中图形位置偏移..."></textarea>
+                </section>
+            </div>
+            <div class="content-edit-footer">
+                <button class="btn-cancel" onclick="closeContentEditModal()">取消</button>
+                <button class="btn-save-all" onclick="saveContentEdit()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-nav.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-feedbacks.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('../js/math-symbol-panel.js') + '"><\/script>');
+    </script>
+    <script>
+        let currentPage = 1;
+        const pageSize = 20;
+        // 标签编辑状态（单标签组）
+        let currentEditTaskId = null;
+        let tagGroup = null;          // 当前编辑的主标签组（单标签组）
+        let frameworkData = null;    // 缓存框架数据
+        let selectedSubTags = [];    // 当前编辑的知识点标签选择
+        // 第二标签组（多知识点，与 tagGroup 知识域不同；可空）
+        let secondTagGroup = null;
+        // 当前正在编辑的标签槽位：'primary' 主标签 | 'second' 第二标签（其余内容不受切换影响）
+        let activeTagSlot = 'primary';
+
+        // 初始化认证
+        initAdminAuth();
+
+        // ========== 工具函数 ==========
+        function escapeHtml(text) {
+            if (!text) return '';
+            var d = document.createElement('div');
+            d.textContent = String(text);
+            return d.innerHTML;
+        }
+
+        // 标签按年级取色的兜底函数（即使知识标签脚本被浏览器缓存旧版或加载失败，也能正确染色）
+        function getGradeColorType(grade) {
+            if (window.KnowledgeTagRender && typeof window.KnowledgeTagRender.getColorTypeByGrade === 'function') {
+                return window.KnowledgeTagRender.getColorTypeByGrade(grade);
+            }
+            var gradeColorMap = {
+                '一上': 'cyan',
+                '一下': 'lime',
+                '二上': 'amber',
+                '二下': 'pink',
+                '三上': 'indigo',
+                '三下': 'slate',
+                '四上': 'emerald',
+                '四下': 'fuchsia',
+                '五上': 'sky',
+                '五下': 'copper',
+                '六上': 'teal',
+                '六下': 'goldenrod',
+                '七上': 'blue',
+                '七下': 'royalblue',
+                '八上': 'purple',
+                '八下': 'orchid',
+                '九上': 'red',
+                '九下': 'olive'
+            };
+            return gradeColorMap[grade] || 'comp';
+        }
+
+        // 标准化 knowledge_tags 为单标签组对象。
+        function normalizeKnowledgeTags(kt) {
+            if (!kt || typeof kt !== 'object' || Array.isArray(kt)) return null;
+            if (!(kt.version || kt.grade || kt.main_tag)) return null;
+            return {
+                version: kt.version || '',
+                grade: kt.grade || '',
+                main_tag: kt.main_tag || '',
+                sub_tags: Array.isArray(kt.sub_tags) ? kt.sub_tags : []
+            };
+        }
+
+        // ========== 标签 v3 色板与渲染（2026-09-02：与首页 index.html 内联版保持一致）==========
+        // 知识域色：数与式=墨、方程与不等式=黛蓝、函数=朱砂、图形与几何=玉、统计与概率=枯金
+        var ADMIN_DOMAIN_COLORS = [
+            { keys: ['数与式', '数与代数'], color: '#1A1917' },
+            { keys: ['方程与不等式'], color: '#3E5C76' },
+            { keys: ['函数'], color: '#A8342F' },
+            { keys: ['图形与几何', '几何'], color: '#7D9F88' },
+            { keys: ['统计与概率'], color: '#CFA976' },
+            { keys: ['综合与实践'], color: '#CFA976' }
+        ];
+        // 年级独立色（18 个年级一上~九下，同首页水墨色板）
+        var ADMIN_GRADE_COLORS = {
+            '一上': '#8B6F47', '一下': '#A67C52', '二上': '#7D9F88', '二下': '#6B8E9F',
+            '三上': '#5A7A8C', '三下': '#2E4C66', '四上': '#3E5C76', '四下': '#6A8A9C',
+            '五上': '#CFA976', '五下': '#D49860', '六上': '#5A9E8E', '六下': '#4A8E7E',
+            '七上': '#B83B43', '七下': '#A8342F', '八上': '#1A1917', '八下': '#7A5C3E',
+            '九上': '#8E44AD', '九下': '#7B5F37'
+        };
+        function adminGradeColor(grade) {
+            return (grade && ADMIN_GRADE_COLORS[grade]) ? ADMIN_GRADE_COLORS[grade] : '#6B5B3E';
+        }
+        function adminDomainColor(version) {
+            if (!version) return '#6B5B3E';
+            for (var i = 0; i < ADMIN_DOMAIN_COLORS.length; i++) {
+                var item = ADMIN_DOMAIN_COLORS[i];
+                for (var j = 0; j < item.keys.length; j++) {
+                    if (version.indexOf(item.keys[j]) !== -1) return item.color;
+                }
+            }
+            return '#6B5B3E';
+        }
+        function adminHexA(hex, alpha) {
+            var n = parseInt(hex.slice(1), 16);
+            return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + alpha + ')';
+        }
+        // 表格单元格 HTML：知识域=域色小字（加粗）、年级=年级色 pill、章/单元=墨 pill
+        function adminTagCellsHTML(kt) {
+            if (!kt) return { version: '-', grade: '-', main: '-' };
+            var d = adminDomainColor(kt.version);
+            var g = adminGradeColor(kt.grade);
+            var versionHTML = kt.version
+                ? '<span class="atag-domain" style="color:' + d + ';">' + escapeHtml(kt.version) + '</span>' : '-';
+            var gradeHTML = kt.grade
+                ? '<span class="atag-pill grade" style="color:' + g + ';border-color:' + g + ';background:' + adminHexA(g, 0.07) + ';">' + escapeHtml(kt.grade) + '</span>' : '-';
+            var mainHTML = kt.main_tag
+                ? '<span class="atag-pill main">' + escapeHtml(kt.main_tag) + '</span>' : '-';
+            return { version: versionHTML, grade: gradeHTML, main: mainHTML };
+        }
+        // 第二标签 “+” 结构（外层沿用原 .tag-second-* 交互样式，内部零件换新 pill / 域色字）
+        function adminSecondToggleHTML(second) {
+            if (!second || !second.main_tag) return '';
+            var g = adminGradeColor(second.grade);
+            var d = adminDomainColor(second.version);
+            var parts = '';
+            if (second.version) parts += '<span class="atag-domain" style="color:' + d + ';">' + escapeHtml(second.version) + '</span>';
+            if (second.grade) parts += '<span class="atag-pill grade" style="color:' + g + ';border-color:' + g + ';background:' + adminHexA(g, 0.07) + ';">' + escapeHtml(second.grade) + '</span>';
+            parts += '<span class="atag-pill main">' + escapeHtml(second.main_tag) + '</span>';
+            return '<span class="tag-second-toggle" tabindex="0" role="button" aria-label="查看第二标签">' +
+                '<span class="tag-second-plus">+</span>' +
+                '<span class="tag-second-pop">' + parts + '</span></span>';
+        }
+
+        // ========== 加载教学内容列表 ==========
+        async function loadTeachings(page = 1) {
+            currentPage = page;
+            const search = document.getElementById('searchInput').value;
+            const version = document.getElementById('versionFilter').value;
+            const grade = document.getElementById('gradeFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+            const sortOrder = document.getElementById('sortOrder').value;
+
+            const listElement = document.getElementById('teachingsList');
+            listElement.innerHTML = '<div class="loading">加载中...</div>';
+
+            try {
+                const result = await getTeachings({
+                    page,
+                    page_size: pageSize,
+                    search: search || undefined,
+                    version: version || undefined,
+                    grade: grade || undefined,
+                    sort_by: sortBy,
+                    sort_order: sortOrder
+                });
+
+                if (result.data.length === 0) {
+                    listElement.innerHTML = '<div class="empty-state"><p>暂无教学内容</p></div>';
+                    document.getElementById('pagination').innerHTML = '';
+                    return;
+                }
+
+                // 渲染表格
+                let tableHTML = `
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>标题</th>
+                                    <th>用户</th>
+                                    <th>知识域</th>
+                                    <th>年级</th>
+                                    <th style="width:130px;">章/单元</th>
+                                    <th>观看/点赞</th>
+                                    <th style="width:140px;">创建时间</th>
+                                    <th style="width:230px;">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                result.data.forEach((teaching, idx) => {
+                    let _dateStr = teaching.generated_at;
+                    const date = _dateStr ? new Date(_dateStr) : null;
+                    // 标准化 knowledge_tags（单标签组模式，取第一组）
+                    const kt = normalizeKnowledgeTags(teaching.knowledge_tags);
+
+                    // 处理知识域/年级/章节显示（2026-09-02 v3：域色小字 + 年级色 pill + 章墨 pill，同首页教学卡片）
+                    let versionHTML = '-';
+                    let gradeHTML = '-';
+                    let knowledgeTagHTML = '-';
+                    let secondToggleHTML = '';
+
+                    if (kt) {
+                        const cells = adminTagCellsHTML(kt);
+                        versionHTML = cells.version;
+                        gradeHTML = cells.grade;
+                        knowledgeTagHTML = cells.main;
+                    }
+
+                    // 章/单元列：若存在第二标签组，主标签后追加“+”悬停标记（保留交互，悬浮内容为新 pill 视觉）
+                    if (teaching.second_knowledge_tag) {
+                        const s2 = normalizeKnowledgeTags(teaching.second_knowledge_tag);
+                        secondToggleHTML = s2 ? adminSecondToggleHTML(s2) : '';
+                    }
+
+                    const rowClass = teaching.has_error ? 'teaching-error-row' : '';
+                    const errorHint = teaching.has_error ? `<span class="teaching-error-hint">${escapeHtml(teaching.error_reason || '案例存在异常')}</span>` : '';
+                    const pinText = teaching.is_pinned ? '取消置顶' : '置顶';
+                    const pinClass = teaching.is_pinned ? 'btn btn-warning' : 'btn btn-primary';
+                    tableHTML += `
+                        <tr class="${rowClass}" title="${escapeHtml(teaching.error_reason || '')}">
+                            <td style="font-size: 12px;">
+                                <a href="../video.html?task_id=${teaching.task_id}"
+                                   style="color: var(--primary-blue); text-decoration: none; cursor: pointer;"
+                                   onmouseover="this.style.textDecoration='underline'"
+                                   onmouseout="this.style.textDecoration='none'"
+                                   title="点击查看详情">
+                                    ${teaching.task_id.substring(0, 8)}...
+                                </a>
+                            </td>
+                            <td>${escapeHtml(teaching.title || '无标题')}</td>
+                            <td>${escapeHtml(teaching.username)}</td>
+                            <td style="white-space:nowrap;">${versionHTML}</td>
+                            <td style="white-space:nowrap;">${gradeHTML}</td>
+                            <td>${knowledgeTagHTML}${secondToggleHTML}</td>
+                            <td>${teaching.view_count} / ${teaching.likes_count}</td>
+                            <td style="font-size: 12px;">${date ? date.toLocaleString('zh-CN', { hour12: false }) : '-'}</td>
+                            <td>
+                                <button class="${pinClass}" style="padding: 6px 12px; font-size: 12px; margin-right: 5px;"
+                                        onclick="handleTeachingPin('${teaching.task_id}', ${teaching.is_pinned ? 'false' : 'true'})">
+                                    ${pinText}
+                                </button>
+                                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px; margin-right: 5px;"
+                                        onclick="editTeachingContent('${teaching.task_id}')">
+                                    编辑内容
+                                </button>
+                                <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;"
+                                        onclick="handleDeleteTeaching('${teaching.task_id}', '${escapeHtml(teaching.title || '无标题')}')">
+                                    删除
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                listElement.innerHTML = tableHTML;
+
+                // 渲染分页
+                renderPagination(result.total_pages, result.page);
+            } catch (error) {
+                console.error('加载教学内容失败:', error);
+                listElement.innerHTML = `<div class="error-message show">加载失败: ${error.message}</div>`;
+            }
+        }
+
+        // 渲染分页
+        function renderPagination(totalPages, current) {
+            const pagination = document.getElementById('pagination');
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            html += `<button onclick="loadTeachings(${current - 1})" ${current === 1 ? 'disabled' : ''}>上一页</button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= current - 2 && i <= current + 2)) {
+                    html += `<button onclick="loadTeachings(${i})" class="${i === current ? 'active' : ''}">${i}</button>`;
+                } else if (i === current - 3 || i === current + 3) {
+                    html += `<span>...</span>`;
+                }
+            }
+            html += `<button onclick="loadTeachings(${current + 1})" ${current === totalPages ? 'disabled' : ''}>下一页</button>`;
+            pagination.innerHTML = html;
+        }
+
+        // 删除教学内容
+        async function handleDeleteTeaching(taskId, title) {
+            if (!confirm(`确定要删除教学内容 "${title}" 吗？此操作不可恢复！`)) {
+                return;
+            }
+            try {
+                await deleteTeaching(taskId);
+                showToast('删除成功', 'success');
+                loadTeachings(currentPage);
+            } catch (error) {
+                showToast('删除失败: ' + error.message, 'error');
+            }
+        }
+
+        async function handleTeachingPin(taskId, pinned) {
+            try {
+                await window.toggleTeachingPin(taskId, pinned);
+                await loadTeachings(currentPage);
+                const modal = document.getElementById('pinManagerModal');
+                if (modal && modal.style.display !== 'none') {
+                    await loadPinManager();
+                }
+            } catch (error) {
+                showToast((pinned ? '置顶失败: ' : '取消置顶失败: ') + error.message, 'error');
+            }
+        }
+
+        async function openPinManager() {
+            document.getElementById('pinManagerModal').style.display = 'flex';
+            await loadPinManager();
+        }
+
+        function closePinManager() {
+            document.getElementById('pinManagerModal').style.display = 'none';
+        }
+
+        async function loadPinManager() {
+            const container = document.getElementById('pinnedTeachingsList');
+            container.innerHTML = '加载中...';
+            try {
+                const result = await getTeachingPins();
+                document.getElementById('pinLimitInput').value = result.limit;
+                document.getElementById('pinCountText').textContent = `当前已置顶 ${result.count} 个，最少保留 5 个`;
+                if (!result.data || result.data.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><p>暂无已置顶教学内容</p></div>';
+                    return;
+                }
+                container.innerHTML = result.data.map((item) => {
+                    const generatedText = item.generated_at
+                        ? new Date(item.generated_at).toLocaleString('zh-CN', { hour12: false })
+                        : '-';
+                    return `
+                    <div class="pin-manager-item">
+                        <div>
+                            <div class="pin-manager-item-title" title="${escapeHtml(item.title || '无标题')}">${escapeHtml(item.title || '无标题')}</div>
+                            <div style="font-size:12px; color:#666; margin-top:4px;">ID：${escapeHtml(item.task_id || '-')} | 生成时间：${escapeHtml(generatedText)}</div>
+                        </div>
+                        <button class="btn btn-danger" onclick="handleTeachingPin('${item.task_id}', false)">取消置顶</button>
+                    </div>
+                `;
+                }).join('');
+            } catch (error) {
+                container.innerHTML = `<div class="error-message show">加载失败: ${escapeHtml(error.message)}</div>`;
+            }
+        }
+
+        async function savePinLimit() {
+            const input = document.getElementById('pinLimitInput');
+            const limit = Number(input.value);
+            if (!Number.isInteger(limit) || limit < 5) {
+                showToast('最多置顶数量不能少于5个', 'warn');
+                return;
+            }
+            try {
+                await updateTeachingPinLimit(limit);
+                await loadPinManager();
+                showToast('保存成功', 'success');
+            } catch (error) {
+                showToast('保存失败: ' + error.message, 'error');
+            }
+        }
+
+        // ========== 单标签组编辑弹窗 ==========
+
+        // 加载框架数据
+        async function loadFrameworkData() {
+            if (frameworkData) return frameworkData;
+            try {
+                frameworkData = await apiRequest('/api/knowledge-tag-framework');
+                return frameworkData;
+            } catch (e) {
+                console.error('加载框架数据失败:', e);
+                return null;
+            }
+        }
+
+        // 打开编辑内容弹窗（标题 / 标签 / 题目 / 动画）
+        async function editTeachingContent(taskId) {
+            try {
+                const data = await apiRequest(`/api/teachings/${taskId}/metadata`);
+                currentEditTaskId = taskId;
+                tagGroup = normalizeKnowledgeTags(data.knowledge_tags) || {
+                    version: '',
+                    grade: '',
+                    main_tag: '',
+                    sub_tags: []
+                };
+                // 第二标签组（可空）；默认编辑主标签槽位
+                secondTagGroup = normalizeKnowledgeTags(data.second_knowledge_tag) || null;
+                activeTagSlot = 'primary';
+
+                // 加载框架数据
+                var fd = await loadFrameworkData();
+                if (!fd) {
+                    showToast('无法加载标签框架数据', 'warn');
+                    return;
+                }
+
+                // 填充标题与题目
+                document.getElementById('editTitle').value = data.title || '';
+                document.getElementById('editQuestion').value = data.question || '';
+                document.getElementById('editErrorFeedback').value = '';
+                // 回显后刷新题目公式预览
+                if (typeof updateQuestionPreview === 'function') updateQuestionPreview();
+
+                // 显示弹窗
+                document.getElementById('contentEditModal').style.display = 'flex';
+                renderActiveTagEditor();
+
+                // 加载封面预览
+                reloadCoverPreview(taskId);
+                // 加载动画预览
+                reloadAnimationPreview(taskId);
+                setRegeneratingUI(false);
+            } catch (error) {
+                showToast('获取教学内容信息失败: ' + (error.message || error), 'error');
+            }
+        }
+
+        // 关闭弹窗
+        function closeContentEditModal() {
+            document.getElementById('contentEditModal').style.display = 'none';
+            currentEditTaskId = null;
+            tagGroup = null;
+            secondTagGroup = null;
+            activeTagSlot = 'primary';
+            if (_regenTimer) { clearInterval(_regenTimer); _regenTimer = null; }
+            if (_coverTimer) { clearInterval(_coverTimer); _coverTimer = null; }
+        }
+
+        // 取当前正在编辑的标签组（主 / 第二）
+        function getCurrentEditGroup() {
+            return activeTagSlot === 'second' ? secondTagGroup : tagGroup;
+        }
+
+        // 渲染当前活动槽位的标签编辑器，并刷新第二标签相关 UI
+        function renderActiveTagEditor() {
+            renderTagGroupEditor(getCurrentEditGroup());
+            refreshSecondTagUI();
+        }
+
+        // 刷新“添加第二标签 / 切换标签”按钮文案与当前槽位提示
+        function refreshSecondTagUI() {
+            const btnLabel = document.getElementById('secondTagBtnLabel');
+            if (btnLabel) btnLabel.textContent = secondTagGroup ? '切换标签' : '添加第二标签';
+
+            const ind = document.getElementById('tagSlotIndicator');
+            if (!ind) return;
+            if (secondTagGroup) {
+                ind.style.display = 'block';
+                const slotText = (activeTagSlot === 'second') ? '第二标签' : '主标签';
+                ind.innerHTML = '正在编辑：<b>' + slotText + '</b>'
+                    + ' &nbsp;<a href="javascript:void(0)" onclick="removeSecondTag()" style="color:#d9534f;">移除第二标签</a>';
+            } else {
+                ind.style.display = 'none';
+                ind.innerHTML = '';
+            }
+        }
+
+        // 添加 / 切换第二标签
+        function toggleSecondTag() {
+            if (!secondTagGroup) {
+                // 添加第二标签：初始化空组并切换至第二槽位编辑
+                secondTagGroup = { version: '', grade: '', main_tag: '', sub_tags: [] };
+                activeTagSlot = 'second';
+                renderTagGroupEditor(secondTagGroup);
+            } else {
+                // 已有第二标签：在主 / 第二槽位间切换（其余内容不受影响）
+                activeTagSlot = (activeTagSlot === 'second') ? 'primary' : 'second';
+                renderTagGroupEditor(getCurrentEditGroup());
+            }
+            refreshSecondTagUI();
+        }
+
+        // 移除第二标签（重置为空，切回主标签槽位）
+        function removeSecondTag() {
+            secondTagGroup = null;
+            if (activeTagSlot === 'second') {
+                activeTagSlot = 'primary';
+                renderTagGroupEditor(tagGroup);
+            }
+            refreshSecondTagUI();
+        }
+
+        // 渲染编辑器（单标签组）
+        function renderTagGroupEditor(group) {
+            var panel = document.getElementById('tagGroupEditorPanel');
+            if (!group) {
+                panel.innerHTML = '<div class="tag-group-empty-hint"><div class="icon">📋</div><div>加载中...</div></div>';
+                return;
+            }
+
+            selectedSubTags = [].concat(group.sub_tags || []);
+
+            // 构建知识域下拉
+            var versions = (frameworkData && frameworkData.versions) || [];
+            var versionOptions = '<option value="">请选择知识域</option>';
+            versions.forEach(function(v) {
+                var sel = (v === group.version) ? ' selected' : '';
+                versionOptions += '<option value="' + escapeHtml(v) + '"' + sel + '>' + escapeHtml(v) + '</option>';
+            });
+
+            // 构建年级下拉
+            var grades = (frameworkData && frameworkData.grades) || [];
+            var gradeOptions = '<option value="">请选择年级</option>';
+            var gradeOrder = ['一上', '一下', '二上', '二下', '三上', '三下', '四上', '四下', '五上', '五下', '六上', '六下', '七上', '七下', '八上', '八下', '九上', '九下'];
+            grades.slice().sort(function(a, b) {
+                return gradeOrder.indexOf(a) - gradeOrder.indexOf(b);
+            }).forEach(function(g) {
+                var sel = (g === group.grade) ? ' selected' : '';
+                gradeOptions += '<option value="' + escapeHtml(g) + '"' + sel + '>' + escapeHtml(g) + '</option>';
+            });
+
+            // 根据知识域和年级筛选章/单元
+            var availableMainTags = getAvailableMainTags(group.version, group.grade);
+            var mainTagOptions = '<option value="">请选择章/单元</option>';
+            availableMainTags.forEach(function(m) {
+                var sel = (m === group.main_tag) ? ' selected' : '';
+                mainTagOptions += '<option value="' + escapeHtml(m) + '"' + sel + '>' + escapeHtml(m) + '</option>';
+            });
+
+            // 知识点标签（可多选，隐性属性）
+            var subTagsHtml = '';
+            var availableSubTags = getAvailableSubTags(group.version, group.grade, group.main_tag);
+            // 过滤掉当前知识域/年级/章组合下不存在的旧子标签，避免保存时被后端拒绝
+            selectedSubTags = selectedSubTags.filter(function(sub) {
+                return availableSubTags.indexOf(sub) >= 0;
+            });
+            availableSubTags.forEach(function(sub) {
+                var selClass = (selectedSubTags.indexOf(sub) >= 0) ? ' selected' : '';
+                subTagsHtml += '<span class="tag-group-subtag' + selClass + '" data-value="' + escapeHtml(sub) + '" onclick="toggleSubTag(\'' + escapeHtml(sub).replace(/'/g, "\\'") + '\', this)">' + escapeHtml(sub) + '</span>';
+            });
+
+            panel.innerHTML = '<div class="tag-group-editor">' +
+                '<div><label>知识域 <span style="color:red;">*</span></label><select id="tagGroupVersion" onchange="onTagGroupFieldChange()">' + versionOptions + '</select></div>' +
+                '<div><label>年级 <span style="color:red;">*</span></label><select id="tagGroupGrade" onchange="onTagGroupFieldChange()">' + gradeOptions + '</select></div>' +
+                '<div><label>章/单元 <span style="color:red;">*</span></label><select id="tagGroupMainTag" onchange="onTagGroupFieldChange()">' + mainTagOptions + '</select></div>' +
+                '<div><label>知识点标签（可多选，隐性属性）</label><div class="tag-group-subtags" id="tagGroupSubTags">' + subTagsHtml + '</div></div>' +
+                '</div>';
+
+            // 绑定事件
+            document.getElementById('tagGroupVersion').addEventListener('change', function() {
+                updateMainTagDropdown();
+                updateSubTagDropdown();
+                syncGroupFromEditor();
+            });
+            document.getElementById('tagGroupGrade').addEventListener('change', function() {
+                updateMainTagDropdown();
+                updateSubTagDropdown();
+                syncGroupFromEditor();
+            });
+            document.getElementById('tagGroupMainTag').addEventListener('change', function() {
+                updateSubTagDropdown();
+                syncGroupFromEditor();
+            });
+        }
+
+        // ========== 重新识别知识点标签（调用标签识别模型，保留手动选择） ==========
+        async function reidentifyTags() {
+            if (!currentEditTaskId) return;
+            const question = document.getElementById('editQuestion').value.trim();
+            if (!question) {
+                showToast('请先在「题目内容」中填写题目', 'warn');
+                return;
+            }
+            const btn = document.getElementById('reidentifyTagBtn');
+            const panel = document.getElementById('tagGroupEditorPanel');
+            btn.disabled = true;
+            btn.innerHTML = '<span>⏳ 识别中...</span>';
+            panel.innerHTML = '<div class="tag-group-empty-hint"><div class="icon">⏳</div><div id="reidentifyHint">正在调用标签识别模型（两步识别，可能需要 1–2 分钟）…</div></div>';
+
+            // 前端超时保护：略高于后端识别总预算（默认 170s，见 TAG_RECOGNIZE_TOTAL_TIMEOUT_SECONDS），
+            // 让后端先返回明确的 504/结果，超时才前端兜底中断，避免误判"卡死"
+            const controller = new AbortController();
+            const TIMEOUT_MS = 185000;
+            const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+            // 实时倒计时，明确告知用户“正在工作”，避免误以为卡死
+            const startTs = Date.now();
+            const tick = setInterval(() => {
+                const sec = Math.floor((Date.now() - startTs) / 1000);
+                const hint = document.getElementById('reidentifyHint');
+                if (hint) hint.textContent = `正在调用标签识别模型（已等待 ${sec}s，两步识别可能需要 1–2 分钟）…`;
+            }, 1000);
+
+            try {
+                const result = await adminReidentifyTags(currentEditTaskId, question, controller.signal);
+                if (result && result.success && result.knowledge_tags) {
+                    const kt = result.knowledge_tags;
+                    if (!kt.version || !kt.grade || !kt.main_tag) {
+                        showToast('识别结果不完整，请手动选择标签', 'warn');
+                        renderTagGroupEditor(getCurrentEditGroup());
+                    } else {
+                        // 回填识别结果到当前活动槽位（不锁定，用户仍可手动调整后保存）
+                        const newGroup = {
+                            version: kt.version || '',
+                            grade: kt.grade || '',
+                            main_tag: kt.main_tag || '',
+                            sub_tags: Array.isArray(kt.sub_tags) ? kt.sub_tags : []
+                        };
+                        if (activeTagSlot === 'second') {
+                            secondTagGroup = newGroup;
+                        } else {
+                            tagGroup = newGroup;
+                        }
+                        renderTagGroupEditor(newGroup);
+
+                        // 新建标签建议：展示提示并引导到「标签智能体审核」队列确认
+                        // （重识别同样遵从识别规则，新建标签需管理员人工审核后方可正式使用）
+                        if (result.pending_tag_id) {
+                            const newTag = (Array.isArray(kt.sub_tags) && kt.sub_tags[0]) || kt.main_tag;
+                            showNewTagProposalHint(newTag, result.pending_tag_id);
+                        }
+                    }
+                } else {
+                    showToast((result && result.message) || '未能识别出标签，请手动选择', 'warn');
+                    renderTagGroupEditor(getCurrentEditGroup());
+                }
+            } catch (error) {
+                if (error && error.name === 'AbortError') {
+                    showToast('标签识别超时（>185s）：模型响应过慢，请稍后重试，或直接在下方手动选择标签', 'warn');
+                } else {
+                    showToast('重新识别标签失败: ' + error.message, 'error');
+                }
+                renderTagGroupEditor(tagGroup);
+            } finally {
+                clearTimeout(timer);
+                clearInterval(tick);
+                btn.disabled = false;
+                btn.innerHTML = '<span>🤖 重新识别标签</span>';
+            }
+        }
+
+        // 新建标签建议提示：引导管理员到「标签智能体审核」队列确认（全人工审核）
+        function showNewTagProposalHint(newTag, pendingTagId) {
+            const panel = document.getElementById('tagGroupEditorPanel');
+            if (!panel) return;
+            const banner = document.createElement('div');
+            banner.className = 'new-tag-proposal-hint';
+            banner.style.cssText = 'margin-top:10px;padding:10px 12px;border-radius:8px;'
+                + 'background:#fff7e6;border:1px solid #ffd591;color:#874d00;font-size:13px;line-height:1.6;';
+            banner.innerHTML = '🔖 识别建议<strong>新建标签「'
+                + escapeHtml(newTag || '新标签') + '」</strong>，已提交「标签智能体审核」队列'
+                + '（operation=add），需管理员确认后方可正式使用。'
+                + '<a href="tag_review.html" target="_blank" '
+                + 'style="margin-left:8px;color:#d46b08;font-weight:600;text-decoration:underline;">前往审核 →</a>';
+            panel.appendChild(banner);
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        }
+
+        // 从编辑器同步数据到当前活动槽位的标签组（主 / 第二）
+        function syncGroupFromEditor() {
+            const g = getCurrentEditGroup();
+            if (!g) return;
+            g.version = document.getElementById('tagGroupVersion').value;
+            g.grade = document.getElementById('tagGroupGrade').value;
+            g.main_tag = document.getElementById('tagGroupMainTag').value;
+            g.sub_tags = [].concat(selectedSubTags);
+        }
+
+        // 知识域/年级/章变化时联动
+        function onTagGroupFieldChange() {
+            syncGroupFromEditor();
+        }
+
+        // 更新章/单元下拉（根据知识域和年级筛选）
+        function updateMainTagDropdown() {
+            var version = document.getElementById('tagGroupVersion').value;
+            var grade = document.getElementById('tagGroupGrade').value;
+            var currentMain = document.getElementById('tagGroupMainTag').value;
+            var available = getAvailableMainTags(version, grade);
+            var sel = document.getElementById('tagGroupMainTag');
+            sel.innerHTML = '<option value="">请选择章/单元</option>';
+            available.forEach(function(m) {
+                var s = (m === currentMain) ? ' selected' : '';
+                sel.innerHTML += '<option value="' + escapeHtml(m) + '"' + s + '>' + escapeHtml(m) + '</option>';
+            });
+        }
+
+        // 更新子标签显示
+        function updateSubTagDropdown() {
+            var version = document.getElementById('tagGroupVersion').value;
+            var grade = document.getElementById('tagGroupGrade').value;
+            var mainTag = document.getElementById('tagGroupMainTag').value;
+            var container = document.getElementById('tagGroupSubTags');
+            if (!container) return;
+            var available = getAvailableSubTags(version, grade, mainTag);
+            // 移除切换知识域/年级/章后已失效的历史子标签选择，避免提交非法组合
+            selectedSubTags = selectedSubTags.filter(function(sub) {
+                return available.indexOf(sub) >= 0;
+            });
+            container.innerHTML = '';
+            available.forEach(function(sub) {
+                var chip = document.createElement('span');
+                chip.className = 'tag-group-subtag' + (selectedSubTags.indexOf(sub) >= 0 ? ' selected' : '');
+                chip.textContent = sub;
+                chip.dataset.value = sub;
+                chip.addEventListener('click', function() {
+                    toggleSubTag(sub, chip);
+                });
+                container.appendChild(chip);
+            });
+        }
+
+        // 切换子标签选中
+        function toggleSubTag(tag, chip) {
+            var idx = selectedSubTags.indexOf(tag);
+            if (idx >= 0) {
+                selectedSubTags.splice(idx, 1);
+                chip.classList.remove('selected');
+            } else {
+                selectedSubTags.push(tag);
+                chip.classList.add('selected');
+            }
+            syncGroupFromEditor();
+        }
+
+        // 根据版本和年级获取可用主标签
+        function getAvailableMainTags(version, grade) {
+            if (!frameworkData) return [];
+            var hierarchy = frameworkData.hierarchy || {};
+            if (!version && !grade) {
+                return frameworkData.main_tags || [];
+            }
+            var available = new Set();
+            if (version && !grade) {
+                if (hierarchy[version]) {
+                    for (var g in hierarchy[version]) {
+                        for (var m in hierarchy[version][g]) {
+                            available.add(m);
+                        }
+                    }
+                }
+            } else if (grade && !version) {
+                for (var v in hierarchy) {
+                    if (hierarchy[v][grade]) {
+                        for (var m in hierarchy[v][grade]) {
+                            available.add(m);
+                        }
+                    }
+                }
+            } else if (version && grade && hierarchy[version] && hierarchy[version][grade]) {
+                for (var m in hierarchy[version][grade]) {
+                    available.add(m);
+                }
+            }
+            return Array.from(available).sort();
+        }
+
+        // 根据版本、年级和主标签获取可用子标签
+        function getAvailableSubTags(version, grade, mainTag) {
+            if (!frameworkData || !mainTag) return [];
+            var hierarchy = frameworkData.hierarchy || {};
+            var subTags = {};
+            // 收集所有该主标签下的子标签
+            for (var v in hierarchy) {
+                for (var g in hierarchy[v]) {
+                    var mains = hierarchy[v][g] || {};
+                    if (mains[mainTag]) {
+                        mains[mainTag].forEach(function(sub) {
+                            subTags[sub] = true;
+                        });
+                    }
+                }
+            }
+            // 如果有指定版本和年级，优先使用该组合的
+            if (version && grade && hierarchy[version] && hierarchy[version][grade] && hierarchy[version][grade][mainTag]) {
+                subTags = {};
+                hierarchy[version][grade][mainTag].forEach(function(sub) {
+                    subTags[sub] = true;
+                });
+            }
+            return Object.keys(subTags).sort();
+        }
+
+        // ========== 保存编辑内容（标题 / 题目 / 标签） ==========
+        async function saveContentEdit() {
+            if (!currentEditTaskId) return;
+            syncGroupFromEditor();
+            if (!tagGroup || !tagGroup.main_tag) {
+                showToast('请选择章/单元', 'warn');
+                return;
+            }
+            const title = document.getElementById('editTitle').value.trim();
+            const question = document.getElementById('editQuestion').value.trim();
+            if (!question) {
+                showToast('题目内容不能为空', 'warn');
+                return;
+            }
+
+            try {
+                // 第二标签：仅当完整填写（含知识域/年级/章单元）才提交；否则传 null 表示清空第二标签
+                let secondTagPayload = null;
+                if (secondTagGroup && secondTagGroup.version && secondTagGroup.grade && secondTagGroup.main_tag) {
+                    secondTagPayload = {
+                        version: secondTagGroup.version,
+                        grade: secondTagGroup.grade,
+                        main_tag: secondTagGroup.main_tag,
+                        sub_tags: secondTagGroup.sub_tags
+                    };
+                }
+                // 保存知识点标签（主标签 + 第二标签）
+                // learn=true：管理后台保存标签时触发智能体学习路径——
+                // 智能体记录管理员的人工修正（学习样本），框架外新标签自动
+                // 提交「标签智能体审核」队列（tag_review.html），审核通过后
+                // 补入正式标签框架。普通用户侧保存不传此标记。
+                const saveResp = await apiRequest('/api/teachings/' + currentEditTaskId + '/knowledge-tags', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        version: tagGroup.version,
+                        grade: tagGroup.grade,
+                        main_tag: tagGroup.main_tag,
+                        sub_tags: tagGroup.sub_tags,
+                        second_tag: secondTagPayload,
+                        confirmed: true,
+                        learn: true
+                    })
+                });
+                // 保存标题与题目（管理员接口，绕过所有权校验）
+                await adminUpdateTeaching(currentEditTaskId, { title: title, question: question });
+
+                // 学习路径反馈：新标签进入审核队列（引导前往审核）/ 仅记录学习样本
+                const lr = saveResp && saveResp.learning;
+                if (lr && lr.proposals > 0) {
+                    const newTagNames = (lr.new_tags || []).join('、');
+                    const goReview = confirm('保存成功！\n\n🧠 标签智能体已学习本次更改，'
+                        + lr.proposals + ' 个新标签已提交「标签智能体审核」队列（待审核）：\n\n'
+                        + (newTagNames ? '  ' + newTagNames + '\n\n' : '')
+                        + '审核通过后将正式加入标签框架，题目标签正常展示。\n\n'
+                        + '点击「确定」前往审核，点「取消」留在当前页。');
+                    if (goReview) {
+                        window.open('tag_review.html', '_blank');
+                    }
+                } else {
+                    showToast(lr && lr.learned
+                        ? '保存成功！\n\n🧠 标签智能体已学习本次标签更改（学习样本已记录）。'
+                        : '保存成功！', 'success');
+                }
+                closeContentEditModal();
+                loadTeachings(currentPage);
+            } catch (error) {
+                showToast('保存失败: ' + error.message, 'error');
+            }
+        }
+
+        // ========== 动画 重新生成 ==========
+        let _regenTimer = null;
+        // ========== 封面 重新生成 ==========
+        let _coverTimer = null;
+
+        // 调用网页同款生成模型，基于弹窗内编辑后的题目内容重新生成（可附带纠错信息）
+        async function regenerateContent(target) {
+            if (!currentEditTaskId) return;
+            const question = document.getElementById('editQuestion').value.trim();
+            if (!question) {
+                showToast('请先在「题目内容」中填写题目', 'warn');
+                return;
+            }
+            const errorFeedback = document.getElementById('editErrorFeedback').value.trim();
+            const title = document.getElementById('editTitle').value.trim();
+
+            setRegeneratingUI(true);
+            try {
+                const result = await adminRegenerateTeaching(currentEditTaskId, {
+                    question: question,
+                    title: title,
+                    error_feedback: errorFeedback,
+                    target: target
+                });
+                if (result && result.success) {
+                    pollRegeneration(currentEditTaskId);
+                } else {
+                    setRegeneratingUI(false);
+                    showToast('重新生成请求失败', 'warn');
+                }
+            } catch (error) {
+                setRegeneratingUI(false);
+                showToast('重新生成失败: ' + error.message, 'error');
+            }
+        }
+
+        function regenerateAnimation() { regenerateContent('animation'); }
+
+        // 轮询生成状态，完成后刷新动画预览
+        function pollRegeneration(taskId) {
+            const statusEl = document.getElementById('animationStatus');
+            statusEl.textContent = '生成中... 0%';
+            statusEl.className = 'box-status running';
+
+            let attempts = 0;
+            const maxAttempts = 200; // 约 10 分钟
+            if (_regenTimer) clearInterval(_regenTimer);
+            _regenTimer = setInterval(async function () {
+                attempts++;
+                try {
+                    const task = await getTaskStatus(taskId);
+                    const prog = task.progress || 0;
+                    if (task.status === 'completed') {
+                        clearInterval(_regenTimer);
+                        _regenTimer = null;
+                        setRegeneratingUI(false);
+                        statusEl.textContent = '动画已重新生成 ✓';
+                        statusEl.className = 'box-status ok';
+                        reloadAnimationPreview(taskId);
+                    } else if (task.status === 'failed') {
+                        clearInterval(_regenTimer);
+                        _regenTimer = null;
+                        setRegeneratingUI(false);
+                        statusEl.textContent = '生成失败：' + (task.error || '未知错误') + '（原内容已保留，可重试）';
+                        statusEl.className = 'box-status err';
+                    } else {
+                        statusEl.textContent = '生成中... ' + prog + '%';
+                    }
+                } catch (e) {
+                    if (attempts >= maxAttempts) {
+                        clearInterval(_regenTimer);
+                        _regenTimer = null;
+                        setRegeneratingUI(false);
+                        statusEl.textContent = '轮询超时，请手动刷新';
+                        statusEl.className = 'box-status err';
+                    }
+                }
+            }, 3000);
+        }
+
+        function setRegeneratingUI(isRunning) {
+            const aBtn = document.getElementById('regenAnimationBtn');
+            if (isRunning) {
+                aBtn.disabled = true;
+                aBtn.classList.add('loading');
+            } else {
+                aBtn.disabled = false;
+                aBtn.classList.remove('loading');
+            }
+        }
+
+        // 重新加载动画预览 iframe
+        function reloadAnimationPreview(taskId) {
+            const frame = document.getElementById('animationFrame');
+            const status = document.getElementById('animationStatus');
+            status.textContent = '动画预览加载中...';
+            status.className = 'box-status';
+            frame.src = API_BASE + '/api/teachings/' + taskId + '/html?t=' + Date.now();
+            frame.onload = function () {
+                status.textContent = '动画已生成 ✓';
+                status.className = 'box-status ok';
+            };
+            frame.onerror = function () {
+                status.textContent = '动画加载失败';
+                status.className = 'box-status err';
+            };
+        }
+
+        // ========== 封面 预览与重新生成 ==========
+
+        // 重新加载封面预览（调用后端 /api/teachings/{task_id}/preview，检查封面是否正常生成）
+        function reloadCoverPreview(taskId) {
+            const img = document.getElementById('coverImage');
+            const status = document.getElementById('coverStatus');
+            status.textContent = '封面加载中...';
+            status.className = 'box-status';
+            img.src = API_BASE + '/api/teachings/' + taskId + '/preview?t=' + Date.now();
+            img.onload = function () {
+                status.textContent = '封面已生成 ✓';
+                status.className = 'box-status ok';
+            };
+            img.onerror = function () {
+                img.removeAttribute('src');
+                status.textContent = '封面未生成（可点击右侧按钮重新生成）';
+                status.className = 'box-status err';
+            };
+        }
+
+        // 调用封面生成模型（与首页生成封面同款）重新生成封面
+        async function regenerateCover() {
+            if (!currentEditTaskId) return;
+            const btn = document.getElementById('regenCoverBtn');
+            const statusEl = document.getElementById('coverStatus');
+            btn.disabled = true;
+            btn.classList.add('loading');
+            statusEl.textContent = '封面生成中... 0%';
+            statusEl.className = 'box-status running';
+            try {
+                const result = await adminRegenerateCover(currentEditTaskId);
+                if (result && result.success) {
+                    pollCoverRegeneration(currentEditTaskId);
+                } else {
+                    btn.disabled = false;
+                    btn.classList.remove('loading');
+                    statusEl.textContent = '封面重新生成请求失败';
+                    statusEl.className = 'box-status err';
+                }
+            } catch (error) {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+                statusEl.textContent = '封面重新生成失败: ' + error.message;
+                statusEl.className = 'box-status err';
+            }
+        }
+
+        // 轮询封面生成状态，完成后刷新封面预览
+        function pollCoverRegeneration(taskId) {
+            const statusEl = document.getElementById('coverStatus');
+            let attempts = 0;
+            const maxAttempts = 240; // 约 12 分钟
+            if (_coverTimer) clearInterval(_coverTimer);
+            _coverTimer = setInterval(async function () {
+                attempts++;
+                try {
+                    const task = await getTaskStatus(taskId);
+                    const prog = task.progress || 0;
+                    if (task.status === 'completed') {
+                        clearInterval(_coverTimer);
+                        _coverTimer = null;
+                        document.getElementById('regenCoverBtn').disabled = false;
+                        document.getElementById('regenCoverBtn').classList.remove('loading');
+                        statusEl.textContent = '封面已重新生成 ✓';
+                        statusEl.className = 'box-status ok';
+                        reloadCoverPreview(taskId);
+                    } else if (task.status === 'failed') {
+                        clearInterval(_coverTimer);
+                        _coverTimer = null;
+                        document.getElementById('regenCoverBtn').disabled = false;
+                        document.getElementById('regenCoverBtn').classList.remove('loading');
+                        statusEl.textContent = '封面生成失败：' + (task.error || '未知错误') + '（旧封面已保留，可重试）';
+                        statusEl.className = 'box-status err';
+                    } else {
+                        statusEl.textContent = '封面生成中... ' + prog + '%';
+                    }
+                } catch (e) {
+                    if (attempts >= maxAttempts) {
+                        clearInterval(_coverTimer);
+                        _coverTimer = null;
+                        document.getElementById('regenCoverBtn').disabled = false;
+                        document.getElementById('regenCoverBtn').classList.remove('loading');
+                        statusEl.textContent = '轮询超时，请手动刷新';
+                        statusEl.className = 'box-status err';
+                    }
+                }
+            }, 3000);
+        }
+
+        // ========== 筛选功能（动态从数据库加载） ==========
+        let filterFrameworkData = null;
+
+        async function loadFilterFramework() {
+            if (filterFrameworkData) return filterFrameworkData;
+            try {
+                filterFrameworkData = await apiRequest('/api/knowledge-tag-framework');
+                return filterFrameworkData;
+            } catch (e) {
+                console.error('加载筛选框架数据失败:', e);
+                return null;
+            }
+        }
+
+        async function initFilters() {
+            var data = await loadFilterFramework();
+            if (!data) return;
+
+            // 填充知识域下拉
+            var versionSelect = document.getElementById('versionFilter');
+            versionSelect.innerHTML = '<option value="">全部知识域</option>';
+            (data.versions || []).forEach(function(v) {
+                versionSelect.innerHTML += '<option value="' + escapeHtml(v) + '">' + escapeHtml(v) + '</option>';
+            });
+
+            // 填充年级下拉
+            var gradeSelect = document.getElementById('gradeFilter');
+            gradeSelect.innerHTML = '<option value="">全部年级</option>';
+            var gradeOrder = ['一上', '一下', '二上', '二下', '三上', '三下', '四上', '四下', '五上', '五下', '六上', '六下', '七上', '七下', '八上', '八下', '九上', '九下'];
+            (data.grades || []).slice().sort(function(a, b) {
+                return gradeOrder.indexOf(a) - gradeOrder.indexOf(b);
+            }).forEach(function(g) {
+                gradeSelect.innerHTML += '<option value="' + escapeHtml(g) + '">' + escapeHtml(g) + '</option>';
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('versionFilter').value = '';
+            document.getElementById('gradeFilter').value = '';
+            document.getElementById('sortBy').value = 'generated_at';
+            document.getElementById('sortOrder').value = 'desc';
+            loadTeachings(1);
+        }
+
+        // 回车搜索
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loadTeachings(1);
+            }
+        });
+
+        // 版本和年级筛选自动触发搜索
+        document.getElementById('versionFilter').addEventListener('change', () => {
+            loadTeachings(1);
+        });
+        document.getElementById('gradeFilter').addEventListener('change', () => {
+            loadTeachings(1);
+        });
+
+        // 页面加载时加载数据
+        initFilters();
+        loadTeachings();
+
+        // ══ 题目内容实时数学公式预览（KaTeX） ══
+        const questionPreviewEl = document.getElementById('questionPreview');
+        const editQuestionEl = document.getElementById('editQuestion');
+        function updateQuestionPreview() {
+            const raw = (editQuestionEl.value || '').trim();
+            if (!raw) {
+                questionPreviewEl.style.display = 'none';
+                questionPreviewEl.innerHTML = '';
+                return;
+            }
+            questionPreviewEl.style.display = 'block';
+            if (window.renderMathText) {
+                questionPreviewEl.innerHTML = window.renderMathText(raw);
+            } else {
+                questionPreviewEl.textContent = raw;
+            }
+        }
+        if (editQuestionEl) {
+            editQuestionEl.addEventListener('input', updateQuestionPreview);
+        }
+    </script>
+</body>
+</html>

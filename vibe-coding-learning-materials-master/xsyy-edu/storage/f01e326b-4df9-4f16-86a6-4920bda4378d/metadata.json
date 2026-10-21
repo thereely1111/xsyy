@@ -1,0 +1,24 @@
+{
+  "question": "学校春游共用10辆客车（全部坐满），大客车每辆坐60人，小客车每辆坐20人，大客车比小客车多坐280人，小客车有____辆。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\f01e326b-4df9-4f16-86a6-4920bda4378d\\ScreenShot_2025-12-19_162500_938.png",
+  "task_id": "f01e326b-4df9-4f16-86a6-4920bda4378d",
+  "generated_at": "2025-12-19T18:01:00.855322",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "鸡兔同笼应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "需建立数量关系解决的典型应用题",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-19T18:01:00.855322",
+  "preview_image": "Preview.webp"
+}

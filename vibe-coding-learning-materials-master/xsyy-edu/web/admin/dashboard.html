@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仪表盘 - 管理后台</title>
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+    </script>
+    <link rel="stylesheet" href="css/theme-override.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>管理后台</h2>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html" class="active">仪表盘</a></li>
+                    <li><a href="teachings.html">教学内容</a></li>
+                    <li><a href="users.html">用户管理</a></li>
+                    <li><a href="tags.html">标签管理</a></li>
+                    <li><a href="recharge_requests.html">订单管理</a></li>
+                    <li><a href="feedbacks.html">用户反馈</a></li>
+                    <li><a href="settings.html">系统配置</a></li>
+                    <li><a href="logs.html">网站日志</a></li>
+                    <li><a href="invite-quota.html">邀请与额度</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>仪表盘</h1>
+                <div class="user-info">
+                    <span>管理员：<span id="userInfo">-</span></span>
+                    <a href="../index.html?v=3" class="btn-home">返回首页</a>
+                    <button class="btn-logout" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+
+            <!-- 统计卡片 -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="loading">加载中...</div>
+            </div>
+
+            <!-- 系统状态 -->
+            <div class="card">
+                <h2 class="card-title">系统状态</h2>
+                <div id="systemStatus" class="loading">加载中...</div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-nav.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-feedbacks.js') + '"><\/script>');
+    </script>
+    <script>
+        // 初始化认证
+        initAdminAuth();
+
+        // 加载统计数据
+        async function loadStatistics() {
+            try {
+                const stats = await getStatistics();
+                
+                // 更新统计卡片
+                const statsGrid = document.getElementById('statsGrid');
+                statsGrid.innerHTML = `
+                    <div class="stat-card primary">
+                        <h3>总用户数</h3>
+                        <div class="value">${stats.users.total}</div>
+                    </div>
+                    <div class="stat-card success">
+                        <h3>今日新增用户</h3>
+                        <div class="value">${stats.users.today_new}</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <h3>7日活跃用户</h3>
+                        <div class="value">${stats.users.active_7days}</div>
+                    </div>
+                    <div class="stat-card primary">
+                        <h3>总教学内容</h3>
+                        <div class="value">${stats.teachings.total}</div>
+                    </div>
+                    <div class="stat-card success">
+                        <h3>今日新增内容</h3>
+                        <div class="value">${stats.teachings.today_new}</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <h3>总评论数</h3>
+                        <div class="value">${stats.interactions.total_comments}</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <h3>总点赞数</h3>
+                        <div class="value">${stats.interactions.total_likes}</div>
+                    </div>
+                    <div class="stat-card primary">
+                        <h3>总观看次数</h3>
+                        <div class="value">${stats.interactions.total_views}</div>
+                    </div>
+                    <div class="stat-card danger" style="cursor:pointer;" onclick="location.href='recharge_requests.html'">
+                        <h3>待处理充值</h3>
+                        <div class="value">${stats.pending_recharge_count ?? 0}</div>
+                    </div>
+                `;
+                
+                // 更新系统状态
+                const systemStatus = document.getElementById('systemStatus');
+                const memory = stats.system.memory;
+                const db = stats.system.database;
+                const cache = stats.system.cache;
+                const tasks = stats.system.tasks;
+                
+                systemStatus.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                        <div>
+                            <h3 style="margin-bottom: 10px; font-size: 14px; color: var(--ink-grey);">内存使用</h3>
+                            ${memory.error ? `<p style="color: var(--primary-red);">${memory.error}</p>` : `
+                                <p>RSS: ${memory.rss_mb} MB</p>
+                                <p>VMS: ${memory.vms_mb} MB</p>
+                                <p>使用率: ${memory.percent}%</p>
+                            `}
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 10px; font-size: 14px; color: var(--ink-grey);">数据库连接池</h3>
+                            ${db.error ? `<p style="color: var(--primary-red);">${db.error}</p>` : `
+                                <p>池大小: ${db.pool_size}</p>
+                                <p>已检出: ${db.checked_out}</p>
+                                <p>总连接: ${db.total_connections}</p>
+                            `}
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 10px; font-size: 14px; color: var(--ink-grey);">HTML缓存</h3>
+                            <p>缓存大小: ${cache.size} / ${cache.max_size}</p>
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 10px; font-size: 14px; color: var(--ink-grey);">任务状态</h3>
+                            <p>总计: ${tasks.total}</p>
+                            <p>运行中: ${tasks.running}</p>
+                            <p>已完成: ${tasks.completed}</p>
+                            <p>失败: ${tasks.failed}</p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px; color: var(--ink-grey); font-size: 12px;">
+                        更新时间: ${new Date(stats.timestamp).toLocaleString('zh-CN', { hour12: false })}
+                    </p>
+                `;
+            } catch (error) {
+                console.error('加载统计数据失败:', error);
+                document.getElementById('statsGrid').innerHTML = 
+                    '<div class="error-message show">加载失败: ' + error.message + '</div>';
+                document.getElementById('systemStatus').innerHTML = 
+                    '<div class="error-message show">加载失败: ' + error.message + '</div>';
+            }
+        }
+
+        // 页面加载时加载数据
+        loadStatistics();
+        
+        // 每30秒自动刷新
+        setInterval(loadStatistics, 30000);
+    </script>
+</body>
+</html>
+

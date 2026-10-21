@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盈亏问题与分配应用 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">盈亏问题与分配应用</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('根据余缺求糖果总量与人数并合理安排船只')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <defs><linearGradient id='redGrad' x1='0' y1='0' x2='0' y2='1'><stop offset='0%' stop-color='#d66a60'/><stop offset='100%' stop-color='#b53b30'/></linearGradient><linearGradient id='grayGrad' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#e8e2d6'/><stop offset='100%' stop-color='#cfc8ba'/></linearGradient><filter id='softShadow' x='-20%' y='-20%' width='140%' height='140%'><feGaussianBlur in='SourceAlpha' stdDeviation='3'/><feOffset dx='2' dy='3' result='offsetblur'/><feComponentTransfer><feFuncA type='linear' slope='0.25'/></feComponentTransfer><feMerge><feMergeNode in='offsetblur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='paperGlow' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='5' result='blur'/><feComposite in='SourceGraphic' in2='blur' operator='over'/></filter></defs><style>.svg-elem { transition: all 0.8s cubic-bezier(0.4,0,0.2,1); } .ink-text { fill: #3a3a3a; font-family: 'KaiTi','STKaiti','Microsoft YaHei',serif; } .red-text { fill: #b53b30; font-family: 'KaiTi','STKaiti','Microsoft YaHei',serif; } .rice-box { fill: #f7f2e8; stroke: #b53b30; stroke-width: 1.5; filter: url(#softShadow); } .candy { fill: url(#redGrad); stroke: #9e322a; stroke-width: 1; } .child { fill: #6b6b6b; } .aunty { fill: #8c8c8c; } .boat { fill: url(#grayGrad); stroke: #6b6b6b; stroke-width: 2; filter: url(#softShadow); } .dashed-line { fill: none; stroke: #b53b30; stroke-width: 2; stroke-dasharray: 8 6; animation: shimmer 1.2s linear infinite; opacity: 1; } .highlight { animation: heartbeat 1.2s ease-in-out infinite; } .float { animation: float 3s ease-in-out infinite; } @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} } @keyframes heartbeat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} } @keyframes shimmer { 0%{stroke-dashoffset:0} 100%{stroke-dashoffset:28} } .formula { font-family:'KaiTi','STKaiti','Microsoft YaHei',serif; color:#3a3a3a; font-size:18px; line-height:1.6; padding:10px 14px; background:rgba(247,242,232,0.95); border:1.5px solid #b53b30; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.08); }</style><text x='400' y='45' text-anchor='middle' class='ink-text' font-size='28' font-weight='bold' filter='url(#softShadow)'>盈亏问题与分配应用</text><path d='M0,500 Q200,490 400,500 T800,500 L800,600 L0,600 Z' fill='#e8e2d6' opacity='0.6'/><g class='svg-elem' x-show='sceneStep &gt;= 1 &amp;&amp; sceneStep &lt;= 7' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 translate-y-4 scale-95' x-transition:enter-end='opacity-100 translate-y-0 scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-95'><text x='60' y='85' class='red-text' font-size='20'>一、分糖：两种分法</text><g transform='translate(80,130)' class='float svg-elem'><ellipse cx='0' cy='35' rx='22' ry='30' class='aunty'/><circle cx='0' cy='5' r='16' fill='#f7f2e8' stroke='#8c8c8c' stroke-width='2'/><path d='M-20,55 Q0,75 20,55 L25,85 L-25,85 Z' fill='url(#redGrad)'/><text x='0' y='105' text-anchor='middle' class='ink-text' font-size='14'>阿姨</text></g><g transform='translate(220,250)'><g transform='translate(0,0)' class='svg-elem child'><circle cx='0' cy='0' r='14'/><circle cx='0' cy='-22' r='11' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='2'/></g><g transform='translate(35,0)' class='svg-elem child'><circle cx='0' cy='0' r='14'/><circle cx='0' cy='-22' r='11' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='2'/></g><g transform='translate(70,0)' class='svg-elem child'><circle cx='0' cy='0' r='14'/><circle cx='0' cy='-22' r='11' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='2'/></g><g transform='translate(105,0)' class='svg-elem child'><circle cx='0' cy='0' r='14'/><circle cx='0' cy='-22' r='11' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='2'/></g><g transform='translate(140,0)' class='svg-elem child'><circle cx='0' cy='0' r='14'/><circle cx='0' cy='-22' r='11' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='2'/></g><g transform='translate(175,0)' class='svg-elem child'><circle cx='0' cy='0' r='14'/><circle cx='0' cy='-22' r='11' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='2'/></g><text x='87' y='38' text-anchor='middle' class='ink-text' font-size='14'>小朋友</text></g><g class='svg-elem highlight' x-show='sceneStep === 1' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 scale-50' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'><g transform='translate(220,205)'><g transform='translate(0,0)'><circle cy='-8' r='6' class='candy'/><circle cy='6' r='6' class='candy'/><circle cy='20' r='6' class='candy'/></g><g transform='translate(35,0)'><circle cy='-8' r='6' class='candy'/><circle cy='6' r='6' class='candy'/><circle cy='20' r='6' class='candy'/></g><g transform='translate(70,0)'><circle cy='-8' r='6' class='candy'/><circle cy='6' r='6' class='candy'/><circle cy='20' r='6' class='candy'/></g><g transform='translate(105,0)'><circle cy='-8' r='6' class='candy'/><circle cy='6' r='6' class='candy'/><circle cy='20' r='6' class='candy'/></g><g transform='translate(140,0)'><circle cy='-8' r='6' class='candy'/><circle cy='6' r='6' class='candy'/><circle cy='20' r='6' class='candy'/></g><g transform='translate(175,0)'><circle cy='-8' r='6' class='candy'/><circle cy='6' r='6' class='candy'/><circle cy='20' r='6' class='candy'/></g></g><g transform='translate(135,180)'><circle cx='0' cy='0' r='7' class='candy'/><circle cx='18' cy='8' r='7' class='candy'/><text x='28' y='12' class='red-text' font-size='16'>多2块</text></g></g><g class='svg-elem' x-show='sceneStep === 2' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 scale-50' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'><g transform='translate(220,192)'><g transform='translate(0,0)'><circle cy='-10' r='6' class='candy'/><circle cy='5' r='6' class='candy'/><circle cy='20' r='6' class='candy'/><circle cy='35' r='6' class='candy'/></g><g transform='translate(35,0)'><circle cy='-10' r='6' class='candy'/><circle cy='5' r='6' class='candy'/><circle cy='20' r='6' class='candy'/><circle cy='35' r='6' class='candy'/></g><g transform='translate(70,0)'><circle cy='-10' r='6' class='candy'/><circle cy='5' r='6' class='candy'/><circle cy='20' r='6' class='candy'/><circle cy='35' r='6' class='candy'/></g><g transform='translate(105,0)'><circle cy='-10' r='6' class='candy'/><circle cy='5' r='6' class='candy'/><circle cy='20' r='6' class='candy'/><circle cy='35' r='6' class='candy'/></g><g transform='translate(140,0)'><circle cy='-10' r='6' class='candy'/><circle cy='5' r='6' class='candy'/><circle cy='20' r='6' class='candy'/><circle cy='35' r='6' class='candy'/></g><g transform='translate(175,0)'><circle cy='-10' r='6' class='candy'/><circle cy='5' r='6' class='candy'/><circle cy='20' r='6' class='candy'/><circle cy='35' r='6' class='candy'/></g></g><g transform='translate(415,230)' class='highlight'><circle cx='0' cy='0' r='7' fill='none' stroke='#b53b30' stroke-width='1.5' stroke-dasharray='3 2'/><circle cx='18' cy='0' r='7' fill='none' stroke='#b53b30' stroke-width='1.5' stroke-dasharray='3 2'/><circle cx='36' cy='0' r='7' fill='none' stroke='#b53b30' stroke-width='1.5' stroke-dasharray='3 2'/><circle cx='54' cy='0' r='7' fill='none' stroke='#b53b30' stroke-width='1.5' stroke-dasharray='3 2'/><text x='70' y='5' class='red-text' font-size='16'>少4块</text></g></g><foreignObject x='60' y='370' width='330' height='90' class='svg-elem' x-show='sceneStep &gt;= 4 &amp;&amp; sceneStep &lt;= 7' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 -translate-x-4' x-transition:enter-end='opacity-100 translate-x-0' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'><div xmlns='http://www.w3.org/1999/xhtml' class='formula' style='text-align:center;'><span x-show='sceneStep === 3'>3x + 2 = 4x − 4</span><span x-show='sceneStep === 4'>4x − 3x = 2 + 4，x = 6</span><span x-show='sceneStep === 5'>3×6 + 2 = 20（块）</span><span x-show='sceneStep === 6'>验：3×6+2=20，4×6−4=20 ✓</span></div></foreignObject><g class='svg-elem highlight' x-show='sceneStep &gt;= 5 &amp;&amp; sceneStep &lt;= 7' x-transition:enter='transition-all duration-500 ease-out' x-transition:enter-start='opacity-0 scale-90' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'><text x='220' y='330' class='red-text' font-size='18'>小朋友：6 人</text></g><g class='svg-elem highlight' x-show='sceneStep &gt;= 6 &amp;&amp; sceneStep &lt;= 7' x-transition:enter='transition-all duration-500 ease-out' x-transition:enter-start='opacity-0 scale-90' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'><text x='220' y='355' class='red-text' font-size='18'>糖总数：20 块</text></g><path d='M130,180 Q180,220 220,250' class='dashed-line svg-elem' x-show='sceneStep === 1 || sceneStep === 2' x-transition='transition-all duration-700'/></g><g class='svg-elem' x-show='sceneStep &gt;= 8 &amp;&amp; sceneStep &lt;= 11' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 translate-y-4 scale-95' x-transition:enter-end='opacity-100 translate-y-0 scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-95'><text x='460' y='85' class='red-text' font-size='20'>二、划船：每船最多4人</text><g transform='translate(500,160)' class='svg-elem' x-show='sceneStep &gt;= 9 &amp;&amp; sceneStep &lt;= 10' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 scale-90' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'><text x='90' y='-15' text-anchor='middle' class='ink-text' font-size='16'>小琼老师 + 17 个小朋友</text><g transform='translate(0,0)'><circle cx='0' cy='0' r='10' fill='#b53b30'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#b53b30' stroke-width='1.5'/><text x='0' y='22' text-anchor='middle' class='ink-text' font-size='10'>老师</text></g><g transform='translate(35,0)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(70,0)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(105,0)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(140,0)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(175,0)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(0,45)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(35,45)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(70,45)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(105,45)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(140,45)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(175,45)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(0,90)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(35,90)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(70,90)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(105,90)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(140,90)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g><g transform='translate(175,90)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/></g></g><g class='svg-elem' x-show='sceneStep &gt;= 10' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 translate-y-4' x-transition:enter-end='opacity-100 translate-y-0' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'><g transform='translate(455,490)' class='float svg-elem'><path d='M-28,0 Q0,28 28,0 L24,-18 L-24,-18 Z' class='boat'/><circle cx='-15' cy='-28' r='6' fill='#6b6b6b'/><circle cx='-5' cy='-28' r='6' fill='#6b6b6b'/><circle cx='5' cy='-28' r='6' fill='#6b6b6b'/><circle cx='15' cy='-28' r='6' fill='#6b6b6b'/><text x='0' y='42' text-anchor='middle' class='ink-text' font-size='12'>4人</text></g><g transform='translate(530,490)' class='float svg-elem' style='animation-delay:0.2s'><path d='M-28,0 Q0,28 28,0 L24,-18 L-24,-18 Z' class='boat'/><circle cx='-15' cy='-28' r='6' fill='#6b6b6b'/><circle cx='-5' cy='-28' r='6' fill='#6b6b6b'/><circle cx='5' cy='-28' r='6' fill='#6b6b6b'/><circle cx='15' cy='-28' r='6' fill='#6b6b6b'/><text x='0' y='42' text-anchor='middle' class='ink-text' font-size='12'>4人</text></g><g transform='translate(605,490)' class='float svg-elem' style='animation-delay:0.4s'><path d='M-28,0 Q0,28 28,0 L24,-18 L-24,-18 Z' class='boat'/><circle cx='-15' cy='-28' r='6' fill='#6b6b6b'/><circle cx='-5' cy='-28' r='6' fill='#6b6b6b'/><circle cx='5' cy='-28' r='6' fill='#6b6b6b'/><circle cx='15' cy='-28' r='6' fill='#6b6b6b'/><text x='0' y='42' text-anchor='middle' class='ink-text' font-size='12'>4人</text></g><g transform='translate(680,490)' class='float svg-elem' style='animation-delay:0.6s'><path d='M-28,0 Q0,28 28,0 L24,-18 L-24,-18 Z' class='boat'/><circle cx='-15' cy='-28' r='6' fill='#6b6b6b'/><circle cx='-5' cy='-28' r='6' fill='#6b6b6b'/><circle cx='5' cy='-28' r='6' fill='#6b6b6b'/><circle cx='15' cy='-28' r='6' fill='#6b6b6b'/><text x='0' y='42' text-anchor='middle' class='ink-text' font-size='12'>4人</text></g></g><g class='svg-elem highlight' x-show='sceneStep === 9' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 scale-90' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'><g transform='translate(760,430)'><circle cx='0' cy='0' r='10' fill='#6b6b6b'/><circle cx='0' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/><circle cx='28' cy='0' r='10' fill='#6b6b6b'/><circle cx='28' cy='-18' r='8' fill='#f7f2e8' stroke='#6b6b6b' stroke-width='1.5'/><text x='14' y='28' text-anchor='middle' class='red-text' font-size='16'>余2人</text></g></g><g class='svg-elem' x-show='sceneStep === 10' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 translate-x-4 scale-90' x-transition:enter-end='opacity-100 translate-x-0 scale-100' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'><g transform='translate(755,490)' class='float svg-elem'><path d='M-28,0 Q0,28 28,0 L24,-18 L-24,-18 Z' class='boat'/><circle cx='-8' cy='-28' r='6' fill='#6b6b6b'/><circle cx='8' cy='-28' r='6' fill='#6b6b6b'/><text x='0' y='42' text-anchor='middle' class='ink-text' font-size='12'>2人</text></g></g><foreignObject x='520' y='360' width='240' height='90' class='svg-elem' x-show='sceneStep &gt;= 10' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 translate-y-4' x-transition:enter-end='opacity-100 translate-y-0' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'><div xmlns='http://www.w3.org/1999/xhtml' class='formula' style='text-align:center;'>18 ÷ 4 = 4 余 2<br/>4 + 1 = 5（条）<br/><span x-show='sceneStep === 10'>验：4×4 + 4 = 20 ≥ 18 ✓</span></div></foreignObject><path d='M620,300 Q620,400 620,450' class='dashed-line svg-elem' x-show='sceneStep &gt;= 10' x-transition='transition-all duration-700'/></g>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+    {
+        "title": "情境引入：阿姨分糖",
+        "description": "画面左侧出现阿姨和一群小朋友，准备开始分糖。我们先观察第一种分法。",
+        "bubbleText": "今天用图形来理解盈亏问题！",
+        "bubblePos": {
+            "x": 120,
+            "y": 90
+        }
+    },
+    {
+        "title": "第一种分法：每人3块多2块",
+        "description": "每个小朋友拿到3块糖，糖筐里还剩2块。用算式表示为：糖数 = 3×人数 + 2。",
+        "bubbleText": "多分出去3块，最后剩下2块，就是“盈”。",
+        "bubblePos": {
+            "x": 140,
+            "y": 120
+        }
+    },
+    {
+        "title": "第二种分法：每人4块少4块",
+        "description": "若每人想分4块，每个小朋友前面的糖还不够，总共缺少4块。用算式表示为：糖数 = 4×人数 − 4。",
+        "bubbleText": "想分4块却差4块，这就是“亏”。",
+        "bubblePos": {
+            "x": 160,
+            "y": 150
+        }
+    },
+    {
+        "title": "建立等式：糖数相同",
+        "description": "因为小朋友人数和糖的总数都不变，所以两个算式相等：3×人数 + 2 = 4×人数 − 4。",
+        "bubbleText": "两次分的糖一样多，可以画等号。",
+        "bubblePos": {
+            "x": 180,
+            "y": 180
+        }
+    },
+    {
+        "title": "求解：小朋友有多少人",
+        "description": "把含人数的项移到一边，常数移到另一边：4×人数 − 3×人数 = 2 + 4，得到人数 = 6。",
+        "bubbleText": "多出的一份正好补上了亏的4块！",
+        "bubblePos": {
+            "x": 200,
+            "y": 210
+        }
+    },
+    {
+        "title": "求糖总数",
+        "description": "把人数6代入第一种分法：3×6 + 2 = 20，阿姨一共有20块糖。",
+        "bubbleText": "20块糖分给6个小朋友。",
+        "bubblePos": {
+            "x": 220,
+            "y": 240
+        }
+    },
+    {
+        "title": "分糖答案验证",
+        "description": "若每人分4块，6个小朋友需要24块；阿姨只有20块，正好少4块，符合题意。",
+        "bubbleText": "验算通过：20 = 4×6 − 4。",
+        "bubblePos": {
+            "x": 240,
+            "y": 270
+        }
+    },
+    {
+        "title": "情境切换：划船租船",
+        "description": "小琼老师带17个小朋友划船，每艘船最多坐4人。我们先算出一共有多少人要坐船。",
+        "bubbleText": "现在来看“分配应用”中的租船问题。",
+        "bubblePos": {
+            "x": 560,
+            "y": 90
+        }
+    },
+    {
+        "title": "计算总人数",
+        "description": "老师1人加上小朋友17人，总人数为18人。",
+        "bubbleText": "别忘了把老师也算进去哦！",
+        "bubblePos": {
+            "x": 580,
+            "y": 120
+        }
+    },
+    {
+        "title": "除法与余数",
+        "description": "18人按每船4人分配：18 ÷ 4 = 4 余 2。可以坐满4条船，还剩2人没有船。",
+        "bubbleText": "剩下的2人也需要船。",
+        "bubblePos": {
+            "x": 600,
+            "y": 150
+        }
+    },
+    {
+        "title": "进一法与验证",
+        "description": "余下的2人还要再租1条船，所以至少需要 4 + 1 = 5 条船。验证：4条船坐16人，第5条船坐2人，18人全部有船。",
+        "bubbleText": "答案：5条船，保证所有人都能划船。",
+        "bubblePos": {
+            "x": 620,
+            "y": 180
+        }
+    }
+],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

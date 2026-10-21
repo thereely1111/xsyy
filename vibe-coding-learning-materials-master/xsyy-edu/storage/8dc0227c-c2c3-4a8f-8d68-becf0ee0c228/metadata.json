@@ -1,0 +1,23 @@
+{
+  "question": "甲，乙两人进行乒乓球比赛，规定谁先胜三场谁就胜，第一场甲胜，而最后是乙胜，共有多少种不同的情况?",
+  "prompt": "甲，乙两人进行乒乓球比赛，规定谁先胜三场谁就胜，第一场甲胜，而最后是乙胜，共有多少种不同 的情况?",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "8dc0227c-c2c3-4a8f-8d68-becf0ee0c228",
+  "generated_at": "2025-12-30T23:50:27.784209Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "比赛胜负排列组合",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "分析比赛进程的排列",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "模型意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-30T23:50:27.784221Z",
+  "preview_image": "Preview.webp"
+}

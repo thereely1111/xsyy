@@ -1,0 +1,24 @@
+{
+  "question": "100个和尚分100个馒头，大和尚每人分3个馒头，小和尚3人分1个馒头，恰好分完. 问大和尚、小和尚各多少人？",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/6e1f66d6-1a17-4b76-8103-2c9b9e980db7/pasted-image-1772611401546.png",
+  "task_id": "6e1f66d6-1a17-4b76-8103-2c9b9e980db7",
+  "generated_at": "2026-03-04T16:05:04.089770Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "和尚分馒头应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境需列式建模",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-03-04T16:05:04.089787Z",
+  "preview_image": "Preview.webp"
+}

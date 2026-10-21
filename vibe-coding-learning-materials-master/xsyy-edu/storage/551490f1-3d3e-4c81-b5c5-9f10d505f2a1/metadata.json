@@ -1,0 +1,10 @@
+{
+  "question": "下图中每个小方格的边长为1, 将这个图形沿格线剪两刀(剪出的小块只能旋转, 不能翻转), 然后拼成一个正方形。该正方形的边长是____。",
+  "title": "图形割补重组边长计算",
+  "plan": {
+    "steps": []
+  },
+  "is_math_problem": true,
+  "has_pic": true,
+  "preview_image": "preview.webp"
+}

@@ -1,0 +1,17 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "四下",
+    "main_tag": "鸡兔同笼",
+    "sub_tags": [
+      "假设法解决"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-08T06:43:54.627488Z",
+  "knowledge_tags_confirmed": true,
+  "title": "鸡兔同笼",
+  "question": "笼子里有鸡和兔子共 20 只，它们共有 54 只脚。请问笼子里鸡有多少只？兔子有多少只？",
+  "prompt": "笼子里有鸡和兔子共 20 只，它们共有 54 只脚。请问笼子里鸡有多少只？兔子有多少只？"
+}

@@ -1,0 +1,66 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "学校给新生分配宿舍，如果每间住5人，则有14人没有床位；如果每间住7人，则多出4个床位。请问宿舍有多少间？新生有多少人？",
+  "prompt": "学校给新生分配宿舍，如果每间住5人，则有14人没有床位；如果每间住7人，则多出4个床位。请问宿舍有多少间？新生有多少人？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "fa414012-b7cd-4fbf-8288-402ba88c8d8c",
+  "generated_at": "2026-09-10T08:27:49.269518Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "盈亏问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "两场景差值对应总量"
+  },
+  "tags_updated_at": "2026-09-10T08:27:49.269518Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "",
+    "display_class": "calculation",
+    "grade": "",
+    "tags": {
+      "main_tag": "",
+      "sub_tags": [],
+      "second_tag": null
+    },
+    "question_type": "",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_calculation",
+      "steps_min": 5,
+      "steps_max": 7,
+      "motion_policy": "answer_first",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  },
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "七上",
+    "main_tag": "一元一次方程",
+    "sub_tags": [
+      "一元一次方程应用题"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-10T08:50:13.362868Z",
+  "knowledge_tags_confirmed": true
+}

@@ -1,0 +1,14 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "八下",
+    "main_tag": "勾股定理",
+    "sub_tags": [
+      "勾股定理及其逆定理"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-17T08:40:42.108025Z",
+  "knowledge_tags_confirmed": true,
+  "preview_image": "preview.webp"
+}

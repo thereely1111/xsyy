@@ -1,0 +1,29 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "用三角函数来做相似三角形的题目此类的问题请帮我生成动画",
+  "prompt": "用三角函数来做相似三角形的题目此类的问题请帮我生成动画",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "d290cafa-603b-4984-bee1-35d404ed8ce5",
+  "generated_at": "2026-08-24T01:05:00.122222Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "百分数问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中百分数应用结构"
+  },
+  "tags_updated_at": "2026-08-24T01:05:00.122222Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "九下",
+    "main_tag": "锐角三角函数",
+    "sub_tags": [
+      "锐角三角函数"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-24T01:05:00.262294Z"
+}

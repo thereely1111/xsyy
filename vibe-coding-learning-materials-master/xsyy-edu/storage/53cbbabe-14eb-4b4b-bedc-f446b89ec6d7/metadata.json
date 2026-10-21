@@ -1,0 +1,36 @@
+{
+  "question": "我有5颗糖，妹妹比我多2颗，我俩一共有多少颗糖？",
+  "prompt": "我有5颗糖，妹妹比我多2颗，我俩一共有多少颗糖？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "53cbbabe-14eb-4b4b-bedc-f446b89ec6d7",
+  "generated_at": "2026-08-03T17:32:16.739998Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "整数加法应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境应用题，列式求解",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "数感",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-08-03T17:32:16.739998Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "一上",
+    "main_tag": "20以内的进位加法",
+    "sub_tags": [
+      "实际应用"
+    ]
+  },
+  "preview_image": "Preview.webp",
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-26T07:50:01.913774Z",
+  "knowledge_tags_confirmed": true,
+  "second_tag": null
+}

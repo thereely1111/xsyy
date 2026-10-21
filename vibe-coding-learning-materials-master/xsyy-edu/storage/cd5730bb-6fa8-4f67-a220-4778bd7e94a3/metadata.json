@@ -1,0 +1,21 @@
+{
+  "question": "【例5】小智和小慧从学校到森林公园春游，小智步行，每小时走5千米，他出发后小时，小慧骑自行车，每小时行15千米，小慧追上小智时，正好到达森林公园，学校离森林公园有多少千米?",
+  "prompt": "【例5】小智和小慧从学校到森林公园春游，小智步行，每小时走5千米，他出发后小时，小慧骑自行车，每小时行15千米，小慧追上小智时，正好到达森林公园，学校离森林公园有多少千米?",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "cd5730bb-6fa8-4f67-a220-4778bd7e94a3",
+  "generated_at": "2025-12-23T22:26:25.169178Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "追及问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及速度、时间、距离的追及计算",
+    "main_tag": "模型意识",
+    "sub_tags": []
+  },
+  "tags_updated_at": "2025-12-23T22:26:25.169178Z",
+  "preview_image": "Preview.webp"
+}

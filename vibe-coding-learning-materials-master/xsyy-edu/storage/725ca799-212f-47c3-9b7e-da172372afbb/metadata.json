@@ -1,0 +1,12 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "六上",
+    "main_tag": "圆",
+    "sub_tags": [
+      "圆的认识与周长面积"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T06:37:32.327711Z"
+}

@@ -1,0 +1,24 @@
+{
+  "question": "某人步行的速度为每秒2米。一列火车从后面开来，超过他用了10秒。已知火车长300米，火车的速度是____米/秒。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\aba007b5-f702-4cc2-a8b4-f79fa0132d6c\\pasted-image-1767511745100.png",
+  "task_id": "aba007b5-f702-4cc2-a8b4-f79fa0132d6c",
+  "generated_at": "2026-01-04T15:30:26.251890Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "追及问题（火车过人）",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "经典的行程应用题，需要用相对速度模型求解。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2026-01-04T15:30:26.251890Z",
+  "preview_image": "Preview.webp"
+}

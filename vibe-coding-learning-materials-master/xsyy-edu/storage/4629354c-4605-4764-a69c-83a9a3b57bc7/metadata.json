@@ -1,0 +1,24 @@
+{
+  "question": "200+199-198-197+...+4+3-2-1",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\4629354c-4605-4764-a69c-83a9a3b57bc7\\pasted-image-1767264514705.png",
+  "task_id": "4629354c-4605-4764-a69c-83a9a3b57bc7",
+  "generated_at": "2026-01-01T18:50:11.301886Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "数列求和简便计算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "需发现加减项的规律，属于数列运算题。",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "数感",
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-01T18:50:11.301886Z",
+  "preview_image": "Preview.webp"
+}

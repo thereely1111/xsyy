@@ -1,0 +1,12 @@
+{
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "六上",
+    "main_tag": "数的运算基础",
+    "sub_tags": [
+      "基础整数加减法"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T06:33:41.876505Z"
+}

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 象数演易</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'xsyy-blue': '#1a365d',
+                        'xsyy-cream': '#f7f3e9',
+                        'xsyy-gold': '#d4a574'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/styles/tailwind.css">
+</head>
+<body class="min-h-screen bg-xsyy-cream">
+    <nav class="bg-xsyy-blue text-white py-4">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <a href="/" class="text-2xl font-bold">象数演易</a>
+            <div class="flex items-center gap-3">
+                <a href="/pages/upload.html" class="btn-primary btn-sm">创建应用</a>
+                <button onclick="logout()" class="btn-secondary btn-sm text-white border-white">退出</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid lg:grid-cols-4 gap-8">
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
+                    <div class="text-center mb-6">
+                        <div class="w-24 h-24 bg-xsyy-gold/20 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl">
+                            👤
+                        </div>
+                        <h2 id="sidebarUsername" class="text-xl font-bold text-xsyy-blue">-</h2>
+                        <p id="sidebarRole" class="text-gray-500">-</p>
+                    </div>
+
+                    <nav class="space-y-2">
+                        <button onclick="showTab('profile')" class="tab-btn w-full text-left px-4 py-3 rounded-lg hover:bg-xsyy-cream transition" data-tab="profile">
+                            📝 个人资料
+                        </button>
+                        <button onclick="showTab('works')" class="tab-btn w-full text-left px-4 py-3 rounded-lg hover:bg-xsyy-cream transition" data-tab="works">
+                            📚 我的作品
+                        </button>
+                        <button onclick="showTab('favorites')" class="tab-btn w-full text-left px-4 py-3 rounded-lg hover:bg-xsyy-cream transition" data-tab="favorites">
+                            ❤️ 我的收藏
+                        </button>
+                        <button onclick="showTab('settings')" class="tab-btn w-full text-left px-4 py-3 rounded-lg hover:bg-xsyy-cream transition" data-tab="settings">
+                            ⚙️ 设置
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3">
+                <div id="tab-profile" class="tab-content bg-white rounded-2xl shadow-lg p-6">
+                    <h2 class="text-2xl font-bold text-xsyy-blue mb-6 border-b-2 border-xsyy-gold pb-2">个人资料</h2>
+                    <div id="profileContent">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 font-bold mb-2">用户名</label>
+                                <p id="profileUsername" class="text-lg">-</p>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-bold mb-2">邮箱</label>
+                                <p id="profileEmail" class="text-lg">-</p>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-bold mb-2">角色</label>
+                                <p id="profileRole" class="text-lg">-</p>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-bold mb-2">注册时间</label>
+                                <p id="profileCreatedAt" class="text-lg">-</p>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <label class="block text-gray-700 font-bold mb-2">个人简介</label>
+                            <p id="profileBio" class="text-gray-600">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-works" class="tab-content bg-white rounded-2xl shadow-lg p-6 hidden">
+                    <h2 class="text-2xl font-bold text-xsyy-blue mb-6 border-b-2 border-xsyy-gold pb-2">我的作品</h2>
+                    <div id="worksList" class="space-y-4">
+                        <div class="text-center py-8">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-xsyy-blue mx-auto mb-4"></div>
+                            <p class="text-gray-500">加载中...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-favorites" class="tab-content bg-white rounded-2xl shadow-lg p-6 hidden">
+                    <h2 class="text-2xl font-bold text-xsyy-blue mb-6 border-b-2 border-xsyy-gold pb-2">我的收藏</h2>
+                    <div id="favoritesList" class="space-y-4">
+                        <div class="text-center py-8">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-xsyy-blue mx-auto mb-4"></div>
+                            <p class="text-gray-500">加载中...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-settings" class="tab-content bg-white rounded-2xl shadow-lg p-6 hidden">
+                    <h2 class="text-2xl font-bold text-xsyy-blue mb-6 border-b-2 border-xsyy-gold pb-2">设置</h2>
+                    <form id="settingsForm" onsubmit="saveSettings(event)">
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-bold mb-2">用户名</label>
+                            <input type="text" id="settingsUsername" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-xsyy-blue focus:ring-2 focus:ring-xsyy-blue/20 outline-none transition">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 font-bold mb-2">个人简介</label>
+                            <textarea id="settingsBio" rows="4" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-xsyy-blue focus:ring-2 focus:ring-xsyy-blue/20 outline-none transition"></textarea>
+                        </div>
+                        <button type="submit" class="px-8 py-3 bg-xsyy-blue text-white rounded-lg font-bold hover:bg-opacity-90 transition">
+                            保存设置
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/src/utils/api.js"></script>
+    <script src="/src/utils/auth.js"></script>
+    <script src="/src/utils/ui.js"></script>
+    <script src="/src/utils/feedback.js"></script>
+    <script>
+        let currentTab = 'profile';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.isAuthenticated()) {
+                showToast('请先登录', 'warning');
+                setTimeout(() => window.location.href = '/', 1500);
+                return;
+            }
+
+            loadProfile();
+            showTab('profile');
+        });
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-xsyy-cream', 'text-xsyy-blue');
+            });
+
+            const tab = document.getElementById(`tab-${tabName}`);
+            if (tab) tab.classList.remove('hidden');
+
+            const btn = document.querySelector(`[data-tab="${tabName}"]`);
+            if (btn) {
+                btn.classList.add('bg-xsyy-cream', 'text-xsyy-blue');
+            }
+
+            currentTab = tabName;
+
+            if (tabName === 'works') loadMyWorks();
+            if (tabName === 'favorites') loadMyFavorites();
+        }
+
+        async function loadProfile() {
+            try {
+                const response = await api.users.profile();
+                const user = response.data;
+
+                document.getElementById('sidebarUsername').textContent = user.username;
+                document.getElementById('sidebarRole').textContent = getRoleLabel(user.role);
+                document.getElementById('profileUsername').textContent = user.username;
+                document.getElementById('profileEmail').textContent = user.email;
+                document.getElementById('profileRole').textContent = getRoleLabel(user.role);
+                document.getElementById('profileCreatedAt').textContent = formatDate(user.created_at);
+                document.getElementById('profileBio').textContent = user.bio || '暂无简介';
+                document.getElementById('settingsUsername').value = user.username;
+                document.getElementById('settingsBio').value = user.bio || '';
+
+                localStorage.setItem('username', user.username);
+                localStorage.setItem('user_role', user.role);
+
+            } catch (error) {
+                showToast('加载失败: ' + error.message, 'error');
+            }
+        }
+
+        function getRoleLabel(role) {
+            const labels = { student: '学生', teacher: '教师', creator: '内容创作者', admin: '管理员' };
+            return labels[role] || role;
+        }
+
+        async function loadMyWorks() {
+            const container = document.getElementById('worksList');
+
+            try {
+                const response = await api.users.myWorks();
+                const works = response.data.items || [];
+
+                if (works.length === 0) {
+                    container.innerHTML = '<p class="text-center text-gray-500 py-8">暂无作品</p>';
+                    return;
+                }
+
+                container.innerHTML = works.map(work => `
+                    <div class="border border-gray-200 rounded-lg p-4 flex items-center justify-between">
+                        <div>
+                            <a href="/pages/detail.html?id=${work.id}" class="text-lg font-bold text-xsyy-blue hover:underline">${work.title}</a>
+                            <p class="text-gray-500 text-sm">${work.primary_tag} · ${getDifficultyLabel(work.difficulty)}</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-gray-400">${work.view_count || 0} 浏览</span>
+                            <span class="px-3 py-1 rounded-full text-sm ${work.is_published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">
+                                ${work.is_published ? '已发布' : '未发布'}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                container.innerHTML = '<p class="text-center text-red-500 py-8">加载失败</p>';
+            }
+        }
+
+        async function loadMyFavorites() {
+            const container = document.getElementById('favoritesList');
+
+            try {
+                const response = await api.users.favorites();
+                const favorites = response.data.items || [];
+
+                if (favorites.length === 0) {
+                    container.innerHTML = '<p class="text-center text-gray-500 py-8">暂无收藏</p>';
+                    return;
+                }
+
+                container.innerHTML = favorites.map(fav => `
+                    <div class="border border-gray-200 rounded-lg p-4 flex items-center justify-between">
+                        <div>
+                            <a href="/pages/detail.html?id=${fav.id}" class="text-lg font-bold text-xsyy-blue hover:underline">${fav.title}</a>
+                            <p class="text-gray-500 text-sm">${fav.primary_tag}</p>
+                        </div>
+                        <button onclick="removeFavorite(${fav.id})" class="text-red-500 hover:text-red-700">取消收藏</button>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                container.innerHTML = '<p class="text-center text-red-500 py-8">加载失败</p>';
+            }
+        }
+
+        function getDifficultyLabel(difficulty) {
+            const labels = { easy: '简单', medium: '中等', hard: '困难', olympiad: '竞赛级' };
+            return labels[difficulty] || '中等';
+        }
+
+        async function removeFavorite(id) {
+            try {
+                await api.users.removeFavorite(id);
+                showToast('已取消收藏', 'success');
+                loadMyFavorites();
+            } catch (error) {
+                showToast('操作失败', 'error');
+            }
+        }
+
+        async function saveSettings(event) {
+            event.preventDefault();
+
+            const data = {
+                username: document.getElementById('settingsUsername').value,
+                bio: document.getElementById('settingsBio').value
+            };
+
+            try {
+                await api.users.updateProfile(data);
+                showToast('保存成功', 'success');
+                loadProfile();
+            } catch (error) {
+                showToast('保存失败: ' + error.message, 'error');
+            }
+        }
+
+        function logout() {
+            auth.logout();
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

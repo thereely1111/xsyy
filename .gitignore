@@ -1,0 +1,27 @@
+# 密钥与本地配置
+.env
+.env.*
+!.env.example
+
+# 依赖与构建产物
+node_modules/
+dist/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+chroma_db/
+
+# 本地模型权重（按 README 重新下载）
+backend/data/models/
+
+# 运行期产物
+logs/
+*.log
+
+# 编辑器 / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

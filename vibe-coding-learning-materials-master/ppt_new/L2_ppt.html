@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Coding · L2 智能建造 · 初步搭建与细节打磨</title>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@11/swiper-bundle.min.css" />
+    <!-- 霓虹风格字体 -->
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700,900&display=swap">
+    <style>
+        :root {
+            --bg-primary: #0a0f1c;
+            --bg-secondary: #111827;
+            --accent-cyan: #00ffcc;
+            --accent-magenta: #ff00aa;
+            --accent-blue: #00ccff;
+            --accent-glow: rgba(0, 255, 204, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --font-display: 'Clash Display', sans-serif;
+            --font-body: 'Satoshi', sans-serif;
+            --title-size: clamp(2.2rem, 4.5vw, 3rem);
+            --heading-size: clamp(1.6rem, 3vw, 2.2rem);
+            --subheading-size: clamp(1.2rem, 2vw, 1.6rem);
+            --body-size: clamp(1rem, 1.5vw, 1.25rem);
+            --small-size: clamp(0.85rem, 1.1vw, 1rem);
+            --slide-padding: clamp(1rem, 2vw, 1.5rem);
+            --content-gap: clamp(0.8rem, 1.5vw, 1.2rem);
+            --element-gap: clamp(1rem, 1.8vw, 1.8rem);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+            font-size: var(--body-size);
+            font-weight: 400;
+        }
+
+        /* 粒子背景 */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .swiper {
+            width: 100vw;
+            max-width: min(1920px, calc(100vh * 16 / 9));
+            aspect-ratio: 16/9;
+            height: auto;
+            position: relative;
+            z-index: 1;
+            margin: 0 auto;
+        }
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--slide-padding);
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 16/9;
+        }
+
+        /* 卡片 */
+        .ppt-card {
+            width: min(1300px, 94%);
+            height: 90%;
+            padding: var(--slide-padding);
+            margin: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            gap: var(--content-gap);
+        }
+        .ppt-card::-webkit-scrollbar { width: 6px; }
+        .ppt-card::-webkit-scrollbar-track { background: rgba(0,255,204,0.05); border-radius: 8px; }
+        .ppt-card::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 8px; }
+
+        /* 标题系统 */
+        .h3-subtitle {
+            font-family: var(--font-display);
+            font-size: 14px !important;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-cyan);
+            padding: 0.2rem 0.8rem;
+            border: 1.5px solid var(--accent-cyan);
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 0 12px var(--accent-glow);
+            background: rgba(0,255,204,0.07);
+            line-height: 1.2;
+        }
+        .h1-title, .slide-title-large {
+            font-family: var(--font-display);
+            font-size: var(--title-size);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 60px var(--accent-glow);
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+        }
+        .h2-title, .slide-title {
+            font-family: var(--font-display);
+            font-size: var(--heading-size);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 0.5em;
+            text-align: center;
+        }
+        /* 正文 */
+        .slide-content {
+            font-family: var(--font-body);
+            font-size: var(--body-size);
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .slide-content-small {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .slide-content-strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* 补齐工具类 */
+        .bg-slate-800 { background-color: #1e293b; }
+        .bg-slate-900 { background-color: #0f172a; }
+        .bg-cyan-900 { background-color: #164e63; }
+        .bg-cyan-800 { background-color: #155e75; }
+        .text-cyan-200 { color: #a5f3fc; }
+        .text-cyan-300 { color: #67e8f9; }
+        .text-yellow-300 { color: #fde047; }
+        .text-slate-300 { color: #cbd5e1; }
+        .text-slate-400 { color: #94a3b8; }
+        .text-slate-500 { color: #64748b; }
+        .border-cyan-800 { border-color: #155e75; }
+
+        .flex { display: flex; }
+        .flex-row { display: flex; flex-direction: row; gap: var(--element-gap); }
+        .flex-col { display: flex; flex-direction: column; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.75rem; }
+        .gap-4 { gap: 1.5rem; }
+        .gap-6 { gap: 2.5rem; }
+        .gap-12 { gap: 4rem; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+        .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); } 
+        .space-y-2 > * + * { margin-top: 0.75rem; }
+        .mt-2 { margin-top: 0.75rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+        .mt-6 { margin-top: 2rem; }
+        .mt-8 { margin-top: 3rem; }
+        .mt-10 { margin-top: 4rem; }
+        .mb-2 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .mb-5 { margin-bottom: 2rem; }
+        .mb-6 { margin-bottom: 2.5rem; }
+        .mb-8 { margin-bottom: 3rem; }
+        .p-3 { padding: 1rem; }
+        .p-6 { padding: 2rem; }
+        .px-3 { padding-left: 1rem; padding-right: 1rem; }
+        .py-1 { padding-top: 0.4rem; padding-bottom: 0.4rem; }
+        .rounded { border-radius: 12px; }
+        .rounded-lg { border-radius: 18px; }
+        .rounded-xl { border-radius: 28px; }
+        .rounded-full { border-radius: 999px; }
+        .border { border-width: 1px; border-style: solid; }
+        .border-2 { border-width: 2px; }
+        .border-slate-700 { border-color: #334155; }
+        .w-full { width: 100%; }
+        .max-w-3xl { max-width: 900px; }
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .italic { font-style: italic; }
+        .tracking-wider { letter-spacing: 0.05em; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .card-equal { flex: 1 1 0; min-width: 0; }
+
+        /* 高亮框 */
+        .highlight-box {
+            background: rgba(0,255,204,0.08);
+            border: 2.5px solid var(--accent-cyan);
+            border-radius: 18px;
+            padding: 1.8rem 2.8rem;
+            margin: 1.5rem 0;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 0 30px var(--accent-glow);
+            font-size: var(--body-size);
+        }
+
+        /* 特性网格 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: var(--element-gap);
+            width: 100%;
+        }
+        .feature-card {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1.8px solid rgba(0, 255, 204, 0.12);
+            border-radius: 22px;
+            padding: 2rem 1.8rem;
+            transition: all 0.3s var(--ease-out-expo);
+            box-shadow: 0 4px 20px rgba(0,255,204,0.05);
+        }
+        .feature-card:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 35px var(--accent-glow);
+            transform: translateY(-6px) scale(1.02);
+        }
+        .feature-number {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 20px var(--accent-glow);
+            margin-bottom: 0.8rem;
+        }
+        .feature-title {
+            font-size: var(--heading-size);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .feature-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+        }
+
+        /* 表格 */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: var(--small-size);
+        }
+        .data-table th {
+            font-weight: 700;
+            color: var(--accent-cyan);
+            background: rgba(0,255,204,0.1);
+            border-bottom: 2px solid rgba(0,255,204,0.25);
+            padding: 1rem 1.2rem;
+        }
+        .data-table td {
+            padding: 1rem 1.2rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .data-table tr:hover td { background: rgba(0,255,204,0.04); color: #fff; }
+
+        /* 代码块 */
+        .code-block-wrapper {
+            background: rgba(10, 15, 28, 0.98);
+            border: 1px solid rgba(0,255,204,0.2);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .code-block-header {
+            background: rgba(0,255,204,0.12);
+            padding: 0.7rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .code-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .code-dot.red { background: #ff5f56; }
+        .code-dot.yellow { background: #ffbd2e; }
+        .code-dot.green { background: #27c93f; }
+        .code-block {
+            padding: 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: var(--small-size);
+            color: #e2e8f0;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .tool-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+        .tool-item {
+            background: rgba(0,255,204,0.08);
+            border: 1px solid rgba(0,255,204,0.25);
+            border-radius: 40px;
+            padding: 0.6rem 1.5rem;
+            font-size: var(--small-size);
+            color: var(--accent-cyan);
+        }
+
+        .editor-link-list {
+            width: fit-content;
+            max-width: 88%;
+            margin: 0 auto;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.9rem;
+        }
+        .editor-link-item {
+            background: rgba(0,255,204,0.07);
+            border: 1px solid rgba(0,255,204,0.22);
+            border-radius: 14px;
+            width: fit-content;
+            max-width: 100%;
+            padding: 0.6rem 1rem;
+            color: #e2e8f0;
+            font-size: 1.35rem;
+            line-height: 1.45;
+        }
+        .editor-link-item a {
+            color: #67e8f9;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            word-break: break-all;
+        }
+
+        .flow-vertical {
+            width: min(900px, 86%);
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+        .flow-box {
+            width: 100%;
+            max-width: 720px;
+            border: 1px solid rgba(0,255,204,0.22);
+            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 0.75rem 1.2rem;
+            text-align: center;
+        }
+        .flow-symbol {
+            font-family: var(--font-display);
+            color: var(--accent-cyan);
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .chapter-slide {
+            justify-content: center;
+        }
+        .chapter-kicker {
+            font-family: var(--font-display);
+            color: var(--accent-cyan);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 1.65rem;
+            margin-bottom: 1rem;
+        }
+        .chapter-number {
+            font-family: var(--font-display);
+            font-size: clamp(4rem, 10vw, 7rem);
+            font-weight: 800;
+            line-height: 0.9;
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 45%, var(--accent-magenta) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 60px rgba(0, 255, 204, 0.18);
+        }
+        .chapter-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 4vw, 3.6rem);
+            font-weight: 800;
+            line-height: 1.08;
+            color: #ffffff;
+            margin-top: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+        .chapter-desc {
+            max-width: 920px;
+            color: var(--text-secondary);
+            font-size: clamp(1rem, 1.6vw, 1.25rem);
+            line-height: 1.75;
+            text-align: center;
+        }
+        .chapter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+        .chapter-tags .badge {
+            background: rgba(0, 255, 204, 0.09);
+            border: 1px solid rgba(0, 255, 204, 0.24);
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            color: #d9fffa;
+        }
+
+        /* 页码与全局页脚 */
+        .global-footer {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            color: var(--text-muted);
+            font-size: var(--small-size);
+            text-align: center;
+            pointer-events: none;
+            user-select: none;
+            letter-spacing: 0.05em;
+        }
+
+        .page-number {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            color: var(--accent-cyan);
+            font-size: 14pt;
+            font-family: var(--font-display);
+            text-shadow: 0 0 10px var(--accent-glow);
+            background: rgba(0,0,0,0.3);
+            padding: 4px 16px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--accent-cyan);
+            letter-spacing: 1px;
+        }
+
+        .hidden { display:none; }
+        .badge { display:inline-block; background:#164e63; color:#a5f3fc; border-radius:20px; padding:0.2rem 1rem; font-size:0.9rem; }
+        .icon-large { font-size: 1.8rem; margin-right: 0.3rem; vertical-align: middle; }
+
+        /* 响应式 */
+        @media (max-width: 900px) {
+            .ppt-card { padding: 1.5rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .flex-row { flex-direction: column; }
+            .md\:grid-cols-2 { grid-template-columns: 1fr; }
+            .page-number { bottom: 10px; right: 10px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            <!-- SLIDE 1 封面 L2 -->
+            <div class="swiper-slide">
+                <div class="ppt-card text-center justify-center">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">Lesson 02</div>
+                    <div class="slide-title-large">Vibe Coding</div>
+                    <div class="h2-title">全栈产品开发实战</div>
+                    <div class="slide-content text-slate-300 font-light mb-6" style="font-size:1.8rem;"><p>从 PRD 到 MVP</p></div>
+                    <div class="flex-row" style="gap:1.8rem; justify-content:center; margin-top:2rem; flex-wrap:wrap;">
+                        <div style="text-align:center;">
+                            <div class="text-cyan slide-title" style="font-size:1.8rem;">01</div>
+                            <div class="slide-content-small" style="font-size:1.5rem;">必备环境<br>配置</div>
+                        </div>
+                        <div class="w-px h-12" style="background:#334155;"></div>
+                        <div style="text-align:center;">
+                            <div class="text-cyan slide-title" style="font-size:1.8rem;">02</div>
+                            <div class="slide-content-small" style="font-size:1.5rem;">产品需求与<br>技术架构</div>
+                        </div>
+                        <div class="w-px h-12" style="background:#334155;"></div>
+                        <div style="text-align:center;">
+                            <div class="text-cyan slide-title" style="font-size:1.8rem;">03</div>
+                            <div class="slide-content-small" style="font-size:1.5rem;">初步搭建与<br>前后端迭代</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAPTER PAGE 01 -->
+            <div class="swiper-slide">
+                <div class="ppt-card chapter-slide justify-center text-center" style="max-width: 1300px;">
+                    <div class="chapter-kicker">Part One</div>
+                    <div class="chapter-number">01</div>
+                    <div class="chapter-title">必备环境配置</div>
+                    <div class="chapter-desc mx-auto">
+                        先把工具、账号和部署环境准备好，后续的 AI 编辑器使用、<br>仓库协作与云端发布，都会建立在这一步的基础之上。
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3 必备环境配置 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 01 / Setup</div>
+                    <div class="h2-title">所需环境</div>
+                    <div class="feature-grid" style="grid-template-columns:repeat(2,1fr);">
+                        <div class="feature-card">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span class="feature-number" style="font-size:26px; margin-bottom:0;">1 🖥️</span>
+                                <div class="feature-title" style="font-size:26px; margin-bottom:0;">AI 编辑器</div>
+                            </div>
+                            <div class="feature-desc" style="font-size:1.3rem;">Trae IDE、Codex、Claude Code、VS Code + Copilot、Cursor、……</div>
+                        </div>
+                        <div class="feature-card">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span class="feature-number" style="font-size:26px; margin-bottom:0;">2 🌐</span>
+                                <div class="feature-title" style="font-size:26px; margin-bottom:0;">GitHub 账号</div>
+                            </div>
+                            <div class="feature-desc" style="font-size:1.3rem;">储存/共享项目仓库，同步记录项目文件修改</div>
+                        </div>
+                        <div class="feature-card">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span class="feature-number" style="font-size:26px; margin-bottom:0;">3 ⚙️</span>
+                                <div class="feature-title" style="font-size:26px; margin-bottom:0;">OpenCloudOS 系统</div>
+                            </div>
+                            <div class="feature-desc" style="font-size:1.3rem;">安装环境、拉取 GitHub 仓库、前后端部署、私有访问</div>
+                        </div>
+                        <div class="feature-card">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span class="feature-number" style="font-size:26px; margin-bottom:0;">4 🚀</span>
+                                <div class="feature-title" style="font-size:26px; margin-bottom:0;">Vercel 部署</div>
+                            </div>
+                            <div class="feature-desc" style="font-size:1.3rem;">上传 GitHub URL ，云端部署平台，实现全网访问</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 4 AI编辑器获取链接 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 01 / Channel</div>
+                    <div class="h2-title">AI 编辑器获取途径</div>
+                    <div class="mt-6" style="display:flex; justify-content:center;">
+                        <div class="feature-card" style="max-width:560px; width:100%; text-align:center;">
+                            <div class="slide-content" style="line-height:2; display:inline-block; text-align:left;font-size:1.25rem;">
+                                <div>Trae IDE：<a href="https://www.trae.ai" target="_blank" style="color:var(--accent-cyan);">https://www.trae.ai/</a></div>
+                                <div>Codex：<a href="https://codexmcp.cn/" target="_blank" style="color:var(--accent-cyan);">https://codexmcp.cn/</a></div>
+                                <div>VS Code：<a href="https://code.visualstudio.com" target="_blank" style="color:var(--accent-cyan);">https://code.visualstudio.com/</a></div>
+                                <div>Cursor：<a href="https://www.cursor.com" target="_blank" style="color:var(--accent-cyan);">https://www.cursor.com/</a></div>
+                                <div>Windsurf：<a href="https://codeium.com/windsurf" target="_blank" style="color:var(--accent-cyan);">https://codeium.com/windsurf</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAPTER PAGE 02 -->
+            <div class="swiper-slide">
+                <div class="ppt-card chapter-slide justify-center text-center" style="max-width: 1300px;">
+                    <div class="chapter-kicker">Part Two</div>
+                    <div class="chapter-number">02</div>
+                    <div class="chapter-title">产品需求与技术架构</div>
+                    <div class="chapter-desc mx-auto">
+                        明确需求，以搭建一个类似“象数演易”的平台为目标，再把需求拆成<br>结构化提示词，最后输出 PRD、技术架构与可执行的开发目标。
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5 提示词分级展示 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 02 / Prompts</div>
+                    <div class="h2-title">提示词决定代码质量</div>
+                    <div class="flex-row gap-4 mt-6" style="flex-wrap:wrap; gap:0.65rem; margin-left:auto; margin-right:auto;">
+                        <div class="feature-card" style="flex:1; min-width:240px; display: flex; flex-direction: column;">
+                            <div class="feature-number" style="font-size:calc(2.2rem - 6px);">🌱 初级</div>
+                            <div class="code-block-wrapper">
+                                <div class="code-block-header">
+                                    <span class="code-dot red"></span>
+                                    <span class="code-dot yellow"></span>
+                                    <span class="code-dot green"></span>
+                                </div>
+                                <div class="code-block">直接做一个番茄钟</div>
+                            </div>
+                            <a href="Demo/demo_1.html" target="_blank" style="display:block; margin-top:0.8rem; text-decoration:none;">
+                                <div class="slide-content-small text-center" style="color:var(--accent-cyan); border:1px dashed rgba(0,255,204,0.45); border-radius:12px; padding:0.8rem 1rem;">点击查看初级效果</div>
+                            </a>
+                            <style>
+                                a:hover .hover-overlay { opacity: 1; }
+                                a:hover .rounded { border-color: #00ffcc; box-shadow: 0 0 20px rgba(0,255,204,0.3); transform: translateY(-2px); }
+                            </style>
+                        </div>
+                        <div class="feature-card" style="flex:1; min-width:240px; display: flex; flex-direction: column;">
+                            <div class="feature-number" style="font-size:calc(2.2rem - 6px);">🚀 进阶</div>
+                            <div class="code-block-wrapper">
+                                <div class="code-block-header">
+                                    <span class="code-dot red"></span>
+                                    <span class="code-dot yellow"></span>
+                                    <span class="code-dot green"></span>
+                                </div>
+                                <div class="code-block">做一个番茄钟，有开始/暂停/重置，界面清新，移动端适配，Tailwind</div>
+                            </div>
+                            <a href="Demo/demo_2.html" target="_blank" style="display:block; margin-top:0.8rem; text-decoration:none;">
+                                <div class="slide-content-small text-center" style="color:var(--accent-cyan); border:1px dashed rgba(0,255,204,0.45); border-radius:12px; padding:0.8rem 1rem;">点击查看进阶效果</div>
+                            </a>
+                        </div>
+                        <div class="feature-card" style="flex:1; min-width:240px; display: flex; flex-direction: column;">
+                            <div class="feature-number" style="font-size:calc(2.2rem - 6px);">⚡ 高级</div>
+                            <div class="code-block-wrapper">
+                                <div class="code-block-header">
+                                    <span class="code-dot red"></span>
+                                    <span class="code-dot yellow"></span>
+                                    <span class="code-dot green"></span>
+                                </div>
+                                <div class="code-block">作为前端专家，创建功能完整的番茄钟：计时、阶段、环形进度、通知、自定义设置、本地存储、响应式，纯HTML/CSS/JS，代码整洁。</div>
+                            </div>
+                            <a href="Demo/demo_3.html" target="_blank" style="display:block; margin-top:0.8rem; text-decoration:none;">
+                                <div class="slide-content-small text-center" style="color:var(--accent-cyan); border:1px dashed rgba(0,255,204,0.45); border-radius:12px; padding:0.8rem 1rem;">点击查看高级效果</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 6 生成PRD的结构化提示词 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 02 / PROMPT ENGINEERING</div>
+                    <div class="h2-title">PRD 结构化提示词示例</div>
+                    <div class="bg-slate-800 rounded-xl border border-cyan-800 mt-4" style="padding: 1.2rem 2rem; max-width: 1000px; gap:0.65rem; margin-left:auto; margin-right:auto; margin-top:0.1em;">
+                        <div class="flex flex-col items-start" style="text-align:left; font-size: 0.75em;">
+                            <div class="flex items-start gap-4 mb-4" style="width: 100%;">
+                                <span class="icon-large" style="line-height: 1; display: flex; align-items: center; justify-content: center; width: 24px;">🧑‍💻</span>
+                                <span class="badge" style="text-align: center; width: 80px; display: flex; align-items: center; justify-content: center;">Role</span>
+                                <span class="text-slate-300" style="text-align: left; flex: 1;">你是资深产品经理，擅长AI教育产品需求分析，将复杂算法转化为师生易用的功能模块，熟悉教育场景下的用户痛点、数据闭环与业务增长逻辑，具备跨团队协作能力（后端、前端、AI工程师）。</span>
+                            </div>
+                            <div class="flex items-start gap-4 mb-4" style="width: 100%;">
+                                <span class="icon-large" style="line-height: 1; display: flex; align-items: center; justify-content: center; width: 24px;">🎯</span>
+                                <span class="badge" style="text-align: center; width: 80px; display: flex; align-items: center; justify-content: center;">Objective</span>
+                                <span class="text-slate-300" style="text-align: left; flex: 1;">开发一个AI驱动的数学教学应用生成平台。该平台需具备智能题目分析、交互式教学应用生成、用户系统、内容互动、语义相似度推荐、管理后台、实时任务追踪和性能优化等核心功能。</span>
+                            </div>
+                            <div class="flex items-start gap-4 mb-4" style="width: 100%;">
+                                <span class="icon-large" style="line-height: 1; display: flex; align-items: center; justify-content: center; width: 24px;">🌏</span>
+                                <span class="badge" style="text-align: center; width: 80px; display: flex; align-items: center; justify-content: center;">Context</span>
+                                <span class="text-slate-300" style="text-align: left; flex: 1;">目标用户为学生、数学教师、教育机构内容创作者。他们需要一个能够快速将任意数学题目转化为互动式教学工具的平台，用于课后练习、备课制作课件、在线教育内容生产等场景。</span>
+                            </div>
+                            <div class="flex items-start gap-4" style="width: 100%;">
+                                <span class="icon-large" style="line-height: 1; display: flex; align-items: center; justify-content: center; width: 24px;">⛓️</span>
+                                <span class="badge" style="text-align: center; width: 80px; display: flex; align-items: center; justify-content: center;">Constraint</span>
+                                <span class="text-slate-300" style="text-align: left; flex: 1;">前端Tailwind + 新中式风格；后端FastAPI，MySQL + ChromaDB；DeepSeek分析题目结构，Gemini生成HTML；JWT认证；异步任务队列；生成代码内嵌Tailwind、响应式且无外部依赖。</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:0.5rem; padding:0.4rem 1.5rem; display:inline-block; width:auto; margin-left:auto; margin-right:auto; background: rgba(17, 24, 39, 0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 18px; box-shadow: none; color: #e2e8f0;">👉 基于角色、目标、背景和约束，生成一份详细的产品需求文档（PRD）</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 7 输出的PRD细节 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 02 / Product Requirement</div>
+                    <div class="h2-title">产品需求文档-章节概览</div>
+                    <div class="feature-card" style="max-width:860px; width:100%; margin:0 auto; padding:1.2rem 1.8rem; text-align:left; overflow:hidden;">
+                        <div class="space-y-2" style="font-size:0.95rem; line-height:1.6; color:#e2e8f0;">
+                            <div><span style="color:#67e8f9; font-weight:700;">1. 项目概述：</span>AI 驱动数学教学应用生成，核心是把数学题快速转成可教学、可复用的交互页面。</div>
+                            <div><span style="color:#67e8f9; font-weight:700;">2. 用户角色：</span>学生、教师、管理员三类角色分别对应练习、备课、管理三种使用场景。</div>
+                            <div><span style="color:#67e8f9; font-weight:700;">3. 功能需求：</span>智能题目分析、标题分类、交互 HTML 生成、收藏评论、语义推荐、管理后台。</div>
+                            <div><span style="color:#67e8f9; font-weight:700;">4. 非功能需求：</span>强调性能、稳定性、安全性，保证题目生成速度、页面可用性和数据安全。</div>
+                            <div><span style="color:#67e8f9; font-weight:700;">5. 技术架构：</span>前端使用原生 HTML/CSS/JS 与 Tailwind，后端使用 FastAPI、MySQL、ChromaDB。</div>
+                            <div><span style="color:#67e8f9; font-weight:700;">6. 数据模型：</span>User、Content、Comment、Like、Favorite、Captcha 等对象支撑账号、内容和互动能力。</div>
+                            <div><span style="color:#67e8f9; font-weight:700;">7. API 接口设计：</span>围绕题目分析、页面生成、用户互动、推荐检索等能力进行接口拆分。</div>
+                            <div><span style="color:#67e8f9; font-weight:700;">8. UI/UX 设计要点：</span>强调新中式风格、清晰层级、交互反馈和移动端适配。</div>
+                            <div><span style="color:#67e8f9; font-weight:700;">9. 部署方案：</span>结合 Nginx、Uvicorn、systemd 和云数据库，形成可上线部署流程。</div>
+                            <div><span style="color:#67e8f9; font-weight:700;">10. 测试计划/风险评估：</span>覆盖功能测试、性能测试、错误兜底和版权风险控制。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 8 技术架构文档展示 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 02 / TECH ARCHITECTURE</div>
+                    <div class="h2-title">技术架构文档</div>
+                    <div class="feature-grid" style="grid-template-columns:repeat(2,1fr);">
+                        <div class="feature-card">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span class="feature-number" style="font-size:26px; margin-bottom:0;">📦</span>
+                                <div class="feature-title" style="font-size:26px; margin-bottom:0;">后端</div>
+                            </div>
+                            <div class="feature-desc" style="font-size:1.3rem;">FastAPI, SQLAlchemy, MySQL, ChromaDB, LangChain, DeepSeek/Gemini, JWT, Prometheus</div>
+                        </div>
+                        <div class="feature-card">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span class="feature-number" style="font-size:26px; margin-bottom:0;">🎨</span>
+                                <div class="feature-title" style="font-size:26px; margin-bottom:0;">前端</div>
+                            </div>
+                            <div class="feature-desc" style="font-size:1.3rem;">原生HTML/CSS/JS, Tailwind, Swiper, MathJax, Fetch API, Web Share API</div>
+                        </div>
+                        <div class="feature-card">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span class="feature-number" style="font-size:26px; margin-bottom:0;">🤖</span>
+                                <div class="feature-title" style="font-size:26px; margin-bottom:0;">AI 流水线</div>
+                            </div>
+                            <div class="feature-desc" style="font-size:1.3rem;">DeepSeek分析题目→Gemini生成HTML→Sentence Transformers嵌入→ChromaDB相似搜索</div>
+                        </div>
+                        <div class="feature-card">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span class="feature-number" style="font-size:26px; margin-bottom:0;">☁️</span>
+                                <div class="feature-title" style="font-size:26px; margin-bottom:0;">部署</div>
+                            </div>
+                            <div class="feature-desc" style="font-size:1.3rem;">Nginx + Uvicorn + systemd + 腾讯云MySQL + 本地文件存储</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAPTER PAGE 03 -->
+            <div class="swiper-slide">
+                <div class="ppt-card chapter-slide justify-center text-center" style="max-width: 1300px;">
+                    <div class="chapter-kicker">Part Three</div>
+                    <div class="chapter-number">03</div>
+                    <div class="chapter-title">初步搭建与前后端迭代</div>
+                    <div class="chapter-desc mx-auto">
+                        先生成项目骨架，再通过后端链路和前端交互的多轮优化，<br>把一个可用原型逐步打磨成更稳定、更适合展示的产品。
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 9 初步搭建：AI生成项目骨架 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 03 / BOOTSTRAPPING</div>
+                    <div class="h2-title">AI 初步搭建项目骨架</div>
+                    <div class="flex-row">
+                        <div class="card-equal code-block-wrapper">
+                            <div class="code-block-header">📁 后端结构</div>
+                            <div class="code-block">backend/<br>  ├ app/<br>    ├ __pycache__/<br>    ├ api/<br>    ├ models/<br>    ├ schemas/<br>    ├ services/<br>    └ utils/<br>  ├ requirements.txt<br>  └ .env</div>
+                        </div>
+                        <div class="card-equal code-block-wrapper">
+                            <div class="code-block-header">📁 前端结构</div>
+                            <div class="code-block">frontend/<br>  ├ public/<br>    ├ css/<br>    ├ fonts/<br>    ├ images/<br>    └ js/<br>  ├ src/<br>    ├ components/<br>    ├ pages/<br>    ├ styles/<br>    └ utils/<br>  └ index.html</div>
+                        </div>
+                    </div>
+                    <p class="slide-content mt-4 text-center" style="gap:0.65rem; margin-left:auto; margin-right:auto; margin-top:0.1em;">通过对话：“根据PRD和技术架构，生成一个FastAPI+原生前端的项目骨架”，AI自动输出目录结构和基础文件。</p>
+                </div>
+            </div>
+
+            <!-- SLIDE 10 后端优化总览 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 03 / BACKEND · ITERATIVE</div>
+                    <div class="h2-title">后端功能优化：先判断，再抽取，再生成</div>
+                    <div class="flow-vertical mt-2" style="margin-top:1.7rem;">
+                        <div class="flow-box">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">阶段 1：输入判定</div>
+                            <div class="text-slate-300">先判断是否数学题，并识别是否存在独立图形，避免无效生成</div>
+                        </div>
+                        <div class="flow-symbol">↓</div>
+                        <div class="flow-box" style="border-color:rgba(0,204,255,0.35);">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">阶段 2：题干抽取</div>
+                            <div class="text-slate-300">剥离题号、闲聊、无关信息，只保留可用于解题的核心题目文本</div>
+                        </div>
+                        <div class="flow-symbol">↓</div>
+                        <div class="flow-box">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">阶段 3：教学输出</div>
+                            <div class="text-slate-300">输出结构化教学步骤，再生成可交互的教学页面 HTML</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 11 后端步骤1 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 03 / BACKEND · STEP 1</div>
+                    <div class="h2-title">输入判定优化：减少无效调用</div>
+                    <div class="flow-vertical mt-2" style="margin-top:1.7rem;">
+                        <div class="flow-box">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">问题</div>
+                            <div class="text-slate-300">用户输入可能是闲聊、非数学内容，直接生成会浪费算力</div>
+                        </div>
+                        <div class="flow-symbol">+</div>
+                        <div class="flow-box" style="border-color:rgba(0,204,255,0.35);">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">关键优化提示词</div>
+                            <div class="text-slate-300">“先判断是否为数学题；若不是，直接返回统一拒绝标记和友好提示，<br>不进入后续流程”</div>
+                        </div>
+                        <div class="flow-symbol">↓</div>
+                        <div class="flow-box">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">优化后</div>
+                            <div class="text-slate-300">服务先筛选再处理，显著降低无效任务和异常输出，节省调用成本</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 12 后端步骤2 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 03 / BACKEND · STEP 2</div>
+                    <div class="h2-title">题干抽取优化：把脏输入变干净数据</div>
+                    <div class="flow-vertical mt-2" style="margin-top:1.7rem;">
+                        <div class="flow-box">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">问题</div>
+                            <div class="text-slate-300">原始输入常混有题号、答案、闲聊，导致后续生成偏题或漏条件</div>
+                        </div>
+                        <div class="flow-symbol">+</div>
+                        <div class="flow-box" style="border-color:rgba(0,204,255,0.35);">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">关键优化提示词</div>
+                            <div class="text-slate-300">“必须剥离题号和无关文本；仅保留完整题干、数学条件与符号；<br>统一输出结构化 JSON 字段”</div>
+                        </div>
+                        <div class="flow-symbol">↓</div>
+                        <div class="flow-box">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">优化后</div>
+                            <div class="text-slate-300">题目字段更稳定，后续教学脚本可直接复用，减少人工返工</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 13 后端步骤3 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 03 / BACKEND · STEP 3</div>
+                    <div class="h2-title">生成链路优化：从结构化需求到教学页</div>
+                    <div class="flow-vertical mt-2" style="margin-top:1.7rem;">
+                        <div class="flow-box">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">问题</div>
+                            <div class="text-slate-300">直接让模型生成页面，易出现步骤跳跃、讲解不连贯、无法课堂演示</div>
+                        </div>
+                        <div class="flow-symbol">+</div>
+                        <div class="flow-box" style="border-color:rgba(0,204,255,0.35);">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">关键优化提示词</div>
+                            <div class="text-slate-300">“先输出默认参数、解题方法、分步演示逻辑；<br>再按步骤生成教学页面，保证左右联动与可回看”</div>
+                        </div>
+                        <div class="flow-symbol">↓</div>
+                        <div class="flow-box">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">优化后</div>
+                            <div class="text-slate-300">后端形成可维护流水线：判定 → 抽取 → 编排 → 生成 → 返回页面</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 14 前端优化1：页面结构 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 03 / FRONTEND · ITERATIVE 01</div>
+                    <div class="h2-title">界面结构优化：先搭信息骨架</div>
+                    <div class="flow-vertical mt-2" style="margin-top:1.7rem;">
+                        <div class="flow-box">
+                            <div style="font-size:1.35rem; font-weight:700; color:#67e8f9;">初版问题</div>
+                            <div class="text-slate-300">信息区块混在一起，讲解时用户找不到重点</div>
+                        </div>
+                        <div class="flow-symbol">+</div>
+                        <div class="flow-box" style="border-color:rgba(0,204,255,0.35);">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">关键优化提示词</div>
+                            <div class="text-slate-300">“将页面拆分为标题区、画布区、步骤区、控制区，<br>保持每块只承载一种信息”</div>
+                        </div>
+                        <div class="flow-symbol">↓</div>
+                        <div class="flow-box">
+                            <div style="font-size:1.35rem; font-weight:700; color:#67e8f9;">优化后</div>
+                            <div class="text-slate-300">结构清晰，线上讲解时更容易跟着节奏走</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 15 前端优化2：视觉风格 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 03 / FRONTEND · ITERATIVE 02</div>
+                    <div class="h2-title">视觉优化：局部截图 + 修正指令</div>
+                    <div class="flow-vertical mt-2">
+                        <div class="flow-box">
+                            <div style="font-size:1.35rem; font-weight:700; color:#67e8f9;">初版问题</div>
+                            <div class="text-slate-300">按钮太方、颜色沉闷、层次感不足</div>
+                        </div>
+                        <div class="flow-symbol">+</div>
+                        <div class="flow-box" style="border-color:rgba(0,204,255,0.35);">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">关键优化提示词</div>
+                            <div class="text-slate-300">“将按钮改为圆角20px，使用暖黄渐变，<br>增加纹理和轻阴影，强化主次层级”</div>
+                        </div>
+                        <div class="flow-symbol">↓</div>
+                        <div class="flow-box">
+                            <div style="font-size:1.35rem; font-weight:700; color:#67e8f9;">优化后</div>
+                            <div class="text-slate-300">视觉更柔和，重点按钮更突出，用户操作更直觉</div>
+                        </div>
+                    </div>
+                    <p class="slide-content mt-4 text-center" style="gap:0.65rem; margin-top:0.1em;">每次只改一个局部，迭代快、风险低、效果可验证。</p>
+                </div>
+            </div>
+
+            <!-- SLIDE 16 前端优化3：交互反馈 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 03 / FRONTEND · ITERATIVE 03</div>
+                    <div class="h2-title">交互优化：加载反馈与结果提示</div>
+                    <div class="flow-vertical mt-2" style="margin-top:1.7rem;">
+                        <div class="flow-box">
+                            <div style="font-size:1.35rem; font-weight:700; color:#67e8f9;">初版问题</div>
+                            <div class="text-slate-300">点击后页面无反馈，用户不确定是否正在处理</div>
+                        </div>
+                        <div class="flow-symbol">+</div>
+                        <div class="flow-box" style="border-color:rgba(0,204,255,0.35);">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">关键优化提示词</div>
+                            <div class="text-slate-300">“增加全屏 Loading 动画 + 底部 toast 成功提示，<br>并保持状态切换平滑”</div>
+                        </div>
+                        <div class="flow-symbol">↓</div>
+                        <div class="flow-box">
+                            <div style="font-size:1.35rem; font-weight:700; color:#67e8f9;">优化后</div>
+                            <div class="text-slate-300">等待可感知，完成可确认，线上演示更稳定</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 17 前端优化4：教学体验 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 03 / FRONTEND · ITERATIVE 04</div>
+                    <div class="h2-title">教学体验优化：让讲解可跟随、可回看</div>
+                    <div class="flow-vertical mt-2">
+                        <div class="flow-box">
+                            <div style="font-size:1.35rem; font-weight:700; color:#67e8f9;">初版问题</div>
+                            <div class="text-slate-300">讲解步骤与画面不同步，回看困难，听课节奏容易断。</div>
+                        </div>
+                        <div class="flow-symbol">+</div>
+                        <div class="flow-box" style="border-color:rgba(0,204,255,0.35);">
+                            <div style="font-size:1.25rem; font-weight:700; color:#67e8f9;">关键优化提示词</div>
+                            <div class="text-slate-300">“用 currentStep 统一控制画布、讲解气泡和右侧步骤高亮；<br>支持回看并自动展开当前讲解。”</div>
+                        </div>
+                        <div class="flow-symbol">↓</div>
+                        <div class="flow-box">
+                            <div style="font-size:1.35rem; font-weight:700; color:#67e8f9;">优化后</div>
+                            <div class="text-slate-300">讲解节奏一致、回放清晰，适合线上分享与课堂复用。</div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 justify-center mt-3" style="gap:0.65rem; margin-top:0.1em;">
+                        <span class="badge">步骤联动</span>
+                        <span class="badge">轨迹可视化</span>
+                        <span class="badge">全屏讲解</span>
+                        <span class="badge">移动端适配</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 18 L2阶段性任务 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">ASSIGNMENT</div>
+                    <div class="h2-title">L2 阶段性任务</div>
+                    <div style="display:flex; justify-content:center;margin-top:2rem;">
+                        <div class="flex-col" style="margin-left:auto; margin-right:auto; background:rgba(59,130,246,0.13);border:2px solid #3b82f6;border-radius:1.2em;padding:1.5em 1.5em;max-width:780px; width:auto;">
+                            <div class="slide-content-strong" style="color:#3b82f6;margin-bottom:0.7em; font-size: 1.6rem;">📘 制作实操过程记录文档</div>
+                            <div class="slide-content-small text-slate-300" style="text-align:left; font-size: 1.3rem;">1. 记录从PRD生成到前后端实现的关键步骤<br>2. 展示使用的完整提示词、AI输出截图<br>3. 总结搭建过程中功能迭代及界面优化心得<br>4. 描述遇到的问题及AI辅助解决过程<br>5. 格式：Word，结构清晰，图文并茂</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 19 结束页 -->
+            <div class="swiper-slide">
+                <div class="ppt-card justify-center text-center">
+                    <div class="slide-title-large">智能建造 · 未完待续</div>
+                    <p class="slide-content mt-4">L3 垂域打磨 · API 注入与系统部署</p>
+                    <div class="mt-6"><span class="hashtag-glow" style="background:linear-gradient(90deg,var(--accent-cyan),var(--accent-magenta)); padding:0.6rem 2rem; border-radius:3rem;">#VibeCoding</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部固定页脚 -->
+    <div class="global-footer">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+
+    <!-- 页码显示 -->
+    <div class="page-number" id="pageCounter">1 / 22</div>
+    
+    <!-- 工具 -->
+    <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // 粒子系统、swiper、copyCode
+        class ParticleSystem {
+            constructor() {
+                this.canvas = document.getElementById('particle-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.resize();
+                this.init();
+                this.animate();
+                window.addEventListener('resize', () => this.resize());
+            }
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+            init() {
+                const particleCount = Math.min(50, Math.floor(window.innerWidth / 30));
+                for (let i = 0; i < particleCount; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 2 + 1,
+                        opacity: Math.random() * 0.5 + 0.2
+                    });
+                }
+            }
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.particles.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(0, 255, 204, ${p.opacity})`;
+                    this.ctx.fill();
+                });
+                this.particles.forEach((p1, i) => {
+                    this.particles.slice(i + 1).forEach(p2 => {
+                        const dx = p1.x - p2.x, dy = p1.y - p2.y, dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < 150) {
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(p1.x, p1.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.strokeStyle = `rgba(0, 255, 204, ${0.1 * (1 - dist/150)})`;
+                            this.ctx.stroke();
+                        }
+                    });
+                });
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        const swiper = new Swiper(".mySwiper", {
+            direction: "vertical",
+            keyboard: { enabled: true },
+            allowTouchMove: false,
+            on: {
+                slideChange: function () {
+                    document.getElementById('pageCounter').innerText = (this.realIndex + 1) + ' / ' + this.slides.length;
+                },
+                init: function () {
+                    document.getElementById('pageCounter').innerText = (this.realIndex + 1) + ' / ' + this.slides.length;
+                }
+            }
+        });
+
+        async function copyCode(btn, code) {
+            try { await navigator.clipboard.writeText(code); btn.innerHTML = '✓'; setTimeout(() => btn.innerHTML = '📋', 1500); } catch { alert('复制失败'); }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "question": "在X星球上的一个森林里,生活着一群兔子,兔子群中夹杂着一些珍稀的变异兔子.已知普通兔子有一个头四只脚,变异兔子有三个头两只脚,已知所有的兔子加起来有53个头102只脚,则所有兔子(包括变异兔子)共有几只?",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\a7d66313-dff5-4e55-9f9e-a2d2fc91c5ab\\pasted-image-1766143729290.png",
+  "task_id": "a7d66313-dff5-4e55-9f9e-a2d2fc91c5ab",
+  "generated_at": "2025-12-19T19:30:53.220524Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "鸡兔同笼应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "复杂应用题，需代数建模求解未知量。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-19T19:30:53.220524Z",
+  "preview_image": "Preview.webp"
+}

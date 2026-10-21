@@ -1,0 +1,23 @@
+{
+  "question": "在三维欧几里得空间中，四面体ABCD的顶点A、B、C、D满足以下条件: 1.向量AB与AC的夹角为60°，且AB点乘AC=3; 2.向量AB与AD的夹角为60°，且AB点乘AD=5; 3.向量AC与AD的夹角为60°，且AC点乘AD=7 求四面体ABCD的体积。",
+  "prompt": "在三维欧几里得空间中，四面体ABCD的顶点A、B、C、D满足以下条件: 1.向量AB与AC的夹角为60°，且AB点乘AC=3; 2.向量AB与AD的夹角为60°，且AB点乘AD=5; 3.向量AC与AD的夹角为60°，且AC点乘AD=7 求四面体ABCD的体积。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "7ca74646-a3ed-4154-a858-ceb6d3a72df3",
+  "generated_at": "2026-01-06T19:49:47.136323Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "向量法求四面体体积",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及三维空间向量与夹角",
+    "main_tag": "空间观念",
+    "sub_tags": [
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-06T19:49:47.136339Z",
+  "preview_image": "Preview.webp"
+}

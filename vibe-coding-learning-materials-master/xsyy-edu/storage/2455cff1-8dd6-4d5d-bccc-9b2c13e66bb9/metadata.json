@@ -1,0 +1,10 @@
+{
+  "question": "将以下4个图形全部使用(只能旋转,不能翻转),能否拼成右边的大图形呢？ A. 能 B. 不能",
+  "title": "图形拼组与旋转平移",
+  "plan": {
+    "steps": []
+  },
+  "is_math_problem": true,
+  "has_pic": true,
+  "preview_image": "preview.webp"
+}

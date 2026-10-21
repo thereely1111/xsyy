@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>火车过点应用题 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">火车过点应用题</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('小狗不动、火车过狗，火车行驶的路程就等于车身长度，故车长为 $15\\times60=900$ 米。')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <!-- 第1步：场景基础 —— 地面、铁轨、小狗 -->
+                            <g x-show="sceneStep >= 1" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <rect x="0" y="0" width="800" height="600" fill="none" pointer-events="none"/>
+                                <rect x="0" y="430" width="800" height="170" fill="#d6d3d1" opacity="0.35"/>
+                                <line x1="20" y1="430" x2="780" y2="430" stroke="#57534e" stroke-width="3"/>
+                                <line x1="60"  y1="431" x2="60"  y2="444" stroke="#a8a29e" stroke-width="5"/>
+                                <line x1="140" y1="431" x2="140" y2="444" stroke="#a8a29e" stroke-width="5"/>
+                                <line x1="220" y1="431" x2="220" y2="444" stroke="#a8a29e" stroke-width="5"/>
+                                <line x1="300" y1="431" x2="300" y2="444" stroke="#a8a29e" stroke-width="5"/>
+                                <line x1="380" y1="431" x2="380" y2="444" stroke="#a8a29e" stroke-width="5"/>
+                                <line x1="460" y1="431" x2="460" y2="444" stroke="#a8a29e" stroke-width="5"/>
+                                <line x1="540" y1="431" x2="540" y2="444" stroke="#a8a29e" stroke-width="5"/>
+                                <line x1="620" y1="431" x2="620" y2="444" stroke="#a8a29e" stroke-width="5"/>
+                                <line x1="700" y1="431" x2="700" y2="444" stroke="#a8a29e" stroke-width="5"/>
+                                <ellipse cx="400" cy="416" rx="17" ry="11" fill="#b45309"/>
+                                <circle cx="400" cy="397" r="9" fill="#b45309"/>
+                                <path d="M392,391 L386,380 L396,388 Z" fill="#92400e"/>
+                                <path d="M408,391 L414,380 L404,388 Z" fill="#92400e"/>
+                                <circle cx="396.5" cy="396" r="1.6" fill="#1c1917"/>
+                                <circle cx="403.5" cy="396" r="1.6" fill="#1c1917"/>
+                                <path d="M416,414 Q428,407 425,396" stroke="#b45309" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                                <text x="400" y="466" text-anchor="middle" font-size="15" fill="#44403c">小狗（不动）</text>
+                            </g>
+
+                            <!-- 第2步：火车出现，车头遇见小狗 -->
+                            <g x-show="sceneStep >= 2" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <g :transform="sceneStep >= 3 ? 'translate(300,0)' : 'translate(0,0)'" style="transition: transform 1.6s ease-in-out;">
+                                    <rect x="100" y="340" width="300" height="76" rx="10" fill="#8a1c1c"/>
+                                    <rect x="100" y="340" width="300" height="14" rx="7" fill="#6b1515"/>
+                                    <rect x="118" y="362" width="34" height="26" rx="4" fill="#fef3c7"/>
+                                    <rect x="166" y="362" width="34" height="26" rx="4" fill="#fef3c7"/>
+                                    <rect x="214" y="362" width="34" height="26" rx="4" fill="#fef3c7"/>
+                                    <rect x="262" y="362" width="34" height="26" rx="4" fill="#fef3c7"/>
+                                    <rect x="310" y="362" width="34" height="26" rx="4" fill="#fef3c7"/>
+                                    <rect x="358" y="362" width="30" height="26" rx="4" fill="#fde68a"/>
+                                    <line x1="398" y1="342" x2="398" y2="414" stroke="#fbbf24" stroke-width="4"/>
+                                    <circle cx="140" cy="421" r="9" fill="#292524"/>
+                                    <circle cx="140" cy="421" r="3" fill="#78716c"/>
+                                    <circle cx="200" cy="421" r="9" fill="#292524"/>
+                                    <circle cx="200" cy="421" r="3" fill="#78716c"/>
+                                    <circle cx="300" cy="421" r="9" fill="#292524"/>
+                                    <circle cx="300" cy="421" r="3" fill="#78716c"/>
+                                    <circle cx="360" cy="421" r="9" fill="#292524"/>
+                                    <circle cx="360" cy="421" r="3" fill="#78716c"/>
+                                </g>
+                            </g>
+
+                            <!-- 第2步：车头遇见小狗标注 + 速度 -->
+                            <g x-show="sceneStep >= 2" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <line x1="400" y1="280" x2="400" y2="336" stroke="#a8a29e" stroke-width="2" marker-end="url(#arrow)"/>
+                                <text x="400" y="262" text-anchor="middle" font-size="17" fill="#8a1c1c" font-weight="bold">车头遇见小狗</text>
+                                <text x="400" y="238" text-anchor="middle" font-size="13" fill="#78716c">（开始计时）</text>
+                                <line x1="150" y1="482" x2="240" y2="482" stroke="#57534e" stroke-width="2" marker-end="url(#arrow)"/>
+                                <text x="195" y="506" text-anchor="middle" font-size="14" fill="#44403c">速度：15 米/秒</text>
+                            </g>
+
+                            <!-- 第3步：虚线轨迹，火车整体向右通过 -->
+                            <g x-show="sceneStep >= 3" x-transition:enter="transition ease-in duration-700" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <line x1="400" y1="336" x2="692" y2="336" stroke="#dc2626" stroke-width="3" stroke-dasharray="10 8" opacity="0.75" marker-end="url(#arrow)"/>
+                                <text x="550" y="326" text-anchor="middle" font-size="13" fill="#dc2626">车头前进方向</text>
+                            </g>
+
+                            <!-- 第4步：原位置虚影 + 车尾离开小狗 -->
+                            <g x-show="sceneStep >= 4" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <rect x="100" y="340" width="300" height="76" rx="10" fill="none" stroke="#a8a29e" stroke-width="2" stroke-dasharray="8 6"/>
+                                <text x="250" y="384" text-anchor="middle" font-size="13" fill="#a8a29e">原来的位置</text>
+                                <text x="200" y="252" text-anchor="middle" font-size="17" fill="#8a1c1c" font-weight="bold">车尾离开小狗</text>
+                                <text x="200" y="276" text-anchor="middle" font-size="13" fill="#78716c">（停止计时 · 共 60 秒）</text>
+                                <path d="M230,286 C270,310 350,326 394,340" stroke="#a8a29e" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+                                <text x="195" y="540" text-anchor="middle" font-size="14" fill="#44403c">时间：60 秒</text>
+                            </g>
+
+                            <!-- 第5步：车长 与 行驶路程 相等 -->
+                            <g x-show="sceneStep >= 5" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <line x1="400" y1="344" x2="400" y2="302" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="4 4"/>
+                                <line x1="700" y1="344" x2="700" y2="302" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="4 4"/>
+                                <line x1="400" y1="306" x2="700" y2="306" stroke="#b91c1c" stroke-width="2.5"/>
+                                <foreignObject x="470" y="268" width="160" height="32">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:14px; font-weight:bold; color:#7f1d1d;" x-html="renderMath('车长 $L$')"></div>
+                                </foreignObject>
+                                <line x1="400" y1="434" x2="400" y2="478" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="4 4"/>
+                                <line x1="700" y1="434" x2="700" y2="478" stroke="#b91c1c" stroke-width="1.5" stroke-dasharray="4 4"/>
+                                <line x1="400" y1="482" x2="694" y2="482" stroke="#b91c1c" stroke-width="2.5" marker-end="url(#arrow)"/>
+                                <foreignObject x="450" y="492" width="200" height="34">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:14px; font-weight:bold; color:#7f1d1d;" x-html="renderMath('行驶的路程')"></div>
+                                </foreignObject>
+                                <text x="748" y="386" text-anchor="middle" font-size="18" fill="#b91c1c" font-weight="bold">=</text>
+                                <text x="748" y="408" text-anchor="middle" font-size="13" fill="#b91c1c" font-weight="bold">一样长</text>
+                            </g>
+
+                            <!-- 第6步：路程公式 -->
+                            <g x-show="sceneStep >= 6" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <foreignObject x="460" y="84" width="290" height="100">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="background:rgba(255,255,255,0.85); border:1px solid #d6d3d1; border-radius:12px; padding:10px 14px; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+                                        <div style="font-size:12px; color:#78716c; margin-bottom:4px;">行程公式</div>
+                                        <div style="font-size:15px; color:#1c1917;" x-html="renderMath('路程 $=$ 速度 $\\times$ 时间')"></div>
+                                    </div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- 第7步：代入计算与作答 -->
+                            <g x-show="sceneStep >= 7" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <foreignObject x="460" y="198" width="290" height="116">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="background:rgba(254,242,242,0.92); border:2px solid #8a1c1c; border-radius:12px; padding:10px 14px; box-shadow:0 4px 12px rgba(138,28,28,0.12);">
+                                        <div style="font-size:15px; color:#1c1917;" x-html="renderMath('车长 $= 15 \\times 60 = 900$（米）')"></div>
+                                        <div style="font-size:14px; font-weight:bold; color:#7f1d1d; margin-top:6px;" x-html="renderMath('答：这列火车长 $900$ 米。')"></div>
+                                    </div>
+                                </foreignObject>
+                            </g>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+                    {
+                        "title": "审题：小狗不动，火车在动",
+                        "description": "小狗蹲在路旁一动不动，火车以每秒 $15$ 米的速度从它身边通过。要求的是火车的长度。",
+                        "bubbleText": "先把场景想清楚：小狗乖乖蹲在路边不动；火车以每秒 $15$ 米的速度开过去。我们要求的是火车有多长。",
+                        "bubblePos": { "x": 60, "y": 60 }
+                    },
+                    {
+                        "title": "第一步：车头遇见小狗，开始计时",
+                        "description": "火车车头刚好到达小狗的那一刻，开始计时，这一刻就是起点。",
+                        "bubbleText": "车头一碰到小狗，我们就按下秒表开始计时。这一刻是 $60$ 秒的起点。",
+                        "bubblePos": { "x": 460, "y": 80 }
+                    },
+                    {
+                        "title": "第二步：火车继续前进，车身整体通过",
+                        "description": "火车保持每秒 $15$ 米继续向前开，车身一节一节地从小狗身边经过。",
+                        "bubbleText": "火车继续往前开。注意看：小狗没动，火车从小狗身边擦过的部分，正好就是整整一个车身的长度！",
+                        "bubblePos": { "x": 430, "y": 60 }
+                    },
+                    {
+                        "title": "第三步：车尾离开小狗，停止计时",
+                        "description": "直到火车车尾离开小狗，计时停止，一共用了 $60$ 秒。",
+                        "bubbleText": "等车尾彻底离开小狗，我们按下停止键，秒表上一共走了 $60$ 秒。",
+                        "bubblePos": { "x": 430, "y": 60 }
+                    },
+                    {
+                        "title": "关键发现：行驶路程 = 车身长度",
+                        "description": "小狗不动，火车从“车头遇见”到“车尾离开”所行驶的路程，恰好等于车身长度。",
+                        "bubbleText": "最关键的一点：因为小狗没动，火车这段时间行驶的路程，正好就是车身的长度。求出路程，就求出了车长！",
+                        "bubblePos": { "x": 90, "y": 60 }
+                    },
+                    {
+                        "title": "第四步：套用路程公式",
+                        "description": "路程 $=$ 速度 $\\times$ 时间，即 $s = v \\times t$。",
+                        "bubbleText": "拿出行程问题的法宝：路程 $=$ 速度 $\\times$ 时间。速度和时间都知道，直接相乘就行。",
+                        "bubblePos": { "x": 60, "y": 70 }
+                    },
+                    {
+                        "title": "第五步：代入计算，得出答案",
+                        "description": "车长 $= 15 \\times 60 = 900$（米）。答：这列火车长 $900$ 米。",
+                        "bubbleText": "把数字代进去：$15 \\times 60 = 900$ 米。别忘了写上单位“米”和答语哦！",
+                        "bubblePos": { "x": 60, "y": 70 }
+                    }
+                ],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        function mathApp() {
+            return appData();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "question": "姐姐和妹妹共有书39本，如果姐姐给妹妹7本后就比妹妹少3本，那么姐姐和妹妹原来各有书多少本?",
+  "prompt": "姐姐和妹妹共有书39本，如果姐姐给妹妹7本后就比妹妹少3本，那么姐姐和妹妹原来各有书多少本?",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "8dfdc995-239d-408b-8d64-fb2ecf76c478",
+  "generated_at": "2025-12-03T12:45:27.386835",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "和差问题应用题",
+  "tags": {
+    "reasoning": "生活情境，需多步列式求解",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-03T12:45:27.386835",
+  "preview_image": "Preview.webp"
+}

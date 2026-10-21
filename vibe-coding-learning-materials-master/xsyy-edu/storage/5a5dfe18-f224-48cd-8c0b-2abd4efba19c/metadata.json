@@ -1,0 +1,68 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "在平面直角坐标系中，一次函数 y = -x + 7 的图象与反比例函数 y = k/x 的图象交于 A、B 两点，且点 A 的横坐标为 2。已知点 C 是反比例函数图象上的一点，且点 C 的纵坐标为 6。求三角形 ABC 的面积，其中 A、B 分别为两个函数的交点。",
+  "prompt": "在平面直角坐标系中，一次函数 y = -x + 7 的图象与反比例函数 y = k/x 的图象交于 A、B 两点，且点 A 的横坐标为 2。已知点 C 是反比例函数图象上的一点，且点 C 的纵坐标为 6。求三角形 ABC 的面积，其中 A、B 分别为两个函数的交点。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "5a5dfe18-f224-48cd-8c0b-2abd4efba19c",
+  "generated_at": "2026-09-10T09:24:38.292680Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "函数图象问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中函数解析式图象结构"
+  },
+  "tags_updated_at": "2026-09-10T09:24:38.292680Z",
+  "knowledge_tags": {
+    "version": "函数",
+    "grade": "九下",
+    "main_tag": "函数·综合与应用",
+    "sub_tags": [
+      "概念与图象"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-10T09:24:38.339129Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "函数",
+    "display_class": "function",
+    "grade": "九下",
+    "tags": {
+      "main_tag": "函数·综合与应用",
+      "sub_tags": [
+        "概念与图象"
+      ],
+      "second_tag": null
+    },
+    "question_type": "反比例函数与一次函数交点",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_function",
+      "steps_min": 5,
+      "steps_max": 7,
+      "motion_policy": "answer_first",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.98,
+    "engine": "agent",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "agent",
+    "action": "inject_official",
+    "confidence": 0.98
+  }
+}

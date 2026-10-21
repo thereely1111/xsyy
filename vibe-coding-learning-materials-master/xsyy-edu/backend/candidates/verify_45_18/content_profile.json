@@ -1,0 +1,30 @@
+{
+  "is_math_problem": true,
+  "problem_raw": "学校图书馆有45本故事书，借出18本，还剩多少本？",
+  "problem_clean": "学校图书馆有45本故事书，借出18本，还剩多少本？",
+  "solvable": true,
+  "solvable_reason": "预检默认放行（fail-open），细化在后续批次接入",
+  "stage": "primary",
+  "domain": "numbers",
+  "main_tag": "不退位减法",
+  "solution_method": "",
+  "grade": "一下",
+  "chapter": "100以内加减法",
+  "tags": [
+    {
+      "name": "不退位减法",
+      "confidence": 0.99
+    }
+  ],
+  "needs_tag_selection": false,
+  "confidence": 0.99,
+  "_engine": "agent",
+  "_action": "inject_official",
+  "_backend_raw": {
+    "matched_existing": true,
+    "keyword_added": [],
+    "pending_tag_id": ""
+  },
+  "has_image": false,
+  "image_paths": []
+}

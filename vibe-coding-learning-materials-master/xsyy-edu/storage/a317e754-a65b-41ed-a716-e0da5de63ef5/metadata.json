@@ -1,0 +1,18 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "函数",
+    "grade": "八下",
+    "main_tag": "反比例函数",
+    "sub_tags": [
+      "k的几何意义"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-27T03:04:43.873744Z",
+  "knowledge_tags_confirmed": true,
+  "title": "函数图象问题",
+  "question": "如图，在平面直角坐标系中，反比例函数  y = k/x ​（ k > 0 ）的图象经过点  A ( 2 , 3 ) 。过点  A 作  A B ⊥ x轴于点  B，连接  O A 。求  k 的值",
+  "prompt": "如图，在平面直角坐标系中，反比例函数  y = k/x ​（ k > 0 ）的图象经过点  A ( 2 , 3 ) 。过点  A 作  A B ⊥ x轴于点  B，连接  O A 。求  k 的值"
+}

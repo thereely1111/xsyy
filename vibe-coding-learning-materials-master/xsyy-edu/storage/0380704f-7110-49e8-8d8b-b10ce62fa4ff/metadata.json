@@ -1,0 +1,23 @@
+{
+  "question": "动物园里养了一些梅花鹿和鸵鸟，鸵鸟比梅花鹿多10只，共有腿140条，梅花鹿和鸵鸟各有 多少只?",
+  "prompt": "动物园里养了一些梅花鹿和鸵鸟，鸵鸟比梅花鹿多10只，共有腿140条，梅花鹿和鸵鸟各有 多少只?",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "0380704f-7110-49e8-8d8b-b10ce62fa4ff",
+  "generated_at": "2025-12-19T16:40:26.644232",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "鸡兔同笼问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及两种动物数量与腿数的关系",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-19T16:40:26.644232",
+  "preview_image": "Preview.webp"
+}

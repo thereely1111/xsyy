@@ -1,0 +1,21 @@
+{
+  "question": "把五进制数 (123)_5 转化为十进制数",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/1fb523c3-0cd7-4fd1-9039-158c0d8896fc/ScreenShot_2026-01-23_235601_871.png",
+  "task_id": "1fb523c3-0cd7-4fd1-9039-158c0d8896fc",
+  "generated_at": "2026-01-24T00:02:06.313960Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "数制转换：五进制转十进制",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "考察对非十进制数的理解和转换。",
+    "main_tag": "数感",
+    "sub_tags": []
+  },
+  "tags_updated_at": "2026-01-24T00:02:06.313974Z",
+  "preview_image": "Preview.webp"
+}

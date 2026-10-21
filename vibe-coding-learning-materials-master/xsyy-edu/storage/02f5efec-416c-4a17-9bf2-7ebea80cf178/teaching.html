@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图形分割与拼组 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">图形分割与拼组</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('把3×12长方形剪成相同两块拼成4×9长方形')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <defs><filter id='paperShadow' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='3'/><feOffset dx='2' dy='3' result='offsetblur'/><feComponentTransfer><feFuncA type='linear' slope='0.3'/></feComponentTransfer><feMerge><feMergeNode in='offsetblur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='redGlow' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur stdDeviation='4' result='coloredBlur'/><feMerge><feMergeNode in='coloredBlur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><linearGradient id='redGrad' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='#d65a4e'/><stop offset='100%' stop-color='#a32b22'/></linearGradient><linearGradient id='grayGrad' x1='0' y1='0' x2='0' y2='1'><stop offset='0%' stop-color='#757575'/><stop offset='100%' stop-color='#4a4a4a'/></linearGradient><marker id='arrow' markerWidth='10' markerHeight='10' refX='9' refY='3' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,6 L9,3 z' fill='#c23a30'/></marker></defs><style>.grid-line{stroke:#4a4a4a;stroke-width:1.5;fill:none;}.target-ghost{stroke:#c23a30;stroke-width:2;fill:#f7f3e8;fill-opacity:0.15;stroke-dasharray:6 4;}.piece-a{fill:url(#redGrad);stroke:#8a221c;stroke-width:1.5;opacity:0.88;filter:url(#paperShadow);}.piece-b{fill:url(#grayGrad);stroke:#3d3d3d;stroke-width:1.5;opacity:0.82;filter:url(#paperShadow);}.dashed-line{fill:none;stroke:#c23a30;stroke-width:2.5;stroke-dasharray:8 6;stroke-linecap:round;marker-end:url(#arrow);animation:flowDash 1.2s linear infinite;}.cut-line{fill:none;stroke:#c23a30;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;filter:url(#redGlow);}.label-text{font-family:'Noto Serif SC','SimSun',serif;font-size:18px;fill:#f7f3e8;text-anchor:middle;}.dim-text{font-family:'Noto Serif SC','SimSun',serif;font-size:16px;fill:#5c5c5c;text-anchor:middle;}.formula-box{font-family:'Noto Serif SC','SimSun',serif;font-size:22px;color:#2c2c2c;background:#f7f3e8;border:2px solid #c23a30;border-radius:8px;padding:10px 18px;display:inline-block;box-shadow:2px 4px 10px rgba(44,44,44,0.15);}.verify-box{font-family:'Noto Serif SC','SimSun',serif;font-size:20px;color:#2c2c2c;background:#f7f3e8;border:2px solid #c23a30;border-radius:8px;padding:10px 16px;display:inline-block;box-shadow:2px 4px 10px rgba(44,44,44,0.15);}.svg-elem{will-change:transform,opacity;}.transition-all{transition-property:all;}.duration-700{transition-duration:700ms;}.duration-1000{transition-duration:1000ms;}.ease-out{transition-timing-function:cubic-bezier(0.16,1,0.3,1);}.ease-in-out{transition-timing-function:cubic-bezier(0.4,0,0.2,1);}.enter-fade-up{opacity:0;transform:translateY(16px);}.enter-fade-up-active{opacity:1;transform:translateY(0);}.enter-fade-scale{opacity:0;transform:scale(0.92);}.enter-fade-scale-active{opacity:1;transform:scale(1);}.enter-slide-left{opacity:0;transform:translateX(40px);}.enter-slide-left-active{opacity:1;transform:translateX(0);}.enter-slide-right{opacity:0;transform:translateX(-40px);}.enter-slide-right-active{opacity:1;transform:translateX(0);}.float{animation:floatY 2s ease-in-out infinite;}.pulse{animation:heartBeat 1.3s ease-in-out infinite;}@keyframes flowDash{to{stroke-dashoffset:-28;}}@keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}@keyframes heartBeat{0%,100%{transform:scale(1);}14%{transform:scale(1.06);}28%{transform:scale(1);}42%{transform:scale(1.06);}70%{transform:scale(1);}}</style><g id='original-grid' class='svg-elem' x-show='sceneStep &lt;= 6' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='enter-fade-scale' x-transition:enter-end='enter-fade-scale-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-scale-active' x-transition:leave-end='enter-fade-scale'><path class='grid-line' d='M 100 360 L 580 360 L 580 480 L 100 480 Z M 140 360 L 140 480 M 180 360 L 180 480 M 220 360 L 220 480 M 260 360 L 260 480 M 300 360 L 300 480 M 340 360 L 340 480 M 380 360 L 380 480 M 420 360 L 420 480 M 460 360 L 460 480 M 500 360 L 500 480 M 540 360 L 540 480 M 100 400 L 580 400 M 100 440 L 580 440' filter='url(#paperShadow)'/><text class='dim-text' x='60' y='425'>3格</text><text class='dim-text' x='340' y='505'>12格</text></g><g id='target-ghost' class='svg-elem' x-show='sceneStep &gt;= 2 &amp;&amp; sceneStep &lt;= 6' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='enter-fade-up' x-transition:enter-end='enter-fade-up-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-up-active' x-transition:leave-end='enter-fade-up'><rect class='target-ghost' x='140' y='140' width='360' height='160' rx='4'/><text class='dim-text' x='320' y='130'>目标：4×9</text><text class='dim-text' x='100' y='230'>4格</text><text class='dim-text' x='320' y='325'>9格</text></g><g id='formula' class='svg-elem' x-show='sceneStep &gt;= 1 &amp;&amp; sceneStep &lt;= 8' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='enter-fade-up' x-transition:enter-end='enter-fade-up-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-up-active' x-transition:leave-end='enter-fade-up'><foreignObject x='610' y='390' width='170' height='70'><div xmlns='http://www.w3.org/1999/xhtml' class='formula-box'>3 × 12 = 36 = 4 × 9</div></foreignObject></g><g id='flow-hint' class='svg-elem dashed-line' x-show='sceneStep &gt;= 2 &amp;&amp; sceneStep &lt;= 3' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='enter-fade-scale' x-transition:enter-end='enter-fade-scale-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-scale-active' x-transition:leave-end='enter-fade-scale'><path d='M 340 420 Q 420 360 320 220'/></g><g id='cut-path' class='svg-elem' x-show='sceneStep &gt;= 3 &amp;&amp; sceneStep &lt;= 6' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='enter-fade-scale' x-transition:enter-end='enter-fade-scale-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-scale-active' x-transition:leave-end='enter-fade-scale'><path class='cut-line' d='M 220 480 L 220 440 L 340 440 L 340 400 L 460 400 L 460 360'/><circle cx='220' cy='480' r='5' fill='#c23a30'/><circle cx='460' cy='360' r='5' fill='#c23a30'/><text x='390' y='430' font-size='28' class='float' fill='#c23a30' font-family='Segoe UI Emoji,Noto Color Emoji,serif'>✂️</text></g><g id='pieces-exploded' class='svg-elem' x-show='sceneStep == 3' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='enter-fade-scale' x-transition:enter-end='enter-fade-scale-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-scale-active' x-transition:leave-end='enter-fade-scale'><g transform='translate(40,40)'><rect class='piece-a' x='220' y='440' width='360' height='40'/><rect class='piece-a' x='340' y='400' width='240' height='40'/><rect class='piece-a' x='460' y='360' width='120' height='40'/><text class='label-text' x='460' y='450'>甲</text></g><g transform='translate(-40,-40)'><rect class='piece-b' x='100' y='440' width='120' height='40'/><rect class='piece-b' x='100' y='400' width='240' height='40'/><rect class='piece-b' x='100' y='360' width='360' height='40'/><text class='label-text' x='160' y='410'>乙</text></g></g><g id='pieces-original' class='svg-elem' x-show='sceneStep &gt;= 5 &amp;&amp; sceneStep &lt;= 6' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='enter-fade-scale' x-transition:enter-end='enter-fade-scale-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-scale-active' x-transition:leave-end='enter-fade-scale'><rect class='piece-a' x='220' y='440' width='360' height='40'/><rect class='piece-a' x='340' y='400' width='240' height='40'/><rect class='piece-a' x='460' y='360' width='120' height='40'/><rect class='piece-b' x='100' y='440' width='120' height='40'/><rect class='piece-b' x='100' y='400' width='240' height='40'/><rect class='piece-b' x='100' y='360' width='360' height='40'/><text class='label-text' x='420' y='450'>甲（18格）</text><text class='label-text' x='200' y='390'>乙（18格）</text></g><g id='strategy-arrow' class='svg-elem dashed-line' x-show='sceneStep &gt;= 6 &amp;&amp; sceneStep &lt;= 7' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='enter-fade-scale' x-transition:enter-end='enter-fade-scale-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-scale-active' x-transition:leave-end='enter-fade-scale'><path d='M 480 420 Q 560 320 360 240'/></g><g id='target-grid' class='svg-elem' x-show='sceneStep &gt;= 7' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='enter-fade-scale' x-transition:enter-end='enter-fade-scale-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-scale-active' x-transition:leave-end='enter-fade-scale'><path class='grid-line' d='M 140 140 L 500 140 L 500 300 L 140 300 Z M 180 140 L 180 300 M 220 140 L 220 300 M 260 140 L 260 300 M 300 140 L 300 300 M 340 140 L 340 300 M 380 140 L 380 300 M 420 140 L 420 300 M 460 140 L 460 300 M 140 180 L 500 180 M 140 220 L 500 220 M 140 260 L 500 260' filter='url(#paperShadow)'/><text class='dim-text' x='100' y='230'>4格</text><text class='dim-text' x='320' y='325'>9格</text></g><g id='target-piece-b' class='svg-elem' x-show='sceneStep &gt;= 7' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='enter-slide-left' x-transition:enter-end='enter-slide-left-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-slide-left-active' x-transition:leave-end='enter-slide-left'><rect class='piece-b' x='140' y='140' width='360' height='40'/><rect class='piece-b' x='140' y='180' width='240' height='40'/><rect class='piece-b' x='140' y='220' width='120' height='40'/><text class='label-text' x='180' y='190'>乙</text></g><g id='target-piece-a' class='svg-elem' x-show='sceneStep &gt;= 8' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='enter-slide-right' x-transition:enter-end='enter-slide-right-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-slide-right-active' x-transition:leave-end='enter-slide-right'><rect class='piece-a' x='140' y='260' width='360' height='40'/><rect class='piece-a' x='260' y='220' width='240' height='40'/><rect class='piece-a' x='380' y='180' width='120' height='40'/><text class='label-text' x='360' y='270'>甲</text></g><g id='move-trajectory' class='svg-elem dashed-line' x-show='sceneStep &gt;= 7 &amp;&amp; sceneStep &lt;= 8' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='enter-fade-scale' x-transition:enter-end='enter-fade-scale-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-scale-active' x-transition:leave-end='enter-fade-scale'><path d='M 480 420 L 360 240'/><text class='dim-text' x='500' y='340'>左移3格、上移1格</text></g><g id='final-verify' class='svg-elem' x-show='sceneStep &gt;= 9' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='enter-fade-up' x-transition:enter-end='enter-fade-up-active' x-transition:leave='transition-all duration-500 ease-in-out' x-transition:leave-start='enter-fade-up-active' x-transition:leave-end='enter-fade-up'><foreignObject x='540' y='210' width='230' height='90'><div xmlns='http://www.w3.org/1999/xhtml' class='verify-box'>4 × 9 = 36 = 3 × 12<br/>两块全等且无缝拼接<br/>答案：可以！</div></foreignObject><g transform='translate(730,255)'><circle r='28' fill='#c23a30' class='pulse'/><text text-anchor='middle' dy='8' fill='#f7f3e8' font-size='24' font-family='Noto Serif SC,SimSun,serif'>可</text></g></g>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+    {
+        "title": "题目呈现",
+        "description": "左图是一个3行12列的方格纸，右图是目标长方形。我们要判断能否只沿格线剪成两块全等图形，再拼成4×9的长方形。",
+        "bubbleText": "先看这两张方格纸的面积关系！",
+        "bubblePos": {
+            "x": 340,
+            "y": 330
+        }
+    },
+    {
+        "title": "面积相等",
+        "description": "3×12的方格纸共有36个小方格，4×9的长方形也是36个小方格。面积相同是拼接的前提。",
+        "bubbleText": "面积都是36格，有希望！",
+        "bubblePos": {
+            "x": 700,
+            "y": 425
+        }
+    },
+    {
+        "title": "目标轮廓",
+        "description": "在下方画出4×9的目标轮廓。它的高度比原来多1行，宽度比原来少3列，这意味着需要把原图的一部分向上、向左移动。",
+        "bubbleText": "高度变4、宽度变9，怎么挪？",
+        "bubblePos": {
+            "x": 320,
+            "y": 120
+        }
+    },
+    {
+        "title": "构思剪切线",
+        "description": "沿一条阶梯形格线剪开：从顶边第3格处垂直向下1格，向右3格，再向下1格，向右3格，再向下1格到底边。",
+        "bubbleText": "沿这条红线剪开试试。",
+        "bubblePos": {
+            "x": 420,
+            "y": 450
+        }
+    },
+    {
+        "title": "沿格线剪开",
+        "description": "剪开后得到两块阶梯形。把它们稍微分开，就能清楚看到两块都是“9+6+3”的阶梯形状。",
+        "bubbleText": "两块形状一模一样！",
+        "bubblePos": {
+            "x": 500,
+            "y": 420
+        }
+    },
+    {
+        "title": "验证全等",
+        "description": "把其中一块绕中心旋转180°，它正好与另一块完全重合。数一数，每块都占18个小方格。",
+        "bubbleText": "旋转180°后完全重合。",
+        "bubblePos": {
+            "x": 200,
+            "y": 420
+        }
+    },
+    {
+        "title": "拼组策略",
+        "description": "保持左下那块乙不动，只要把右上那块甲向左平移3格、再向上平移1格，就能嵌入4×9的轮廓。",
+        "bubbleText": "甲向左3格、向上1格。",
+        "bubblePos": {
+            "x": 620,
+            "y": 300
+        }
+    },
+    {
+        "title": "固定底座",
+        "description": "先把乙块放入4×9长方形的底部，它占据下面的三层阶梯。",
+        "bubbleText": "乙块先就位。",
+        "bubblePos": {
+            "x": 200,
+            "y": 200
+        }
+    },
+    {
+        "title": "嵌入上部",
+        "description": "把甲块按刚才的策略平移，正好填补乙块上方的空间，严丝合缝。",
+        "bubbleText": "甲块一落下，刚好填满！",
+        "bubblePos": {
+            "x": 420,
+            "y": 240
+        }
+    },
+    {
+        "title": "完成验证",
+        "description": "拼成的长方形是4行9列，共36格；两块都是18格且形状相同。因此，3×12方格纸可以这样剪拼成4×9长方形。",
+        "bubbleText": "答案：可以！",
+        "bubblePos": {
+            "x": 650,
+            "y": 250
+        }
+    }
+],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

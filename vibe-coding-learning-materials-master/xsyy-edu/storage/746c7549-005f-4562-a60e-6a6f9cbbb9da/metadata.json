@@ -1,0 +1,35 @@
+{
+  "question": "小红买了 3 支笔，每支笔 2 元，她给了售货员 10 元，应该找回多少钱？",
+  "prompt": "小红买了 3 支笔，每支笔 2 元，她给了售货员 10 元，应该找回多少钱？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "746c7549-005f-4562-a60e-6a6f9cbbb9da",
+  "generated_at": "2026-08-04T14:14:00.554265Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "计算应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "题目包含购买数量、单价、总价以及找零的计算，属于应用题。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "运算能力",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-08-04T14:14:00.554279Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "二上",
+    "main_tag": "表内乘法",
+    "sub_tags": [
+      "乘法应用题"
+    ]
+  },
+  "preview_image": "Preview.webp",
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-26T01:30:09.105206Z",
+  "knowledge_tags_confirmed": true
+}

@@ -1,0 +1,29 @@
+{
+  "question": "一辆卡车运矿石，晴天每天可运20次，雨天每天可运12次，它一共运了112次，平均每天运14次，这几天中有几天是雨天？",
+  "prompt": "一辆卡车运矿石，晴天每天可运20次，雨天每天可运12次，它一共运了112次，平均每天运14次，这几天中有几天是雨天？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "1ec396ce-e3b0-4cf7-b9cc-5251d1703d17",
+  "generated_at": "2026-08-19T02:44:09.630435Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "鸡兔同笼",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中双对象总量分配结构"
+  },
+  "tags_updated_at": "2026-08-19T02:44:09.630435Z",
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "七下",
+    "main_tag": "二元一次方程组",
+    "sub_tags": [
+      "二元一次方程组应用题"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-19T02:44:09.821190Z",
+  "preview_image": "Preview.webp"
+}

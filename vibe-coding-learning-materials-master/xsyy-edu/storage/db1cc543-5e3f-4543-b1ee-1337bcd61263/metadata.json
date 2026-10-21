@@ -1,0 +1,24 @@
+{
+  "question": "10枚金币外观完全相同，其中只有一枚伪币，伪币比真币轻（真币一样重）。现有一架托盘天平，至少需要称____次才能保证找出伪币。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\db1cc543-5e3f-4543-b1ee-1337bcd61263\\pasted-image-1766563005467.png",
+  "task_id": "db1cc543-5e3f-4543-b1ee-1337bcd61263",
+  "generated_at": "2025-12-24T15:59:57.415018Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "找伪币最少称量次数",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "该题考察天平称量的逻辑优化问题。",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "模型意识",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2025-12-24T15:59:57.415018Z",
+  "preview_image": "Preview.webp"
+}

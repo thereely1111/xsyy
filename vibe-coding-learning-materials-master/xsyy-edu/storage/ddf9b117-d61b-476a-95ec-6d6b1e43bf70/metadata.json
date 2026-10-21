@@ -1,0 +1,35 @@
+{
+  "question": "小明有 18 个玩具，他想平均分给 6 个小朋友，每个小朋友能分到几个？",
+  "prompt": "小明有 18 个玩具，他想平均分给 6 个小朋友，每个小朋友能分到几个？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "ddf9b117-d61b-476a-95ec-6d6b1e43bf70",
+  "generated_at": "2026-08-07T09:52:25.638783Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "平均分除法",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活分配问题",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "运算能力",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-08-07T09:52:25.638796Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "二下",
+    "main_tag": "表内除法",
+    "sub_tags": [
+      "除法应用"
+    ]
+  },
+  "preview_image": "Preview.webp",
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T09:12:30.360147Z",
+  "knowledge_tags_confirmed": true
+}

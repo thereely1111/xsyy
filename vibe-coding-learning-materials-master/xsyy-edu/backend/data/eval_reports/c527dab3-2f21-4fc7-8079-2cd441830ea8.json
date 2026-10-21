@@ -1,0 +1,288 @@
+{
+  "report_id": "c527dab3-2f21-4fc7-8079-2cd441830ea8",
+  "created_at": "2026-08-27T15:56:38",
+  "sample_size": 10,
+  "result": {
+    "evaluated": 10,
+    "backend": "lexical",
+    "backend_status": "lexical",
+    "exact_match": 0,
+    "accuracy": 0.0,
+    "domain_accuracy": 0.0,
+    "grade_accuracy": 0.0,
+    "main_tag_accuracy": 0.0,
+    "sub_tag_accuracy": 0.0,
+    "per_domain": [
+      {
+        "domain": "函数",
+        "total": 1,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      {
+        "domain": "图形与几何",
+        "total": 3,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      {
+        "domain": "数与式",
+        "total": 2,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      {
+        "domain": "方程与不等式",
+        "total": 3,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      {
+        "domain": "统计与概率",
+        "total": 1,
+        "correct": 0,
+        "accuracy": 0.0
+      }
+    ],
+    "confusion": {
+      "方程与不等式": {
+        "(无识别)": 3
+      },
+      "统计与概率": {
+        "(无识别)": 1
+      },
+      "数与式": {
+        "(无识别)": 2
+      },
+      "图形与几何": {
+        "(无识别)": 3
+      },
+      "函数": {
+        "(无识别)": 1
+      }
+    },
+    "errors": [
+      {
+        "question": "甲、乙两人分别从 A、B 两地同时出发，相向而行。第一次相遇时，相遇点距离 A 地 800米。两人相遇后继续前进，分别到达 B、A 两地后立即掉头返回，第二次相遇时，相遇点距离 B 地 300米。请问：A、B 两地之间的路程是多少米？",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "七上",
+          "main_tag": "一元一次方程",
+          "sub_tag": "行程问题"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "解方程组：x + y = 7\\n2x - y = 5",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "七下",
+          "main_tag": "二元一次方程组",
+          "sub_tag": "二元一次方程组解法"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "某班共有学生 45 人，其中男生 20 人，女生 25 人。 （1）从该班随机选一名学生，求选中男生的概率； （2）全班平均身高为 160 厘米，男生平均身高为 165 厘米，求女生的平均身高。",
+        "expected": {
+          "version": "统计与概率",
+          "grade": "四下",
+          "main_tag": "平均数与条形统计图",
+          "sub_tag": "求平均数"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "某班42个同学参加植树，男生平均每人种3棵，女生平均每人种2棵。已知男生共比女生多种56棵，求男、女生各多少人。",
+        "expected": {
+          "version": "数与式",
+          "grade": "四下",
+          "main_tag": "四则运算",
+          "sub_tag": "加减互逆关系"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "一片牧草，每天匀速生长。这片牧草可供 10头 牛吃 20天，或者供 15头 牛吃 10天。问：可供 25头 牛吃几天？若想使这片牧草永远吃不完，最多只能放牧多少头牛？",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "七下",
+          "main_tag": "二元一次方程组",
+          "sub_tag": "二元一次方程组应用题"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "正方体的体积计算",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "五下",
+          "main_tag": "长方体和正方体",
+          "sub_tag": "体积公式"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "一个长方体的长、宽、高是三个连续偶数，体积是960立方厘米，求它的表面积。",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "五下",
+          "main_tag": "长方体和正方体",
+          "sub_tag": "表面积公式"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "已知一个角的补角比它的余角的 2 倍大 30°，求这个角的度数。",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "七上",
+          "main_tag": "几何图形初步",
+          "sub_tag": "余角、补角与方位角"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "如图，在平面直角坐标系中，反比例函数  y = k/x ​（ k > 0 ）的图象经过点  A ( 2 , 3 ) 。过点  A 作  A B ⊥ x轴于点  B，连接  O A 。求  k 的值",
+        "expected": {
+          "version": "函数",
+          "grade": "八下",
+          "main_tag": "反比例函数",
+          "sub_tag": "k的几何意义"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "小明有 18 个玩具，他想平均分给 6 个小朋友，每个小朋友能分到几个？",
+        "expected": {
+          "version": "数与式",
+          "grade": "二下",
+          "main_tag": "表内除法",
+          "sub_tag": "平均分"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      }
+    ],
+    "source_distribution": [
+      {
+        "source": "none",
+        "count": 10,
+        "pct": 1.0
+      }
+    ],
+    "accuracy_by_source": [
+      {
+        "source": "none",
+        "count": 10,
+        "correct": 0,
+        "accuracy": 0.0
+      }
+    ],
+    "confidence": {
+      "avg": null,
+      "avg_correct": null,
+      "buckets": [
+        {
+          "range": "0.0-0.4",
+          "total": 0,
+          "correct": 0,
+          "accuracy": 0
+        },
+        {
+          "range": "0.4-0.6",
+          "total": 0,
+          "correct": 0,
+          "accuracy": 0
+        },
+        {
+          "range": "0.6-0.8",
+          "total": 0,
+          "correct": 0,
+          "accuracy": 0
+        },
+        {
+          "range": "0.8-1.0",
+          "total": 0,
+          "correct": 0,
+          "accuracy": 0
+        },
+        {
+          "range": "no_conf",
+          "total": 10,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      ]
+    }
+  }
+}

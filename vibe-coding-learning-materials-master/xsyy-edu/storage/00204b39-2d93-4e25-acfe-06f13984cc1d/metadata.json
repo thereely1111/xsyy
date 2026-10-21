@@ -1,0 +1,29 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "球的体积计算",
+  "prompt": "球的体积计算",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "00204b39-2d93-4e25-acfe-06f13984cc1d",
+  "generated_at": "2026-08-24T09:07:41.832628Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "几何面积周长问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中平面图形面积周长结构"
+  },
+  "tags_updated_at": "2026-08-24T09:07:41.832628Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "六下",
+    "main_tag": "圆柱与圆锥",
+    "sub_tags": [
+      "圆柱与圆锥的体积"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T06:30:45.732487Z"
+}

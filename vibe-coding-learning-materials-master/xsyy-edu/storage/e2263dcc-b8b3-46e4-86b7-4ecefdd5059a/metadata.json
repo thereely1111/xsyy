@@ -1,0 +1,69 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "笼子里有若干只鸡和兔。从上面数，有8个头；从下面数，有26只脚。鸡和兔各有几只？",
+  "prompt": "笼子里有若干只鸡和兔。从上面数，有8个头；从下面数，有26只脚。鸡和兔各有几只？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "e2263dcc-b8b3-46e4-86b7-4ecefdd5059a",
+  "generated_at": "2026-09-18T06:19:06.884514Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "鸡兔同笼",
+  "title_quality": "ok",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "双对象总量脚数关系"
+  },
+  "tags_updated_at": "2026-09-18T06:19:06.884514Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "四下",
+    "main_tag": "鸡兔同笼",
+    "sub_tags": [
+      "假设法解决"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-18T06:19:07.154326Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "primary_school",
+    "domain": "图形与几何",
+    "display_class": "geometry",
+    "grade": "四下",
+    "tags": {
+      "main_tag": "鸡兔同笼",
+      "sub_tags": [
+        "假设法解决"
+      ],
+      "second_tag": null
+    },
+    "question_type": "",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "primary_geometry",
+      "steps_min": 3,
+      "steps_max": 5,
+      "motion_policy": "playful",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.98,
+    "engine": "agent",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "agent",
+    "action": "inject_official",
+    "confidence": 0.98
+  }
+}

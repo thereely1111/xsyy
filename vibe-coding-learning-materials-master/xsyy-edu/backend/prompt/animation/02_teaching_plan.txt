@@ -1,0 +1,18 @@
+【教学节拍表纪律层 02_teaching_plan】—— 供 PlanningAgent（P2 启用）
+
+（教学节拍表 teaching_plan.json 是动画与解答的共同剧本：先锁方法、再拆拍、
+分工演与写，杜绝"动画讲动画、解答解解答"。本层 P2 由 PlanningAgent 消费。）
+
+1. 前置约束：节拍必须在 method_lock 锁定的方法骨架内拆，不得越出方法边界；
+   方法指纹 = ContentProfile.method_lock.method_id（与 reusable_skeleton 同源）。
+2. 节拍粒度：一拍 = 一个认知单元 = 动画一步；可对应解答 1~3 行文字；
+   概念上严格一一对应，禁止各自拆步。
+3. 每拍字段（beats[]）：
+   - beat_id（b1,b2,…）、goal（一句话教什么）、
+   - canvas_action（动画在画布上做什么动作）、
+   - write_point（解答在这里写什么）、
+   - bubble_text（老师说气泡的一句话）、
+   - focus_elements（本拍高亮/操作的 SVG 元素 id 列表）。
+4. 顺序：读懂题意 → 沿方法逐步推导 → 得到结果 → 验证/作答；
+   一拍一个数学动作，中间量按方法顺序排列。
+5. 输出 teaching_plan.json（含 method_lock_ref），结构见方案附录 A4。

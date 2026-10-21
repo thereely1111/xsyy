@@ -1,0 +1,24 @@
+{
+  "question": "四边形 ABCD 为正方形, DE // AC, AE = AC, AE 与 CD 相交于 F. 求证: CE = CF.",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/60fd0a38-b86a-4dd8-99de-ae5b008356ff/pasted-image-1767682874681.png",
+  "task_id": "60fd0a38-b86a-4dd8-99de-ae5b008356ff",
+  "generated_at": "2026-01-06T15:06:09.619309Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "正方形性质与全等证明",
+  "has_pic": true,
+  "tags": {
+    "reasoning": "题目是典型的初中平面几何证明题。",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "推理意识",
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-06T15:06:09.619345Z",
+  "preview_image": "Preview.webp"
+}

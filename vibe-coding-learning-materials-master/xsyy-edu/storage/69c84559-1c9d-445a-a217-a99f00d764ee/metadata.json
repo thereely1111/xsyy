@@ -1,0 +1,21 @@
+{
+  "question": "一列火车长180米，以每秒25米的速度通过一座120米的大桥。问：从车头上桥到车尾离开桥需要多长时间？",
+  "prompt": "一列火车长180米，以每秒25米的速度通过一座120米的大桥。问：从车头上桥到车尾离开桥需要多长时间？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "69c84559-1c9d-445a-a217-a99f00d764ee",
+  "generated_at": "2026-01-09T08:35:08.359405Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "火车过桥问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境应用题",
+    "main_tag": "模型意识",
+    "sub_tags": []
+  },
+  "tags_updated_at": "2026-01-09T08:35:08.359418Z",
+  "preview_image": "Preview.webp"
+}

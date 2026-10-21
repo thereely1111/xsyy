@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>环形跑道追及相遇问题 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">环形跑道追及相遇问题</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('由同向追及与反向相遇的间隔求较快者单圈时间')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <defs><linearGradient id='trackGrad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='#7d7d7d'/><stop offset='50%' stop-color='#f0ece2'/><stop offset='100%' stop-color='#7d7d7d'/></linearGradient><filter id='softShadow' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur in='SourceAlpha' stdDeviation='4' result='blur'/><feOffset in='blur' dx='3' dy='4' result='offsetBlur'/><feComponentTransfer><feFuncA type='linear' slope='0.3'/></feComponentTransfer><feMerge><feMergeNode in='offsetBlur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='redGlow' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur stdDeviation='5' result='coloredBlur'/><feMerge><feMergeNode in='coloredBlur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><marker id='arrowHead' markerWidth='10' markerHeight='10' refX='9' refY='3' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,6 L9,3 z' fill='#6b6b6b'/></marker><marker id='arrowHeadRed' markerWidth='10' markerHeight='10' refX='9' refY='3' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,6 L9,3 z' fill='#b93632'/></marker></defs><style>.ink-text{font-family:KaiTi,STKaiti,serif;fill:#4a4a4a;}.vermilion{fill:#b93632;}.rice{fill:#f7f2e9;}.track{fill:none;stroke:url(#trackGrad);stroke-width:26;filter:url(#softShadow);}.track-glow{fill:none;stroke:#fdfbf6;stroke-width:10;opacity:0.35;}.dashed-line{fill:none;stroke:#b93632;stroke-width:2.5;stroke-dasharray:8 6;opacity:0.85;animation:shimmer 1.4s linear infinite;}.arrow{fill:none;stroke:#6b6b6b;stroke-width:3;marker-end:url(#arrowHead);}.arrow-red{fill:none;stroke:#b93632;stroke-width:3;marker-end:url(#arrowHeadRed);}.svg-elem{transition:all 0.7s cubic-bezier(0.4,0,0.2,1);transform-box:fill-box;transform-origin:center;}.runner{filter:url(#softShadow);}.runner-float{animation:float 2.4s ease-in-out infinite;}.heartbeat{animation:heartbeat 1.5s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}.answer-ring{fill:none;stroke:#b93632;stroke-width:4;filter:url(#redGlow);animation:heartbeat 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center;}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}@keyframes heartbeat{0%,100%{transform:scale(1);opacity:0.9}25%{transform:scale(1.05);opacity:1}50%{transform:scale(1)}75%{transform:scale(1.03)}}@keyframes shimmer{0%{stroke-dashoffset:200}100%{stroke-dashoffset:0}}</style><circle cx='400' cy='300' r='220' class='track'/><circle cx='400' cy='300' r='220' class='track-glow'/><g x-show='sceneStep &lt; 8' class='svg-elem' x-transition:enter='transition-all duration-700 ease-out transform' x-transition:enter-start='opacity-0 scale-95' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-700 ease-in transform' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-105'><text x='400' y='295' text-anchor='middle' class='ink-text' font-size='22' filter='url(#softShadow)'>环形跑道 600 米</text><text x='400' y='320' text-anchor='middle' class='ink-text' font-size='14'>全长一圈</text></g><circle cx='400' cy='80' r='6' fill='#b93632' filter='url(#redGlow)'/><text x='400' y='65' text-anchor='middle' class='ink-text' font-size='16'>起点</text><g class='runner runner-float' transform='translate(360,95)'><circle r='18' fill='#b93632' opacity='0.9'/><text x='0' y='6' text-anchor='middle' fill='#f7f2e9' font-size='16' font-family='KaiTi,STKaiti,serif'>哥</text></g><g class='runner runner-float' transform='translate(440,95)' style='animation-delay:0.3s'><circle r='16' fill='#6b6b6b' opacity='0.9'/><text x='0' y='5' text-anchor='middle' fill='#f7f2e9' font-size='16' font-family='KaiTi,STKaiti,serif'>弟</text></g><g x-show='sceneStep &lt;= 3' class='svg-elem' x-transition:enter='transition-all duration-700 ease-out transform' x-transition:enter-start='opacity-0 translate-x-8 scale-90' x-transition:enter-end='opacity-100 translate-x-0 scale-100' x-transition:leave='transition-all duration-700 ease-in transform' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 -translate-x-8 scale-90'><path d='M 425,85 A 220,220 0 1 1 280,520' class='arrow-red'/><path d='M 455,80 A 250,250 0 1 1 310,525' class='arrow'/><text x='600' y='300' class='ink-text' font-size='18'>同向顺时针</text></g><circle cx='400' cy='300' r='250' fill='none' class='dashed-line svg-elem' x-show='sceneStep &gt;= 2 &amp;&amp; sceneStep &lt;= 3' x-transition:enter='transition-all duration-1000 ease-out transform' x-transition:enter-start='opacity-0 scale-80 rotate-12' x-transition:enter-end='opacity-100 scale-100 rotate-0' x-transition:leave='transition-all duration-700 ease-in transform' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-80 -rotate-12'/><text x='650' y='80' class='ink-text vermilion svg-elem' font-size='16' x-show='sceneStep == 1' x-transition:enter='transition-all duration-700 ease-out transform' x-transition:enter-start='opacity-0 translate-y-4' x-transition:enter-end='opacity-100 translate-y-0' x-transition:leave='transition-all duration-500 ease-in transform' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0 -translate-y-4'>多跑一圈 = 600 米</text><path d='M 600,80 C 680,80 700,150 560,170' fill='none' class='dashed-line svg-elem' x-show='sceneStep &gt;= 2 &amp;&amp; sceneStep &lt;= 3' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0' x-transition:enter-end='opacity-100' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'/><foreignObject x='540' y='140' width='220' height='80' class='svg-elem' x-show='sceneStep == 2' x-transition:enter='transition-all duration-1000 ease-out transform' x-transition:enter-start='opacity-0 translate-x-12 scale-90' x-transition:enter-end='opacity-100 translate-x-0 scale-100' x-transition:leave='transition-all duration-700 ease-in transform' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 translate-x-12 scale-90'><div xmlns='http://www.w3.org/1999/xhtml' style='width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f7f2e9;border-left:4px solid #b93632;border-radius:6px;box-shadow:2px 3px 8px rgba(0,0,0,0.15);padding:8px;font-family:KaiTi,STKaiti,serif;color:#4a4a4a;font-size:20px;'>v₁ − v₂ = 600 ÷ 12 = 50</div></foreignObject><g x-show='sceneStep &gt;= 4 &amp;&amp; sceneStep &lt;= 5' class='svg-elem' x-transition:enter='transition-all duration-700 ease-out transform' x-transition:enter-start='opacity-0 translate-x-8 scale-90' x-transition:enter-end='opacity-100 translate-x-0 scale-100' x-transition:leave='transition-all duration-700 ease-in transform' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 translate-x-8 scale-90'><path d='M 360,95 A 220,220 0 0 0 180,300' class='arrow-red'/><path d='M 440,95 A 220,220 0 1 1 620,300' class='arrow'/><text x='400' y='40' text-anchor='middle' class='ink-text' font-size='18'>反向而行</text></g><g transform='translate(400,520)' x-show='sceneStep == 3' class='svg-elem' x-transition:enter='transition-all duration-700 ease-out transform' x-transition:enter-start='opacity-0 scale-50' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-600 ease-in transform' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-50'><circle r='30' fill='none' stroke='#b93632' stroke-width='2' class='heartbeat'/><circle r='18' fill='#b93632' opacity='0.2' class='heartbeat' style='animation-delay:0.2s'/><text y='50' text-anchor='middle' class='ink-text' font-size='15'>相遇点</text></g><path d='M 200,300 C 150,300 130,240 160,190' fill='none' class='dashed-line svg-elem' x-show='sceneStep &gt;= 4 &amp;&amp; sceneStep &lt;= 5' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0' x-transition:enter-end='opacity-100' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'/><foreignObject x='40' y='140' width='220' height='80' class='svg-elem' x-show='sceneStep == 4' x-transition:enter='transition-all duration-1000 ease-out transform' x-transition:enter-start='opacity-0 -translate-x-12 scale-90' x-transition:enter-end='opacity-100 translate-x-0 scale-100' x-transition:leave='transition-all duration-700 ease-in transform' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 -translate-x-12 scale-90'><div xmlns='http://www.w3.org/1999/xhtml' style='width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f7f2e9;border-left:4px solid #b93632;border-radius:6px;box-shadow:2px 3px 8px rgba(0,0,0,0.15);padding:8px;font-family:KaiTi,STKaiti,serif;color:#4a4a4a;font-size:20px;'>v₁ + v₂ = 600 ÷ 4 = 150</div></foreignObject><foreignObject x='300' y='460' width='200' height='110' class='svg-elem' x-show='sceneStep == 5' x-transition:enter='transition-all duration-1000 ease-out transform' x-transition:enter-start='opacity-0 translate-y-10 scale-90' x-transition:enter-end='opacity-100 translate-y-0 scale-100' x-transition:leave='transition-all duration-700 ease-in transform' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 translate-y-10 scale-90'><div xmlns='http://www.w3.org/1999/xhtml' style='width:100%;height:100%;background:#f7f2e9;border-left:4px solid #b93632;border-radius:6px;box-shadow:2px 3px 8px rgba(0,0,0,0.15);padding:10px;font-family:KaiTi,STKaiti,serif;color:#4a4a4a;font-size:16px;'><p style='margin:0 0 4px;'>v₁ − v₂ = 50</p><p style='margin:0 0 6px;'>v₁ + v₂ = 150</p><p style='margin:0;color:#b93632;font-size:18px;'>相加：2v₁ = 200<br/>v₁ = 100 米/分</p></div></foreignObject><foreignObject x='330' y='40' width='80' height='36' class='svg-elem' x-show='sceneStep &gt;= 7' x-transition:enter='transition-all duration-700 ease-out transform' x-transition:enter-start='opacity-0 translate-y-4' x-transition:enter-end='opacity-100 translate-y-0' x-transition:leave='transition-all duration-500 ease-in transform' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0 -translate-y-4'><div xmlns='http://www.w3.org/1999/xhtml' style='width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f7f2e9;border:1px solid #b93632;border-radius:4px;font-family:KaiTi,STKaiti,serif;color:#b93632;font-size:14px;'>v₁ = 100</div></foreignObject><foreignObject x='420' y='40' width='80' height='36' class='svg-elem' x-show='sceneStep &gt;= 7' x-transition:enter='transition-all duration-700 ease-out transform' x-transition:enter-start='opacity-0 translate-y-4' x-transition:enter-end='opacity-100 translate-y-0' x-transition:leave='transition-all duration-500 ease-in transform' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0 -translate-y-4'><div xmlns='http://www.w3.org/1999/xhtml' style='width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#f7f2e9;border:1px solid #6b6b6b;border-radius:4px;font-family:KaiTi,STKaiti,serif;color:#6b6b6b;font-size:14px;'>v₂ = 50</div></foreignObject><g x-show='sceneStep &gt;= 8' class='svg-elem' x-transition:enter='transition-all duration-1000 ease-out transform' x-transition:enter-start='opacity-0 scale-80' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-700 ease-in transform' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-80'><circle cx='400' cy='300' r='240' fill='none' class='answer-ring'/><foreignObject x='320' y='260' width='160' height='80'><div xmlns='http://www.w3.org/1999/xhtml' style='width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f7f2e9;border-radius:50%;border:2px solid #b93632;box-shadow:0 0 15px rgba(185,54,50,0.3);'><span style='font-size:13px;color:#4a4a4a;font-family:KaiTi,STKaiti,serif;'>快者跑一圈</span><span style='font-size:26px;color:#b93632;font-family:KaiTi,STKaiti,serif;font-weight:bold;'>6 分钟</span></div></foreignObject></g><foreignObject x='230' y='430' width='340' height='130' class='svg-elem' x-show='sceneStep == 8' x-transition:enter='transition-all duration-1000 ease-out transform' x-transition:enter-start='opacity-0 translate-y-10 scale-95' x-transition:enter-end='opacity-100 translate-y-0 scale-100' x-transition:leave='transition-all duration-700 ease-in transform' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 translate-y-10 scale-95'><div xmlns='http://www.w3.org/1999/xhtml' style='width:100%;height:100%;background:#f7f2e9;border-left:4px solid #b93632;border-radius:6px;box-shadow:2px 3px 8px rgba(0,0,0,0.15);padding:12px;font-family:KaiTi,STKaiti,serif;color:#4a4a4a;font-size:15px;'><p style='margin:0 0 6px;color:#b93632;font-size:16px;'>✓ 验证</p><p style='margin:0 0 3px;'>同向：600 ÷ (100 − 50) = 12 分钟</p><p style='margin:0 0 6px;'>反向：600 ÷ (100 + 50) = 4 分钟</p><p style='margin:0;'>与题意完全吻合，答案为 <strong style='color:#b93632;'>6 分钟</strong>。</p></div></foreignObject>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+    {
+        "title": "题意：环形跑道上的兄弟",
+        "description": "在600米环形跑道上，哥哥和弟弟同时从同一点出发，先按顺时针方向奔跑。",
+        "bubbleText": "兄弟俩从同一点顺时针起跑。",
+        "bubblePos": {
+            "x": 400,
+            "y": 80
+        }
+    },
+    {
+        "title": "同向追及：每12分钟相遇",
+        "description": "同向而行时，哥哥速度更快，每相遇一次就要比弟弟多跑整整一圈600米。",
+        "bubbleText": "每相遇一次，快者比慢者多跑一圈。",
+        "bubblePos": {
+            "x": 560,
+            "y": 180
+        }
+    },
+    {
+        "title": "写出追及方程",
+        "description": "12分钟内，速度差累计完成600米，因此得到 v₁ − v₂ = 50 米/分。",
+        "bubbleText": "速度差 = 600 ÷ 12 = 50",
+        "bubblePos": {
+            "x": 560,
+            "y": 180
+        }
+    },
+    {
+        "title": "反向相遇：每4分钟相遇",
+        "description": "哥哥改为逆时针，弟弟仍顺时针，两人相向而行，每4分钟合走一整圈600米。",
+        "bubbleText": "反向时，两人路程和为一圈。",
+        "bubblePos": {
+            "x": 240,
+            "y": 180
+        }
+    },
+    {
+        "title": "写出相遇方程",
+        "description": "4分钟内，速度和累计完成600米，因此得到 v₁ + v₂ = 150 米/分。",
+        "bubbleText": "速度和 = 600 ÷ 4 = 150",
+        "bubblePos": {
+            "x": 240,
+            "y": 180
+        }
+    },
+    {
+        "title": "联立方程求速度",
+        "description": "把两式相加：2v₁ = 200，解得哥哥速度 v₁ = 100 米/分。",
+        "bubbleText": "两式相加，哥哥速度浮出水面。",
+        "bubblePos": {
+            "x": 400,
+            "y": 500
+        }
+    },
+    {
+        "title": "求出慢者速度",
+        "description": "代入 v₁ − v₂ = 50，得弟弟速度 v₂ = 50 米/分。",
+        "bubbleText": "弟弟速度为 50 米/分。",
+        "bubblePos": {
+            "x": 400,
+            "y": 500
+        }
+    },
+    {
+        "title": "快者跑一圈的时间",
+        "description": "跑道全长600米，快者速度为100米/分，所需时间为 600 ÷ 100 = 6 分钟。",
+        "bubbleText": "答案：6 分钟。",
+        "bubblePos": {
+            "x": 400,
+            "y": 80
+        }
+    },
+    {
+        "title": "验证答案",
+        "description": "同向：600 ÷ (100−50) = 12 分钟；反向：600 ÷ (100+50) = 4 分钟，均与题目条件相符。",
+        "bubbleText": "验算通过，答案正确！",
+        "bubblePos": {
+            "x": 400,
+            "y": 80
+        }
+    }
+],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

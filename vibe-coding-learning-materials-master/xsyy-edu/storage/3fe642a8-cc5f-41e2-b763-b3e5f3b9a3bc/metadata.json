@@ -1,0 +1,24 @@
+{
+  "question": "一个两位数，个位数字是十位数字的3倍。如果将这个两位数加上7，得到的新数字的个位和十位数字就正好互换。求原来的两位数。",
+  "prompt": "5. 一个两位数，个位数字是十位数字的3倍。如果将这个两位数加上7，得到的新数字的个位和十位数字就正好互换。求原来的两位数。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "3fe642a8-cc5f-41e2-b763-b3e5f3b9a3bc",
+  "generated_at": "2026-04-03T12:00:48.622164Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "数字位置关系方程",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及数字的代数表示与方程",
+    "main_tag": "符号意识",
+    "sub_tags": [
+      "推理意识",
+      "知识点梳理"
+    ]
+  },
+  "tags_updated_at": "2026-04-03T12:00:48.622179Z",
+  "preview_image": "Preview.webp"
+}

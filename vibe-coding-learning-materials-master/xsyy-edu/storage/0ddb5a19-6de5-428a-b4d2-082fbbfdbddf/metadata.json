@@ -1,0 +1,29 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "一个箱子中装有红球和黄球共 100 个，红球个数比黄球的 3 倍多 20 个。从袋中随机摸出一个球，求摸到黄球的概率。",
+  "prompt": "一个箱子中装有红球和黄球共 100 个，红球个数比黄球的 3 倍多 20 个。从袋中随机摸出一个球，求摸到黄球的概率。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "0ddb5a19-6de5-428a-b4d2-082fbbfdbddf",
+  "generated_at": "2026-08-24T07:28:23.773158Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "概率问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中随机事件概率结构"
+  },
+  "tags_updated_at": "2026-08-24T07:28:23.773158Z",
+  "knowledge_tags": {
+    "version": "统计与概率",
+    "grade": "九上",
+    "main_tag": "概率初步",
+    "sub_tags": [
+      "列举法求概率"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-24T07:28:23.805044Z"
+}

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站日志 - 管理后台</title>
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+    </script>
+    <style>
+        .wl-toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .wl-toolbar select, .wl-toolbar input { padding: 9px 12px; border: 1px solid var(--border-color); border-radius: 8px; font: inherit; background: white; }
+        .wl-toolbar input[type="date"] { min-width: 150px; }
+        .wl-toolbar input[type="search"] { min-width: 200px; flex: 1; }
+        .wl-toolbar input[type="number"] { width: 90px; }
+        .wl-toolbar button { width: auto; padding: 9px 16px; font-size: 14px; }
+        .wl-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .wl-stat { flex: 1; min-width: 120px; background: #fff; border: 1px solid var(--border-color); border-radius: 10px; padding: 14px 16px; }
+        .wl-stat .num { font-size: 24px; font-weight: 700; line-height: 1.1; }
+        .wl-stat .lbl { color: var(--ink-grey); font-size: 13px; margin-top: 4px; }
+        .wl-stat.error .num { color: var(--primary-red); }
+        .wl-stat.warn .num { color: #d99a16; }
+        .wl-stat.info .num { color: var(--jade-green); }
+        .log-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; }
+        .log-table th, .log-table td { padding: 11px 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 13px; vertical-align: top; }
+        .log-table th { background: #f5f6f8; color: var(--ink-grey); font-weight: 600; white-space: nowrap; }
+        .log-table tbody tr { cursor: pointer; }
+        .log-table tbody tr:hover { background: #fafbfc; }
+        .lvl { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+        .lvl.ERROR { background: #fdeaea; color: var(--primary-red); }
+        .lvl.WARN { background: #fdf3e0; color: #b9790f; }
+        .lvl.INFO { background: #e7f4ec; color: var(--jade-green); }
+        .cat { display: inline-block; padding: 2px 8px; border-radius: 6px; background: #eef0f3; color: #50607a; font-size: 12px; }
+        .msg-cell { max-width: 380px; color: #2a2f36; white-space: pre-wrap; word-break: break-word; }
+        .sub-text { color: var(--ink-grey); font-size: 12px; }
+        .pager { display: flex; gap: 10px; align-items: center; justify-content: flex-end; margin-top: 14px; }
+        .pager button { width: auto; padding: 7px 14px; font-size: 13px; }
+        .empty-state { padding: 40px; text-align: center; color: var(--ink-grey); }
+        /* 详情弹窗（紧凑型） */
+        .modal-mask { position: fixed; inset: 0; background: rgba(17,22,28,.45); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 24px 16px; backdrop-filter: blur(2px); }
+        .modal-mask.show { display: flex; }
+        .modal { background: #fff; border-radius: 14px; width: min(560px, 100%); max-height: 86vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.28); border-top: 3px solid var(--primary-red); animation: modalIn .16s ease-out; }
+        .modal.lvl-WARN { border-top-color: #d99a16; }
+        .modal.lvl-INFO { border-top-color: var(--jade-green); }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+        .modal-head { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 13px 16px; border-bottom: 1px solid var(--border-color); background: #fbfcfd; }
+        .modal-head .mh-time { margin-left: auto; font-size: 12px; color: var(--ink-grey); }
+        .modal-head .close-x { cursor: pointer; font-size: 20px; line-height: 1; color: var(--ink-grey); border: none; background: none; width: 30px; height: 30px; border-radius: 7px; transition: background .15s; }
+        .modal-head .close-x:hover { background: #eef1f4; color: #333; }
+        .modal-body { flex: 1 1 auto; overflow-y: auto; padding: 16px; }
+        /* 报错原因（按级别着色，限高可滚） */
+        .d-msg { border-left: 3px solid var(--primary-red); background: #fdf6f6; border-radius: 0 8px 8px 0; padding: 10px 12px; margin-bottom: 14px; font-size: 13px; line-height: 1.55; color: #2a2f36; white-space: pre-wrap; word-break: break-word; max-height: 130px; overflow: auto; }
+        .d-msg.WARN { border-left-color: #d99a16; background: #fdfaf1; }
+        .d-msg.INFO { border-left-color: var(--jade-green); background: #f3faf6; }
+        /* 元信息紧凑网格 */
+        .d-meta { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px 14px; margin-bottom: 14px; }
+        .d-meta .mi .mk { font-size: 11px; color: var(--ink-grey); margin-bottom: 2px; letter-spacing: .02em; }
+        .d-meta .mi .mv { font-size: 13px; color: #1f2429; font-weight: 500; word-break: break-all; }
+        .d-meta .mi.full { grid-column: 1 / -1; }
+        .d-meta .mv .sub { display: block; font-size: 11px; color: var(--ink-grey); font-weight: 400; margin-top: 2px; word-break: break-all; }
+        /* 折叠分区 */
+        details.d-sec { border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 10px; overflow: hidden; background: #fff; }
+        details.d-sec > summary { cursor: pointer; list-style: none; padding: 9px 12px; font-size: 13px; font-weight: 600; color: #28323d; display: flex; align-items: center; user-select: none; }
+        details.d-sec > summary::-webkit-details-marker { display: none; }
+        details.d-sec > summary::before { content: "\25B8"; margin-right: 8px; color: var(--jade-green); font-size: 11px; transition: transform .15s; }
+        details.d-sec[open] > summary::before { transform: rotate(90deg); }
+        details.d-sec > summary .hint { margin-left: auto; font-size: 11px; font-weight: 400; color: var(--ink-grey); }
+        details.d-sec > pre { margin: 0; padding: 0 12px 12px; font: 12px/1.55 Consolas, "Microsoft YaHei", monospace; white-space: pre-wrap; word-break: break-word; color: #2a2f36; max-height: 220px; overflow: auto; }
+        details.dark-sec > pre { background: #1f2329; color: #d7dae0; border-radius: 6px; padding: 10px 12px; max-height: 260px; }
+        .modal-foot { flex: 0 0 auto; display: flex; justify-content: flex-end; gap: 8px; padding: 11px 16px; border-top: 1px solid var(--border-color); background: #fbfcfd; }
+        .row-del { color: var(--primary-red); border: 1px solid var(--border-color); background: #fff; border-radius: 6px; padding: 3px 8px; font-size: 12px; cursor: pointer; }
+        .auto-refresh { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-grey); }
+        /* 任务时间线抽屉 */
+        .tl-link { color: var(--jade-green); cursor: pointer; font-weight: 600; border-bottom: 1px dashed var(--jade-green); }
+        .tl-link:hover { color: #0d5c44; }
+        .timeline-mask { position: fixed; inset: 0; background: rgba(17,22,28,.35); display: none; z-index: 999; }
+        .timeline-mask.show { display: block; }
+        .timeline-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 92vw); background: #fff; z-index: 1001; box-shadow: -12px 0 40px rgba(0,0,0,.22); display: flex; flex-direction: column; transform: translateX(100%); transition: transform .22s ease-out; border-left: 1px solid var(--border-color); }
+        .timeline-drawer.show { transform: none; }
+        .tl-head { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--border-color); background: #fbfcfd; }
+        .tl-head h3 { margin: 0; font-size: 14px; color: #28323d; }
+        .tl-head .tl-task { font-family: Consolas, monospace; font-size: 12px; color: var(--ink-grey); word-break: break-all; }
+        .tl-head .close-x { margin-left: auto; cursor: pointer; font-size: 20px; line-height: 1; color: var(--ink-grey); border: none; background: none; width: 30px; height: 30px; border-radius: 7px; }
+        .tl-head .close-x:hover { background: #eef1f4; }
+        .tl-body { flex: 1 1 auto; overflow-y: auto; padding: 18px 16px 24px; }
+        .tl-item { position: relative; padding: 0 0 18px 26px; border-left: 2px solid #e3e8ee; margin-left: 8px; }
+        .tl-item:last-child { border-left-color: transparent; }
+        .tl-dot { position: absolute; left: -7px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #c3ccd6; border: 2px solid #fff; box-shadow: 0 0 0 1px #c3ccd6; }
+        .tl-item.lv-ERROR .tl-dot { background: var(--primary-red); box-shadow: 0 0 0 1px var(--primary-red); }
+        .tl-item.lv-WARN .tl-dot { background: #d99a16; box-shadow: 0 0 0 1px #d99a16; }
+        .tl-item.lv-INFO .tl-dot { background: var(--jade-green); box-shadow: 0 0 0 1px var(--jade-green); }
+        .tl-time { font-size: 11px; color: var(--ink-grey); font-family: Consolas, monospace; }
+        .tl-tags { margin: 2px 0 4px; display: flex; flex-wrap: wrap; gap: 6px; }
+        .tl-tag { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; background: #eef0f3; color: #50607a; }
+        .tl-tag.ev { background: #e7f4ec; color: #0d5c44; }
+        .tl-msg { font-size: 13px; color: #2a2f36; line-height: 1.55; word-break: break-word; cursor: pointer; }
+        .tl-msg:hover { color: var(--jade-green); }
+        .tl-detail { display: none; margin-top: 6px; font: 11px/1.6 Consolas, "Microsoft YaHei", monospace; white-space: pre-wrap; word-break: break-word; color: #5a6a76; background: #f6f8fa; border-radius: 6px; padding: 8px 10px; max-height: 180px; overflow: auto; }
+        .tl-item .tl-detail.open { display: block; }
+        .tl-empty { padding: 40px; text-align: center; color: var(--ink-grey); }
+        @media (max-width: 768px) {
+            .msg-cell { max-width: 200px; }
+            .d-meta { grid-template-columns: 1fr; }
+        }
+    </style>
+    <link rel="stylesheet" href="css/theme-override.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header"><h2>管理后台</h2></div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html">仪表盘</a></li>
+                    <li><a href="teachings.html">教学内容</a></li>
+                    <li><a href="users.html">用户管理</a></li>
+                    <li><a href="tags.html">标签管理</a></li>
+                    <li><a href="recharge_requests.html">订单管理</a></li>
+                    <li><a href="feedbacks.html">用户反馈</a></li>
+                    <li><a href="settings.html">系统配置</a></li>
+                    <li><a href="logs.html" class="active">网站日志</a></li>
+                    <li><a href="invite-quota.html">邀请与额度</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h1>网站日志</h1>
+                <div class="user-info">
+                    <span>管理员：<span id="userInfo">-</span></span>
+                    <a href="../index.html?v=3" class="btn-home">返回首页</a>
+                    <button class="btn-logout" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="wl-stats">
+                    <div class="wl-stat"><div class="num" id="statTotal">0</div><div class="lbl">日志总数</div></div>
+                    <div class="wl-stat error"><div class="num" id="statError">0</div><div class="lbl">ERROR（报错）</div></div>
+                    <div class="wl-stat warn"><div class="num" id="statWarn">0</div><div class="lbl">WARN（轻微异常）</div></div>
+                    <div class="wl-stat info"><div class="num" id="statInfo">0</div><div class="lbl">INFO</div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="wl-toolbar">
+                    <select id="levelFilter" aria-label="日志级别">
+                        <option value="">全部级别</option>
+                        <option value="ERROR">ERROR</option>
+                        <option value="WARN">WARN</option>
+                        <option value="INFO">INFO</option>
+                    </select>
+                    <select id="categoryFilter" aria-label="日志类别">
+                        <option value="">全部分类</option>
+                        <option value="animation_generation">动画生成</option>
+                        <option value="server_error">服务端错误</option>
+                        <option value="client_page">前端页面</option>
+                        <option value="system">系统</option>
+                        <option value="api">接口</option>
+                    </select>
+                    <input id="searchFilter" type="search" placeholder="搜索原因 / 用户ID / 任务ID / 页面" aria-label="搜索">
+                    <input id="startDate" type="date" aria-label="开始日期">
+                    <input id="endDate" type="date" aria-label="结束日期">
+                    <input id="pageSize" type="number" min="10" max="200" value="30" aria-label="每页条数">
+                    <button id="refreshButton" class="btn btn-primary" type="button">刷新</button>
+                    <label class="auto-refresh"><input id="autoRefresh" type="checkbox"> 自动刷新(10s)</label>
+                    <button id="clearButton" class="btn btn-danger" type="button">清空日志</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <table class="log-table">
+                    <thead>
+                        <tr>
+                            <th style="width:150px">时间</th>
+                            <th style="width:78px">级别</th>
+                            <th style="width:120px">类别</th>
+                            <th style="width:150px">触发用户</th>
+                            <th style="width:110px">任务ID</th>
+                            <th style="width:160px">页面</th>
+                            <th>报错原因</th>
+                            <th style="width:60px">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logTableBody">
+                        <tr><td colspan="8" class="empty-state">加载中...</td></tr>
+                    </tbody>
+                </table>
+                <div class="pager">
+                    <span id="pageInfo" class="sub-text"></span>
+                    <button id="prevPage" class="btn btn-secondary" type="button">上一页</button>
+                    <button id="nextPage" class="btn btn-secondary" type="button">下一页</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 任务时间线抽屉：按 task_id 聚合该任务全部日志（事件链） -->
+    <div class="timeline-mask" id="timelineMask"></div>
+    <div class="timeline-drawer" id="timelineDrawer" aria-label="任务时间线">
+        <div class="tl-head">
+            <h3>任务时间线</h3>
+            <span class="tl-task" id="tlTaskId">-</span>
+            <span class="tl-task" id="tlCount">0 条</span>
+            <button class="close-x" id="tlClose" aria-label="关闭">&times;</button>
+        </div>
+        <div class="tl-body" id="tlBody">
+            <div class="tl-empty">加载中...</div>
+        </div>
+    </div>
+
+    <!-- 详情弹窗（紧凑型） -->
+    <div class="modal-mask" id="detailMask">
+        <div class="modal" id="detailModal">
+            <div class="modal-head">
+                <span id="detailLevel" class="lvl ERROR">ERROR</span>
+                <span id="detailCategory" class="cat">animation_generation</span>
+                <span class="mh-time" id="dTime">-</span>
+                <button class="close-x" id="detailClose" aria-label="关闭">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="d-msg" id="dMessage"></div>
+
+                <div class="d-meta">
+                    <div class="mi"><div class="mk">触发用户</div><div class="mv" id="dUser">-</div></div>
+                    <div class="mi"><div class="mk">任务ID</div><div class="mv" id="dTask">-</div></div>
+                    <div class="mi full"><div class="mk">页面</div><div class="mv" id="dPage">-</div></div>
+                    <div class="mi full"><div class="mk">设备 / UA</div><div class="mv" id="dDevice">-</div></div>
+                    <div class="mi full"><div class="mk">请求</div><div class="mv" id="dRequest">-</div></div>
+                    <div class="mi"><div class="mk">错误码</div><div class="mv" id="dErrorCode">-</div></div>
+                </div>
+
+                <details class="d-sec" id="paramsSec">
+                    <summary>请求参数 <span class="hint">点击展开</span></summary>
+                    <pre id="dParams">-</pre>
+                </details>
+                <details class="d-sec" id="contextSec">
+                    <summary>其他上下文 <span class="hint">点击展开</span></summary>
+                    <pre id="dContext">-</pre>
+                </details>
+                <details class="d-sec dark-sec" id="stackSec">
+                    <summary>异常堆栈 <span class="hint">点击展开</span></summary>
+                    <pre id="dStack"></pre>
+                </details>
+            </div>
+
+            <div class="modal-foot">
+                <button class="btn btn-secondary" id="detailCloseBtn" type="button">关闭</button>
+                <button class="btn btn-danger" id="detailDeleteBtn" type="button">删除此日志</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-nav.js') + '"><\/script>');
+    </script>
+    <script>
+        const state = { page: 1, pageSize: 30, total: 0, totalPages: 1, loading: false };
+        let autoTimer = null;
+
+        const levelFilter = document.getElementById('levelFilter');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const searchFilter = document.getElementById('searchFilter');
+        const startDate = document.getElementById('startDate');
+        const endDate = document.getElementById('endDate');
+        const pageSizeInput = document.getElementById('pageSize');
+        const tableBody = document.getElementById('logTableBody');
+
+        // 进入网站日志页即视为已读，清零“新增错误日志”红点
+        if (window.markWebsiteLogsSeen) {
+            window.markWebsiteLogsSeen();
+        }
+
+        function escapeHtml(s) {
+            if (s === null || s === undefined) return '';
+            return String(s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function prettyJson(v) {
+            if (v === null || v === undefined) return '';
+            if (typeof v === 'string') return v;
+            try { return JSON.stringify(v, null, 2); } catch (e) { return String(v); }
+        }
+
+        function fmtTime(iso) {
+            if (!iso) return '-';
+            // 后端返回 UTC ISO（带 Z）。公网管理后台的运行环境（服务器/浏览器）可能为 UTC 时区，
+            // 若用 getHours() 取浏览器本地时间会少 8 小时；这里显式按东八区（北京时间）格式化，
+            // 无论访问端在哪个时区，显示结果都一致。
+            const d = new Date(iso);
+            if (isNaN(d.getTime())) return String(iso).replace('T', ' ').slice(0, 19);
+            const beijing = new Date(d.getTime() + 8 * 3600 * 1000); // 东八区 = UTC+8
+            const pad = n => String(n).padStart(2, '0');
+            return beijing.getUTCFullYear() + '-' + pad(beijing.getUTCMonth() + 1) + '-' + pad(beijing.getUTCDate())
+                + ' ' + pad(beijing.getUTCHours()) + ':' + pad(beijing.getUTCMinutes()) + ':' + pad(beijing.getUTCSeconds());
+        }
+
+        async function loadLogs() {
+            if (state.loading) return;
+            state.loading = true;
+            state.pageSize = Math.min(200, Math.max(10, parseInt(pageSizeInput.value, 10) || 30));
+            try {
+                const data = await getWebsiteLogs({
+                    page: state.page,
+                    page_size: state.pageSize,
+                    level: levelFilter.value,
+                    category: categoryFilter.value,
+                    search: searchFilter.value.trim(),
+                    start_date: startDate.value || '',
+                    end_date: endDate.value || '',
+                });
+                state.total = data.total || 0;
+                state.totalPages = data.total_pages || 1;
+                state.page = Math.min(state.page, state.totalPages || 1);
+                renderStats(data);
+                renderTable(data.logs || []);
+                renderPager();
+            } catch (err) {
+                tableBody.innerHTML = `<tr><td colspan="8" class="empty-state">加载失败：${escapeHtml(err.message || err)}</td></tr>`;
+            } finally {
+                state.loading = false;
+            }
+        }
+
+        // 统计：在不过载后端的前提下，按当前筛选条件额外统计各级别数量。
+        async function loadStats() {
+            try {
+                const base = { search: searchFilter.value.trim(), start_date: startDate.value || '', end_date: endDate.value || '' };
+                const [err, warn, info] = await Promise.all([
+                    getWebsiteLogs({ ...base, level: 'ERROR', page_size: 1 }).catch(() => ({ total: 0 })),
+                    getWebsiteLogs({ ...base, level: 'WARN', page_size: 1 }).catch(() => ({ total: 0 })),
+                    getWebsiteLogs({ ...base, level: 'INFO', page_size: 1 }).catch(() => ({ total: 0 })),
+                ]);
+                document.getElementById('statError').textContent = err.total || 0;
+                document.getElementById('statWarn').textContent = warn.total || 0;
+                document.getElementById('statInfo').textContent = info.total || 0;
+            } catch (e) { /* 统计失败不影响主列表 */ }
+        }
+
+        function renderStats() {
+            // 总条数由主列表 total 给出，级别统计通过 loadStats 异步刷新
+            document.getElementById('statTotal').textContent = state.total;
+        }
+
+        function renderTable(logs) {
+            if (!logs.length) {
+                tableBody.innerHTML = '<tr><td colspan="8" class="empty-state">暂无匹配的网站日志</td></tr>';
+                return;
+            }
+            tableBody.innerHTML = logs.map(log => {
+                const user = log.username ? `${escapeHtml(log.username)}<br><span class="sub-text">${escapeHtml(log.userId || '')}</span>` : (escapeHtml(log.userId || '') || '<span class="sub-text">游客/匿名</span>');
+                const task = log.taskId
+                    ? `<span class="tl-link" data-timeline="${escapeHtml(String(log.taskId))}" title="查看该任务完整事件链">${escapeHtml(String(log.taskId).slice(0, 8))}…</span>`
+                    : '-';
+                const page = log.pageTitle ? `${escapeHtml(log.pageTitle)}<br><span class="sub-text">${escapeHtml(log.pageUrl || '')}</span>` : (escapeHtml(log.pageUrl || '') || '-');
+                return `
+                    <tr data-id="${log.id}">
+                        <td>${escapeHtml(fmtTime(log.createdAt))}</td>
+                        <td><span class="lvl ${escapeHtml(log.level)}">${escapeHtml(log.level)}</span></td>
+                        <td><span class="cat">${escapeHtml(log.category)}</span></td>
+                        <td>${user}</td>
+                        <td>${task}</td>
+                        <td>${page}</td>
+                        <td class="msg-cell">${escapeHtml(log.message)}</td>
+                        <td><button class="row-del" data-del="${log.id}">删除</button></td>
+                    </tr>`;
+            }).join('');
+        }
+
+        function renderPager() {
+            document.getElementById('pageInfo').textContent = `第 ${state.page} / ${state.totalPages} 页，共 ${state.total} 条`;
+            document.getElementById('prevPage').disabled = state.page <= 1;
+            document.getElementById('nextPage').disabled = state.page >= state.totalPages;
+        }
+
+        let currentDetailId = null;
+        function openDetail(log) {
+            currentDetailId = log.id;
+            const lvl = log.level || '';
+            const modalEl = document.getElementById('detailModal');
+            modalEl.className = 'modal lvl-' + escapeHtml(lvl);
+            document.getElementById('detailLevel').className = `lvl ${escapeHtml(lvl)}`;
+            document.getElementById('detailLevel').textContent = lvl;
+            document.getElementById('detailCategory').textContent = log.category || '-';
+            document.getElementById('dTime').textContent = fmtTime(log.createdAt);
+            const dMsg = document.getElementById('dMessage');
+            dMsg.className = 'd-msg ' + escapeHtml(lvl);
+            dMsg.textContent = log.message || '(无)';
+            const userVal = log.username
+                ? `${escapeHtml(log.username)}${log.userId ? '<span class="sub">' + escapeHtml(log.userId) + '</span>' : ''}`
+                : (escapeHtml(log.userId || '') || '游客/匿名');
+            document.getElementById('dUser').innerHTML = userVal;
+            document.getElementById('dTask').textContent = log.taskId || '-';
+            const pageVal = (log.pageTitle || log.pageUrl)
+                ? `${escapeHtml(log.pageTitle || '')}${log.pageUrl ? '<span class="sub">' + escapeHtml(log.pageUrl) + '</span>' : ''}`
+                : '-';
+            document.getElementById('dPage').innerHTML = pageVal;
+            document.getElementById('dDevice').textContent = log.device || '-';
+            document.getElementById('dRequest').textContent = (log.requestMethod || '') + ' ' + (log.requestPath || '');
+            document.getElementById('dErrorCode').textContent = log.errorCode || '-';
+            document.getElementById('dParams').textContent = prettyJson(log.requestParams) || '(空)';
+            document.getElementById('dContext').textContent = prettyJson(log.context) || '(空)';
+            const stackSec = document.getElementById('stackSec');
+            if (log.stackTrace) {
+                stackSec.style.display = 'block';
+                document.getElementById('dStack').textContent = log.stackTrace;
+            } else {
+                stackSec.style.display = 'none';
+            }
+            document.getElementById('detailMask').classList.add('show');
+        }
+
+        function closeDetail() {
+            document.getElementById('detailMask').classList.remove('show');
+        }
+
+        // 事件绑定
+        document.getElementById('refreshButton').addEventListener('click', () => { state.page = 1; loadLogs(); loadStats(); });
+        document.getElementById('prevPage').addEventListener('click', () => { if (state.page > 1) { state.page--; loadLogs(); } });
+        document.getElementById('nextPage').addEventListener('click', () => { if (state.page < state.totalPages) { state.page++; loadLogs(); } });
+        document.getElementById('clearButton').addEventListener('click', async () => {
+            if (!confirm('确定要清空全部网站日志吗？此操作不可恢复。')) return;
+            try {
+                await clearWebsiteLogs();
+                state.page = 1;
+                loadLogs(); loadStats();
+            } catch (err) { showToast('清空失败：' + (err.message || err), 'error'); }
+        });
+        document.getElementById('detailClose').addEventListener('click', closeDetail);
+        document.getElementById('detailCloseBtn').addEventListener('click', closeDetail);
+        document.getElementById('detailMask').addEventListener('click', (e) => { if (e.target.id === 'detailMask') closeDetail(); });
+        document.getElementById('detailDeleteBtn').addEventListener('click', () => {
+            if (!currentDetailId) return;
+            if (!confirm('确定删除这条日志吗？')) return;
+            deleteWebsiteLog(currentDetailId)
+                .then(() => { closeDetail(); loadLogs(); loadStats(); })
+                .catch(err => showToast('删除失败：' + (err.message || err), 'error'));
+        });
+
+        [levelFilter, categoryFilter, pageSizeInput].forEach(el => el.addEventListener('change', () => { state.page = 1; loadLogs(); loadStats(); }));
+        searchFilter.addEventListener('input', debounce(() => { state.page = 1; loadLogs(); loadStats(); }, 400));
+        [startDate, endDate].forEach(el => el.addEventListener('change', () => { state.page = 1; loadLogs(); loadStats(); }));
+
+        tableBody.addEventListener('click', (e) => {
+            const tlLink = e.target.closest('[data-timeline]');
+            if (tlLink) {
+                e.stopPropagation();
+                openTimeline(tlLink.getAttribute('data-timeline'));
+                return;
+            }
+            const delBtn = e.target.closest('[data-del]');
+            if (delBtn) {
+                e.stopPropagation();
+                const id = delBtn.getAttribute('data-del');
+                if (confirm('确定删除这条日志吗？')) {
+                    deleteWebsiteLog(id).then(() => { loadLogs(); loadStats(); }).catch(err => showToast('删除失败：' + (err.message || err), 'error'));
+                }
+                return;
+            }
+            const row = e.target.closest('tr[data-id]');
+            if (!row) return;
+            // 拉取完整记录（含堆栈/上下文）后展示
+            const id = row.getAttribute('data-id');
+            getWebsiteLogs({ page: 1, page_size: state.pageSize, level: levelFilter.value, category: categoryFilter.value, search: searchFilter.value.trim(), start_date: startDate.value || '', end_date: endDate.value || '' })
+                .then(data => {
+                    const found = (data.logs || []).find(l => String(l.id) === String(id));
+                    if (found) openDetail(found);
+                })
+                .catch(() => {});
+        });
+
+        // ---------- 任务时间线抽屉 ----------
+        let currentTimelineTask = null;
+        function openTimeline(taskId) {
+            if (!taskId) return;
+            currentTimelineTask = taskId;
+            document.getElementById('tlTaskId').textContent = taskId;
+            document.getElementById('tlCount').textContent = '加载中…';
+            document.getElementById('tlBody').innerHTML = '<div class="tl-empty">加载中...</div>';
+            document.getElementById('timelineMask').classList.add('show');
+            document.getElementById('timelineDrawer').classList.add('show');
+            getWebsiteLogTimeline(taskId)
+                .then(data => renderTimeline(taskId, data.logs || []))
+                .catch(err => {
+                    document.getElementById('tlBody').innerHTML = `<div class="tl-empty">加载失败：${escapeHtml(err.message || err)}</div>`;
+                    document.getElementById('tlCount').textContent = '0 条';
+                });
+        }
+        function closeTimeline() {
+            document.getElementById('timelineDrawer').classList.remove('show');
+            document.getElementById('timelineMask').classList.remove('show');
+            currentTimelineTask = null;
+        }
+        function renderTimeline(taskId, logs) {
+            document.getElementById('tlCount').textContent = `${logs.length} 条`;
+            if (!logs.length) {
+                document.getElementById('tlBody').innerHTML = '<div class="tl-empty">该任务暂无日志记录</div>';
+                return;
+            }
+            // 按时间正序（接口已保证 id 升序），从创建到结束呈现完整事件链
+            const items = logs.map(log => {
+                const lvl = String(log.level || 'INFO').toUpperCase();
+                const tags = [];
+                if (log.event) tags.push(`<span class="tl-tag ev">${escapeHtml(log.event)}</span>`);
+                if (log.stage) tags.push(`<span class="tl-tag">${escapeHtml(log.stage)}</span>`);
+                if (log.errorType) tags.push(`<span class="tl-tag">${escapeHtml(log.errorType)}</span>`);
+                const detailBits = [];
+                detailBits.push(`id: ${log.id}`);
+                detailBits.push(`级别: ${lvl}`);
+                if (log.errorCode) detailBits.push(`error_code: ${log.errorCode}`);
+                if (log.pageUrl) detailBits.push(`页面: ${log.pageUrl}`);
+                if (log.device) detailBits.push(`UA: ${log.device.slice(0, 120)}`);
+                if (log.requestMethod && log.requestPath) detailBits.push(`请求: ${log.requestMethod} ${log.requestPath}`);
+                if (log.requestParams) detailBits.push(`参数: ${JSON.stringify(log.requestParams)}`);
+                if (log.context) detailBits.push(`上下文: ${JSON.stringify(log.context)}`);
+                if (log.stackTrace) detailBits.push(`堆栈: ${log.stackTrace.slice(0, 600)}`);
+                return `
+                    <div class="tl-item lv-${lvl}">
+                        <span class="tl-dot"></span>
+                        <div class="tl-time">${escapeHtml(fmtTime(log.createdAt))}</div>
+                        <div class="tl-tags">${tags.join('') || ''}</div>
+                        <div class="tl-msg" data-tl-detail>${escapeHtml(log.message)}</div>
+                        <div class="tl-detail">${escapeHtml(detailBits.join('\n'))}</div>
+                    </div>`;
+            }).join('');
+            document.getElementById('tlBody').innerHTML = items;
+            document.getElementById('tlBody').querySelectorAll('[data-tl-detail]').forEach(el => {
+                el.addEventListener('click', () => {
+                    el.nextElementSibling.classList.toggle('open');
+                });
+            });
+        }
+        document.getElementById('tlClose').addEventListener('click', closeTimeline);
+        document.getElementById('timelineMask').addEventListener('click', closeTimeline);
+
+        document.getElementById('autoRefresh').addEventListener('change', (e) => {
+            if (e.target.checked) {
+                autoTimer = setInterval(() => { if (!document.getElementById('detailMask').classList.contains('show')) loadLogs(); }, 10000);
+            } else if (autoTimer) {
+                clearInterval(autoTimer); autoTimer = null;
+            }
+        });
+
+        function debounce(fn, wait) {
+            let t = null;
+            return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), wait); };
+        }
+
+        (async function init() {
+            const isAdmin = await checkAdminAuth();
+            if (!isAdmin) return;
+            const adminInfo = await checkAdmin();
+            document.getElementById('userInfo').textContent = adminInfo.username;
+            loadLogs();
+            loadStats();
+        })();
+    </script>
+</body>
+</html>

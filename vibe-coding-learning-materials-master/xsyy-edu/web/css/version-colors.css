@@ -1,0 +1,39 @@
+/**
+ * 知识点标签颜色映射（全局共享，按年级区分）
+ *
+ * 用于标签按年级（一上~九下，18个）区分颜色，主标签（.tag-main）与副标签（.tag-sub）同色。
+ * 颜色类型与 knowledge-tag-render.js 中 GRADE_COLOR_MAP 一一对应。
+ * （章/单元共38个，颜色需求过多，故按年级着色）
+ *
+ * 引入方式：<link rel="stylesheet" href="css/version-colors.css">
+ * 各页面（video.html / index.html / admin/teachings.html）统一引用本文件，
+ * 避免分散维护导致颜色不一致。
+ */
+
+/* ===== 年级颜色（按年级区分，主副标签同色） ===== */
+.tag-main.cyan, .tag-sub.cyan { background: #0891B2; color: #fff; }            /* 一上 */
+.tag-main.lime, .tag-sub.lime { background: #65A30D; color: #fff; }            /* 一下 */
+.tag-main.amber, .tag-sub.amber { background: #D97706; color: #fff; }           /* 二上 */
+.tag-main.pink, .tag-sub.pink { background: #DB2777; color: #fff; }            /* 二下 */
+.tag-main.indigo, .tag-sub.indigo { background: #4F46E5; color: #fff; }         /* 三上 */
+.tag-main.slate, .tag-sub.slate { background: #475569; color: #fff; }           /* 三下 */
+.tag-main.emerald, .tag-sub.emerald { background: #059669; color: #fff; }       /* 四上 */
+.tag-main.fuchsia, .tag-sub.fuchsia { background: #C026D3; color: #fff; }       /* 四下 */
+.tag-main.sky, .tag-sub.sky { background: #0284C7; color: #fff; }               /* 五上 */
+.tag-main.copper, .tag-sub.copper { background: #B45309; color: #fff; }         /* 五下 */
+
+.tag-main.teal, .tag-sub.teal { background: #16A085; color: #fff; }           /* 六上 */
+.tag-main.goldenrod, .tag-sub.goldenrod { background: #D4A017; color: #fff; } /* 六下 */
+.tag-main.blue, .tag-sub.blue { background: #2E86C1; color: #fff; }           /* 七上 */
+.tag-main.royalblue, .tag-sub.royalblue { background: #1F5AA8; color: #fff; } /* 七下 */
+.tag-main.purple, .tag-sub.purple { background: #8E44AD; color: #fff; }       /* 八上 */
+.tag-main.orchid, .tag-sub.orchid { background: #B569C9; color: #fff; }       /* 八下 */
+.tag-main.red, .tag-sub.red { background: #D9342B; color: #fff; }             /* 九上 */
+.tag-main.olive, .tag-sub.olive { background: #7D8C2E; color: #fff; }         /* 九下 */
+
+/* ===== 备用色（保留，供扩展/特殊场景使用） ===== */
+.tag-main.crimson, .tag-sub.crimson { background: #B81B3A; color: #fff; }
+.tag-main.green, .tag-sub.green { background: #27AE60; color: #fff; }
+.tag-main.orange, .tag-sub.orange { background: #E67E22; color: #fff; }
+.tag-main.brown, .tag-sub.brown { background: #8B5E3C; color: #fff; }
+.tag-main.maroon, .tag-sub.maroon { background: #7B2D26; color: #fff; }

@@ -1,0 +1,22 @@
+{
+  "question": "某列车通过342米的遂道用了23秒，接着通过234米的遂道用了17秒，这列火车与另一列长88米、速度为每秒22米的列车错车而过，问需要(　 )秒钟?",
+  "prompt": "某列车通过342米的遂道用了23秒，接着通过234米的遂道用了17秒，这列火车与另一列长88米、速度为每秒22米的列车错车而过，问需要(　 )秒钟?",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "7e29c7cf-95f6-4b6b-9cab-7f05ed419c09",
+  "generated_at": "2025-12-10T21:37:32.393758",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "火车过桥与错车问题",
+  "tags": {
+    "reasoning": "情境应用题，需多步建模",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-10T21:37:32.393758",
+  "preview_image": "Preview.webp"
+}

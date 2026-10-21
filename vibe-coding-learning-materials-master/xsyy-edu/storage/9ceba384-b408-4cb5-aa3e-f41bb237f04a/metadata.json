@@ -1,0 +1,28 @@
+{
+  "question": "已知一次函数  y = − 2 x + 8 y=−2x+8。 （1）求该函数图象与 x 轴、y 轴围成的三角形面积； （2）求当  y > 0 y>0 时，x 的取值范围。",
+  "prompt": "已知一次函数  y = − 2 x + 8 y=−2x+8。 （1）求该函数图象与 x 轴、y 轴围成的三角形面积； （2）求当  y > 0 y>0 时，x 的取值范围。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "9ceba384-b408-4cb5-aa3e-f41bb237f04a",
+  "generated_at": "2026-08-19T08:42:40.313167Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "函数图象问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中函数解析式图象结构"
+  },
+  "tags_updated_at": "2026-08-19T08:42:40.313167Z",
+  "knowledge_tags": {
+    "version": "函数",
+    "grade": "八下",
+    "main_tag": "一次函数",
+    "sub_tags": [
+      "一次函数与方程/不等式及实际应用"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-19T08:42:40.398001Z"
+}

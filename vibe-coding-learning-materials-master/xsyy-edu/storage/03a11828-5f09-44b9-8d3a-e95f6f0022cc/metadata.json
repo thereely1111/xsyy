@@ -1,0 +1,24 @@
+{
+  "question": "在300米的环形跑道上，艾迪和薇儿同时同地起跑，如果同向而跑2分30秒艾迪追上薇儿，如果背向而跑则半分钟相遇，则艾迪的速度为____米/秒，薇儿速度为____米/秒。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\03a11828-5f09-44b9-8d3a-e95f6f0022cc\\ScreenShot_2026-02-03_002352_702.png",
+  "task_id": "03a11828-5f09-44b9-8d3a-e95f6f0022cc",
+  "generated_at": "2026-02-03T00:26:57.101549Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "环形跑道追及相遇",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的行程问题，需要建立代数模型求解。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2026-02-03T00:26:57.101549Z",
+  "preview_image": "Preview.webp"
+}

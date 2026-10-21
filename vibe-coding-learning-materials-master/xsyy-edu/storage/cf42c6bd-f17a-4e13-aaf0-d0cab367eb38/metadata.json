@@ -1,0 +1,18 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "六下",
+    "main_tag": "圆柱与圆锥",
+    "sub_tags": [
+      "圆柱与圆锥的体积"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-03T07:37:08.610367Z",
+  "question": "一个忽略厚度的圆柱形笔筒，直径为8cm，高为12cm，它的体积是？",
+  "prompt": "一个忽略厚度的圆柱形笔筒，直径为8cm，高为12cm，它的体积是？",
+  "title": "几何面积周长问题",
+  "knowledge_tags_confirmed": true
+}

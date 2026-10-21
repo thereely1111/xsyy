@@ -1,0 +1,24 @@
+{
+  "question": "0.47 × 1.2 + 8.6 × 0.12 - 1.33 × 0.2",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/2f6ab09b-5955-4092-9f02-4139ddd21b98/ScreenShot_2026-01-24_105310_000.png",
+  "task_id": "2f6ab09b-5955-4092-9f02-4139ddd21b98",
+  "generated_at": "2026-01-24T10:56:48.286408Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "小数乘法简算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "纯粹考察小数四则运算的计算能力。",
+    "main_tag": "运算能力",
+    "sub_tags": [
+      "数感",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-24T10:56:48.286424Z",
+  "preview_image": "Preview.webp"
+}

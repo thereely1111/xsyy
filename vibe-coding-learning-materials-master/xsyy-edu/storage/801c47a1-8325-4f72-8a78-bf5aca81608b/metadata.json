@@ -1,0 +1,24 @@
+{
+  "question": "每行的左边和每列的上边所标数字代表该行、列连续黑色方块的数量。小朋友们,你们能根据这些数字,标出所有的黑色方块吗?",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\801c47a1-8325-4f72-8a78-bf5aca81608b\\ScreenShot_2026-01-13_101257_505.png",
+  "task_id": "801c47a1-8325-4f72-8a78-bf5aca81608b",
+  "generated_at": "2026-01-13T10:19:01.446024Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "逻辑推理网格填涂",
+  "has_pic": true,
+  "tags": {
+    "reasoning": "基于行列表的数字约束进行逻辑推理。",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "几何直观",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-13T10:19:01.446024Z",
+  "preview_image": "Preview.webp"
+}

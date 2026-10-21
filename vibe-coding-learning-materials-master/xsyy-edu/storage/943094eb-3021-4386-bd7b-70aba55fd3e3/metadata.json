@@ -1,0 +1,24 @@
+{
+  "question": "一人以每分钟120米的速度沿铁路边跑步。一列长288米的火车从对面开来，从他身边通过用了8秒钟，火车的速度是____米/秒。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\943094eb-3021-4386-bd7b-70aba55fd3e3\\ScreenShot_2026-01-11_155144_236.png",
+  "task_id": "943094eb-3021-4386-bd7b-70aba55fd3e3",
+  "generated_at": "2026-01-11T15:57:28.058621Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "火车过人相遇问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的行程应用题，需构建相对速度模型并进行单位换算。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "量感",
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-11T15:57:28.058621Z",
+  "preview_image": "Preview.webp"
+}

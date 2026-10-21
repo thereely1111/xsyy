@@ -1,0 +1,18 @@
+{
+  "knowledge_tags": {
+    "version": "函数",
+    "grade": "八下",
+    "main_tag": "反比例函数",
+    "sub_tags": [
+      "k的几何意义"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-02T05:57:57.698772Z",
+  "knowledge_tags_confirmed": true,
+  "title": "函数图象问题",
+  "question": "反比例函数 y = k/x（k != 0）的图象与一次函数 y = mx + n 的图象交于 A(2, 4) 和 B(-1, -2) 两点。\n\n（1）求反比例函数和一次函数的解析式；\n（2）连接 OA、OB，求三角形 AOB 的面积；\n（3）根据图象，直接写出不等式 k/x > mx + n 的解集。",
+  "prompt": "反比例函数 y = k/x（k != 0）的图象与一次函数 y = mx + n 的图象交于 A(2, 4) 和 B(-1, -2) 两点。\n\n（1）求反比例函数和一次函数的解析式；\n（2）连接 OA、OB，求三角形 AOB 的面积；\n（3）根据图象，直接写出不等式 k/x > mx + n 的解集。",
+  "preview_image": "Preview.webp"
+}

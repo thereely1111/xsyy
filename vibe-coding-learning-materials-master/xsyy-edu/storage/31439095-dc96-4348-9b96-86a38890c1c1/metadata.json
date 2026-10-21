@@ -1,0 +1,23 @@
+{
+  "question": "$(256)_8 = 2\\times \\underline{\\hspace{0.5cm}} + 5\\times \\underline{\\hspace{0.5cm}} + 6\\times \\underline{\\hspace{0.5cm}} = (\\underline{\\hspace{0.5cm}})_{10}$",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\31439095-dc96-4348-9b96-86a38890c1c1\\pasted-image-1766550366995.png",
+  "task_id": "31439095-dc96-4348-9b96-86a38890c1c1",
+  "generated_at": "2025-12-24T12:28:36.884408Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "八进制转十进制",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "考察数制转换和数的位值概念。",
+    "main_tag": "数感",
+    "sub_tags": [
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-24T12:28:36.884408Z",
+  "preview_image": "Preview.webp"
+}

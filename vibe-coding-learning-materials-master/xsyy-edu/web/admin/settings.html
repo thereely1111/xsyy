@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统配置 - 管理后台</title>
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+    </script>
+    <link rel="stylesheet" href="css/theme-override.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>管理后台</h2>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html">仪表盘</a></li>
+                    <li><a href="teachings.html">教学内容</a></li>
+                    <li><a href="users.html">用户管理</a></li>
+                    <li><a href="tags.html">标签管理</a></li>
+                    <li><a href="recharge_requests.html">订单管理</a></li>
+                    <li><a href="feedbacks.html">用户反馈</a></li>
+                    <li><a href="settings.html" class="active">系统配置</a></li>
+                    <li><a href="logs.html">网站日志</a></li>
+                    <li><a href="invite-quota.html">邀请与额度</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>系统配置</h1>
+                <div class="user-info">
+                    <span>管理员：<span id="userInfo">-</span></span>
+                    <a href="../index.html?v=3" class="btn-home">返回首页</a>
+                    <button class="btn-logout" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+
+            <!-- 配置表单 -->
+            <div class="card">
+                <h2 class="card-title">系统配置</h2>
+                <div id="configForm" class="loading">加载中...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 返利与额度配置弹窗 -->
+    <div id="configModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closeConfigModal()"></div>
+        <div class="modal-content" style="max-width: 520px; max-height: 88vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h3>返利与用户额度配置</h3>
+                <button class="modal-close" onclick="closeConfigModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="flex: 1; min-height: 0; overflow-y: auto;">
+                <form id="settingsForm">
+                    <h3 style="margin:0 0 10px; color:#b23a2e;">⓪ 邀请返利活动（总控）</h3>
+                    <div class="form-group">
+                        <label>活动总开关</label>
+                        <select id="inviteActivityEnabled">
+                            <option value="1">开启（发放返佣 / 邀请奖励 / 被邀额外奖励 / 里程碑）</option>
+                            <option value="0">停用（以上全部停发；注册赠送与官方邀请码不受影响）</option>
+                        </select>
+                        <p style="font-size:12px; color:var(--ink-grey); margin-top:5px;">一键停活动，无需发版；停用期间新用户注册赠送额度照常发放。</p>
+                    </div>
+                    <div class="form-group">
+                        <label>返佣分发明细开关（灰度）</label>
+                        <select id="inviteCommissionEnabled">
+                            <option value="1">开启（按规则返佣）</option>
+                            <option value="0">关闭（只发邀请额度，不产生佣金）</option>
+                        </select>
+                        <p style="font-size:12px; color:var(--ink-grey); margin-top:5px;">需在活动总开关开启的前提下生效。</p>
+                    </div>
+
+                    <hr style="margin:18px 0; border-color:var(--border-color);">
+                    <h3 style="margin:0 0 10px; color:var(--ink-black);">① 赠送与邀请额度（单级邀请）</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="form-group" style="margin:0;">
+                            <label>注册赠送额度（次）</label>
+                            <input type="number" id="newUserGiftQuota" min="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>注册赠送有效期（天）</label>
+                            <input type="number" id="newUserGiftValidDays" min="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>被邀额外赠送（次）</label>
+                            <input type="number" id="invitedExtraQuota" min="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>被邀额外有效期（天）</label>
+                            <input type="number" id="invitedExtraValidDays" min="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>每邀请 1 人奖励（次）</label>
+                            <input type="number" id="inviteRewardQuota" min="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>邀请奖励有效期（天）</label>
+                            <input type="number" id="inviteRewardValidDays" min="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>邀请奖励月度上限（次）</label>
+                            <input type="number" id="inviteRewardMonthlyCap" min="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>月度邀请告警阈值（人）</label>
+                            <input type="number" id="inviteManualReviewThreshold" min="0">
+                        </div>
+                    </div>
+                    <p style="font-size:12px; color:var(--ink-grey); margin-top:6px;">有效期填 0 = 长期有效。额度按批次发放，先到期先扣（FIFO）。</p>
+
+                    <hr style="margin:18px 0; border-color:var(--border-color);">
+                    <h3 style="margin:0 0 10px; color:var(--ink-black);">② 返佣规则（单级 · 直接邀请人）</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="form-group" style="margin:0;">
+                            <label>月卡首单佣金（元）</label>
+                            <input type="number" id="commissionFirstMonthly" min="0" step="0.01">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>季卡首单佣金（元）</label>
+                            <input type="number" id="commissionFirstQuarterly" min="0" step="0.01">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>半年卡首单佣金（元）</label>
+                            <input type="number" id="commissionFirstHalfyear" min="0" step="0.01">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>年卡首单佣金（元）</label>
+                            <input type="number" id="commissionFirstYearly" min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:10px;">
+                        <div class="form-group" style="margin:0;">
+                            <label>续费佣金（首单 × %）</label>
+                            <input type="number" id="commissionRenewalPct" min="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>佣金解冻期（天）</label>
+                            <input type="number" id="commissionFreezeDays" min="0">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>佣金资格</label>
+                            <select id="commissionInviterPaid">
+                                <option value="1">仅已付费邀请人</option>
+                                <option value="0">任意邀请人</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr style="margin:18px 0; border-color:var(--border-color);">
+                    <h3 style="margin:0 0 10px; color:var(--ink-black);">③ 提现规则</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="form-group" style="margin:0;">
+                            <label>最低提现金额（元）</label>
+                            <input type="number" id="withdrawMinFen" min="0" step="0.01">
+                        </div>
+                        <div class="form-group" style="margin:0;">
+                            <label>每月提现次数上限</label>
+                            <input type="number" id="withdrawMonthlyTimes" min="0">
+                        </div>
+                    </div>
+
+                    <hr style="margin:18px 0; border-color:var(--border-color);">
+                    <h3 style="margin:0 0 4px; color:var(--ink-black);">④ 累计邀请里程碑（领取赠会员体验）</h3>
+                    <p style="font-size:12px; color:var(--ink-grey); margin:0 0 8px;">invited=累计邀请人数 · days=赠送会员体验天数 · label=展示名称</p>
+                    <div id="milestoneRows"></div>
+                    <button type="button" class="btn" onclick="addMilestoneRow()" style="margin-top:8px; background:#fff; border:1px solid var(--border-color); color:var(--ink-black);">＋ 添加里程碑</button>
+
+                    <div class="error-message" id="errorMessage"></div>
+                    <div style="color: var(--jade-green); font-size: 12px; margin-top: 10px; display: none;" id="successMessage">
+                        配置已更新并实时生效
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+                        <button type="button" class="btn" onclick="closeConfigModal()">取消</button>
+                        <button type="submit" class="btn btn-primary">保存配置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 价格体系配置弹窗 -->
+    <div id="planConfigModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closePlanConfigModal()"></div>
+        <div class="modal-content" style="max-width: 800px; max-height: 88vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h3>订阅价格体系</h3>
+                <button class="modal-close" onclick="closePlanConfigModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="flex: 1; min-height: 0; overflow-y: auto;">
+                <p style="font-size: 13px; color: var(--ink-grey); margin-bottom: 14px;">
+                    配置各订阅套餐的名称、原价与限时优惠价（含优惠截止日期），保存后实时生效。会员时长固定为自然月/季/半年/年（月度1个月、季度3个月、半年6个月、年度1年），到期后按自然日历顺延。<b>优惠价留空 = 该套餐按原价销售，前台卡片只显示原价。</b>
+                </p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 12px;">
+                        <input type="text" id="planMonthlyName" placeholder="套餐名称（默认：月度订阅）" style="width: 100%; margin-bottom: 8px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                            <input type="number" id="planMonthlyOriginal" min="0" step="0.1" placeholder="原价（元）">
+                            <input type="number" id="planMonthlyDiscount" min="0" step="0.1" placeholder="优惠价（可留空）">
+                            <input type="date" id="planMonthlyUntil" title="优惠截止日期">
+                        </div>
+                        <div style="font-size: 12px; color: var(--ink-grey); margin-top: 6px;">时长固定 1 个自然月。</div>
+                    </div>
+                    <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 12px;">
+                        <input type="text" id="planQuarterlyName" placeholder="套餐名称（默认：季度订阅）" style="width: 100%; margin-bottom: 8px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                            <input type="number" id="planQuarterlyOriginal" min="0" step="0.1" placeholder="原价（元）">
+                            <input type="number" id="planQuarterlyDiscount" min="0" step="0.1" placeholder="优惠价（可留空）">
+                            <input type="date" id="planQuarterlyUntil" title="优惠截止日期">
+                        </div>
+                        <div style="font-size: 12px; color: var(--ink-grey); margin-top: 6px;">时长固定 3 个自然月。</div>
+                    </div>
+                    <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 12px;">
+                        <input type="text" id="planHalfyearName" placeholder="套餐名称（默认：半年订阅）" style="width: 100%; margin-bottom: 8px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                            <input type="number" id="planHalfyearOriginal" min="0" step="0.1" placeholder="原价（元）">
+                            <input type="number" id="planHalfyearDiscount" min="0" step="0.1" placeholder="优惠价（可留空）">
+                            <input type="date" id="planHalfyearUntil" title="优惠截止日期">
+                        </div>
+                        <div style="font-size: 12px; color: var(--ink-grey); margin-top: 6px;">时长固定 6 个自然月。</div>
+                    </div>
+                    <div style="border: 1px solid var(--border-color); border-radius: 10px; padding: 12px;">
+                        <input type="text" id="planYearlyName" placeholder="套餐名称（默认：年度订阅）" style="width: 100%; margin-bottom: 8px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                            <input type="number" id="planYearlyOriginal" min="0" step="0.1" placeholder="原价（元）">
+                            <input type="number" id="planYearlyDiscount" min="0" step="0.1" placeholder="优惠价（可留空）">
+                            <input type="date" id="planYearlyUntil" title="优惠截止日期">
+                        </div>
+                        <div style="font-size: 12px; color: var(--ink-grey); margin-top: 6px;">时长固定 1 个自然年。</div>
+                    </div>
+                </div>
+                <p style="font-size: 12px; color: var(--ink-grey); margin-top: 8px;">
+                    优惠截止日期留空表示长期优惠；优惠期结束后自动按原价收费；优惠价留空表示长期按原价销售。
+                </p>
+
+                <div class="error-message" id="planErrorMessage"></div>
+                <div style="color: var(--jade-green); font-size: 12px; margin-top: 10px; display: none;" id="planSuccessMessage">
+                    价格配置已更新并实时生效
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;">
+                    <button type="button" class="btn" onclick="closePlanConfigModal()">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="savePlanConfig()">保存价格配置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-nav.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-feedbacks.js') + '"><\/script>');
+    </script>
+    <script>
+        // 初始化认证
+        initAdminAuth();
+
+        // 加载配置（主页面仅显示摘要与入口，详细配置在弹窗中编辑）
+        async function loadConfig() {
+            const formElement = document.getElementById('configForm');
+            formElement.innerHTML = '<div class="loading">加载中...</div>';
+
+            try {
+                const config = await getConfig();
+
+                // 填充"返利与额度"弹窗输入框
+                document.getElementById('inviteActivityEnabled').value = String(Number(config.invite_activity_enabled) === 1 ? 1 : 0);
+                document.getElementById('inviteCommissionEnabled').value = String(Number(config.invite_commission_enabled) === 1 ? 1 : 0);
+                document.getElementById('newUserGiftQuota').value = config.new_user_gift_quota;
+                document.getElementById('newUserGiftValidDays').value = config.new_user_gift_valid_days;
+                document.getElementById('invitedExtraQuota').value = config.invited_extra_quota;
+                document.getElementById('invitedExtraValidDays').value = config.invited_extra_valid_days;
+                document.getElementById('inviteRewardQuota').value = config.invite_reward_quota;
+                document.getElementById('inviteRewardValidDays').value = config.invite_reward_valid_days;
+                document.getElementById('inviteRewardMonthlyCap').value = config.invite_reward_monthly_cap;
+                document.getElementById('inviteManualReviewThreshold').value = config.invite_manual_review_threshold;
+                document.getElementById('commissionRenewalPct').value = config.commission_renewal_pct;
+                document.getElementById('commissionFreezeDays').value = config.commission_freeze_days;
+                document.getElementById('commissionInviterPaid').value = String(Number(config.commission_inviter_paid) === 1 ? 1 : 0);
+                document.getElementById('withdrawMinFen').value = ((Number(config.withdraw_min_fen) || 0) / 100).toFixed(2);
+                document.getElementById('withdrawMonthlyTimes').value = config.withdraw_monthly_times;
+                // 首单佣金（存分为单位，界面以元展示）
+                const firstFen = parseConfigObj(config.commission_first_fen);
+                document.getElementById('commissionFirstMonthly').value = ((Number(firstFen.monthly) || 0) / 100).toFixed(2);
+                document.getElementById('commissionFirstQuarterly').value = ((Number(firstFen.quarterly) || 0) / 100).toFixed(2);
+                document.getElementById('commissionFirstHalfyear').value = ((Number(firstFen.halfyear) || 0) / 100).toFixed(2);
+                document.getElementById('commissionFirstYearly').value = ((Number(firstFen.yearly) || 0) / 100).toFixed(2);
+                // 里程碑
+                milestoneState = parseConfigObj(config.invite_milestones, true);
+                renderMilestoneRows();
+
+                // 填充价格配置输入框
+                fillPlanInputs('monthly', config.plan_monthly);
+                fillPlanInputs('quarterly', config.plan_quarterly);
+                fillPlanInputs('halfyear', config.plan_halfyear);
+                fillPlanInputs('yearly', config.plan_yearly);
+
+                // 主页面价格摘要
+                const planSummary = buildPlanSummary(config);
+                const activityState = Number(config.invite_activity_enabled) === 1 ? '开启' : '停用';
+                const commissionState = Number(config.invite_commission_enabled) === 1 ? '开启' : '关闭';
+                const paidGate = Number(config.commission_inviter_paid) === 1 ? '仅已付费邀请人' : '任意邀请人';
+
+                formElement.innerHTML = `
+                    <div class="form-group">
+                        <label>邀请码（官方）</label>
+                        <input type="text" id="betaCode" value="${escapeHtml(config.beta_code)}" readonly>
+                        <p style="font-size: 12px; color: var(--ink-grey); margin-top: 5px;">
+                            官方邀请码需通过环境变量 BETA_CODE 修改，修改后需重启服务
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <label>管理员用户名列表</label>
+                        <input type="text" value="${escapeHtml(config.admin_usernames.join(', '))}" readonly>
+                        <p style="font-size: 12px; color: var(--ink-grey); margin-top: 5px;">
+                            管理员列表需通过环境变量 ADMIN_USERNAMES 修改
+                        </p>
+                    </div>
+
+                    <hr style="margin: 20px 0; border-color: var(--border-color);">
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div style="background: #fafafa; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                            <h3 style="margin: 0 0 12px; color: var(--ink-black); font-size: 16px;">邀请返利与用户额度</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                                <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 10px;">
+                                    <div style="font-size: 12px; color: #888;">活动总开关</div>
+                                    <div style="font-size: 16px; font-weight: bold; color: ${Number(config.invite_activity_enabled) === 1 ? '#16a34a' : '#b23a2e'}; margin-top: 4px;">
+                                        ${activityState}
+                                    </div>
+                                </div>
+                                <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 10px;">
+                                    <div style="font-size: 12px; color: #888;">返佣分发</div>
+                                    <div style="font-size: 16px; font-weight: bold; color: ${Number(config.invite_commission_enabled) === 1 ? '#16a34a' : '#b23a2e'}; margin-top: 4px;">
+                                        ${commissionState}
+                                    </div>
+                                </div>
+                            </div>
+                                <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 10px; margin-bottom: 10px;">
+                                    <div style="font-size: 12px; color: #888;">首单佣金（月/季/半年/年 · 元）· 续费 · 资格</div>
+                                    <div style="font-size: 15px; font-weight: bold; color: #c47f17; margin-top: 4px;">
+                                        ¥${((Number(firstFen.monthly) || 0) / 100).toFixed(2)} / ¥${((Number(firstFen.quarterly) || 0) / 100).toFixed(2)} / ¥${((Number(firstFen.halfyear) || 0) / 100).toFixed(2)} / ¥${((Number(firstFen.yearly) || 0) / 100).toFixed(2)}
+                                        <span style="font-size:12px; color:#888; font-weight:400;"> · 续费${config.commission_renewal_pct}% · ${paidGate}</span>
+                                    </div>
+                                </div>
+                            <div style="background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 10px; margin-bottom: 10px;">
+                                <div style="font-size: 12px; color: #888;">注册赠送 / 被邀额外 / 每邀请奖励（次 · 天）</div>
+                                <div style="font-size: 15px; font-weight: bold; color: #1677ff; margin-top: 4px;">
+                                    ${config.new_user_gift_quota}次·${config.new_user_gift_valid_days}天 / +${config.invited_extra_quota}次·${config.invited_extra_valid_days}天 / +${config.invite_reward_quota}次·${config.invite_reward_valid_days}天
+                                </div>
+                                <div style="font-size: 12px; color: #888; margin-top: 3px;">邀请奖励月上限 ${config.invite_reward_monthly_cap} 次 · 提现 ≥¥${((Number(config.withdraw_min_fen) || 0) / 100).toFixed(2)} · ${config.withdraw_monthly_times}次/月 · 佣金T+${config.commission_freeze_days}解冻</div>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="openConfigModal()">编辑返利与额度配置</button>
+                        </div>
+                        <div style="background: #fafafa; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; display: flex; flex-direction: column;">
+                            <h3 style="margin: 0 0 8px; color: var(--ink-black); font-size: 16px;">公告管理</h3>
+                            <p style="margin: 0 0 14px; font-size: 12px; color: var(--ink-grey); line-height: 1.6;">普通公告与首页顶部公告分开管理；首页公告可单独发布、修改或撤下。</p>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto;">
+                                <button type="button" class="btn" onclick="openAnnounceModal()" style="background:#fff; border:1px solid var(--border-color); color:var(--ink-black);">📢 发布普通公告</button>
+                                <button type="button" class="btn btn-primary" onclick="openManageAnnounceModal()">📋 管理普通公告</button>
+                                <button type="button" class="btn btn-primary" onclick="openHomeAnnouncementModal()" style="background:#b83b43; border-color:#b83b43;">📌 首页公告管理</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr style="margin: 24px 0; border-color: var(--border-color);">
+
+                    <h3 style="margin-bottom: 14px; color: var(--ink-black);">订阅价格体系</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px;">
+                        ${planSummary}
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="openPlanConfigModal()">编辑价格体系</button>
+                `;
+            } catch (error) {
+                console.error('加载配置失败:', error);
+                formElement.innerHTML = `<div class="error-message show">加载失败: ${error.message}</div>`;
+            }
+        }
+
+        // ========== 里程碑（可增删） ==========
+        let milestoneState = [
+            { invited: 3, days: 7, months: '', label: '7天会员体验' },
+            { invited: 10, days: 30, months: 1, label: '月度会员体验' },
+            { invited: 30, days: 90, months: 3, label: '季度会员体验' },
+        ];
+
+        function parseConfigObj(raw, isArray = false) {
+            try {
+                const obj = JSON.parse(raw || (isArray ? '[]' : '{}'));
+                if (isArray) return Array.isArray(obj) ? obj : [];
+                return obj && typeof obj === 'object' ? obj : {};
+            } catch (e) {
+                return isArray ? [] : {};
+            }
+        }
+
+        function renderMilestoneRows() {
+            const container = document.getElementById('milestoneRows');
+            container.innerHTML = milestoneState.map((m, i) => `
+                <div data-ms-row="1" style="display:grid; grid-template-columns:80px 70px 70px 1fr 36px; gap:8px; margin-bottom:8px; align-items:center;">
+                    <input type="number" data-ms="invited" value="${m.invited}" min="1" placeholder="人数" style="width:100%; box-sizing:border-box;">
+                    <input type="number" data-ms="days" value="${m.days}" min="0" placeholder="天数" style="width:100%; box-sizing:border-box;">
+                    <input type="number" data-ms="months" value="${m.months || ''}" min="0" placeholder="月数(可选)" style="width:100%; box-sizing:border-box;">
+                    <input type="text" data-ms="label" value="${escapeHtml(m.label || '')}" placeholder="展示名，如：7天会员体验" style="width:100%; box-sizing:border-box;">
+                    <button type="button" class="modal-close" onclick="removeMilestoneRow(${i})" title="删除该里程碑">&times;</button>
+                </div>
+            `).join('') || '<p style="font-size:12px; color:var(--ink-grey);">暂无里程碑，点击下方按钮添加。</p>';
+        }
+
+        function syncMilestoneRows() {
+            const container = document.getElementById('milestoneRows');
+            milestoneState = Array.from(container.querySelectorAll('[data-ms-row]')).map(row => ({
+                invited: parseInt(row.querySelector('[data-ms="invited"]').value) || 0,
+                days: parseInt(row.querySelector('[data-ms="days"]').value) || 0,
+                months: parseInt(row.querySelector('[data-ms="months"]').value) || 0,
+                label: (row.querySelector('[data-ms="label"]').value || '').trim(),
+            }));
+        }
+
+        function addMilestoneRow() {
+            syncMilestoneRows();
+            milestoneState.push({ invited: 0, days: 0, months: 0, label: '' });
+            renderMilestoneRows();
+        }
+
+        function removeMilestoneRow(index) {
+            milestoneState.splice(index, 1);
+            renderMilestoneRows();
+        }
+
+        // 弹窗开关
+        function openConfigModal() {
+            document.getElementById('errorMessage').textContent = '';
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('configModal').style.display = 'flex';
+        }
+        function closeConfigModal() {
+            document.getElementById('configModal').style.display = 'none';
+        }
+
+        // 保存配置（实时生效）
+        async function saveConfig() {
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            const num = (id) => parseInt(document.getElementById(id).value);
+            const yuan2fen = (id) => Math.round((parseFloat(document.getElementById(id).value) || 0) * 100);
+
+            const data = {
+                invite_activity_enabled: num('inviteActivityEnabled'),
+                invite_commission_enabled: num('inviteCommissionEnabled'),
+                new_user_gift_quota: num('newUserGiftQuota'),
+                new_user_gift_valid_days: num('newUserGiftValidDays'),
+                invited_extra_quota: num('invitedExtraQuota'),
+                invited_extra_valid_days: num('invitedExtraValidDays'),
+                invite_reward_quota: num('inviteRewardQuota'),
+                invite_reward_valid_days: num('inviteRewardValidDays'),
+                invite_reward_monthly_cap: num('inviteRewardMonthlyCap'),
+                invite_manual_review_threshold: num('inviteManualReviewThreshold'),
+                commission_first_fen: JSON.stringify({
+                    monthly: yuan2fen('commissionFirstMonthly'),
+                    quarterly: yuan2fen('commissionFirstQuarterly'),
+                    halfyear: yuan2fen('commissionFirstHalfyear'),
+                    yearly: yuan2fen('commissionFirstYearly'),
+                }),
+                commission_renewal_pct: num('commissionRenewalPct'),
+                commission_inviter_paid: num('commissionInviterPaid'),
+                commission_freeze_days: num('commissionFreezeDays'),
+                withdraw_min_fen: yuan2fen('withdrawMinFen'),
+                withdraw_monthly_times: num('withdrawMonthlyTimes'),
+            };
+
+            errorMessage.textContent = '';
+            errorMessage.classList.remove('show');
+            successMessage.style.display = 'none';
+
+            const labels = {
+                invite_activity_enabled: '活动总开关', invite_commission_enabled: '返佣分发开关',
+                new_user_gift_quota: '注册赠送额度', new_user_gift_valid_days: '注册赠送有效期',
+                invited_extra_quota: '被邀额外赠送额度', invited_extra_valid_days: '被邀额外有效期',
+                invite_reward_quota: '每邀请奖励额度', invite_reward_valid_days: '邀请奖励有效期',
+                invite_reward_monthly_cap: '邀请奖励月度上限', invite_manual_review_threshold: '月度邀请告警阈值',
+                commission_renewal_pct: '续费佣金百分比', commission_inviter_paid: '佣金资格',
+                commission_freeze_days: '佣金解冻期', withdraw_min_fen: '最低提现金额',
+                withdraw_monthly_times: '每月提现次数上限',
+            };
+            for (const [key, value] of Object.entries(data)) {
+                if (key === 'commission_first_fen') continue;
+                if (['invite_activity_enabled', 'invite_commission_enabled', 'commission_inviter_paid'].includes(key)) {
+                    if (![0, 1].includes(value)) {
+                        errorMessage.textContent = `${labels[key]}只能是 0 或 1`;
+                        errorMessage.classList.add('show');
+                        return;
+                    }
+                } else if (isNaN(value) || value < 0) {
+                    errorMessage.textContent = `${labels[key]}必须是不小于 0 的数字`;
+                    errorMessage.classList.add('show');
+                    return;
+                }
+            }
+            // 里程碑：同步编辑行并校验（invited>0，且 days 或 months 至少一项>0，label 非空）
+            syncMilestoneRows();
+            const milestones = milestoneState;
+            if (!milestones.length) {
+                errorMessage.textContent = '至少保留一条累计邀请里程碑';
+                errorMessage.classList.add('show');
+                return;
+            }
+            for (const m of milestones) {
+                if (!(m.invited > 0) || !(m.days > 0 || m.months > 0) || !m.label) {
+                    errorMessage.textContent = '里程碑每行需填写：邀请人数(>0)、体验时长(天数或月数择一填 >0) 与展示名';
+                    errorMessage.classList.add('show');
+                    return;
+                }
+            }
+            data.invite_milestones = JSON.stringify(milestones);
+
+            try {
+                const result = await updateConfig(data);
+                successMessage.textContent = result.message || '配置已更新并实时生效';
+                successMessage.style.display = 'block';
+                // 保存成功后关闭弹窗并刷新摘要
+                setTimeout(() => {
+                    closeConfigModal();
+                    loadConfig();
+                }, 600);
+            } catch (error) {
+                errorMessage.textContent = '保存失败: ' + error.message;
+                errorMessage.classList.add('show');
+            }
+        }
+
+        // 弹窗表单提交
+        document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await saveConfig();
+        });
+
+        // ========== 价格体系配置 ==========
+
+        const PLAN_META = {
+            monthly: { name: '月度订阅', unit: '/月', durationText: '1个月' },
+            quarterly: { name: '季度订阅', unit: '/季', durationText: '3个月' },
+            halfyear: { name: '半年订阅', unit: '/半年', durationText: '6个月' },
+            yearly: { name: '年度订阅', unit: '/年', durationText: '1年' },
+        };
+
+        function parsePlanConfig(raw) {
+            try {
+                const obj = JSON.parse(raw || '{}');
+                return obj && typeof obj === 'object' ? obj : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function fillPlanInputs(planId, raw) {
+            const cfg = parsePlanConfig(raw);
+            document.getElementById(`plan${capitalize(planId)}Name`).value = (typeof cfg.name === 'string') ? cfg.name : '';
+            document.getElementById(`plan${capitalize(planId)}Original`).value = cfg.original != null ? cfg.original : '';
+            // 优惠价为空/0 视为"无优惠"，输入框留空展示
+            document.getElementById(`plan${capitalize(planId)}Discount`).value = (cfg.discount != null && Number(cfg.discount) > 0) ? cfg.discount : '';
+            document.getElementById(`plan${capitalize(planId)}Until`).value = cfg.discount_until || '';
+        }
+
+        function capitalize(s) {
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+
+        function buildPlanSummary(config) {
+            return ['monthly', 'quarterly', 'halfyear', 'yearly'].map((planId) => {
+                const cfg = parsePlanConfig(config[`plan_${planId}`]);
+                const name = (typeof cfg.name === 'string' && cfg.name.trim()) ? cfg.name.trim() : PLAN_META[planId].name;
+                const original = cfg.original != null ? cfg.original : '-';
+                const hasDiscount = cfg.discount != null && Number(cfg.discount) > 0;
+                const discount = hasDiscount ? cfg.discount : '-';
+                const until = cfg.discount_until || '长期';
+                const durationLine = hasDiscount
+                    ? `优惠至 ${until} · 有效期 ${PLAN_META[planId].durationText}`
+                    : `无优惠 · 有效期 ${PLAN_META[planId].durationText}`;
+                return `
+                    <div style="background: #f7f7f7; border: 1px solid #e8e8e8; border-radius: 8px; padding: 12px;">
+                        <div style="font-size: 13px; font-weight: bold; color: var(--ink-black);">${name}</div>
+                        <div style="font-size: 12px; color: #888; margin-top: 6px;">原价 ¥${original}${PLAN_META[planId].unit}</div>
+                        <div style="font-size: 16px; font-weight: bold; color: ${hasDiscount ? '#c41d7f' : '#888'}; margin-top: 4px;">${hasDiscount ? `优惠 ¥${discount}` : '按原价销售'}</div>
+                        <div style="font-size: 12px; color: #888; margin-top: 4px;">${durationLine}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openPlanConfigModal() {
+            document.getElementById('planErrorMessage').textContent = '';
+            document.getElementById('planErrorMessage').classList.remove('show');
+            document.getElementById('planSuccessMessage').style.display = 'none';
+            document.getElementById('planConfigModal').style.display = 'flex';
+        }
+        function closePlanConfigModal() {
+            document.getElementById('planConfigModal').style.display = 'none';
+        }
+
+        async function savePlanConfig() {
+            const errorMessage = document.getElementById('planErrorMessage');
+            const successMessage = document.getElementById('planSuccessMessage');
+            errorMessage.textContent = '';
+            errorMessage.classList.remove('show');
+            successMessage.style.display = 'none';
+
+            const payload = {};
+            for (const planId of ['monthly', 'quarterly', 'halfyear', 'yearly']) {
+                const name = (document.getElementById(`plan${capitalize(planId)}Name`).value || '').trim();
+                const original = parseFloat(document.getElementById(`plan${capitalize(planId)}Original`).value);
+                const discountRaw = (document.getElementById(`plan${capitalize(planId)}Discount`).value || '').trim();
+                const discount = discountRaw === '' ? null : parseFloat(discountRaw); // 留空 = 无优惠，按原价销售
+                const until = document.getElementById(`plan${capitalize(planId)}Until`).value || '';
+                const duration = { monthly: 30, quarterly: 90, halfyear: 180, yearly: 365 }[planId] || 30; // 会员时长固定自然月，天数仅作 legacy 冗余字段保存
+                if (isNaN(original) || original < 0) {
+                    errorMessage.textContent = `${name || PLAN_META[planId].name}的原价必须是非负数字`;
+                    errorMessage.classList.add('show');
+                    return;
+                }
+                if (discount !== null && (isNaN(discount) || discount < 0)) {
+                    errorMessage.textContent = `${name || PLAN_META[planId].name}的优惠价必须是非负数字或留空`;
+                    errorMessage.classList.add('show');
+                    return;
+                }
+                if (until && !/^\d{4}-\d{2}-\d{2}$/.test(until)) {
+                    errorMessage.textContent = `${name || PLAN_META[planId].name}的优惠截止日期格式不正确`;
+                    errorMessage.classList.add('show');
+                    return;
+                }
+                payload[`plan_${planId}`] = JSON.stringify({ name, original, discount, discount_until: until, duration_days: duration });
+            }
+
+            try {
+                const result = await updateConfig(payload);
+                successMessage.textContent = result.message || '价格配置已更新并实时生效';
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    closePlanConfigModal();
+                    loadConfig();
+                }, 600);
+            } catch (error) {
+                errorMessage.textContent = '保存失败: ' + error.message;
+                errorMessage.classList.add('show');
+            }
+        }
+
+        // 页面加载时加载配置
+        loadConfig();
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,66 @@
+{
+  "question": "125×8÷4+36",
+  "prompt": "125×8÷4+36",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "E:\\象数演易\\1\\xsyy\\vibe-coding-learning-materials-master\\xsyy-edu\\storage\\e4be7379-267c-4990-939b-bf70c8d069de\\pasted-image-1789109531286.png",
+  "task_id": "e4be7379-267c-4990-939b-bf70c8d069de",
+  "generated_at": "2026-09-11T07:06:25.164983Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "四则混合运算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "图片包含一道只由数字和运算符组成的数学算式，不含独立的几何图形或示意图。"
+  },
+  "tags_updated_at": "2026-09-11T07:06:25.164983Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "",
+    "display_class": "calculation",
+    "grade": "",
+    "tags": {
+      "main_tag": "",
+      "sub_tags": [],
+      "second_tag": null
+    },
+    "question_type": "",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_calculation",
+      "steps_min": 5,
+      "steps_max": 7,
+      "motion_policy": "answer_first",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  },
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "二下",
+    "main_tag": "混合运算",
+    "sub_tags": [
+      "两级混合运算"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-11T07:16:24.974001Z",
+  "knowledge_tags_confirmed": true
+}

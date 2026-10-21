@@ -1,0 +1,24 @@
+{
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "五上",
+    "main_tag": "简易方程",
+    "sub_tags": [
+      "字母表示数"
+    ]
+  },
+  "second_tag": {
+    "version": "方程与不等式",
+    "grade": "七上",
+    "main_tag": "一元一次方程",
+    "sub_tags": [
+      "一元一次方程应用题"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-26T08:56:45.866131Z",
+  "knowledge_tags_confirmed": true,
+  "title": "分数应用题",
+  "question": "某校六年级有甲、乙两个班。原来甲班人数是乙班人数的 5/7​  。后来从甲班转走了 4人 到乙班，此时甲班人数是乙班人数的  3/5  ​  。请问：原来甲、乙两班各有多少人？",
+  "prompt": "某校六年级有甲、乙两个班。原来甲班人数是乙班人数的 5/7​  。后来从甲班转走了 4人 到乙班，此时甲班人数是乙班人数的  3/5  ​  。请问：原来甲、乙两班各有多少人？"
+}

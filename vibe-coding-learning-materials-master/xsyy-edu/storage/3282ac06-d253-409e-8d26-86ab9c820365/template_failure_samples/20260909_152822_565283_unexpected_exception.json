@@ -1,0 +1,17 @@
+{
+  "failure_stage": "unexpected_exception",
+  "error_message": "【动画与完整解题（动态片段）生成失败】模板动态片段生成失败，已重试 2 次，最终错误: <!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n<html>\r\n<head><title>504 Gateway Time-out</title></head>\r\n<body>\r\n<h1>504 Gateway Time-out</h1>\r\n<p>The gateway did not receive a timely response from the upstream server or application.<hr/>Powered by Tengine</body>\r\n</html>（stage=unexpected_exception）",
+  "generated_at": "2026-09-09T07:28:22.565283Z",
+  "task_id": "3282ac06-d253-409e-8d26-86ab9c820365",
+  "debug_info": {
+    "error_stage": "unexpected_exception",
+    "exception_type": "InternalServerError",
+    "exception_message": "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n<html>\r\n<head><title>504 Gateway Time-out</title></head>\r\n<body>\r\n<h1>504 Gateway Time-out</h1>\r\n<p>The gateway did not receive a timely response from the upstream server or application.<hr/>Powered by Tengine</body>\r\n</html>",
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "question": "在“和谐校园，大家共建”活动中，张校长组织10名学生参加座谈会，如果参加座谈会的每两个人之间都要握一次手，一共要握多少次手？用列表或画图的方法找出规律，求出结果。",
+    "title": "概率问题",
+    "task_id": "3282ac06-d253-409e-8d26-86ab9c820365",
+    "max_output_tokens": 32768
+  }
+}

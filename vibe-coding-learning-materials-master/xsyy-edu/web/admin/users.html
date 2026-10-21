@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="Kem5Se9EJTEPfl1czUJyJj">
+<head data-page-node-id="06INI7Qk7vj2Nkoc53RhH8">
+    <meta charset="UTF-8" data-page-node-id="WhZNPCaZCdDApiulCTsSHk">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="RaaO9xp6LCCopehvjsDfm7">
+    <title>用户管理 - 管理后台</title>
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+    </script>
+    <style>
+        .inviter-code-btn {
+            background: none; border: none; cursor: pointer;
+            color: var(--primary-blue, #1677ff); text-decoration: underline;
+            font-size: 13px; font-family: monospace; padding: 2px 4px;
+        }
+        .inviter-code-btn:hover { opacity: .8; }
+        .view-info-btn {
+            background: #e8f1ff; color: var(--primary-blue, #1677ff);
+            border: 1px solid #b9d4ff; border-radius: 6px; cursor: pointer;
+        }
+        .view-info-btn:hover { background: #d6e8ff; }
+        .commission-btn {
+            background: #fff3e6; color: #c47f17;
+            border: 1px solid #f0c27f; border-radius: 6px; cursor: pointer;
+        }
+        .commission-btn:hover { background: #ffe8cc; }
+        .account-btn {
+            background: #f0f5ff; color: #2f54eb;
+            border: 1px solid #adc6ff; border-radius: 6px; cursor: pointer;
+        }
+        .account-btn:hover { background: #d6e4ff; }
+        .ban-btn { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; border-radius: 6px; cursor: pointer; }
+        .ban-btn:hover { background: #ffe7ba; }
+        .delete-btn { background: #fff1f0; color: #cf1322; border: 1px solid #ffa39e; border-radius: 6px; cursor: pointer; }
+        .delete-btn:hover { background: #ffccc7; }
+        .commission-modal {
+            max-width: 820px !important;
+        }
+        .commission-modal .modal-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cm-summary-grid {
+            width: 100%;
+            max-width: 760px;
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+            gap: 12px !important;
+            justify-content: center;
+            align-items: stretch;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cm-edit-grid {
+            width: 100%;
+            max-width: 760px;
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+            gap: 12px !important;
+            justify-content: center;
+            align-items: start;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .commission-modal hr,
+        .commission-modal > .modal-body > div,
+        .commission-modal > .modal-body > #cmWithdrawalList,
+        .commission-modal > .modal-body > #cmRecordList {
+            width: 100%;
+            max-width: 760px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (max-width: 768px) {
+            .commission-modal {
+                width: calc(100% - 24px) !important;
+            }
+            .cm-summary-grid,
+            .cm-edit-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+        #usersList table {
+            width: 100%;
+            min-width: 1080px;
+            table-layout: fixed;
+        }
+        #usersList table th,
+        #usersList table td {
+            text-align: center !important;
+            vertical-align: middle;
+            box-sizing: border-box;
+        }
+        #usersList table th:nth-child(1),
+        #usersList table td:nth-child(1) { width: 11%; }
+        #usersList table th:nth-child(2),
+        #usersList table td:nth-child(2) { width: 10%; }
+        #usersList table th:nth-child(3),
+        #usersList table td:nth-child(3) { width: 9%; }
+        #usersList table th:nth-child(4),
+        #usersList table td:nth-child(4) { width: 9%; }
+        #usersList table th:nth-child(5),
+        #usersList table td:nth-child(5) { width: 14%; }
+        #usersList table th:nth-child(6),
+        #usersList table td:nth-child(6),
+        #usersList table th:nth-child(7),
+        #usersList table td:nth-child(7) { width: 10%; }
+        #usersList table th:nth-child(8),
+        #usersList table td:nth-child(8) { width: 27%; }
+        #usersList table td:nth-child(1),
+        #usersList table td:nth-child(5),
+        #usersList table td:nth-child(6),
+        #usersList table td:nth-child(7) {
+            overflow-wrap: anywhere;
+        }
+        #usersList table td > div {
+            justify-content: center;
+        }
+        #usersList table th:nth-child(n+5),
+        #usersList table td:nth-child(n+5) {
+            font-size: 13px;
+        }
+        @media (max-width: 1200px) {
+            #usersList table { min-width: 980px; }
+            #usersList table th:nth-child(8),
+            #usersList table td:nth-child(8) { width: 30%; }
+        }
+    </style>
+    <link rel="stylesheet" href="css/theme-override.css" data-page-node-id="ditj8yUEHPbSjhHL1wrqzb">
+</head>
+<body data-page-node-id="CNcEhtfJTBSMH5LSznGmxD">
+    <div class="admin-layout" data-page-node-id="JLxVnRH8Zja2atwNvpEpKk">
+        <aside class="sidebar" data-page-node-id="gNyhG2nbVkQ33gEZefrvS9">
+            <div class="sidebar-header" data-page-node-id="tvVIJ3lNFTtoUclED13mr2">
+                <h2 data-page-node-id="6TJaktZZF1Jru3o3kSrQBi">管理后台</h2>
+            </div>
+            <nav data-page-node-id="fimeodVu2bZqtlWXiVqZO2">
+                <ul class="sidebar-nav" data-page-node-id="wLIRqyhogEo0wDAZukyJlN">
+                    <li data-page-node-id="k36HWdtfMyrNH0MdEmiTU3"><a href="dashboard.html" data-page-node-id="TEBuDSAPQRq7HK3HZXjeiN">仪表盘</a></li>
+                    <li data-page-node-id="qYKHcQZNXbdoZO55AgamWL"><a href="teachings.html" data-page-node-id="dx8KCR022BMPMuF2Tzeldr">教学内容</a></li>
+                    <li data-page-node-id="ekjoAL8tQFkRz5X3vN7IMr"><a href="users.html" class="active" data-page-node-id="Zw89liZjHmmHVtyrtGawAJ">用户管理</a></li>
+                    <li data-page-node-id="SBPjF6btf9YTMmEOubcB8K"><a href="tags.html" data-page-node-id="NujWIcTcPrQoKS3zd5gDM2">标签管理</a></li>
+                    <li data-page-node-id="yHI7aMCiknM3KNfNWYA2Xj"><a href="recharge_requests.html" data-page-node-id="41AMkzghEIK6Bh3pRoKFcd">订单管理</a></li>
+                    <li data-page-node-id="FdwIvzUhKso7m9aBfSbHtA"><a href="feedbacks.html" data-page-node-id="QrwEftwXZsQzBpqAuZ1s1G">用户反馈</a></li>
+                    <li data-page-node-id="9HI1cnbh9jFiGxJ0FQhxsB"><a href="settings.html" data-page-node-id="PL8O7rTduZZg5Ae5xDsf5b">系统配置</a></li>
+                    <li data-page-node-id="xWrUVrcqKglHTxbA2B33E0"><a href="logs.html" data-page-node-id="AX8o6kpQgiZUH5UNWsODQ6">网站日志</a></li>
+                    <li><a href="invite-quota.html">邀请与额度</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content" data-page-node-id="hH2mSZx7ysEek8mALSjyWp">
+            <div class="content-header" data-page-node-id="cqmJdoo4bqcx53TtXb8aGA">
+                <h1 data-page-node-id="whHLdU49X5lj1tNXnR4TJO">用户管理</h1>
+                <div class="user-info" data-page-node-id="zIg4EVLq1n1ojaaFo3IlvW">
+                    <span data-page-node-id="DFboXhoSxUIkCiX9BNpAa2">管理员：<span id="userInfo" data-page-node-id="KioI4gcntknGnmAao3bxdW">-</span></span>
+                    <a href="../index.html?v=3" class="btn-home" data-page-node-id="JDzilyD1ibqXBTSF0qfk8m">返回首页</a>
+                    <button class="btn-logout" onclick="logout()" data-page-node-id="0cjVd0bFgQtdTuTvSzEc9U">退出登录</button>
+                </div>
+            </div>
+
+            <div class="card" data-page-node-id="KtBUCU9WpeRSf3aAd661i6">
+                <div class="search-bar" data-page-node-id="7ggjmeeUlcGSSzVCDUGZUZ">
+                    <input type="text" id="searchInput" placeholder="搜索用户名、手机号或邮箱..." data-page-node-id="AsHdZR5fvkQfWfe91pusCj">
+                    <button onclick="loadUsers()" data-page-node-id="4pFky3uCepNCDduQZYotb8">搜索</button>
+                </div>
+            </div>
+
+            <div class="card" data-page-node-id="i9GAOtgZAapBcmRfuSBLT1">
+                <div id="usersList" class="loading" data-page-node-id="xPMGuFER6D4Dhz9X1yoiGT">加载中...</div>
+            </div>
+
+            <div class="pagination" id="pagination" data-page-node-id="4gEGGUuUYWC01qeu9GA05o"></div>
+        </main>
+    </div>
+
+    <div id="balanceModal" class="modal" style="display:none;" data-page-node-id="snHRMK45ITvLRu52ngXGxC">
+        <div class="modal-overlay" onclick="closeBalanceModal()" data-page-node-id="aqtbI4f59RnkTbfUKrwqyT"></div>
+        <div class="modal-content" style="max-width: 420px;" data-page-node-id="fQVkuyMoybonQuFP3oHaJ7">
+            <div class="modal-header" data-page-node-id="91L3LUfgf3dzKrAmujcumv">
+                <h3 data-page-node-id="ByB9Tj92UaITNrPawpNkL0">编辑用户余额</h3>
+                <button class="modal-close" onclick="closeBalanceModal()" data-page-node-id="RTeHv4dF8MN43cs2XpgYZg">&times;</button>
+            </div>
+            <div class="modal-body" data-page-node-id="Bz61fLZEUV64ouozcnofDv">
+                <div style="margin-bottom: 16px;" data-page-node-id="JEFRTaCCqW5PIiQfakaCkI">
+                    <label style="font-weight: bold;" data-page-node-id="JLwAtMGJTJ5uLoGkd4QRB5">用户：</label>
+                    <span id="balanceModalUsername" data-page-node-id="Y3BbRJe0BOJV0aYv0HsCGw">-</span>
+                </div>
+                <div style="margin-bottom: 16px;" data-page-node-id="aWAGA49p8WqDvr3SckYJZA">
+                    <label style="font-weight: bold;" data-page-node-id="yuNliTgT2pPgMFAJK0oEj8">当前余额：</label>
+                    <span id="balanceModalCurrent" style="color: #c41d7f; font-weight: bold; font-size: 18px;" data-page-node-id="p8vKuGDR5J4Jrl1YGmC90R">0</span>
+                    <span style="color: #666;" data-page-node-id="RTBmVRsjuHP2Zsy5fSVCFG"> 次</span>
+                </div>
+                <hr style="margin: 16px 0; border-color: #e8e8e8;" data-page-node-id="KZojhlhzXjzJnK834b82ZR">
+                <div style="margin-bottom: 12px;" data-page-node-id="Dyh2R2kU9PnrzSskFowyGQ">
+                    <label style="font-weight: bold; display: block; margin-bottom: 6px;" data-page-node-id="wVUKJb4TJsCcKpChbajidr">设置为指定值：</label>
+                    <div style="display: flex; gap: 8px;" data-page-node-id="HBazVeHVRAhbz6RGPULkrJ">
+                        <input type="number" id="setBalanceInput" min="0" placeholder="输入新余额" style="flex: 1; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px;" data-page-node-id="MuKkMEkoOWTUIcQ7A3lnXH">
+                        <button onclick="setBalance()" style="padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; background: var(--primary-blue); color: #fff; white-space: nowrap;" data-page-node-id="Md3ApNnILsIIeZPwpoXJm4">设为该值</button>
+                    </div>
+                </div>
+                <div style="margin-bottom: 12px;" data-page-node-id="NG6rrRU0F04OIH8RWMRBaV">
+                    <label style="font-weight: bold; display: block; margin-bottom: 6px;" data-page-node-id="2gPV36eM4kBIdlk95S0EBe">增加余额：</label>
+                    <div style="display: flex; gap: 8px;" data-page-node-id="HDKEJVE75WLAVEDHvS5XUK">
+                        <input type="number" id="addBalanceInput" min="1" placeholder="输入增加数量" style="flex: 1; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px;" data-page-node-id="r3Qt2QIvgL7KSSII629jyq">
+                        <button onclick="addBalance()" style="padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; background: #52c41a; color: #fff; white-space: nowrap;" data-page-node-id="kodZZN9XA8DkG8cXQnV3RL">增加</button>
+                    </div>
+                </div>
+                <div data-page-node-id="NEM508CExlH122ZReqbu7P">
+                    <label style="font-weight: bold; display: block; margin-bottom: 6px;" data-page-node-id="Hv9v45GDFR7IOM15gwpFfo">扣除余额：</label>
+                    <div style="display: flex; gap: 8px;" data-page-node-id="klKVHJHYTq60LGQBgjVMMp">
+                        <input type="number" id="subtractBalanceInput" min="1" placeholder="输入扣除数量" style="flex: 1; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px;" data-page-node-id="TFaPVg9cLiIE2CsAQETwg1">
+                        <button onclick="subtractBalance()" style="padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; background: #ff4d4f; color: #fff; white-space: nowrap;" data-page-node-id="9E25mbyXt7VWpxU6vTm1Tz">扣除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="accountModal" class="modal" style="display:none;" data-page-node-id="Nd986Ie5kTLBmhPV9FN4H1">
+        <div class="modal-overlay" onclick="closeAccountModal()" data-page-node-id="FAWQRzH3K3WZ6wHpFWaH5R"></div>
+        <div class="modal-content" style="max-width: 420px;" data-page-node-id="BbKU2NQfSaJlLx5c00U6b0">
+            <div class="modal-header" data-page-node-id="foIcPhibFQ9e6nYju2YHrT">
+                <h3 data-page-node-id="BUEsZp4GbfmlqDuxwtAEDH">账号管理</h3>
+                <button class="modal-close" onclick="closeAccountModal()" data-page-node-id="6EMS9XUl614IFPpe97H0cq">&times;</button>
+            </div>
+            <div class="modal-body" data-page-node-id="puZCINKX5desder7UpMlN5">
+                <div style="margin-bottom: 16px;" data-page-node-id="wRLmwgL7iHvEjSdBqWCfy4">
+                    <label style="font-weight: bold;" data-page-node-id="5JjZxDIwIBZmKgSFqgEIs4">用户：</label>
+                    <span id="accountModalUsername" data-page-node-id="XoEbFa56dgRVa7QHIGeWQQ">-</span>
+                </div>
+                <div style="margin-bottom: 12px; color: #999; font-size: 12px;" data-page-node-id="QgXyiEsFJEnqwRYevbT8nU">初始化密码：123456</div>
+                <button onclick="handleResetUserPassword()" style="padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; background: #ff4d4f; color: #fff;" data-page-node-id="NjHLjH526UO5IyzihgZQIz">初始化密码</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="commissionModal" class="modal" style="display:none;" data-page-node-id="QGBcpIl4t1QjPQltr9gAa9">
+        <div class="modal-overlay" onclick="closeCommissionModal()" data-page-node-id="LH2XKc8n0HOsrRvGHM5pBV"></div>
+        <div class="modal-content commission-modal" style="max-width: 680px; width: 92%; max-height: 90vh; display: flex; flex-direction: column; box-sizing: border-box;" data-page-node-id="1BOniIap4mrFUiV5fSNP4Q">
+            <div class="modal-header" data-page-node-id="CD5JHtWhkcpqGyVGc7nZuz">
+                <h3 data-page-node-id="AFktT7tN2B744Geof8cRQf">返利管理</h3>
+                <button class="modal-close" onclick="closeCommissionModal()" data-page-node-id="W2tIGLaYSovrgvmZiv4poB">&times;</button>
+            </div>
+            <div class="modal-body" style="flex: 1; min-height: 0; overflow-y: auto;" data-page-node-id="AhL7CsITNlxQR3v5MAnLtp">
+                <div style="margin-bottom: 16px;" data-page-node-id="jxDTpW4URofePX69FdJH8R">
+                    <label style="font-weight: bold;" data-page-node-id="gQvRD7OafG8dwXHKhozVKq">用户：</label>
+                    <span id="commissionModalUsername" style="color: var(--primary-blue, #1677ff); font-weight: bold;" data-page-node-id="e7npn2lPO378DII3CiTlIz">-</span>
+                </div>
+                <div class="cm-summary-grid" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px;" data-page-node-id="OB6yl8gJzbkhNa5XZHit83">
+                    <div style="background: #fff7e8; border: 1px solid #f0d9b0; border-radius: 8px; padding: 10px; text-align: center;" data-page-node-id="guBOB3u36mlcuovOk9aOap">
+                        <div style="font-size: 12px; color: #888;" data-page-node-id="IbGvx0VBG3qcAXTcHwQr8R">总返利金额（元）</div>
+                        <div id="cmTotalReward" style="font-size: 18px; font-weight: bold; color: #c47f17;" data-page-node-id="DkiCV320EOsuu54HwBvMV8">0.00</div>
+                    </div>
+                    <div style="background: #e8f5e9; border: 1px solid #c3e6cb; border-radius: 8px; padding: 10px; text-align: center;" data-page-node-id="Cd5op0esEZcuvdterfU8C5">
+                        <div style="font-size: 12px; color: #888;" data-page-node-id="YaAscZaibAwX2MZJ14Lbxr">已提现金额（元）</div>
+                        <div id="cmWithdrawn" style="font-size: 18px; font-weight: bold; color: #2e7d32;" data-page-node-id="rygV0Kqh9YVpli4ygKQ1C2">0.00</div>
+                    </div>
+                    <div style="background: #fff3e6; border: 1px solid #f0c27f; border-radius: 8px; padding: 10px; text-align: center;" data-page-node-id="75RCfGPQoEI7mG3zBLdPcw">
+                        <div style="font-size: 12px; color: #888;" data-page-node-id="dP0P4qq0U1DlbsamWtkQqf">待提现金额（元）</div>
+                        <div id="cmPending" style="font-size: 18px; font-weight: bold; color: #c47f17;" data-page-node-id="kmpND2B30E3UB2kNld1JAl">0.00</div>
+                    </div>
+                    <div style="background: #e8f1ff; border: 1px solid #b9d4ff; border-radius: 8px; padding: 10px; text-align: center;" data-page-node-id="pUI7DgE7f9DUBRrP7JABsN">
+                        <div style="font-size: 12px; color: #888;" data-page-node-id="sJOSJ6TjfBtDrRuGmAkcU1">可提现金额（元）</div>
+                        <div id="cmAvailable" style="font-size: 18px; font-weight: bold; color: #1677ff;" data-page-node-id="wXC911OV63MZBAQjrFQPjd">0.00</div>
+                    </div>
+                </div>
+                <hr style="margin: 14px 0; border-color: #e8e8e8;" data-page-node-id="TFTsoPchyV9gUftdGdmfvY">
+                <div style="font-weight: bold; margin-bottom: 8px;" data-page-node-id="Nn8R48JzJ8VX4g0pkCAy4X">编辑返利数据（金额单位：元）</div>
+                <div class="cm-edit-grid" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px;" data-page-node-id="3ErfLBWPeaE0uNk5hCeIAg">
+                    <div data-page-node-id="1z2uUjCMBn5EppV1dPjuJl">
+                        <label style="font-weight: bold; display: block; margin-bottom: 6px;" data-page-node-id="GFpZ1UBz0AsGH4JisbCu65">设置总返利：</label>
+                        <div style="display: flex; gap: 8px;" data-page-node-id="O1P993F2gyiftYLjmYN8hB">
+                            <input type="number" id="cmSetTotal" min="0" step="0.01" placeholder="输入新总返利" style="flex: 1; min-width: 0; width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; box-sizing: border-box;" data-page-node-id="9pgPWuRXMqpoEU6IHeCH88">
+                            <button onclick="cmSetField('total')" style="padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; background: var(--primary-blue); color: #fff; white-space: nowrap;" data-page-node-id="fLcS56lYyXKLFiWZez7qS5">设为该值</button>
+                        </div>
+                    </div>
+                    <div data-page-node-id="xDbyQcbcUWwz4nJ5ta379p">
+                        <label style="font-weight: bold; display: block; margin-bottom: 6px;" data-page-node-id="eyPuxnZMQkZtHiAj38GsEE">增加总返利：</label>
+                        <div style="display: flex; gap: 8px;" data-page-node-id="Dl5COLmRNaAEMdGlRrZSbc">
+                            <input type="number" id="cmAddTotal" min="0.01" step="0.01" placeholder="输入增加数量" style="flex: 1; min-width: 0; width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; box-sizing: border-box;" data-page-node-id="9VF9SFKbCjjxVFrDJzkwA0">
+                            <button onclick="cmAddField('total')" style="padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; background: #52c41a; color: #fff; white-space: nowrap;" data-page-node-id="uC0DcP4uc8doa3HbVSFek0">增加</button>
+                        </div>
+                    </div>
+                    <div data-page-node-id="Pgg8QtQ8OMY2Iyh6VEiqPp">
+                        <label style="font-weight: bold; display: block; margin-bottom: 6px;" data-page-node-id="Gs1tLStsIXPNH3m347PWQd">设置已提现：</label>
+                        <div style="display: flex; gap: 8px;" data-page-node-id="GhEb1EDvnGJ3NTyqOdbpSh">
+                            <input type="number" id="cmSetWithdrawn" min="0" step="0.01" placeholder="输入新已提现" style="flex: 1; min-width: 0; width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; box-sizing: border-box;" data-page-node-id="OHBd8jlyaFVVUsf3oSLLwV">
+                            <button onclick="cmSetField('withdrawn')" style="padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; background: var(--primary-blue); color: #fff; white-space: nowrap;" data-page-node-id="1ZZOBq2l09w8Rwk42eFnh9">设为该值</button>
+                        </div>
+                    </div>
+                    <div data-page-node-id="EzQjoHNYFMexiGAayL3i3z">
+                        <label style="font-weight: bold; display: block; margin-bottom: 6px;" data-page-node-id="iUVl9Tgcbll5BpdtGM8Htb">设置待提现：</label>
+                        <div style="display: flex; gap: 8px;" data-page-node-id="K9CpDNPyRFxZnd8Suc4mbD">
+                            <input type="number" id="cmSetPending" min="0" step="0.01" placeholder="输入新待提现" style="flex: 1; min-width: 0; width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 6px; box-sizing: border-box;" data-page-node-id="M10DTytXEPPGw11xxXgc5Q">
+                            <button onclick="cmSetField('pending')" style="padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; background: var(--primary-blue); color: #fff; white-space: nowrap;" data-page-node-id="dBzRKxUKtagJCOIzTWV7df">设为该值</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-weight: bold; margin-bottom: 8px;" data-page-node-id="HuAop3onXDo0ZgSka8iCTv">提现申请（待审核）</div>
+                <div id="cmWithdrawalList" style="max-height: 150px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 8px; margin-bottom: 14px;" data-page-node-id="Y5dPKeYQzEUVOp0rAl3652">
+                    <div style="color: #999; text-align: center; padding: 10px;" data-page-node-id="J7y7NIvp17IJFYaODLSfkp">加载中...</div>
+                </div>
+                <div style="font-weight: bold; margin-bottom: 8px;" data-page-node-id="nrG58XOA5JNIjW5prAwHkR">返利来源明细（最近 50 条）</div>
+                <div id="cmRecordList" style="max-height: 180px; overflow-y: auto; border: 1px solid #eee; border-radius: 8px; padding: 8px;" data-page-node-id="aH6NqkBrasmfOzUBFyVQP5">
+                    <div style="color: #999; text-align: center; padding: 10px;" data-page-node-id="ECEU1wEdD6mCAWdCaPQ96w">加载中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="userInfoModal" class="modal" style="display:none;" data-page-node-id="A9ScEYG5atTiKu8ZGiahur">
+        <div class="modal-overlay" onclick="closeUserInfoModal()" data-page-node-id="Ub64IqlUxkYgN77s7ZLcVp"></div>
+        <div class="modal-content" style="max-width: 420px;" data-page-node-id="kaDPsOiUg6uiFMbwrk7snJ">
+            <div class="modal-header" data-page-node-id="5Fbd7gPLWSq9saxCdtKYe0">
+                <h3 data-page-node-id="G79kCaVc9REgpe5VlCMLpb">用户信息</h3>
+                <button class="modal-close" onclick="closeUserInfoModal()" data-page-node-id="OwvlNAiDqqvtZZTsDS0bSf">&times;</button>
+            </div>
+            <div class="modal-body" data-page-node-id="LNhOCiuyKi74mFf6BfLA4u">
+                <div style="display:flex; gap:12px; margin-bottom:14px;" data-page-node-id="f3rbsCd1W1vAcQWQ8bGtko">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="vMCCD8GTArsXnJjfa2cBDl">用户名：</label>
+                    <span id="uiUsername" style="word-break:break-all;" data-page-node-id="nAyqe4lmuj87T8zm5E7Yzx">-</span>
+                </div>
+                <div style="display:flex; gap:12px; margin-bottom:14px;" data-page-node-id="bkXL4652HQVgu1j3OloY8P">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="vD39zSfSdLk1f39zmJdDE8">绑定手机：</label>
+                    <span id="uiPhone" data-page-node-id="kjlQP0tSSGGmkNzM3obwR1">-</span>
+                </div>
+                <div style="display:flex; gap:12px; margin-bottom:14px;" data-page-node-id="c6u8aWjQZzbIHP3gJqDXLS">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="m4Stydz0GldOiOOUJT1GUL">绑定邮箱：</label>
+                    <span id="uiEmail" data-page-node-id="W40ms2LlQbpZEHiF4LKRUz">-</span>
+                </div>
+                <div style="display:flex; gap:12px;" data-page-node-id="f2SxBFOOqsL4yQtB1LX4CL">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="3RMFpBK8AJzlRzzuqzTZcp">邀请码：</label>
+                    <span id="uiInviteCode" style="font-family:monospace; letter-spacing:1px; color:var(--primary-blue,#1677ff); font-weight:bold;" data-page-node-id="zefANp07WwQFxD2JAZtDHu">-</span>
+                </div>
+                <div style="display:flex; gap:12px; margin-top:14px;" data-page-node-id="kTxpBlbp4YvSCCHZh0EL3k">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="yRJ0Us59aqYKwBspGDq7a3">IP：</label>
+                    <span id="uiIp" data-page-node-id="83BrtDkZ9Dw3V921FDG7aE">-</span>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 16px;" data-page-node-id="mPlWOhAApcNEDWAkKqLAbF">
+                    <button type="button" id="manageBanBtn" class="btn ban-btn" style="padding: 8px 20px; font-size: 13px;" data-page-node-id="SLlGPmrIL0GcdHOwSvl2y5">封禁</button>
+                    <button type="button" id="deleteUserBtn" class="btn delete-btn" style="padding: 8px 20px; font-size: 13px;" data-page-node-id="Zryejo8QyiEiHsHzxbFy34">删除</button>
+                </div>
+                <hr style="margin: 14px 0; border-color: #eee;" data-page-node-id="RHCQtWlIB3IphcCNGoBEBu">
+                <div style="font-weight:bold; color:#555; margin-bottom: 8px;" data-page-node-id="ann9LYVRXtJdQeCjQ94R1y">返利信息</div>
+                <div style="display:flex; gap:12px; margin-bottom: 8px;" data-page-node-id="ia893iYCuDJxujAhkfRDBh">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="Qa0X6Po4fUtdT7FGg6w980">总返利：</label>
+                    <span id="uiTotalReward" style="color:#c47f17; font-weight:bold;" data-page-node-id="WZPrz5Hfzhoypeq2dO0VFt">¥0.00</span>
+                </div>
+                <div style="display:flex; gap:12px; margin-bottom: 8px;" data-page-node-id="ePEt6GZeH8QBUqTI9JJzdM">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="FBpNji9zKEp2BfRZyYVciM">可提现：</label>
+                    <span id="uiAvailableReward" style="color:#1677ff; font-weight:bold;" data-page-node-id="OxPiJpoky1AM1RfzF5pXd5">¥0.00</span>
+                </div>
+                <div style="display:flex; gap:12px; margin-bottom: 8px;" data-page-node-id="ZvqPGmEFhEtorADqih603W">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="FyPC7e5roCmmN7avV13kcS">提现中：</label>
+                    <span id="uiPendingReward" style="color:#c47f17; font-weight:bold;" data-page-node-id="v6hA44ZC5AbuBll9pJbfrM">¥0.00</span>
+                </div>
+                <div style="display:flex; gap:12px;" data-page-node-id="ZSwglS4PxGUCZwy3qcYSq1">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="6t7frPz3dNXoM0Dbjabxl0">已提现：</label>
+                    <span id="uiWithdrawnReward" style="font-weight:bold;" data-page-node-id="rCapn9ktEGyMG2RvDCm0uD">¥0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="banModal" class="modal" style="display:none;" data-page-node-id="QFzEr3ZSBNlfyS4bSw3juK">
+        <div class="modal-overlay" onclick="closeBanModal()" data-page-node-id="6nVS5764n3Ww4SsrP0Z7pG"></div>
+        <div class="modal-content" style="max-width: 420px;" data-page-node-id="BELzJzjF3yA0q5ry1PhB9n">
+            <div class="modal-header" data-page-node-id="5F4qIvruiJgLAImYeqFHOM">
+                <h3 data-page-node-id="04lEwvRkUyNDYcuZ8m4YqI">封禁用户</h3>
+                <button class="modal-close" onclick="closeBanModal()" data-page-node-id="N8efpVXiFPxpOfYLAY8FeN">&times;</button>
+            </div>
+            <div class="modal-body" data-page-node-id="xj9EeAPrzSU1fCBASaGEPP">
+                <p style="font-size: 13px; color: #666; margin-bottom: 4px;" data-page-node-id="WBDBEYIEJEeJ3sXGWzS5n2">用户：<b id="banUsername" style="color: var(--primary-blue, #1677ff);" data-page-node-id="kNnat97gWywQDzyFlHTIdI">-</b></p>
+                <p style="font-size: 13px; color: #666; margin-bottom: 14px;" data-page-node-id="Tk3EglMnU6kITiDua685qo">封禁后，该用户将无法使用网页创建动画（生成教学内容）功能，其余浏览不受影响。</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;" data-page-node-id="GyHXqpapoUBpJoEAmZHojn">
+                    <label style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid #d9d9d9; border-radius:6px; cursor:pointer;" data-page-node-id="6CWrWw5xY86OslQdHbocJr"><input type="radio" name="banDuration" value="1d" data-page-node-id="xK8UXv1twaq8Rer4XjWrkG"> 封禁 1 天</label>
+                    <label style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid #d9d9d9; border-radius:6px; cursor:pointer;" data-page-node-id="HAEaSXxZ2hGLmyrrYctoqQ"><input type="radio" name="banDuration" value="7d" data-page-node-id="66XgBInL8xLevEJJBRrRtv"> 封禁 7 天</label>
+                    <label style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid #d9d9d9; border-radius:6px; cursor:pointer;" data-page-node-id="sF1J4eCjzvFdtY1zyOQXcU"><input type="radio" name="banDuration" value="30d" data-page-node-id="PLJVGJTfbIT5Uui0eg5NZ7"> 封禁 30 天</label>
+                    <label style="display:flex; align-items:center; gap:6px; padding:8px 10px; border:1px solid #d9d9d9; border-radius:6px; cursor:pointer;" data-page-node-id="JxcX5S9BRtXbR7Ei11YVKL"><input type="radio" name="banDuration" value="permanent" data-page-node-id="clsFA7rSu9n1rxrZ78rNme"> 永久封禁</label>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom: 16px;" data-page-node-id="C0tvDhySlRO4qV1aBJ9ACr">
+                    <label style="font-weight:bold; white-space:nowrap;" data-page-node-id="eSYHNXbLBRu1eEBSxEN88Q">自定义时长：</label>
+                    <input type="number" id="banCustomDays" min="1" placeholder="天数" style="flex:1; min-width:0; padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px;" data-page-node-id="wm2KTBekTy54kZHYqh76t5">
+                    <span style="color:#999; font-size:13px;" data-page-node-id="sxMlfY3uCUjOKedbjkBGCo">天</span>
+                </div>
+                <div style="display:flex; gap:10px; justify-content:flex-end;" data-page-node-id="nzLDhFXro0O6u1AWBG4yXO">
+                    <button class="btn" onclick="closeBanModal()" data-page-node-id="nqeQkWDFCOmUpvBRnRQVkj">取消</button>
+                    <button class="btn ban-btn" id="unbanBtn" data-page-node-id="BnTjm80GgrntAN4HrHaovd">解除封禁</button>
+                    <button class="btn btn-primary" id="confirmBanBtn" data-page-node-id="tVn3okuqZOXYhUNaly4bIN">确认封禁</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="inviterModal" class="modal" style="display:none;" data-page-node-id="UOvLOf8B5SCP0d3G1wxPdQ">
+        <div class="modal-overlay" onclick="closeInviterModal()" data-page-node-id="rvtAO34WNy6tPyk3KCLLUB"></div>
+        <div class="modal-content" style="max-width: 420px;" data-page-node-id="k9VVbHcFYMyp41mCp4UHHO">
+            <div class="modal-header" data-page-node-id="9NvdF3kZiwiYgtXf5ylAWu">
+                <h3 data-page-node-id="SFiD8SaTQr5fvGt52ZQRnZ">邀请人信息</h3>
+                <button class="modal-close" onclick="closeInviterModal()" data-page-node-id="XKatuFCOqeKDkKLBD2qxKD">&times;</button>
+            </div>
+            <div class="modal-body" data-page-node-id="ciTrEMZzRVD2zD3mFcVtBA">
+                <div style="display:flex; gap:12px; margin-bottom:14px;" data-page-node-id="3WfnzcFzlk16uet0qutFrW">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="ZZlmAtTqsDfafoJhgmwAs1">用户名：</label>
+                    <span id="ivUsername" style="word-break:break-all;" data-page-node-id="GtpdIvQK2E8JHKXwlSHvVz">-</span>
+                </div>
+                <div style="display:flex; gap:12px; margin-bottom:14px;" data-page-node-id="WqcuFO0Bi9Fa8vQWAAfngt">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="LBDfWCCc0tqYn9uK9oylrf">绑定手机：</label>
+                    <span id="ivPhone" data-page-node-id="JWmLPRjwYV4HpIRrKnXBV9">-</span>
+                </div>
+                <div style="display:flex; gap:12px; margin-bottom:14px;" data-page-node-id="KiU4SNy6lGDPSXsmRDvR0t">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="hOtPGi3Ld6HuBDPHiJByNj">绑定邮箱：</label>
+                    <span id="ivEmail" data-page-node-id="B84K2lGB8GSvs53y1aazfb">-</span>
+                </div>
+                <div style="display:flex; gap:12px; margin-bottom:14px;" data-page-node-id="fzmgomLPyskN0Bv4obetCx">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="xepLaiAK4nqbaJYTUi4qev">邀请码：</label>
+                    <span id="ivInviteCode" style="font-family:monospace; letter-spacing:1px; color:var(--primary-blue,#1677ff); font-weight:bold;" data-page-node-id="jLUGKNpOCmgk7fYvgfE3UT">-</span>
+                </div>
+                <div style="display:flex; gap:12px;" data-page-node-id="svfvgIVEc24TZUsvwaENnd">
+                    <label style="width:80px; font-weight:bold; color:#555; flex-shrink:0;" data-page-node-id="TjfQlr3ppuUiqFrmF3mHFG">成功邀请：</label>
+                    <span id="ivInvitedCount" style="color:#c41d7f; font-weight:bold;" data-page-node-id="9Cf0704qSTYZp0YJ6PXkpG">-</span>
+                    <span style="color:#666;" data-page-node-id="zY2vdJGSO6sU5dJu5VjqFq">人</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+    </script>
+    <script>
+        let currentPage = 1;
+        const pageSize = 20;
+        let editingUserId = null;
+        let editingUsername = null;
+        let editingBalance = 0;
+        let accountPasswordPlain = null;
+        let commissionUserId = null;
+        let banUserId = null;
+        let commissionUsername = null;
+        let commissionData = null;
+        window.__userMap = {};
+        window.__inviterMap = {};
+
+        initAdminAuth();
+
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"']/g, function (m) {
+                return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+            });
+        }
+
+        async function loadUsers(page = 1) {
+            currentPage = page;
+            const search = document.getElementById('searchInput').value.trim();
+            const listElement = document.getElementById('usersList');
+            listElement.innerHTML = '<div class="loading">加载中...</div>';
+
+            try {
+                const result = await getUsers({
+                    page,
+                    page_size: pageSize,
+                    search: search || undefined
+                });
+
+                const users = result.users || result.data || [];
+                if (users.length === 0) {
+                    listElement.innerHTML = '<div class="empty-state"><p>暂无用户</p></div>';
+                    document.getElementById('pagination').innerHTML = '';
+                    return;
+                }
+
+                window.__userMap = {};
+                window.__inviterMap = {};
+
+                let tableHTML = `
+                    <div style="overflow-x:auto;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>用户名</th>
+                                    <th>手机号</th>
+                                    <th>教学内容数</th>
+                                    <th>余额（次）</th>
+                                    <th>注册时间</th>
+                                    <th>邀请人</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                users.forEach(user => {
+                    const balance = user.balance ?? user.extra_balance ?? 0;
+                    const date = user.created_at ? new Date(user.created_at) : null;
+                    window.__userMap[user.user_id] = user;
+                    if (user.inviter) window.__inviterMap[user.user_id] = user.inviter;
+
+                    const inviterCell = user.inviter
+                        ? `<button class="inviter-code-btn" data-user-id="${user.user_id}" title="点击查看邀请人信息">${escapeHtml(user.inviter.username)}</button>`
+                        : '<span style="color:#bbb;">无</span>';
+
+                    tableHTML += `
+                        <tr>
+                            <td>${escapeHtml(user.username)}</td>
+                            <td>${user.phone || '-'}</td>
+                            <td>${user.teachings_count ?? 0}</td>
+                            <td><span style="color: #c41d7f; font-weight: bold;">${balance}</span></td>
+                            <td style="font-size: 12px;">${date ? date.toLocaleString('zh-CN', { hour12: false }) : '-'}</td>
+                            <td style="font-size: 13px;">${inviterCell}</td>
+                            <td style="white-space: nowrap;">
+                                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                    <button class="btn view-info-btn" style="padding: 6px 12px; font-size: 12px;" data-user-id="${user.user_id}">查看信息</button>
+                                    <button class="btn btn-primary edit-balance-btn" style="padding: 6px 12px; font-size: 12px;" data-user-id="${user.user_id}" data-username="${escapeHtml(user.username)}" data-balance="${balance}">编辑余额</button>
+                                    <button class="btn account-btn row-account-btn" style="padding: 6px 12px; font-size: 12px;" data-user-id="${user.user_id}" data-username="${escapeHtml(user.username)}">账号管理</button>
+                                    <button class="btn commission-btn row-commission-btn" style="padding: 6px 12px; font-size: 12px;" data-user-id="${user.user_id}" data-username="${escapeHtml(user.username)}">返利管理</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += '</tbody></table></div>';
+                listElement.innerHTML = tableHTML;
+                renderPagination(result.total_pages, result.page || page);
+            } catch (error) {
+                console.error('加载用户列表失败:', error);
+                listElement.innerHTML = `<div class="error-message show">加载失败: ${error.message}</div>`;
+            }
+        }
+
+        function renderPagination(totalPages, current) {
+            const pagination = document.getElementById('pagination');
+            if (!totalPages || totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            html += `<button onclick="loadUsers(${current - 1})" ${current === 1 ? 'disabled' : ''}>上一页</button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= current - 2 && i <= current + 2)) {
+                    html += `<button onclick="loadUsers(${i})" class="${i === current ? 'active' : ''}">${i}</button>`;
+                } else if (i === current - 3 || i === current + 3) {
+                    html += '<span>...</span>';
+                }
+            }
+            html += `<button onclick="loadUsers(${current + 1})" ${current === totalPages ? 'disabled' : ''}>下一页</button>`;
+            pagination.innerHTML = html;
+        }
+
+        function openBalanceModal(userId, username, currentBalance) {
+            editingUserId = userId;
+            editingUsername = username;
+            editingBalance = currentBalance || 0;
+            document.getElementById('balanceModalUsername').textContent = username || '-';
+            document.getElementById('balanceModalCurrent').textContent = editingBalance;
+            document.getElementById('setBalanceInput').value = '';
+            document.getElementById('addBalanceInput').value = '';
+            document.getElementById('subtractBalanceInput').value = '';
+            document.getElementById('balanceModal').style.display = 'flex';
+        }
+
+        function closeBalanceModal() {
+            document.getElementById('balanceModal').style.display = 'none';
+            editingUserId = null;
+        }
+
+        async function setBalance() {
+            const input = document.getElementById('setBalanceInput');
+            const value = parseInt(input.value, 10);
+            if (isNaN(value) || value < 0) {
+                showToast('请输入有效的余额（大于等于0）', 'warn');
+                return;
+            }
+            if (!confirm(`确认将用户 "${editingUsername}" 的余额设置为 ${value}？`)) return;
+            try {
+                await updateUser(editingUserId, { extra_balance: value });
+                showToast(`余额已更新：${editingBalance} → ${value}`, 'success');
+                closeBalanceModal();
+                loadUsers(currentPage);
+            } catch (error) {
+                showToast('更新失败: ' + error.message, 'error');
+            }
+        }
+
+        async function addBalance() {
+            const input = document.getElementById('addBalanceInput');
+            const value = parseInt(input.value, 10);
+            if (isNaN(value) || value <= 0) {
+                showToast('请输入有效的增加数量（大于0）', 'warn');
+                return;
+            }
+            if (!confirm(`确认为用户 "${editingUsername}" 增加 ${value} 余额？`)) return;
+            try {
+                const result = await updateUser(editingUserId, { add_balance: value });
+                showToast(result.message || `已增加 ${value} 余额`, 'success');
+                closeBalanceModal();
+                loadUsers(currentPage);
+            } catch (error) {
+                showToast('操作失败: ' + error.message, 'error');
+            }
+        }
+
+        async function subtractBalance() {
+            const input = document.getElementById('subtractBalanceInput');
+            const value = parseInt(input.value, 10);
+            if (isNaN(value) || value <= 0) {
+                showToast('请输入有效的扣除数量（大于0）', 'warn');
+                return;
+            }
+            if (!confirm(`确认从用户 "${editingUsername}" 的余额中扣除 ${value}？`)) return;
+            try {
+                const result = await updateUser(editingUserId, { add_balance: -value });
+                showToast(result.message || `已扣除 ${value} 余额`, 'success');
+                closeBalanceModal();
+                loadUsers(currentPage);
+            } catch (error) {
+                showToast('操作失败: ' + error.message, 'error');
+            }
+        }
+
+        async function openAccountManagement(userId, username) {
+            if (!userId) {
+                showToast('请先选择用户', 'warn');
+                return;
+            }
+            editingUserId = userId;
+            editingUsername = username || '-';
+            accountPasswordPlain = null;
+            document.getElementById('accountModalUsername').textContent = editingUsername;
+            document.getElementById('accountModal').style.display = 'flex';
+            try {
+                const result = await getUserAccount(editingUserId);
+                const account = result.user || {};
+                document.getElementById('accountModalUsername').textContent = account.username || editingUsername || '-';
+            } catch (error) {
+                closeAccountModal();
+                showToast('加载账号信息失败: ' + error.message, 'error');
+            }
+        }
+
+        function closeAccountModal() {
+            document.getElementById('accountModal').style.display = 'none';
+            document.getElementById('accountModalUsername').textContent = '-';
+            accountPasswordPlain = null;
+        }
+
+        async function handleResetUserPassword() {
+            if (!editingUserId) {
+                showToast('请先选择用户', 'warn');
+                return;
+            }
+            if (!confirm(`确认将用户 "${editingUsername}" 的密码初始化为 123456？`)) return;
+            try {
+                const result = await resetUserPassword(editingUserId);
+                accountPasswordPlain = '123456';
+                showToast(result.message || `密码已初始化为 ${accountPasswordPlain}`, 'success');
+            } catch (error) {
+                showToast('初始化密码失败: ' + error.message, 'error');
+            }
+        }
+
+        function fenToYuan(fen) {
+            return ((fen || 0) / 100).toFixed(2);
+        }
+
+        function yuanToFen(yuan) {
+            const value = parseFloat(yuan);
+            if (isNaN(value) || value < 0) return null;
+            return Math.round(value * 100);
+        }
+
+        async function openCommissionModal(userId, username) {
+            commissionUserId = userId;
+            commissionUsername = username || '-';
+            document.getElementById('commissionModalUsername').textContent = commissionUsername;
+            document.getElementById('commissionModal').style.display = 'flex';
+            document.getElementById('cmWithdrawalList').innerHTML = '<div style="color: #999; text-align: center; padding: 10px;">加载中...</div>';
+            document.getElementById('cmRecordList').innerHTML = '<div style="color: #999; text-align: center; padding: 10px;">加载中...</div>';
+            document.getElementById('cmSetTotal').value = '';
+            document.getElementById('cmAddTotal').value = '';
+            document.getElementById('cmSetWithdrawn').value = '';
+            document.getElementById('cmSetPending').value = '';
+            try {
+                const data = await getCommission(userId);
+                commissionData = data;
+                renderCommissionSummary(data.account);
+                renderCommissionWithdrawals(data.withdrawals);
+                renderCommissionRecords(data.records);
+            } catch (error) {
+                showToast('加载返利数据失败: ' + error.message, 'error');
+            }
+        }
+
+        function closeCommissionModal() {
+            document.getElementById('commissionModal').style.display = 'none';
+            commissionUserId = null;
+            commissionData = null;
+        }
+
+        function renderCommissionSummary(account) {
+            if (!account) return;
+            document.getElementById('cmTotalReward').textContent = fenToYuan(account.total_reward);
+            document.getElementById('cmWithdrawn').textContent = fenToYuan(account.withdrawn_amount);
+            document.getElementById('cmPending').textContent = fenToYuan(account.pending_amount);
+            document.getElementById('cmAvailable').textContent = fenToYuan(account.available_amount);
+        }
+
+        function renderCommissionWithdrawals(withdrawals) {
+            const container = document.getElementById('cmWithdrawalList');
+            const pendingItems = (withdrawals || []).filter(item => item.status === 'pending');
+            if (pendingItems.length === 0) {
+                container.innerHTML = '<div style="color: #999; text-align: center; padding: 10px;">暂无待审核的提现申请</div>';
+                return;
+            }
+            container.innerHTML = pendingItems.map(item => `
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px; border-bottom: 1px dashed #eee;">
+                    <div>
+                        <span style="font-weight: bold; color: #c47f17;">¥${fenToYuan(item.amount)}</span>
+                        <span style="color: #999; font-size: 12px; margin-left: 8px;">${new Date(item.created_at).toLocaleString('zh-CN', { hour12: false })}</span>
+                    </div>
+                    <div style="white-space: nowrap;">
+                        <button onclick="processWithdrawal('${item.request_id}', 'approve')" style="padding: 5px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; background: #52c41a; color: #fff; margin-right: 6px;">通过</button>
+                        <button onclick="processWithdrawal('${item.request_id}', 'reject')" style="padding: 5px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; background: #ff4d4f; color: #fff;">驳回</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCommissionRecords(records) {
+            const container = document.getElementById('cmRecordList');
+            if (!records || records.length === 0) {
+                container.innerHTML = '<div style="color: #999; text-align: center; padding: 10px;">暂无返利记录</div>';
+                return;
+            }
+            const levelLabel = { 1: '直接邀请' };
+            container.innerHTML = records.map(record => `
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px; border-bottom: 1px dashed #eee;">
+                    <div style="min-width: 0;">
+                        <div style="font-size: 13px;">来源用户：<b>${escapeHtml(record.sourceUsername || record.sourceUserId)}</b>${record.sourceInviteCode ? `<span style="color: #aaa; font-size: 12px;">（邀请码 ${escapeHtml(record.sourceInviteCode)}）</span>` : ''}</div>
+                        <div style="color: #999; font-size: 12px;">${levelLabel[record.level] || '第' + record.level + '级'} · ${record.createdAt ? new Date(record.createdAt).toLocaleString('zh-CN', { hour12: false }) : '-'}</div>
+                    </div>
+                    <div style="font-weight: bold; color: #c47f17; white-space: nowrap;">+¥${fenToYuan(record.amount)}</div>
+                </div>
+            `).join('');
+        }
+
+        async function processWithdrawal(requestId, action) {
+            const actionText = action === 'approve' ? '通过' : '驳回';
+            if (!confirm(`确认${actionText}该提现申请？`)) return;
+            try {
+                const result = await processCommissionWithdrawal(requestId, action);
+                showToast(result.message || `${actionText}成功`, 'success');
+                const data = await getCommission(commissionUserId);
+                commissionData = data;
+                renderCommissionSummary(data.account);
+                renderCommissionWithdrawals(data.withdrawals);
+                renderCommissionRecords(data.records);
+            } catch (error) {
+                showToast('操作失败: ' + error.message, 'error');
+            }
+        }
+
+        async function cmSetField(field) {
+            const inputMap = { total: 'cmSetTotal', withdrawn: 'cmSetWithdrawn', pending: 'cmSetPending' };
+            const apiMap = { total: 'set_total_reward', withdrawn: 'set_withdrawn_amount', pending: 'set_pending_amount' };
+            const labelMap = { total: '总返利', withdrawn: '已提现', pending: '待提现' };
+            const fen = yuanToFen(document.getElementById(inputMap[field]).value);
+            if (fen === null) {
+                showToast('请输入有效的金额（元）', 'warn');
+                return;
+            }
+            if (!confirm(`确认将用户 "${commissionUsername}" 的${labelMap[field]}设置为 ${fenToYuan(fen)} 元？`)) return;
+            try {
+                const result = await updateCommission(commissionUserId, { [apiMap[field]]: fen });
+                showToast(result.message || '更新成功', 'success');
+                renderCommissionSummary(result.account);
+            } catch (error) {
+                showToast('更新失败: ' + error.message, 'error');
+            }
+        }
+
+        async function cmAddField(field) {
+            const inputMap = { total: 'cmAddTotal' };
+            const apiMap = { total: 'add_total_reward' };
+            const labelMap = { total: '总返利' };
+            const fen = yuanToFen(document.getElementById(inputMap[field]).value);
+            if (fen === null || fen === 0) {
+                showToast('请输入有效的增加数量（元）', 'warn');
+                return;
+            }
+            if (!confirm(`确认为用户 "${commissionUsername}" 增加 ${fenToYuan(fen)} 元${labelMap[field]}？`)) return;
+            try {
+                const result = await updateCommission(commissionUserId, { [apiMap[field]]: fen });
+                showToast(result.message || '更新成功', 'success');
+                renderCommissionSummary(result.account);
+            } catch (error) {
+                showToast('更新失败: ' + error.message, 'error');
+            }
+        }
+
+        function openUserInfoModal(userId) {
+            const user = window.__userMap[userId];
+            if (!user) {
+                showToast('未找到该用户数据', 'warn');
+                return;
+            }
+            document.getElementById('uiUsername').textContent = user.username || '-';
+            document.getElementById('uiPhone').textContent = user.phone || '未绑定';
+            document.getElementById('uiEmail').textContent = user.email || '未绑定';
+            document.getElementById('uiInviteCode').textContent = user.invite_code || '-';
+            document.getElementById('uiIp').textContent = user.ip_address || '未记录';
+            commissionUserId = user.user_id;
+            commissionUsername = user.username || '';
+            const commission = user.commission || {};
+            document.getElementById('uiTotalReward').textContent = '¥' + fenToYuan(commission.total_reward);
+            document.getElementById('uiAvailableReward').textContent = '¥' + fenToYuan(commission.available_amount);
+            document.getElementById('uiPendingReward').textContent = '¥' + fenToYuan(commission.pending_amount);
+            document.getElementById('uiWithdrawnReward').textContent = '¥' + fenToYuan(commission.withdrawn_amount);
+            document.getElementById('userInfoModal').style.display = 'flex';
+        }
+
+        function closeUserInfoModal() {
+            document.getElementById('userInfoModal').style.display = 'none';
+        }
+
+        function openInviterModal(userId) {
+            const inviter = window.__inviterMap[userId];
+            if (!inviter) {
+                showToast('该用户未绑定邀请人', 'warn');
+                return;
+            }
+            document.getElementById('ivUsername').textContent = inviter.username || '-';
+            document.getElementById('ivPhone').textContent = inviter.phone || '未绑定';
+            document.getElementById('ivEmail').textContent = inviter.email || '未绑定';
+            document.getElementById('ivInviteCode').textContent = inviter.invite_code || '-';
+            document.getElementById('ivInvitedCount').textContent = inviter.invited_count ?? 0;
+            document.getElementById('inviterModal').style.display = 'flex';
+        }
+
+        function closeInviterModal() {
+            document.getElementById('inviterModal').style.display = 'none';
+        }
+
+        function openBanModal(userId, username) {
+            banUserId = userId;
+            document.getElementById('banUsername').textContent = username || '-';
+            document.getElementById('banCustomDays').value = '';
+            document.querySelectorAll('input[name="banDuration"]').forEach((r) => { r.checked = false; });
+            document.getElementById('banModal').style.display = 'flex';
+        }
+
+        function closeBanModal() {
+            document.getElementById('banModal').style.display = 'none';
+        }
+
+        function logout() {
+            removeToken();
+            location.href = 'index.html';
+        }
+
+        document.getElementById('usersList').addEventListener('click', function(e) {
+            const viewBtn = e.target.closest('.view-info-btn');
+            if (viewBtn) {
+                openUserInfoModal(viewBtn.getAttribute('data-user-id'));
+                return;
+            }
+            const cmBtn = e.target.closest('.row-commission-btn');
+            if (cmBtn) {
+                openCommissionModal(cmBtn.getAttribute('data-user-id'), cmBtn.getAttribute('data-username'));
+                return;
+            }
+            const accountBtn = e.target.closest('.row-account-btn');
+            if (accountBtn) {
+                openAccountManagement(accountBtn.getAttribute('data-user-id'), accountBtn.getAttribute('data-username'));
+                return;
+            }
+            const inviterBtn = e.target.closest('.inviter-code-btn');
+            if (inviterBtn) {
+                openInviterModal(inviterBtn.getAttribute('data-user-id'));
+                return;
+            }
+            const btn = e.target.closest('.edit-balance-btn');
+            if (btn) {
+                const userId = btn.getAttribute('data-user-id');
+                const username = btn.getAttribute('data-username');
+                const balance = parseInt(btn.getAttribute('data-balance'), 10);
+                openBalanceModal(userId, username, balance);
+            }
+        });
+
+        document.getElementById('manageBanBtn').addEventListener('click', function() {
+            if (!commissionUserId) return;
+            openBanModal(commissionUserId, commissionUsername);
+        });
+
+        document.getElementById('confirmBanBtn').addEventListener('click', async function() {
+            if (!banUserId) return;
+            let banUntil;
+            const selected = document.querySelector('input[name="banDuration"]:checked');
+            if (selected && selected.value === 'permanent') {
+                banUntil = 'permanent';
+            } else {
+                const presetDays = selected ? parseInt(selected.value, 10) : NaN;
+                const customDays = parseInt(document.getElementById('banCustomDays').value, 10);
+                const days = !isNaN(presetDays) ? presetDays : customDays;
+                if (isNaN(days) || days < 1) {
+                    showToast('请选择封禁时长或填写有效的自定义天数', 'warn');
+                    return;
+                }
+                const expire = new Date();
+                expire.setDate(expire.getDate() + days);
+                banUntil = expire.toISOString();
+            }
+            try {
+                const result = await banUser(banUserId, banUntil);
+                showToast(result.message || '已封禁该用户', 'success');
+                closeBanModal();
+            } catch (error) {
+                showToast('封禁失败: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('unbanBtn').addEventListener('click', async function() {
+            if (!banUserId) return;
+            if (!confirm('确认解除该用户的封禁？')) return;
+            try {
+                const result = await banUser(banUserId, null);
+                showToast(result.message || '已解除封禁', 'success');
+                closeBanModal();
+            } catch (error) {
+                showToast('操作失败: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('deleteUserBtn').addEventListener('click', async function() {
+            if (!commissionUserId) return;
+            const username = commissionUsername;
+            if (!confirm(`确定要彻底删除用户 "${username}" 吗？\n该操作将删除该用户的所有数据（教学内容、邀请关系、返利记录、配额等），且无法恢复！`)) return;
+            try {
+                const result = await deleteUser(commissionUserId);
+                showToast(result.message || '用户已删除', 'success');
+                closeUserInfoModal();
+                loadUsers(1);
+            } catch (error) {
+                showToast('删除失败: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loadUsers(1);
+        });
+
+        loadUsers();
+    </script>
+</body>
+</html>

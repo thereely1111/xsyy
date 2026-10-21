@@ -1,0 +1,17 @@
+{
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "八下",
+    "main_tag": "一元一次方程",
+    "sub_tags": [
+      "列方程实际模型"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-26T07:38:48.152163Z",
+  "knowledge_tags_confirmed": true,
+  "title": "列车过桥过隧道问题",
+  "question": "一列火车长 200 米，完全通过一座长 1000 米 的铁路桥，共用时 60 秒。求这列火车的速度是多少？",
+  "prompt": "一列火车长 200 米，完全通过一座长 1000 米 的铁路桥，共用时 60 秒。求这列火车的速度是多少？"
+}

@@ -1,0 +1,10 @@
+{
+  "question": "四边形 ABCD 为正方形，DE // AC, AE = AC, AE 与 CD 相交于 F. 求证：CE = CF.",
+  "title": "正方形性质几何证明",
+  "plan": {
+    "steps": []
+  },
+  "is_math_problem": true,
+  "has_pic": true,
+  "preview_image": "preview.webp"
+}

@@ -1,0 +1,24 @@
+{
+  "question": "三位数加减法",
+  "prompt": "三位数加减法",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "000fa2a1-b311-4529-bca6-4720f1ab223a",
+  "generated_at": "2026-07-31T14:40:34.477631Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "三位数加减法",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "是非混合运算",
+    "main_tag": "运算能力",
+    "sub_tags": [
+      "几何直观",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-07-31T14:40:34.477654Z",
+  "preview_image": "Preview.webp"
+}

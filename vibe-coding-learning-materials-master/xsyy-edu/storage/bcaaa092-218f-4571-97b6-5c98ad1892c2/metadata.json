@@ -1,0 +1,23 @@
+{
+  "question": "将十进制数139转化成三进制数",
+  "prompt": "2.将十进制数139转化成三进制数",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "bcaaa092-218f-4571-97b6-5c98ad1892c2",
+  "generated_at": "2025-12-24T12:02:13.641123Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "进制转换",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及数的概念与表示",
+    "main_tag": "数感",
+    "sub_tags": [
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-24T12:02:13.641123Z",
+  "preview_image": "Preview.webp"
+}

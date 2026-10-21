@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网格数字逻辑推理 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">网格数字逻辑推理</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('这是一道5×5网格数字逻辑推理题（数织Nonogram）：先用线索5把整行整列涂黑，再用“1 1”线索推出中间格子为空，最后锁定中心格并逐行逐列验证全部符合数字。')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <!-- 基础场景：5×5 网格 + 行列线索数字 + 图例（始终可见） -->
+                            <g>
+                                <rect x="196" y="118" width="352" height="404" rx="14" fill="#fffdf8" stroke="#e7e5e4" stroke-width="1.5"/>
+                                <line x1="256" y1="126" x2="256" y2="470" stroke="#d6d3d1" stroke-width="1.5"/>
+                                <line x1="204" y1="184" x2="540" y2="184" stroke="#d6d3d1" stroke-width="1.5"/>
+                                <rect x="260" y="190" width="280" height="280" fill="#ffffff" stroke="#57534e" stroke-width="2.5"/>
+                                <line x1="316" y1="190" x2="316" y2="470" stroke="#e7e5e4" stroke-width="1.5"/>
+                                <line x1="372" y1="190" x2="372" y2="470" stroke="#e7e5e4" stroke-width="1.5"/>
+                                <line x1="428" y1="190" x2="428" y2="470" stroke="#e7e5e4" stroke-width="1.5"/>
+                                <line x1="484" y1="190" x2="484" y2="470" stroke="#e7e5e4" stroke-width="1.5"/>
+                                <line x1="260" y1="246" x2="540" y2="246" stroke="#e7e5e4" stroke-width="1.5"/>
+                                <line x1="260" y1="302" x2="540" y2="302" stroke="#e7e5e4" stroke-width="1.5"/>
+                                <line x1="260" y1="358" x2="540" y2="358" stroke="#e7e5e4" stroke-width="1.5"/>
+                                <line x1="260" y1="414" x2="540" y2="414" stroke="#e7e5e4" stroke-width="1.5"/>
+                                <!-- 行线索（左侧） -->
+                                <text x="246" y="224" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">5</text>
+                                <text x="228" y="280" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="246" y="280" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="210" y="336" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="228" y="336" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="246" y="336" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="228" y="392" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="246" y="392" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="246" y="448" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">5</text>
+                                <!-- 列线索（上方） -->
+                                <text x="288" y="176" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">5</text>
+                                <text x="344" y="176" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="344" y="157" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="400" y="176" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="400" y="157" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="400" y="138" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="456" y="176" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="456" y="157" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">1</text>
+                                <text x="512" y="176" text-anchor="middle" font-size="17" font-weight="bold" fill="#44403c" font-family="'Noto Serif SC', serif">5</text>
+                                <!-- 图例 -->
+                                <rect x="260" y="496" width="15" height="15" rx="2" fill="#1c1917"/>
+                                <text x="281" y="508" font-size="13" fill="#78716c" font-family="'Noto Serif SC', serif">涂黑格</text>
+                                <line x1="356" y1="498" x2="368" y2="510" stroke="#9a3412" stroke-width="2.5" stroke-linecap="round"/>
+                                <line x1="356" y1="510" x2="368" y2="498" stroke="#9a3412" stroke-width="2.5" stroke-linecap="round"/>
+                                <text x="375" y="508" font-size="13" fill="#78716c" font-family="'Noto Serif SC', serif">确定为空</text>
+                            </g>
+
+                            <!-- 第1步：认识线索区域 -->
+                            <g x-show="sceneStep >= 1"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100">
+                                <rect x="200" y="192" width="54" height="276" rx="8" fill="#8a1c1c" opacity="0.06"/>
+                                <rect x="262" y="124" width="276" height="58" rx="8" fill="#8a1c1c" opacity="0.06"/>
+                                <text x="203" y="207" font-size="11" fill="#8a1c1c" opacity="0.9" font-family="'Noto Serif SC', serif">行线索</text>
+                                <text x="268" y="137" font-size="11" fill="#8a1c1c" opacity="0.9" font-family="'Noto Serif SC', serif">列线索</text>
+                            </g>
+
+                            <!-- 第2步：第1行与第5行线索为5，整行涂黑 -->
+                            <g x-show="sceneStep >= 2"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100">
+                                <rect x="262" y="192" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="318" y="192" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="374" y="192" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="430" y="192" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="486" y="192" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="262" y="418" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="318" y="418" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="374" y="418" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="430" y="418" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="486" y="418" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <line x1="266" y1="218" x2="534" y2="218" stroke="#fafaf9" stroke-width="2" stroke-dasharray="7 7" opacity="0.9"/>
+                                <line x1="266" y1="442" x2="534" y2="442" stroke="#fafaf9" stroke-width="2" stroke-dasharray="7 7" opacity="0.9"/>
+                                <circle cx="246" cy="218" r="14" fill="none" stroke="#8a1c1c" stroke-width="2"/>
+                                <circle cx="246" cy="442" r="14" fill="none" stroke="#8a1c1c" stroke-width="2"/>
+                            </g>
+
+                            <!-- 第3步：第1列与第5列线索为5，整列涂黑 -->
+                            <g x-show="sceneStep >= 3"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100">
+                                <rect x="262" y="248" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="262" y="304" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="262" y="360" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="486" y="248" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="486" y="304" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="486" y="360" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <line x1="288" y1="196" x2="288" y2="464" stroke="#fafaf9" stroke-width="2" stroke-dasharray="7 7" opacity="0.9"/>
+                                <line x1="512" y1="196" x2="512" y2="464" stroke="#fafaf9" stroke-width="2" stroke-dasharray="7 7" opacity="0.9"/>
+                                <circle cx="288" cy="170" r="14" fill="none" stroke="#8a1c1c" stroke-width="2"/>
+                                <circle cx="512" cy="170" r="14" fill="none" stroke="#8a1c1c" stroke-width="2"/>
+                            </g>
+
+                            <!-- 第4步：第2行线索1 1已被两端用掉，中间3格为空 -->
+                            <g x-show="sceneStep >= 4"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100">
+                                <rect x="206" y="262" width="52" height="28" rx="6" fill="none" stroke="#8a1c1c" stroke-width="1.5" stroke-dasharray="4 3"/>
+                                <line x1="332" y1="262" x2="356" y2="286" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="332" y1="286" x2="356" y2="262" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="388" y1="262" x2="412" y2="286" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="388" y1="286" x2="412" y2="262" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="444" y1="262" x2="468" y2="286" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="444" y1="286" x2="468" y2="262" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                            </g>
+
+                            <!-- 第5步：第4行同理，中间3格为空 -->
+                            <g x-show="sceneStep >= 5"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100">
+                                <rect x="206" y="374" width="52" height="28" rx="6" fill="none" stroke="#8a1c1c" stroke-width="1.5" stroke-dasharray="4 3"/>
+                                <line x1="332" y1="374" x2="356" y2="398" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="332" y1="398" x2="356" y2="374" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="388" y1="374" x2="412" y2="398" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="388" y1="398" x2="412" y2="374" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="444" y1="374" x2="468" y2="398" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="444" y1="398" x2="468" y2="374" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                            </g>
+
+                            <!-- 第6步：第2列与第4列线索1 1已用掉，第3行穿过的格子为空 -->
+                            <g x-show="sceneStep >= 6"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100">
+                                <rect x="330" y="140" width="28" height="44" rx="6" fill="none" stroke="#8a1c1c" stroke-width="1.5" stroke-dasharray="4 3"/>
+                                <rect x="442" y="140" width="28" height="44" rx="6" fill="none" stroke="#8a1c1c" stroke-width="1.5" stroke-dasharray="4 3"/>
+                                <line x1="332" y1="318" x2="356" y2="342" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="332" y1="342" x2="356" y2="318" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="444" y1="318" x2="468" y2="342" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                                <line x1="444" y1="342" x2="468" y2="318" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                            </g>
+
+                            <!-- 第7步：第3行第3列必为黑，全图验证完成 -->
+                            <g x-show="sceneStep >= 7"
+                               x-transition:enter="transition ease-out duration-700"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100">
+                                <rect x="374" y="304" width="52" height="52" rx="4" fill="#1c1917"/>
+                                <rect x="253" y="183" width="294" height="294" rx="6" fill="none" stroke="#16a34a" stroke-width="3"/>
+                                <rect x="280" y="50" width="240" height="32" rx="16" fill="#dcfce7" stroke="#86efac" stroke-width="1.5"/>
+                                <text x="400" y="71" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534" font-family="'Noto Serif SC', serif">✓ 解题完成，全部符合！</text>
+                            </g>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+                  {
+                    "title": "第一步：读懂规则——数字就是线索",
+                    "description": "每行左边的数字 = 该行连续黑格的数量；每列上方的数字 = 该列连续黑格的数量。若有多个数字，就表示分成几组，组与组之间至少要隔开 $1$ 个空格。画面中两处淡色区域就是线索区。",
+                    "bubbleText": "小朋友，网格边上的数字就是全部线索：某行写 5，表示这一行 5 个格子要全部涂黑；写 1 1，表示有 2 个分开的黑格，中间要隔开。先别急着涂，我们先找最容易的突破口！",
+                    "bubblePos": {"x": 30, "y": 60}
+                  },
+                  {
+                    "title": "第二步：先涂线索为 5 的整行",
+                    "description": "第 1 行、第 5 行的线索都是 $5$，而每行正好只有 $5$ 个格子，$5=5$ 只能全部涂黑：把第 1 行、第 5 行全部涂黑（白色虚线为涂黑路径）。",
+                    "bubbleText": "一行总共 5 个格，线索恰好也是 5，那就只有一种可能——全部涂黑！这招叫“满格直接填”，解题时永远先找这种格子，最稳当。",
+                    "bubblePos": {"x": 470, "y": 150}
+                  },
+                  {
+                    "title": "第三步：再涂线索为 5 的整列",
+                    "description": "第 1 列、第 5 列的线索同样是 $5$，整列涂黑。涂完后留意：第 2、3、4 行的两端已经变黑了。",
+                    "bubbleText": "列也用一样的道理：第 1 列、第 5 列线索是 5，整列涂黑。你看，涂完之后，中间三行的两头都被占住了，这正好为下一步推理埋下伏笔。",
+                    "bubblePos": {"x": 470, "y": 250}
+                  },
+                  {
+                    "title": "第四步：由第 2 行线索 1 1 推出 3 个空格",
+                    "description": "第 2 行线索为 1 1：整行只允许有 $2$ 个分开的黑格。此时第 1 列、第 5 列已是黑色，正好用掉这 $2$ 组，中间 $3$ 格必为空，打 ×。",
+                    "bubbleText": "推理的关键时刻！第 2 行线索说“只有 2 个黑格，还不能挨着”。看，两端已经黑了，名额用光了，中间 3 格就不可能再黑——统统打 ×。",
+                    "bubblePos": {"x": 470, "y": 190}
+                  },
+                  {
+                    "title": "第五步：第 4 行照搬同样的方法",
+                    "description": "第 4 行线索也是 1 1，两端（第 1 列、第 5 列）已黑，所以第 4 行第 2、3、4 列这 $3$ 格全为空，打 ×。",
+                    "bubbleText": "同样的道理再来一遍：第 4 行两头已黑，线索 1 1 的两组已经落实，中间 3 格全是空的。像这样“名额用光，其余必空”的推理，是这类游戏最常用的招式。",
+                    "bubblePos": {"x": 470, "y": 310}
+                  },
+                  {
+                    "title": "第六步：换看列，锁定第 3 行",
+                    "description": "第 2 列线索 1 1：第 1 行、第 5 行已黑，用掉了 $2$ 组，故第 3 行第 2 列为空；第 4 列同理。给第 3 行第 2、4 列打 ×。",
+                    "bubbleText": "横行看完看竖列。第 2 列的线索 1 1，两组正好落在第 1 行和第 5 行，那它穿过第 3 行的格子必须是空的；第 4 列也一样。横着看、竖着看轮流来，就是这类游戏的秘诀。",
+                    "bubblePos": {"x": 470, "y": 230}
+                  },
+                  {
+                    "title": "第七步：填上最后一格并全图验证",
+                    "description": "第 3 行线索 1 1 1：两端已黑，第 2、4 列又确定为空，剩下的第 3 行第 3 列必为黑。逐行逐列核对，全部符合数字，解题完成！",
+                    "bubbleText": "最后一步收尾！第 3 行需要 3 个分开的黑格，两头已有 2 个，第 2、4 列填不了，第 3 个只能落在第 3 列。最后把每行每列对着数字检查一遍——全部吻合，完美通关！",
+                    "bubblePos": {"x": 470, "y": 150}
+                  }
+                ],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

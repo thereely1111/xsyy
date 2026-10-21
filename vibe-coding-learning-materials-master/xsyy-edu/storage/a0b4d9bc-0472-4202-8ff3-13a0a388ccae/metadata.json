@@ -1,0 +1,24 @@
+{
+  "question": "将如图所示图形沿格线剪成两块, 拼成一个正方形, 剪切的方法如图( )所示。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\a0b4d9bc-0472-4202-8ff3-13a0a388ccae\\ScreenShot_2026-01-31_103744_146.png",
+  "task_id": "a0b4d9bc-0472-4202-8ff3-13a0a388ccae",
+  "generated_at": "2026-01-31T11:28:41.398073Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "图形切割与拼接",
+  "has_pic": true,
+  "tags": {
+    "reasoning": "题目考察二维图形的等积切割与重组。",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "推理意识",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2026-01-31T11:28:41.398073Z",
+  "preview_image": "Preview.webp"
+}

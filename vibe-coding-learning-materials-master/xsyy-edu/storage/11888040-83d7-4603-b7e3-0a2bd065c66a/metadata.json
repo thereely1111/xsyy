@@ -1,0 +1,24 @@
+{
+  "question": "在一个600米的环形跑道上，兄弟两人同时从同一个起点按顺时针方向跑步，两人每隔12分钟相遇一次。若两个人速度不变，还是在原来出发点同时出发，哥哥改为按逆时针方向跑，则两人每隔4分钟相遇一次，跑得快者跑一圈需要____分钟。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\11888040-83d7-4603-b7e3-0a2bd065c66a\\ScreenShot_2026-02-03_002357_115.png",
+  "task_id": "11888040-83d7-4603-b7e3-0a2bd065c66a",
+  "generated_at": "2026-02-03T00:44:23.270311Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "环形跑道行程问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的应用题，需构建二元方程模型求解速度。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-02-03T00:44:23.270311Z",
+  "preview_image": "Preview.webp"
+}

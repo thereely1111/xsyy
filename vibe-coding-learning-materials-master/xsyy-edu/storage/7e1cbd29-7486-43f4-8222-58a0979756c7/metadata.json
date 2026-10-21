@@ -1,0 +1,29 @@
+{
+  "question": "解分式方程：  2 x − 3 = 1 x−3 2 ​  =1 若求出的 x 是正整数，则从 1 到 x 的整数中随机取一个数，求取到偶数的概率。",
+  "prompt": "解分式方程：  2 x − 3 = 1 x−3 2 ​  =1 若求出的 x 是正整数，则从 1 到 x 的整数中随机取一个数，求取到偶数的概率。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "7e1cbd29-7486-43f4-8222-58a0979756c7",
+  "generated_at": "2026-08-20T08:13:17.489549Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "概率问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中随机事件概率结构"
+  },
+  "tags_updated_at": "2026-08-20T08:13:17.489549Z",
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "八上",
+    "main_tag": "分式",
+    "sub_tags": [
+      "分式方程及其应用"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T08:54:41.525332Z",
+  "knowledge_tags_confirmed": true
+}

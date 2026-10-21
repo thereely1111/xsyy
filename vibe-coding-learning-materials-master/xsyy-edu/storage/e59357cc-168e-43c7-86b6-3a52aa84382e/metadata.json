@@ -1,0 +1,66 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "一上",
+    "main_tag": "1~5认识与加减",
+    "sub_tags": [
+      "加法意义"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-09T06:03:03.303121Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "",
+    "display_class": "calculation",
+    "grade": "",
+    "tags": {
+      "main_tag": "",
+      "sub_tags": [],
+      "second_tag": null
+    },
+    "question_type": "",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_calculation",
+      "steps_min": 5,
+      "steps_max": 7,
+      "motion_policy": "answer_first",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  },
+  "question": "1+1",
+  "prompt": "1+1",
+  "title": "整数加法",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "e59357cc-168e-43c7-86b6-3a52aa84382e",
+  "generated_at": "2026-09-09T03:38:37.796640Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "has_pic": false,
+  "tags": {
+    "reasoning": "含加法运算"
+  },
+  "tags_updated_at": "2026-09-09T03:38:37.796640Z",
+  "knowledge_tags_confirmed": true
+}

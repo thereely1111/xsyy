@@ -1,0 +1,23 @@
+{
+  "question": "35+36+37+38+39 = □ × □,方框里应分别填( )。\nA. 36,5\nB. 37,5\nC. 38,5\nD. 39,5",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/9c49beca-05b0-48f5-a588-1e183f8c5b99/pasted-image-1768144499715.png",
+  "task_id": "9c49beca-05b0-48f5-a588-1e183f8c5b99",
+  "generated_at": "2026-01-11T23:16:52.039982Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "连续数求和简算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "题目考察连续数的求和规律（中间数×个数）。",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-11T23:16:52.039993Z",
+  "preview_image": "Preview.webp"
+}

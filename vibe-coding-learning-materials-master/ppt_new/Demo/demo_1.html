@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>番茄钟</title>
+	<style>
+		body { font-family: Arial, sans-serif; background: #f7f7f7; text-align: center; padding-top: 60px; }
+		.pomodoro-container { background: #fff; display: inline-block; padding: 32px 40px; border-radius: 16px; box-shadow: 0 2px 16px #0001; }
+		.timer { font-size: 48px; margin: 24px 0; letter-spacing: 2px; }
+		button { font-size: 18px; margin: 0 10px; padding: 8px 24px; border: none; border-radius: 6px; background: #ff6347; color: #fff; cursor: pointer; transition: background 0.2s; }
+		button:hover { background: #e5533d; }
+	</style>
+</head>
+<body>
+	<div class="pomodoro-container">
+		<h2>番茄钟</h2>
+		<div class="timer" id="timer">25:00</div>
+		<div>
+			<button onclick="startTimer()">开始</button>
+			<button onclick="pauseTimer()">暂停</button>
+			<button onclick="resetTimer()">重置</button>
+		</div>
+	</div>
+	<audio id="alarm" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfa1c3b.mp3"></audio>
+	<script>
+		let duration = 25 * 60; // 25分钟
+		let timeLeft = duration;
+		let timerInterval = null;
+		let isRunning = false;
+
+		function updateDisplay() {
+			const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+			const sec = String(timeLeft % 60).padStart(2, '0');
+			document.getElementById('timer').textContent = `${min}:${sec}`;
+		}
+
+		function startTimer() {
+			if (isRunning) return;
+			isRunning = true;
+			timerInterval = setInterval(() => {
+				if (timeLeft > 0) {
+					timeLeft--;
+					updateDisplay();
+				} else {
+					clearInterval(timerInterval);
+					isRunning = false;
+					document.getElementById('alarm').play();
+					alert('时间到！休息一下吧~');
+				}
+			}, 1000);
+		}
+
+		function pauseTimer() {
+			if (timerInterval) clearInterval(timerInterval);
+			isRunning = false;
+		}
+
+		function resetTimer() {
+			pauseTimer();
+			timeLeft = duration;
+			updateDisplay();
+		}
+
+		updateDisplay();
+	</script>
+</body>
+</html>

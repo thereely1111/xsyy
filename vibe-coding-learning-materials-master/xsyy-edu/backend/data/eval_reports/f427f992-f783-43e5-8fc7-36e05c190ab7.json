@@ -1,0 +1,458 @@
+{
+  "report_id": "f427f992-f783-43e5-8fc7-36e05c190ab7",
+  "created_at": "2026-08-27T15:50:35",
+  "sample_size": 20,
+  "result": {
+    "evaluated": 20,
+    "backend": "lexical",
+    "backend_status": "lexical",
+    "exact_match": 0,
+    "accuracy": 0.0,
+    "domain_accuracy": 0.0,
+    "grade_accuracy": 0.0,
+    "main_tag_accuracy": 0.0,
+    "sub_tag_accuracy": 0.0,
+    "per_domain": [
+      {
+        "domain": "函数",
+        "total": 1,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      {
+        "domain": "图形与几何",
+        "total": 9,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      {
+        "domain": "数与式",
+        "total": 3,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      {
+        "domain": "方程与不等式",
+        "total": 6,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      {
+        "domain": "统计与概率",
+        "total": 1,
+        "correct": 0,
+        "accuracy": 0.0
+      }
+    ],
+    "confusion": {
+      "方程与不等式": {
+        "(无识别)": 6
+      },
+      "图形与几何": {
+        "(无识别)": 9
+      },
+      "数与式": {
+        "(无识别)": 3
+      },
+      "统计与概率": {
+        "(无识别)": 1
+      },
+      "函数": {
+        "(无识别)": 1
+      }
+    },
+    "errors": [
+      {
+        "question": "某校六年级有甲、乙两个班。原来甲班人数是乙班人数的 5/7​  。后来从甲班转走了 4人 到乙班，此时甲班人数是乙班人数的  3/5  ​  。请问：原来甲、乙两班各有多少人？",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "五上",
+          "main_tag": "简易方程",
+          "sub_tag": "字母表示数"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "已知△ABC中，AB=AC，AD是角平分线，DE，DF分别垂直于AB，AC，求证BE=FC",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "七上",
+          "main_tag": "几何图形初步",
+          "sub_tag": "角的度量与角平分线"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "鸡兔同笼，共有头30个，脚86只，求鸡和兔各有多少只？",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "四下",
+          "main_tag": "鸡兔同笼",
+          "sub_tag": "假设法解决"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "一个圆的直径是10厘米，求这个圆的周长。",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "六上",
+          "main_tag": "圆",
+          "sub_tag": "圆的认识与周长面积"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "某服装店用4000元购进甲、乙两种新款夏装共80件。已知甲种进价每件40元，售价每件60元；乙种进价每件80元，售价每件130元。服装店在销售时，甲种按售价出售，乙种因款式新颖，在售价的基础上加价10% 出售。全部售完后，服装店共获利多少元？",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "七下",
+          "main_tag": "二元一次方程组",
+          "sub_tag": "二元一次方程组应用题"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "以下列长度的三条线段为边，能组成直角三角形的是（ ）． A. 1, 2, 3 B. 3, 3, 4 C. 1, √3, 2 D. 4, 4, 4",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "八上",
+          "main_tag": "勾股定理",
+          "sub_tag": "勾股定理在几何中的应用"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "一片牧草，每天匀速生长。这片牧草可供 10头 牛吃 20天，或者供 15头 牛吃 10天。问：可供 25头 牛吃几天？若想使这片牧草永远吃不完，最多只能放牧多少头牛？",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "七下",
+          "main_tag": "二元一次方程组",
+          "sub_tag": "二元一次方程组应用题"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "某校有若干个学生寄宿宿舍，若每一间宿舍住6人，则多出34人；若每一间宿舍住7人，则多出4间宿舍。问宿舍有多少间？寄宿学生有多少人？",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "七上",
+          "main_tag": "一元一次方程",
+          "sub_tag": "分配与配套问题"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "一列火车长 200 米，完全通过一座长 1000 米 的铁路桥，共用时 60 秒。求这列火车的速度是多少？",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "八下",
+          "main_tag": "一元一次方程",
+          "sub_tag": "列方程实际模型"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "三角形的内角和怎么算",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "四下",
+          "main_tag": "三角形",
+          "sub_tag": "内角和与三边关系"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "三角形的内角和怎么计算",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "八上",
+          "main_tag": "三角形",
+          "sub_tag": "三角形内角和与外角"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "小明有 18 个玩具，他想平均分给 6 个小朋友，每个小朋友能分到几个？",
+        "expected": {
+          "version": "数与式",
+          "grade": "二下",
+          "main_tag": "表内除法",
+          "sub_tag": "平均分"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "已知一个角的补角比它的余角的 2 倍大 30°，求这个角的度数。",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "七上",
+          "main_tag": "几何图形初步",
+          "sub_tag": "余角、补角与方位角"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "小红买了 3 支笔，每支笔 2 元，她给了售货员 10 元，应该找回多少钱？",
+        "expected": {
+          "version": "数与式",
+          "grade": "二上",
+          "main_tag": "表内乘法",
+          "sub_tag": "乘法应用题"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "某班共有学生 45 人，其中男生 20 人，女生 25 人。 （1）从该班随机选一名学生，求选中男生的概率； （2）全班平均身高为 160 厘米，男生平均身高为 165 厘米，求女生的平均身高。",
+        "expected": {
+          "version": "统计与概率",
+          "grade": "四下",
+          "main_tag": "平均数与条形统计图",
+          "sub_tag": "求平均数"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "解分式方程：  2 x − 3 = 1 x−3 2 ​  =1 若求出的 x 是正整数，则从 1 到 x 的整数中随机取一个数，求取到偶数的概率。",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "八上",
+          "main_tag": "分式",
+          "sub_tag": "分式方程及其应用"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "一个三角形的三条边长分别是3厘米、4厘米和5厘米，求这个三角形的周长。",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "三上",
+          "main_tag": "图形初步",
+          "sub_tag": "周长的意义与计算"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "有一个自然数，用它分别去除以 5、7、9，得到的余数分别是 3、4、5。请问：这个自然数最小是多少？",
+        "expected": {
+          "version": "数与式",
+          "grade": "二下",
+          "main_tag": "有余数的除法",
+          "sub_tag": "余数应用"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "一次函数y=3x-6的图象与x轴、y轴分别交于A、B两点，O为原点，求三角形AOB的面积。",
+        "expected": {
+          "version": "函数",
+          "grade": "八下",
+          "main_tag": "一次函数",
+          "sub_tag": "一次函数与方程/不等式及实际应用"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "△DEF三个内角度数之比∠D：∠E：∠F=1：3：5，EP平分∠DEF，∠DEP=…",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "七上",
+          "main_tag": "几何图形初步",
+          "sub_tag": "角的度量与角平分线"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      }
+    ],
+    "source_distribution": [
+      {
+        "source": "none",
+        "count": 20,
+        "pct": 1.0
+      }
+    ],
+    "accuracy_by_source": [
+      {
+        "source": "none",
+        "count": 20,
+        "correct": 0,
+        "accuracy": 0.0
+      }
+    ],
+    "confidence": {
+      "avg": null,
+      "avg_correct": null,
+      "buckets": [
+        {
+          "range": "0.0-0.4",
+          "total": 0,
+          "correct": 0,
+          "accuracy": 0
+        },
+        {
+          "range": "0.4-0.6",
+          "total": 0,
+          "correct": 0,
+          "accuracy": 0
+        },
+        {
+          "range": "0.6-0.8",
+          "total": 0,
+          "correct": 0,
+          "accuracy": 0
+        },
+        {
+          "range": "0.8-1.0",
+          "total": 0,
+          "correct": 0,
+          "accuracy": 0
+        },
+        {
+          "range": "no_conf",
+          "total": 20,
+          "correct": 0,
+          "accuracy": 0.0
+        }
+      ]
+    }
+  }
+}

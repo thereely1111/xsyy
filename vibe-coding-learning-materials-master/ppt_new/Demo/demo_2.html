@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>番茄钟</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+	<style>
+		body { font-family: 'Inter', sans-serif; }
+	</style>
+</head>
+<body class="bg-gradient-to-br from-rose-100 to-teal-100 min-h-screen flex items-center justify-center">
+	<div class="w-full max-w-xs mx-auto bg-white/80 rounded-2xl shadow-xl p-6 flex flex-col items-center">
+		<h1 class="text-2xl font-bold text-teal-700 mb-4">番茄钟</h1>
+		<div id="timer" class="text-6xl font-mono text-rose-500 mb-6 select-none">25:00</div>
+		<div class="flex gap-4 mb-2 w-full justify-center">
+			<button id="startPauseBtn" class="flex-1 bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 rounded-lg transition">开始</button>
+			<button id="resetBtn" class="flex-1 bg-rose-400 hover:bg-rose-500 text-white font-bold py-2 rounded-lg transition">重置</button>
+		</div>
+		<p class="text-xs text-gray-500 mt-2">每25分钟专注后休息一会儿吧！</p>
+	</div>
+	<script>
+		let duration = 25 * 60; // 25分钟
+		let timeLeft = duration;
+		let timerInterval = null;
+		let running = false;
+
+		const timerEl = document.getElementById('timer');
+		const startPauseBtn = document.getElementById('startPauseBtn');
+		const resetBtn = document.getElementById('resetBtn');
+
+		function updateDisplay() {
+			const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+			const sec = String(timeLeft % 60).padStart(2, '0');
+			timerEl.textContent = `${min}:${sec}`;
+		}
+
+		function startTimer() {
+			if (timerInterval) return;
+			timerInterval = setInterval(() => {
+				if (timeLeft > 0) {
+					timeLeft--;
+					updateDisplay();
+				} else {
+					clearInterval(timerInterval);
+					timerInterval = null;
+					running = false;
+					startPauseBtn.textContent = '开始';
+					timerEl.classList.add('text-green-500');
+				}
+			}, 1000);
+		}
+
+		function pauseTimer() {
+			clearInterval(timerInterval);
+			timerInterval = null;
+		}
+
+		startPauseBtn.addEventListener('click', () => {
+			if (!running) {
+				running = true;
+				startPauseBtn.textContent = '暂停';
+				timerEl.classList.remove('text-green-500');
+				startTimer();
+			} else {
+				running = false;
+				startPauseBtn.textContent = '开始';
+				pauseTimer();
+			}
+		});
+
+		resetBtn.addEventListener('click', () => {
+			running = false;
+			pauseTimer();
+			timeLeft = duration;
+			updateDisplay();
+			startPauseBtn.textContent = '开始';
+			timerEl.classList.remove('text-green-500');
+		});
+
+		updateDisplay();
+	</script>
+</body>
+</html>

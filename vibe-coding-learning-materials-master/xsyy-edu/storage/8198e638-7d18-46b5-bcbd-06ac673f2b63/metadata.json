@@ -1,0 +1,30 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "有一个自然数，用它分别去除以 5、7、9，得到的余数分别是 3、4、5。请问：这个自然数最小是多少？",
+  "prompt": "有一个自然数，用它分别去除以 5、7、9，得到的余数分别是 3、4、5。请问：这个自然数最小是多少？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "8198e638-7d18-46b5-bcbd-06ac673f2b63",
+  "generated_at": "2026-08-25T06:16:36.001226Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "余数与同余问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中除法余数条件或同余结构"
+  },
+  "tags_updated_at": "2026-08-25T06:16:36.001226Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "六上",
+    "main_tag": "数的运算基础",
+    "sub_tags": [
+      "余数与同余问题"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T08:49:34.001852Z",
+  "knowledge_tags_confirmed": true
+}

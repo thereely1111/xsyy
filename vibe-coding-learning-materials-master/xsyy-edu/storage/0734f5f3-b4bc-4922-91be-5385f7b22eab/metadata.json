@@ -1,0 +1,24 @@
+{
+  "question": "x/(x-2) + (x-9)/(x-7) = (x+1)/(x-1) + (x-8)/(x-6)",
+  "prompt": "\\frac{x}{x-2}+\\frac{x-9}{x-7}=\\frac{x+1}{x-1}+\\frac{x-8}{x-6}",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "0734f5f3-b4bc-4922-91be-5385f7b22eab",
+  "generated_at": "2026-07-28T15:02:00.412800Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "解分式方程",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "含未知数x的分式方程",
+    "main_tag": "符号意识",
+    "sub_tags": [
+      "几何直观",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-07-28T15:02:00.412800Z",
+  "preview_image": "Preview.webp"
+}

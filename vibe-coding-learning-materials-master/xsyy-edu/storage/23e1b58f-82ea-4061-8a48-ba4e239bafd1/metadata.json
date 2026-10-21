@@ -1,0 +1,24 @@
+{
+  "question": "小杰看一本故事书，现已看了 30 页，还有 8 页没有看，这本书共有多少页？",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/23e1b58f-82ea-4061-8a48-ba4e239bafd1/pasted-image-1767488828253.png",
+  "task_id": "23e1b58f-82ea-4061-8a48-ba4e239bafd1",
+  "generated_at": "2026-01-04T09:08:13.689973Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "求总量应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "题目为求总页数的应用题，需建立加法模型。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "数感",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2026-01-04T09:08:13.689985Z",
+  "preview_image": "Preview.webp"
+}

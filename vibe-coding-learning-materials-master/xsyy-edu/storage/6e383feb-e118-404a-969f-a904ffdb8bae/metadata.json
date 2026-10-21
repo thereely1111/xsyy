@@ -1,0 +1,24 @@
+{
+  "question": "任意一个三位数，将它的百位数字与个位数字交换，得到一个新的三位数。请问原数与新数的差，是否能被99整除？请说明理由。",
+  "prompt": "2. 任意一个三位数，将它的百位数字与个位数字交换，得到一个新的三位数。请问原数与新数的差，是否能被99整除？请说明理由。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "6e383feb-e118-404a-969f-a904ffdb8bae",
+  "generated_at": "2026-04-03T09:23:55.012092Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "三位数数字交换与整除性",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "核心为代数推理与证明",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "符号意识",
+      "知识点梳理"
+    ]
+  },
+  "tags_updated_at": "2026-04-03T09:23:55.012107Z",
+  "preview_image": "Preview.webp"
+}

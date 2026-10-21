@@ -1,0 +1,17 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "六下",
+    "main_tag": "圆柱与圆锥",
+    "sub_tags": [
+      "圆柱与圆锥的体积"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-31T01:29:51.492136Z",
+  "knowledge_tags_confirmed": true,
+  "title": "几何面积周长问题",
+  "question": "圆锥的体积计算",
+  "prompt": "圆锥的体积计算"
+}

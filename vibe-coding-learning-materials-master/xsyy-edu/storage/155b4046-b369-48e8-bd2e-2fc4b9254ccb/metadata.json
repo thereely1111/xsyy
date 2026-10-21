@@ -1,0 +1,24 @@
+{
+  "question": "学校春游共用10辆客车（全部坐满），大客车每辆坐60人，小客车每辆坐20人，大客车比小客车多坐280人，小客车有____辆。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\155b4046-b369-48e8-bd2e-2fc4b9254ccb\\ScreenShot_2025-12-19_162500_938.png",
+  "task_id": "155b4046-b369-48e8-bd2e-2fc4b9254ccb",
+  "generated_at": "2025-12-19T17:45:47.092862",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "二元应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及现实情境和方程建模解决问题。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-19T17:45:47.092862",
+  "preview_image": "Preview.webp"
+}

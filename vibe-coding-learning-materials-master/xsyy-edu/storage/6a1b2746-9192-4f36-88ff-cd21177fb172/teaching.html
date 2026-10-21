@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>和尚分馒头应用题 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">和尚分馒头应用题</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('100个和尚分100个馒头，大和尚每人3个、小和尚3人共1个，列方程组解得大和尚25人、小和尚75人。')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+
+                            <!-- Step 1: Problem overview - monks and mantou -->
+                            <g x-show="sceneStep >= 1" x-transition:enter="transition ease-out duration-500">
+                                <text x="400" y="40" text-anchor="middle" font-size="20" font-weight="bold" fill="#1f2937" font-family="'Noto Serif SC', serif">100个和尚分100个馒头</text>
+                                <!-- Big monk area -->
+                                <rect x="50" y="60" width="320" height="140" rx="12" fill="#fef2f2" stroke="#d6b4b4" stroke-width="1.5"/>
+                                <text x="210" y="85" text-anchor="middle" font-size="15" fill="#8a1c1c" font-weight="bold">大和尚</text>
+                                <circle cx="110" cy="125" r="20" fill="#fca5a5" stroke="#8a1c1c" stroke-width="1.5"/>
+                                <text x="110" y="130" text-anchor="middle" font-size="13" fill="#8a1c1c">僧</text>
+                                <circle cx="165" cy="125" r="20" fill="#fca5a5" stroke="#8a1c1c" stroke-width="1.5"/>
+                                <text x="165" y="130" text-anchor="middle" font-size="13" fill="#8a1c1c">僧</text>
+                                <circle cx="220" cy="125" r="20" fill="#fca5a5" stroke="#8a1c1c" stroke-width="1.5"/>
+                                <text x="220" y="130" text-anchor="middle" font-size="13" fill="#8a1c1c">僧</text>
+                                <text x="265" y="130" font-size="18" fill="#8a1c1c">...</text>
+                                <text x="210" y="180" text-anchor="middle" font-size="14" fill="#44403c">每人分 3 个馒头</text>
+                                <!-- Small monk area -->
+                                <rect x="430" y="60" width="320" height="140" rx="12" fill="#f0fdf4" stroke="#a3c9a3" stroke-width="1.5"/>
+                                <text x="590" y="85" text-anchor="middle" font-size="15" fill="#166534" font-weight="bold">小和尚</text>
+                                <circle cx="510" cy="125" r="15" fill="#86efac" stroke="#166534" stroke-width="1.2"/>
+                                <text x="510" y="130" text-anchor="middle" font-size="10" fill="#166534">僧</text>
+                                <circle cx="550" cy="125" r="15" fill="#86efac" stroke="#166534" stroke-width="1.2"/>
+                                <text x="550" y="130" text-anchor="middle" font-size="10" fill="#166534">僧</text>
+                                <circle cx="590" cy="125" r="15" fill="#86efac" stroke="#166534" stroke-width="1.2"/>
+                                <text x="590" y="130" text-anchor="middle" font-size="10" fill="#166534">僧</text>
+                                <text x="625" y="130" font-size="16" fill="#166534">...</text>
+                                <text x="590" y="180" text-anchor="middle" font-size="14" fill="#44403c">3人共分 1 个馒头</text>
+                                <!-- Mantou row -->
+                                <circle cx="330" cy="230" r="10" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
+                                <circle cx="360" cy="230" r="10" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
+                                <circle cx="390" cy="230" r="10" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
+                                <circle cx="420" cy="230" r="10" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
+                                <circle cx="450" cy="230" r="10" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
+                                <text x="400" y="260" text-anchor="middle" font-size="13" fill="#92400e">共 100 个馒头，恰好分完</text>
+                            </g>
+
+                            <!-- Step 2: Set variables x and y -->
+                            <g x-show="sceneStep >= 2" x-transition:enter="transition ease-out duration-500">
+                                <rect x="100" y="285" width="250" height="55" rx="10" fill="#fff" stroke="#8a1c1c" stroke-width="2"/>
+                                <text x="225" y="318" text-anchor="middle" font-size="18" fill="#8a1c1c" font-weight="bold">大和尚 = x 人</text>
+                                <rect x="450" y="285" width="250" height="55" rx="10" fill="#fff" stroke="#166534" stroke-width="2"/>
+                                <text x="575" y="318" text-anchor="middle" font-size="18" fill="#166534" font-weight="bold">小和尚 = y 人</text>
+                                <!-- Dashed trajectory connecting boxes -->
+                                <line x1="350" y1="312" x2="450" y2="312" stroke="#a8a29e" stroke-width="1.5" stroke-dasharray="6,4" marker-end="url(#arrow)"/>
+                            </g>
+
+                            <!-- Step 3: Equation 1 - people count -->
+                            <g x-show="sceneStep >= 3">
+                                <rect x="150" y="365" width="500" height="48" rx="8" fill="#fefce8" stroke="#ca8a04" stroke-width="1.5"/>
+                                <foreignObject x="160" y="369" width="480" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:17px; color:#854d0e; font-weight:bold; text-align:center; line-height:40px;" x-html="renderMath('方程一：$x + y = 100$（人数关系）')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 4: Equation 2 - mantou count -->
+                            <g x-show="sceneStep >= 4">
+                                <rect x="150" y="425" width="500" height="48" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+                                <foreignObject x="160" y="429" width="480" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:17px; color:#991b1b; font-weight:bold; text-align:center; line-height:40px;" x-html="renderMath('方程二：$3x + \\frac{y}{3} = 100$（馒头关系）')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 5: Substitution process -->
+                            <g x-show="sceneStep >= 5" x-transition:enter="transition ease-out duration-500">
+                                <!-- Curved dashed trajectory from eq1 area downward -->
+                                <path d="M 250 413 C 200 450, 130 470, 130 500" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+                                <rect x="50" y="500" width="310" height="48" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+                                <foreignObject x="60" y="504" width="290" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:16px; color:#5b21b6; font-weight:bold; text-align:center; line-height:40px;" x-html="renderMath('由①得：$y = 100 - x$')"></div>
+                                </foreignObject>
+                                <!-- Arrow from substitution to equation 2 -->
+                                <path d="M 360 524 C 430 524, 480 490, 480 473" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+                                <rect x="420" y="500" width="340" height="48" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+                                <foreignObject x="430" y="504" width="320" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:15px; color:#5b21b6; font-weight:bold; text-align:center; line-height:40px;" x-html="renderMath('代入②：$3x + \\frac{100-x}{3} = 100$')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 6: Solve for x -->
+                            <g x-show="sceneStep >= 6">
+                                <rect x="100" y="285" width="600" height="130" rx="10" fill="#ffffff" stroke="#1d4ed8" stroke-width="2" fill-opacity="0.97"/>
+                                <foreignObject x="120" y="290" width="560" height="120">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:16px; color:#1e3a5f; line-height:2.2; padding:5px;">
+                                        <div x-html="renderMath('两边乘以3：$9x + 100 - x = 300$')"></div>
+                                        <div x-html="renderMath('合并同类项：$8x = 200$')"></div>
+                                        <div style="font-weight:bold; color:#1d4ed8;" x-html="renderMath('解得：$x = 25$（大和尚25人）')"></div>
+                                    </div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 7: Solve for y -->
+                            <g x-show="sceneStep >= 7" x-transition:enter="transition ease-out duration-500">
+                                <rect x="200" y="435" width="400" height="52" rx="10" fill="#f0fdf4" stroke="#166534" stroke-width="2"/>
+                                <foreignObject x="210" y="440" width="380" height="42">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:18px; color:#166534; font-weight:bold; text-align:center; line-height:42px;" x-html="renderMath('$y = 100 - 25 = 75$（小和尚75人）')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 8: Verification -->
+                            <g x-show="sceneStep >= 8">
+                                <rect x="130" y="510" width="540" height="65" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+                                <foreignObject x="140" y="514" width="520" height="58">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:15px; color:#065f46; text-align:center; line-height:1.9; padding-top:4px;">
+                                        <div x-html="renderMath('验算：$25+75=100$（人）✓')"></div>
+                                        <div x-html="renderMath('$25 \\times 3 + 75 \\div 3 = 75+25 = 100$（个）✓')"></div>
+                                    </div>
+                                </foreignObject>
+                                <circle cx="700" cy="540" r="16" fill="#059669"/>
+                                <text x="700" y="546" text-anchor="middle" font-size="16" fill="#fff" font-weight="bold">✓</text>
+                            </g>
+
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [{"title":"读题：找出已知条件","description":"题目告诉我们：共有 $100$ 个和尚、$100$ 个馒头。大和尚每人分 $3$ 个，小和尚 $3$ 人分 $1$ 个，恰好分完。","bubbleText":"我们先来读题！这道题有两个关键数字：和尚一共100人，馒头一共100个。大和尚吃得多，一人3个；小和尚吃得少，3个人才分1个。","bubblePos":{"x":420,"y":50}},{"title":"设未知数","description":"设大和尚有 $x$ 人，小和尚有 $y$ 人。","bubbleText":"我们不知道大和尚和小和尚各有多少人，所以用字母来代替。设大和尚x人，小和尚y人，接下来就要找它们的关系。","bubblePos":{"x":420,"y":150}},{"title":"列方程一：人数关系","description":"大和尚人数 + 小和尚人数 = 总人数，即 $x + y = 100$。","bubbleText":"第一个等量关系很好找：大和尚人数加上小和尚人数，等于100。所以x+y=100，这就是我们的第一个方程。","bubblePos":{"x":420,"y":220}},{"title":"列方程二：馒头关系","description":"大和尚分的馒头 + 小和尚分的馒头 = 总馒头数，即 $3x + \\frac{y}{3} = 100$。","bubbleText":"第二个等量关系是关于馒头的。大和尚每人3个，x人就分3x个；小和尚3人分1个，y人就分y÷3个。加起来等于100个馒头。","bubblePos":{"x":420,"y":300}},{"title":"代入消元","description":"由方程一得 $y = 100 - x$，代入方程二：$3x + \\frac{100-x}{3} = 100$。","bubbleText":"现在有两个方程、两个未知数。我们从第一个方程得出y=100-x，然后把它代入第二个方程，这样就只剩一个未知数x了！","bubblePos":{"x":420,"y":180}},{"title":"解方程求x","description":"两边乘3：$9x + 100 - x = 300$，化简得 $8x = 200$，所以 $x = 25$。","bubbleText":"为了去掉分母，等式两边都乘以3，得到9x+100-x=300。合并同类项：8x=200。两边除以8，x=25。大和尚有25人！","bubblePos":{"x":420,"y":250}},{"title":"求小和尚人数","description":"将 $x=25$ 代入 $y = 100 - x$，得 $y = 100 - 25 = 75$。","bubbleText":"把x=25代回y=100-x，得到y=100-25=75。所以小和尚有75人。","bubblePos":{"x":420,"y":320}},{"title":"验证答案","description":"验证：$25 + 75 = 100$（人）✓，$25 \\times 3 + 75 \\div 3 = 75 + 25 = 100$（个）✓。","bubbleText":"最后一定要验算！人数：25+75=100，对了！馒头：25×3=75个给大和尚，75÷3=25个给小和尚，75+25=100，也对了！答案正确。","bubblePos":{"x":420,"y":200}}],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

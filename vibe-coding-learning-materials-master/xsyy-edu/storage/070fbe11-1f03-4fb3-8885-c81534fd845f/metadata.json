@@ -1,0 +1,68 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "在平面直角坐标系中，一次函数 y = kx + b 的图象与反比例函数 y = m/x 的图象交于 A(2, 3) 和 B(-1, -6) 两点，且一次函数图象与 y 轴交于点 C。求三角形 OBC 的面积，其中 O 为坐标原点。",
+  "prompt": "在平面直角坐标系中，一次函数 y = kx + b 的图象与反比例函数 y = m/x 的图象交于 A(2, 3) 和 B(-1, -6) 两点，且一次函数图象与 y 轴交于点 C。求三角形 OBC 的面积，其中 O 为坐标原点。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "070fbe11-1f03-4fb3-8885-c81534fd845f",
+  "generated_at": "2026-09-09T09:03:50.329392Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "函数图象问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中函数解析式图象结构"
+  },
+  "tags_updated_at": "2026-09-09T09:03:50.329392Z",
+  "knowledge_tags": {
+    "version": "函数",
+    "grade": "八下",
+    "main_tag": "反比例函数",
+    "sub_tags": [
+      "k的几何意义"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-09T09:08:36.719023Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "函数",
+    "display_class": "function",
+    "grade": "八下",
+    "tags": {
+      "main_tag": "一次函数",
+      "sub_tags": [
+        "一次函数与方程/不等式及实际应用"
+      ],
+      "second_tag": null
+    },
+    "question_type": "反比例函数与一次函数交点",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_function",
+      "steps_min": 5,
+      "steps_max": 7,
+      "motion_policy": "answer_first",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  },
+  "knowledge_tags_confirmed": true
+}

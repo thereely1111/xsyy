@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="1m1NANEZjiURYmk5NtlHMU">
+<head data-page-node-id="kRluR5a5lUgUKf0NrDdQiL">
+    <meta charset="UTF-8" data-page-node-id="5M1WERw8jRRFaHFEd62y7I">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="s6FhRGaDyqfKUORQLu3ms5">
+    <title>邀请与额度管理 - 管理后台</title>
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+    </script>
+    <style>
+        /* 本页专属组件样式，全部引用 admin.css 的 token，禁止硬编码 hex */
+
+        /* ---- 子页面 Tabs ---- */
+        .iq-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding: 4px;
+            background: var(--paper-deep);
+            border-radius: 10px;
+            width: fit-content;
+        }
+        .iq-tab {
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--ink-black);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-sans);
+        }
+        .iq-tab:hover {
+            color: var(--primary-blue);
+        }
+        .iq-tab.active {
+            background: var(--primary-blue);
+            color: var(--card-bg);
+            border-color: var(--primary-blue);
+        }
+        .iq-tab:focus-visible {
+            outline: 2px solid var(--accent-gold);
+            outline-offset: 2px;
+        }
+
+        /* ---- Tab 面板 ---- */
+        .iq-panel {
+            display: none;
+            animation: iq-fade-in 0.25s ease both;
+        }
+        .iq-panel.active {
+            display: block;
+        }
+
+        /* ---- 规则卡 4 列 ---- */
+        .iq-rule-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        .iq-rule-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--primary-red);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .iq-rule-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-red);
+            margin: 0 0 8px;
+            line-height: 1.3;
+        }
+        .iq-rule-card p {
+            font-size: 12px;
+            line-height: 1.65;
+            color: var(--ink-grey);
+            margin: 0;
+        }
+
+        /* ---- 分区标题 ---- */
+        .iq-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ink-black);
+            margin: 0 0 14px;
+        }
+        .iq-summary {
+            font-size: 13px;
+            color: var(--ink-grey);
+            margin: -6px 0 14px;
+        }
+        .iq-summary .num {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        /* ---- 统计卡 ---- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 4px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 22px;
+            transition: box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            box-shadow: 0 4px 14px rgba(43, 43, 43, 0.10);
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--ink-grey);
+            margin-bottom: 10px;
+        }
+        .stat-value {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1;
+        }
+        .stat-value .unit {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--ink-grey);
+            margin-left: 4px;
+        }
+        .stat-value.sm {
+            font-size: 18px;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+
+        /* ---- 里程碑 ---- */
+        .milestone-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .milestone-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: center;
+        }
+        .milestone-meta {
+            font-size: 13px;
+            color: var(--ink-black);
+        }
+        .milestone-state {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+        .milestone-state.done {
+            background: rgba(125, 159, 136, 0.16);
+            color: var(--jade-green);
+        }
+        .milestone-state.todo {
+            background: var(--paper-deep);
+            color: var(--ink-grey);
+        }
+        .progress-track {
+            grid-column: 1 / -1;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--paper-deep);
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: var(--accent-gold);
+            transition: width 0.5s ease;
+        }
+        .progress-fill.done {
+            background: var(--jade-green);
+        }
+
+        /* ---- 徽章 ---- */
+        .grant-badge,
+        .status-badge,
+        .relation-badge {
+            display: inline-block;
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+        .grant-new_user_gift { background: rgba(62, 92, 118, 0.12); color: var(--primary-blue); }
+        .grant-invited_extra { background: rgba(207, 169, 118, 0.18); color: var(--ink-black); }
+        .grant-invite_reward { background: rgba(125, 159, 136, 0.16); color: var(--jade-green); }
+        .grant-admin { background: rgba(184, 59, 67, 0.12); color: var(--primary-red); }
+
+        .status-active { background: rgba(125, 159, 136, 0.16); color: var(--jade-green); }
+        .status-expired { background: rgba(184, 59, 67, 0.12); color: var(--primary-red); }
+        .status-exhausted { background: var(--paper-deep); color: var(--ink-grey); }
+
+        .relation-badge { background: rgba(125, 159, 136, 0.16); color: var(--jade-green); }
+
+        /* ---- 工具栏 ---- */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .toolbar select,
+        .toolbar input[type="text"] {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: var(--font-sans);
+            background: var(--card-bg);
+            color: var(--ink-black);
+        }
+        .toolbar select:focus,
+        .toolbar input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(62, 92, 118, 0.18);
+        }
+        .toolbar .spacer { flex: 1; }
+        .toolbar label {
+            font-size: 13px;
+            color: var(--ink-grey);
+        }
+
+        /* ---- 表格 ---- */
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--ink-black);
+            margin: 22px 0 12px;
+        }
+        .empty-state,
+        .loading-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--ink-grey);
+            font-size: 14px;
+        }
+        .pagination {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            padding: 16px 0 4px;
+            flex-wrap: wrap;
+        }
+        .pagination button {
+            min-width: 36px;
+            padding: 6px 10px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--ink-black);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        .pagination button:hover:not(:disabled) {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+        .pagination button.active {
+            background: var(--primary-blue);
+            color: var(--card-bg);
+            border-color: var(--primary-blue);
+        }
+        .pagination button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .pagination span {
+            padding: 6px 4px;
+            color: var(--ink-grey);
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .learn-table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+        .learn-table tbody tr:hover {
+            background: var(--paper-deep);
+        }
+
+        /* ---- 结果卡片入场 ---- */
+        #resultArea > .card {
+            animation: iq-fade-in 0.25s ease both;
+        }
+        @keyframes iq-fade-in {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---- 导出按钮 loading ---- */
+        #relationExportBtn.is-loading,
+        #quotaExportBtn.is-loading,
+        #allExportBtn.is-loading {
+            position: relative;
+            padding-left: 26px;
+        }
+        #relationExportBtn.is-loading::before,
+        #quotaExportBtn.is-loading::before,
+        #allExportBtn.is-loading::before {
+            content: "";
+            position: absolute;
+            left: 9px;
+            top: 50%;
+            width: 12px;
+            height: 12px;
+            margin-top: -6px;
+            border: 2px solid var(--paper-deep);
+            border-top-color: var(--card-bg);
+            border-radius: 50%;
+            animation: iq-spin 0.7s linear infinite;
+        }
+        @keyframes iq-spin { to { transform: rotate(360deg); } }
+
+        /* ---- 响应式 ---- */
+        @media (max-width: 1100px) {
+            .iq-rule-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 640px) {
+            .iq-rule-grid {
+                grid-template-columns: 1fr;
+            }
+            .iq-tabs {
+                width: 100%;
+            }
+            .iq-tab {
+                flex: 1;
+                text-align: center;
+            }
+        }
+
+        /* ---- reduced-motion ---- */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+    </style>
+</head>
+<body data-page-node-id="Usske4Xr2esRcdRlZn25MM">
+    <aside class="sidebar" data-page-node-id="9WQ8nSJ7QmUaufcDRHZEA4">
+        <div class="sidebar-header" data-page-node-id="bdxM0sSlz5SebKcWPVUmh4">
+            <h2 data-page-node-id="65RPO20c2xhwhUAaCYpLPP">管理后台</h2>
+        </div>
+        <nav data-page-node-id="o8ENKKqgIBoyJNWfZjtDnu">
+            <ul class="sidebar-nav" data-page-node-id="fmtb565mbrplBh55D4F68j">
+                <li data-page-node-id="9ESpArfoa5FfVbaDmEzWG7"><a href="dashboard.html" data-page-node-id="77zjU8h7F9SaNP0PtzuRCB">仪表盘</a></li>
+                <li data-page-node-id="YpBb7ePqfESuEjThgHXmuu"><a href="teachings.html" data-page-node-id="L2iF8XLPfWVJ1RUfdSlPfM">教学内容</a></li>
+                <li data-page-node-id="fJ7J7BfVo1RnMCBs7TxHDh"><a href="users.html" data-page-node-id="hZ4PZOhpVg2eo3F8l5NGWH">用户管理</a></li>
+                <li data-page-node-id="zYB0yFFh5NTMYs57GcXJK9"><a href="tags.html" data-page-node-id="rBtHNNIvgVhZShLUzkVGJR">标签管理</a></li>
+                <li data-page-node-id="C4joW4iaesxqmfHL5QbwWl"><a href="tag_review.html" data-page-node-id="Z3vQtmPdBPKnHViXcxtBzE">标签智能体审核</a></li>
+                <li data-page-node-id="m6WT7dMKnXl5DcwKQO8eAF"><a href="recharge_requests.html" data-page-node-id="khEHZE2z97X9rBCkRRkIP2">订单管理</a></li>
+                <li data-page-node-id="XdvSr4rG0mi9HAIQ8CZXiL"><a href="feedbacks.html" data-page-node-id="kr2QpviwIskWQH9Lqtvfx0">用户反馈</a></li>
+                <li data-page-node-id="x5wSzyDO9ICCNacbfyIuvR"><a href="settings.html" data-page-node-id="DevSiedT3TJ3ExQ7pYBlzO">系统配置</a></li>
+                <li data-page-node-id="o5pmk2FHT4sjacMpsf4rda"><a href="logs.html" data-page-node-id="mi2gHq5pc8acAylCU6YWf4">网站日志</a></li>
+                <li data-page-node-id="t0MK8a4OGP44OG4eT5mROV"><a href="invite-quota.html" class="active" data-page-node-id="2n39ox0k1RmFLQ9mZnMZGi">邀请与额度</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content" data-page-node-id="B3PTj7VzdtCrAtscAeLFSC">
+        <div class="content-header" data-page-node-id="4CUHf4BLBbxFdXSmS8Jsiq">
+            <h1 data-page-node-id="jI2fxZLQHXVVz33eslY1eq">邀请与额度管理</h1>
+            <div class="user-info" data-page-node-id="1h37wYkYu1j8h9Lv7K0Dqb">
+                <span data-page-node-id="k7Qjk5eRvDGDvxXEDHVCHX">管理员：<span id="userInfo" data-page-node-id="bF9TE0uyQVm2uhHSZXjGvG">-</span></span>
+                <a href="../index.html?v=3" class="btn-home" data-page-node-id="16lUuMdnEVyZYx7ZDjiGKT">返回首页</a>
+                <button class="btn-logout" onclick="logout()" data-page-node-id="rII9MOibfoN8qJH0UOBznH">退出登录</button>
+            </div>
+        </div>
+
+        <div class="card" data-page-node-id="oDH5VGjkcCLOGGxmaftU9k">
+            <div class="search-bar" data-page-node-id="FjatXiYi78ln8MPLUtWHjF">
+                <label for="searchInput" data-page-node-id="mNsXYz9e11AGHk4EDfgKmW">用户</label>
+                <input type="text" id="searchInput" placeholder="用户名 / user_id / 邀请码" autocomplete="off" data-page-node-id="4mBUUitjE6UzauPeFgExvL" />
+                <button class="btn btn-primary btn-sm" id="searchBtn" data-page-node-id="IXNyk6KjjABBl5EJWHfiTR">查询</button>
+                <span id="searchError" class="error-message show" style="display:none;" data-page-node-id="1PWRyLLjkZq3z7wKFywbqd"></span>
+            </div>
+        </div>
+
+        <div id="globalArea" data-page-node-id="iq-global-area">
+            <div class="card" data-page-node-id="iq-overview-card">
+                <div class="iq-section-title" data-page-node-id="iq-overview-title">全局概览</div>
+                <div class="stats-grid" data-page-node-id="iq-overview-grid">
+                    <div class="stat-card" data-page-node-id="iq-overview-total-invited">
+                        <div class="stat-label">总邀请关系数</div>
+                        <div class="stat-value" id="statAllInvited">-</div>
+                    </div>
+                    <div class="stat-card" data-page-node-id="iq-overview-total-granted">
+                        <div class="stat-label">累计发放额度</div>
+                        <div class="stat-value" id="statTotalGranted">-<span class="unit">次</span></div>
+                    </div>
+                    <div class="stat-card" data-page-node-id="iq-overview-month-new">
+                        <div class="stat-label">本月新增邀请</div>
+                        <div class="stat-value" id="statMonthNew">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-page-node-id="iq-alllist-card">
+                <div class="iq-section-title" data-page-node-id="iq-alllist-title">全部邀请记录</div>
+                <div class="toolbar" data-page-node-id="iq-alllist-toolbar">
+                    <input type="text" id="allKeywordInput" placeholder="按用户名 / user_id / 邀请码过滤（可留空）" autocomplete="off" data-page-node-id="iq-alllist-keyword" />
+                    <button class="btn btn-primary btn-sm" id="allListBtn" data-page-node-id="iq-alllist-btn">刷新列表</button>
+                    <div class="spacer" data-page-node-id="iq-alllist-spacer"></div>
+                    <button class="btn btn-success btn-sm" id="allExportBtn" data-page-node-id="iq-alllist-export">导出全量 CSV</button>
+                </div>
+                <div class="table-container" data-page-node-id="iq-alllist-table-wrap">
+                    <div class="loading-state" id="allListLoading" style="display:none;" data-page-node-id="iq-alllist-loading">加载中…</div>
+                    <div class="empty-state" id="allListEmpty" style="display:none;" data-page-node-id="iq-alllist-empty">暂无邀请记录</div>
+                    <table class="learn-table" id="allListTable" style="display:none;width:100%;border-collapse:collapse;" data-page-node-id="iq-alllist-table">
+                        <thead data-page-node-id="iq-alllist-thead">
+                            <tr data-page-node-id="iq-alllist-header-row">
+                                <th style="text-align:left;">邀请人</th>
+                                <th style="text-align:left;">被邀请人</th>
+                                <th style="text-align:left;">绑定时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allListBody" data-page-node-id="iq-alllist-body"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="allListPagination" data-page-node-id="iq-alllist-pagination"></div>
+            </div>
+        </div>
+
+        <div class="iq-tabs" role="tablist" aria-label="邀请与额度子页面" data-page-node-id="iq-tabs-root">
+            <button class="iq-tab active" role="tab" aria-selected="true" aria-controls="relationPanel" id="tabRelation" data-tab="relation" data-page-node-id="iq-tab-relation">邀请关系管理</button>
+            <button class="iq-tab" role="tab" aria-selected="false" aria-controls="quotaPanel" id="tabQuota" data-tab="quota" data-page-node-id="iq-tab-quota">额度管理</button>
+        </div>
+
+        <div id="resultArea" style="display:none;" data-page-node-id="0egv1zqSDv24Cvm542P3hP">
+            <!-- 子页 1：邀请关系管理 -->
+            <div id="relationPanel" class="iq-panel active" role="tabpanel" aria-labelledby="tabRelation" data-page-node-id="iq-panel-relation">
+                <div class="iq-rule-grid" data-page-node-id="iq-rule-grid-relation">
+                    <div class="iq-rule-card" data-page-node-id="iq-rule-relation-1">
+                        <h4>邀请关系存储·仅一级</h4>
+                        <p>只存 [用户→直接邀请人] 一条关系，不存邀请链；数据结构层面杜绝二级/多级分销；建立邀请关系表并随注册持续积累。</p>
+                    </div>
+                    <div class="iq-rule-card" data-page-node-id="iq-rule-relation-2">
+                        <h4>奖励结算·双方各5次</h4>
+                        <p>注册时填写有效邀请码即绑定关系，双方各得 5 次生成额度；官方码 XSYY2026 不计入任何人的邀请关系。</p>
+                    </div>
+                    <div class="iq-rule-card" data-page-node-id="iq-rule-relation-3">
+                        <h4>邀请统计·按用户查询</h4>
+                        <p>按用户查询：已邀请人数、获得额度总数、里程碑进度（邀请 3/10/30 人 → 7 天/月/季会员，每档一次）。</p>
+                    </div>
+                    <div class="iq-rule-card" data-page-node-id="iq-rule-relation-4">
+                        <h4>数据导出</h4>
+                        <p>查询结果与全部邀请记录均支持一键导出 CSV（带 UTF-8 BOM，Excel 直接打开）。</p>
+                    </div>
+                </div>
+
+                <div class="card" data-page-node-id="iq-relation-section">
+                    <div class="iq-section-title" data-page-node-id="iq-relation-section-title">邀请记录·按用户查询</div>
+                    <div class="toolbar" data-page-node-id="iq-relation-toolbar">
+                        <select id="relationFilter" data-page-node-id="iq-relation-filter">
+                            <option value="">全部邀请人</option>
+                        </select>
+                        <button class="btn btn-sm" id="relationResetBtn" data-page-node-id="iq-relation-reset">重置</button>
+                        <div class="spacer" data-page-node-id="iq-relation-spacer"></div>
+                        <button class="btn btn-success btn-sm" id="relationExportBtn" data-page-node-id="iq-relation-export">导出 CSV</button>
+                    </div>
+                    <div id="relationSummary" class="iq-summary" data-page-node-id="iq-relation-summary"></div>
+
+                    <div class="stats-grid" id="relationStatsGrid" data-page-node-id="iq-relation-stats-grid">
+                        <div class="stat-card" data-page-node-id="iq-stat-invited-wrap">
+                            <div class="stat-label" data-page-node-id="iq-stat-invited-label">已邀请人数</div>
+                            <div class="stat-value" id="statInvited" data-page-node-id="iq-stat-invited">-</div>
+                        </div>
+                        <div class="stat-card" data-page-node-id="iq-stat-reward-total-wrap">
+                            <div class="stat-label" data-page-node-id="iq-stat-reward-total-label">获得额度总数（邀请奖励）</div>
+                            <div class="stat-value" id="statInviteRewardTotal" data-page-node-id="iq-stat-reward-total">-<span class="unit">次</span></div>
+                        </div>
+                        <div class="stat-card" data-page-node-id="iq-stat-milestone-wrap">
+                            <div class="stat-label" data-page-node-id="iq-stat-milestone-label">里程碑进度</div>
+                            <div class="stat-value sm" id="statMilestoneProgress" data-page-node-id="iq-stat-milestone">按邀请人单独累计（3/10/30 人逐档解锁）</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" id="milestoneCard" data-page-node-id="b1pfpW5jQwXKc82cUsL2GS">
+                    <div class="section-title" data-page-node-id="heHGT8YM2nGjlGfb3Bl1cm">邀请里程碑进度</div>
+                    <div class="milestone-list" id="milestoneList" data-page-node-id="1AbCCRPnCYZIR1uKUlNEMO"></div>
+                </div>
+
+                <div class="card" data-page-node-id="iq-invitees-table-card">
+                    <div class="table-container" id="inviteesTableWrap" data-page-node-id="iq-invitees-table-wrap">
+                        <div class="loading-state" id="inviteesLoading" style="display:none;" data-page-node-id="iq-invitees-loading">加载中…</div>
+                        <div class="empty-state" id="inviteesEmpty" style="display:none;" data-page-node-id="iq-invitees-empty">暂无邀请记录</div>
+                        <table class="learn-table" id="inviteesTable" style="display:none;width:100%;border-collapse:collapse;" data-page-node-id="iq-invitees-table">
+                            <thead data-page-node-id="iq-invitees-thead">
+                                <tr data-page-node-id="iq-invitees-header-row">
+                                    <th style="text-align:left;" data-page-node-id="iq-invitees-th-name">被邀请人</th>
+                                    <th style="text-align:left;" data-page-node-id="iq-invitees-th-time">注册时间</th>
+                                    <th style="text-align:left;" data-page-node-id="iq-invitees-th-code">填写的邀请码</th>
+                                    <th style="text-align:left;" data-page-node-id="iq-invitees-th-status">邀请关系</th>
+                                    <th style="text-align:left;" data-page-node-id="iq-invitees-th-reward">奖励发放</th>
+                                    <th style="text-align:left;" data-page-node-id="iq-invitees-th-monthly">邀请人当月累计</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inviteesBody" data-page-node-id="iq-invitees-body"></tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="inviteesPagination" data-page-node-id="iq-invitees-pagination"></div>
+                </div>
+            </div>
+
+            <!-- 子页 2：额度管理 -->
+            <div id="quotaPanel" class="iq-panel" role="tabpanel" aria-labelledby="tabQuota" data-page-node-id="iq-panel-quota">
+                <div class="iq-rule-grid" data-page-node-id="iq-rule-grid-quota">
+                    <div class="iq-rule-card" data-page-node-id="iq-rule-quota-1">
+                        <h4>额度发放记录·明细表</h4>
+                        <p>逐条记录：用户、额度类型（注册赠 / 邀请奖励 / 里程碑会员）、数量、发放时间、过期时间。</p>
+                    </div>
+                    <div class="iq-rule-card" data-page-node-id="iq-rule-quota-2">
+                        <h4>有效期控制·到期失效</h4>
+                        <p>注册赠 8 次：7 天；邀请奖励 5 次：30 天。到期自动失效，不结转。</p>
+                    </div>
+                    <div class="iq-rule-card" data-page-node-id="iq-rule-quota-3">
+                        <h4>月度上限·后端强制</h4>
+                        <p>未付费用户邀请所得额度，月度累计上限 30 次，达到即停发，由后端强制。</p>
+                    </div>
+                    <div class="iq-rule-card" data-page-node-id="iq-rule-quota-4">
+                        <h4>会员体验·到期回收</h4>
+                        <p>里程碑会员（邀请 3/10/30 人所得）权益到期后自动回收为免费版。</p>
+                    </div>
+                </div>
+
+                <div class="card" data-page-node-id="iq-quota-section">
+                    <div class="iq-section-title" data-page-node-id="iq-quota-section-title">额度发放记录</div>
+                    <div class="toolbar" data-page-node-id="iq-quota-toolbar">
+                        <label for="grantTypeFilter" data-page-node-id="iq-quota-type-label">额度类型</label>
+                        <select id="grantTypeFilter" data-page-node-id="iq-quota-type-filter">
+                            <option value="" data-page-node-id="iq-quota-type-all">全部额度类型</option>
+                            <option value="new_user_gift" data-page-node-id="iq-quota-type-new">注册赠礼</option>
+                            <option value="invited_extra" data-page-node-id="iq-quota-type-invited">被邀额外</option>
+                            <option value="invite_reward" data-page-node-id="iq-quota-type-reward">邀请奖励</option>
+                            <option value="admin" data-page-node-id="iq-quota-type-admin">管理员补发</option>
+                        </select>
+                        <label for="statusFilter" style="margin-left:12px;" data-page-node-id="iq-quota-status-label">状态</label>
+                        <select id="statusFilter" data-page-node-id="iq-quota-status-filter">
+                            <option value="" data-page-node-id="iq-quota-status-all">全部状态</option>
+                            <option value="active" data-page-node-id="iq-quota-status-active">生效中</option>
+                            <option value="expired" data-page-node-id="iq-quota-status-expired">已过期</option>
+                            <option value="exhausted" data-page-node-id="iq-quota-status-exhausted">已用完</option>
+                        </select>
+                        <div class="spacer" data-page-node-id="iq-quota-spacer"></div>
+                        <button class="btn btn-success btn-sm" id="quotaExportBtn" data-page-node-id="iq-quota-export">导出 CSV</button>
+                    </div>
+                    <div id="quotaSummary" class="iq-summary" data-page-node-id="iq-quota-summary"></div>
+                    <div class="table-container" id="grantsTableWrap" data-page-node-id="p0mDPt0LqBDfSUidZGbd2m">
+                        <div class="loading-state" id="grantsLoading" style="display:none;" data-page-node-id="gQxGRMz12P4I5QobTAL8a6">加载中…</div>
+                        <div class="empty-state" id="grantsEmpty" style="display:none;" data-page-node-id="QUvKcojidEFCGDrQJP7tqP">暂无额度发放记录</div>
+                        <table class="learn-table" id="grantsTable" style="display:none;width:100%;border-collapse:collapse;" data-page-node-id="Jp2a4GS3hNb8StNpggYa7X">
+                            <thead data-page-node-id="KQZI5V6iWOfsNhFT8F2TUP">
+                                <tr data-page-node-id="bgCIQefLik6ZXKGJuMVTLu">
+                                    <th style="text-align:left;" data-page-node-id="YXMbQjqHp3VCZMGa6MBkLU">用户</th>
+                                    <th style="text-align:left;" data-page-node-id="xFKSsHYal5UCHZSvMAJD2t">额度类型</th>
+                                    <th style="text-align:right;" data-page-node-id="TD9Inmdf37BUYbt4HCzG47">数量</th>
+                                    <th style="text-align:left;" data-page-node-id="CohbIltBxl7vO4K6gzGx0X">发放时间</th>
+                                    <th style="text-align:left;" data-page-node-id="iF1oxGRoacGNGByaT1DuNB">过期时间</th>
+                                    <th style="text-align:left;" data-page-node-id="iq-quota-th-status">状态</th>
+                                    <th style="text-align:left;" data-page-node-id="iq-quota-th-rule">规则体现</th>
+                                </tr>
+                            </thead>
+                            <tbody id="grantsBody" data-page-node-id="vK0kjJZspPbkuIxeFAyhRY"></tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="pagination" data-page-node-id="z7zse9DmSijAASB3H0EAgx"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="hintCard" style="display:none;" data-page-node-id="kVb5a9nBmyBAzSrhy7eKQo">
+            <div class="empty-state" data-page-node-id="dgyyDOGM8vWVrlf8UHzTip">输入用户名、user_id 或邀请码后点击「查询」，查看该用户的邀请关系与额度明细。</div>
+        </div>
+    </main>
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/invite-quota.js') + '"><\/script>');
+    </script>
+</body>
+</html>

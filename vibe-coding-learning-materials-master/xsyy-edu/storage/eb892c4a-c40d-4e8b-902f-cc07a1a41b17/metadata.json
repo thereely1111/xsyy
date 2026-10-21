@@ -1,0 +1,28 @@
+{
+  "question": "证明勾股定理",
+  "prompt": "证明一下勾股定理的内容",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "eb892c4a-c40d-4e8b-902f-cc07a1a41b17",
+  "generated_at": "2026-08-21T01:20:44.575345Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "勾股定理证明",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及直角三角形边长关系证明"
+  },
+  "tags_updated_at": "2026-08-21T01:20:44.575345Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "八下",
+    "main_tag": "勾股定理",
+    "sub_tags": [
+      "勾股定理及其逆定理"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-21T01:20:44.608156Z"
+}

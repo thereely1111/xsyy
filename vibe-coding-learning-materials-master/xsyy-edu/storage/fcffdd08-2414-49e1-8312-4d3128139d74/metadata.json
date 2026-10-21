@@ -1,0 +1,24 @@
+{
+  "question": "二(2)班同学排成6列做早操，每列人数同样多。小红站在第一列，从前面数，从后面数都是第 5个。二(2)班一共有多少个同学在做操?",
+  "prompt": "4.二(2)班同学排成6列做早操，每列人数同样多。小红站在第一列，从前面数，从后面数都是第 5个。二(2)班一共有多少个同学在做操?",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "fcffdd08-2414-49e1-8312-4d3128139d74",
+  "generated_at": "2026-07-24T17:26:53.659704Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "排队问题应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境应用题，需列式解决",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-07-24T17:26:53.659704Z",
+  "preview_image": "Preview.webp"
+}

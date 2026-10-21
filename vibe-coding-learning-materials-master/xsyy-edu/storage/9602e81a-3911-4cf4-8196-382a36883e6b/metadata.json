@@ -1,0 +1,12 @@
+{
+  "knowledge_tags": {
+    "version": "统计与概率",
+    "grade": "九上",
+    "main_tag": "概率初步",
+    "sub_tags": [
+      "列举法求概率"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-17T08:46:45.759952Z"
+}

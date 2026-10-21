@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建应用 - 象数演易</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'xsyy-blue': '#1a365d',
+                        'xsyy-dark': '#0f172a',
+                        'xsyy-cream': '#f7f3e9',
+                        'xsyy-gold': '#d4a574',
+                        'xsyy-light': '#e8e0d5'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/styles/tailwind.css">
+</head>
+<body class="min-h-screen bg-xsyy-cream">
+    <nav class="bg-xsyy-blue text-white py-4">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <a href="/" class="text-2xl font-bold">象数演易</a>
+            <a href="/" class="btn-secondary btn-sm">返回首页</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-3xl font-bold text-xsyy-blue mb-8 text-center">创建数学教学应用</h1>
+
+            <div id="step1" class="card p-8 mb-8">
+                <h2 class="text-xl font-bold text-xsyy-blue mb-6 border-b-2 border-xsyy-gold pb-2">
+                    <span class="inline-block w-8 h-8 bg-xsyy-blue text-white rounded-full text-center leading-8 mr-2">1</span>
+                    输入题目
+                </h2>
+
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-bold mb-2">题目内容</label>
+                    <textarea id="problemContent" rows="6" class="input-field" placeholder="请输入数学题目，例如：已知函数f(x)=ax^2+bx+c，若f(1)=0，f(2)=0，求a,b,c的值"></textarea>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-bold mb-2">或上传图片</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-[20px] p-8 text-center hover:border-[#f5b042] transition cursor-pointer" id="uploadArea">
+                        <input type="file" id="imageUpload" accept="image/*" class="hidden">
+                        <div class="text-4xl mb-2">📷</div>
+                        <p class="text-gray-500">点击上传题目图片（支持JPG、PNG，最大5MB）</p>
+                    </div>
+                </div>
+
+                <button onclick="analyzeProblem()" class="w-full py-4 btn-primary text-lg">
+                    开始分析
+                </button>
+            </div>
+
+            <div id="step2" class="card p-8 mb-8 hidden">
+                <h2 class="text-xl font-bold text-xsyy-blue mb-6 border-b-2 border-xsyy-gold pb-2">
+                    <span class="inline-block w-8 h-8 bg-xsyy-blue text-white rounded-full text-center leading-8 mr-2">2</span>
+                    AI分析结果
+                </h2>
+
+                <div id="analysisProgress" class="mb-6">
+                    <div class="flex items-center justify-center py-8">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-xsyy-blue mr-4"></div>
+                        <span class="text-lg text-gray-600">AI正在分析题目...</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div id="analysisBar" class="bg-xsyy-gold h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div id="analysisResult" class="hidden">
+                    <div class="grid md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-xsyy-cream rounded-lg p-4">
+                            <p class="text-sm text-gray-500">主标签</p>
+                            <p id="resultTag" class="text-xl font-bold text-xsyy-blue">-</p>
+                        </div>
+                        <div class="bg-xsyy-cream rounded-lg p-4">
+                            <p class="text-sm text-gray-500">难度</p>
+                            <p id="resultDifficulty" class="text-xl font-bold text-xsyy-gold">-</p>
+                        </div>
+                        <div class="bg-xsyy-cream rounded-lg p-4">
+                            <p class="text-sm text-gray-500">预计时间</p>
+                            <p id="resultTime" class="text-xl font-bold text-green-600">-</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <p class="text-sm text-gray-500 mb-1">题目标题</p>
+                        <p id="resultTitle" class="text-xl font-bold text-xsyy-blue">-</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <p class="text-sm text-gray-500 mb-1">子标签</p>
+                        <div id="resultTags" class="flex flex-wrap gap-2">-</div>
+                    </div>
+
+                    <div class="mb-6">
+                        <p class="text-sm text-gray-500 mb-1">知识点</p>
+                        <ul id="resultKnowledge" class="list-disc list-inside text-gray-700">-</ul>
+                    </div>
+
+                    <button onclick="generateApplication()" class="w-full py-4 btn-primary text-lg">
+                        生成教学应用
+                    </button>
+                </div>
+            </div>
+
+            <div id="step3" class="card p-8 hidden">
+                <h2 class="text-xl font-bold text-xsyy-blue mb-6 border-b-2 border-xsyy-gold pb-2">
+                    <span class="inline-block w-8 h-8 bg-xsyy-blue text-white rounded-full text-center leading-8 mr-2">3</span>
+                    生成进度
+                </h2>
+
+                <div id="generationProgress" class="mb-6">
+                    <div class="flex items-center justify-center py-8">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-xsyy-blue mr-4"></div>
+                        <span class="text-lg text-gray-600">AI正在生成教学应用...</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div id="generationBar" class="bg-xsyy-gold h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    <p id="generationStatus" class="text-center text-gray-500 mt-2">准备中...</p>
+                </div>
+
+                <div id="generationResult" class="hidden text-center">
+                    <div class="text-6xl mb-4">🎉</div>
+                    <h3 class="text-2xl font-bold text-xsyy-blue mb-4">生成成功！</h3>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a id="viewAppBtn" href="#" class="px-8 py-4 btn-primary font-bold">
+                            查看应用
+                        </a>
+                        <a id="downloadAppBtn" href="#" class="px-8 py-4 btn-secondary font-bold">
+                            下载HTML
+                        </a>
+                        <button onclick="window.location.reload()" class="px-8 py-4 btn-secondary font-bold">
+                            创建新应用
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/src/utils/api.js"></script>
+    <script src="/src/utils/auth.js"></script>
+    <script src="/src/utils/ui.js"></script>
+    <script src="/src/utils/feedback.js"></script>
+    <script>
+        let currentTaskId = null;
+        let analysisData = null;
+        let applicationId = null;
+        let isAnalyzing = false;
+        let isGenerating = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.isAuthenticated()) {
+                showToast('请先登录', 'warning');
+                setTimeout(() => window.location.href = '/', 1500);
+                return;
+            }
+
+            const uploadArea = document.getElementById('uploadArea');
+            const imageUpload = document.getElementById('imageUpload');
+
+            uploadArea.addEventListener('click', () => imageUpload.click());
+            imageUpload.addEventListener('change', handleImageUpload);
+        });
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('图片大小不能超过5MB', 'error');
+                return;
+            }
+
+            showToast('图片上传功能开发中，请使用文本输入', 'info');
+        }
+
+        async function analyzeProblem() {
+            const content = document.getElementById('problemContent').value.trim();
+            const button = event.currentTarget;
+
+            if (!content) {
+                showToast('请输入题目内容', 'warning');
+                return;
+            }
+
+            if (isAnalyzing) return;
+            isAnalyzing = true;
+            
+            // 禁用按钮
+            disableButton(button, '分析中...');
+
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
+
+            const analysisBar = document.getElementById('analysisBar');
+            analysisBar.style.width = '10%';
+
+            try {
+                const response = await api.problems.analyze(content, { showLoading: false });
+                currentTaskId = response.data.task_id;
+
+                pollTaskStatus(currentTaskId, (data) => {
+                    const progress = Math.min(data.progress || 0, 90);
+                    analysisBar.style.width = progress + '%';
+
+                    if (data.status === 'success' && data.result) {
+                        analysisData = data.result;
+                        showAnalysisResult(data.result);
+                        isAnalyzing = false;
+                    } else if (data.status === 'failed') {
+                        showToast('分析失败: ' + (data.error_message || '未知错误'), 'error');
+                        document.getElementById('step1').classList.remove('hidden');
+                        document.getElementById('step2').classList.add('hidden');
+                        isAnalyzing = false;
+                        enableButton(button);
+                    }
+                }, 1500);
+
+            } catch (error) {
+                showToast('分析失败: ' + error.message, 'error');
+                document.getElementById('step1').classList.remove('hidden');
+                document.getElementById('step2').classList.add('hidden');
+                isAnalyzing = false;
+                enableButton(button);
+            }
+        }
+
+        function showAnalysisResult(result) {
+            document.getElementById('analysisProgress').classList.add('hidden');
+            document.getElementById('analysisResult').classList.remove('hidden');
+
+            document.getElementById('resultTitle').textContent = result.title || '数学题目';
+            document.getElementById('resultTag').textContent = result.primary_tag || '数学';
+
+            const difficultyLabels = { easy: '简单', medium: '中等', hard: '困难', olympiad: '竞赛级' };
+            document.getElementById('resultDifficulty').textContent = difficultyLabels[result.difficulty] || '中等';
+
+            document.getElementById('resultTime').textContent = (result.estimated_time || 15) + '分钟';
+
+            const tagsContainer = document.getElementById('resultTags');
+            tagsContainer.innerHTML = (result.secondary_tags || []).map(tag =>
+                `<span class="px-3 py-1 bg-xsyy-gold/10 text-xsyy-gold rounded-full text-sm">${tag}</span>`
+            ).join('');
+
+            const knowledgeContainer = document.getElementById('resultKnowledge');
+            knowledgeContainer.innerHTML = (result.knowledge_points || []).map(kp =>
+                `<li>${kp.name} (${kp.mastery || '理解'})</li>`
+            ).join('');
+        }
+
+        async function generateApplication() {
+            const button = event.currentTarget;
+            
+            if (!analysisData) {
+                showToast('请先完成题目分析', 'warning');
+                return;
+            }
+
+            if (isGenerating) return;
+            isGenerating = true;
+            
+            // 禁用按钮
+            disableButton(button, '生成中...');
+
+            const content = document.getElementById('problemContent').value.trim();
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+
+            const generationBar = document.getElementById('generationBar');
+            const generationStatus = document.getElementById('generationStatus');
+
+            generationBar.style.width = '10%';
+            generationStatus.textContent = '提交生成任务...';
+
+            try {
+                const response = await api.applications.generate({
+                    analyze_result: analysisData,
+                    question_content: content,
+                    options: {
+                        include_animation: true,
+                        include_exercises: true,
+                        exercise_count: 3,
+                        style: 'traditional'
+                    }
+                }, { showLoading: false });
+
+                applicationId = response.data.application_id;
+                const taskId = response.data.task_id;
+
+                generationBar.style.width = '30%';
+                generationStatus.textContent = 'AI正在生成中...';
+
+                pollTaskStatus(taskId, (data) => {
+                    const progress = Math.min((data.progress || 0) * 0.7 + 30, 95);
+                    generationBar.style.width = progress + '%';
+
+                    if (data.status === 'success') {
+                        showGenerationSuccess();
+                        isGenerating = false;
+                    } else if (data.status === 'failed') {
+                        showToast('生成失败: ' + (data.error_message || '未知错误'), 'error');
+                        document.getElementById('step2').classList.remove('hidden');
+                        document.getElementById('step3').classList.add('hidden');
+                        isGenerating = false;
+                        enableButton(button);
+                    } else {
+                        generationStatus.textContent = '生成中... ' + Math.round(progress) + '%';
+                    }
+                }, 1500);
+
+            } catch (error) {
+                showToast('生成失败: ' + error.message, 'error');
+                document.getElementById('step2').classList.remove('hidden');
+                document.getElementById('step3').classList.add('hidden');
+                isGenerating = false;
+                enableButton(button);
+            }
+        }
+
+        function showGenerationSuccess() {
+            document.getElementById('generationProgress').classList.add('hidden');
+            document.getElementById('generationResult').classList.remove('hidden');
+
+            document.getElementById('viewAppBtn').href = `/pages/detail.html?id=${applicationId}`;
+
+            const downloadBtn = document.getElementById('downloadAppBtn');
+            downloadBtn.onclick = async () => {
+                try {
+                    const blob = await api.applications.download(applicationId);
+                    downloadBlob(blob, `数学教学应用_${applicationId}.html`);
+                } catch (error) {
+                    showToast('下载失败', 'error');
+                }
+            };
+        }
+    </script>
+</body>
+</html>

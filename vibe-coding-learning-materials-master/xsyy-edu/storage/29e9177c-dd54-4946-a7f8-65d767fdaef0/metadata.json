@@ -1,0 +1,12 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "七上",
+    "main_tag": "几何图形初步",
+    "sub_tags": [
+      "余角、补角与方位角"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T06:34:23.457605Z"
+}

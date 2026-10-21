@@ -1,0 +1,34 @@
+{
+  "question": "一个布袋中装有红球和黄球共 50 个，红球个数比黄球的 3 倍多 2 个。从袋中随机摸出一个球，求摸到黄球的概率。",
+  "prompt": "一个布袋中装有红球和黄球共 50 个，红球个数比黄球的 3 倍多 2 个。从袋中随机摸出一个球，求摸到黄球的概率。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "48d3a40c-4c8b-413a-a044-1e040463980c",
+  "generated_at": "2026-08-18T01:49:05.980982Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "概率应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "含概率与数量关系",
+    "main_tag": "概率初步",
+    "sub_tags": [
+      "列举法求概率"
+    ]
+  },
+  "tags_updated_at": "2026-08-18T01:49:05.980982Z",
+  "knowledge_tags": {
+    "version": "统计与概率",
+    "grade": "九上",
+    "main_tag": "概率初步",
+    "sub_tags": [
+      "列举法求概率"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T09:06:15.922875Z",
+  "preview_image": "Preview.webp",
+  "knowledge_tags_confirmed": true
+}

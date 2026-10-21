@@ -1,0 +1,68 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "一个长方体纸盒，底面是一个正方形。将纸盒沿着一条高剪开并展开后，侧面展开图是一个长 24 厘米、宽 6 厘米的长方形。请问这个长方体纸盒的体积是多少立方厘米？",
+  "prompt": "一个长方体纸盒，底面是一个正方形。将纸盒沿着一条高剪开并展开后，侧面展开图是一个长 24 厘米、宽 6 厘米的长方形。请问这个长方体纸盒的体积是多少立方厘米？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "10e2d3bf-7bd0-4cf9-a172-06c1ca8b6ffd",
+  "generated_at": "2026-09-09T06:04:13.736760Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "几何面积周长问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中平面图形面积周长结构"
+  },
+  "tags_updated_at": "2026-09-09T06:04:13.736760Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "五下",
+    "main_tag": "长方体和正方体",
+    "sub_tags": [
+      "体积公式"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-09T06:10:24.978207Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "primary_school",
+    "domain": "图形与几何",
+    "display_class": "geometry",
+    "grade": "五下",
+    "tags": {
+      "main_tag": "长方体和正方体",
+      "sub_tags": [
+        "体积公式"
+      ],
+      "second_tag": null
+    },
+    "question_type": "体积容积",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "primary_geometry",
+      "steps_min": 3,
+      "steps_max": 5,
+      "motion_policy": "playful",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  },
+  "knowledge_tags_confirmed": true
+}

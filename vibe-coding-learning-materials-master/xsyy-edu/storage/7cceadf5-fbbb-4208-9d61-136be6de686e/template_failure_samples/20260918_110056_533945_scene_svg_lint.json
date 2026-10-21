@@ -1,0 +1,487 @@
+{
+  "failure_stage": "scene_svg_lint",
+  "error_message": "【动画与完整解题（动态片段）生成失败】模板动态片段生成失败，已重试 2 次，最终错误: 模板动态片段生成失败：SVG 纪律 Lint 未通过\n请检查并修正以下纪律违规，然后重新输出完整 JSON：\n- [bbox_in_bounds] 元素 <ellipse> bbox=(-27,270)-(27,354) 越出 820×620 画布（容差 ±24px），请把图形/文字移入画布或整体缩小；若含 motions 运动主体，须保证「初始位置 + 各步 translate 最大位移」仍落在画布内\n（另有告警，建议一并优化：\n  - [text_on_shape_warn] 文字 @254,570 与 <rect> @245,548 交叠 312×19px 且未完全落入图形内；若文字是图形内标签请整体移入，否则请移到图形外侧避让\n  - [shape_coincident_warn] 图形 <rect>@128,218 与 <rect>@142,232 交叠 IoU=0.79，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n  - [shape_coincident_warn] 图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍\n）（stage=scene_svg_lint）",
+  "generated_at": "2026-09-18T03:00:56.535450Z",
+  "task_id": "7cceadf5-fbbb-4208-9d61-136be6de686e",
+  "debug_info": {
+    "question": "笼子里有若干只鸡和兔。从上面数，有8个头；从下面数，有26只脚。鸡和兔各有几只？",
+    "title": "鸡兔同笼",
+    "model_name": "gpt-5.6-sol",
+    "end_marker": "<!--PARTS_END-->",
+    "attempts": [
+      {
+        "round_idx": 0,
+        "round_max_tokens": 32768,
+        "finish_reason": "stop",
+        "streaming": true,
+        "response_text_preview": "{\"title\":\"鸡兔同笼\",\"summary\":\"用头和脚的总数求鸡兔只数\",\"scene_svg\":\"<g font-family=\\\"Arial, sans-serif\\\" fill=\\\"#2b2b2b\\\">\\n  <g id=\\\"cage\\\" class=\\\"svg-elem\\\" x-show=\\\"sceneStep >= 1\\\">\\n    <rect x=\\\"128\\\" y=\\\"218\\\" width=\\\"564\\\" height=\\\"190\\\" rx=\\\"14\\\" fill=\\\"#f4efe3\\\" fill-opacity=\\\"0.72\\\" stroke=\\\"#b9ad95\\\" stroke-width=\\\"3\\\"/>\\n    <rect x=\\\"142\\\" y=\\\"232\\\" width=\\\"536\\\" height=\\\"158\\\" rx=\\\"10\\\" fill=\\\"none\\\" stroke=\\\"#b9ad95\\\" stroke-width=\\\"2\\\"/>\\n    <text x=\\\"410\\\" y=\\\"447\\\" text-anchor=\\\"middle\\\" font-size=\\\"22\\\" fill=\\\"#2b2b2b\\\">一个笼子里共有 8 个头</text>\\n  </g>\\n  <g id=\\\"headRow\\\" class=\\\"svg-elem\\\" x-show=\\\"sceneStep >= 1\\\">\\n    <circle cx=\\\"185\\\" cy=\\\"112\\\" r=\\\"18\\\" fill=\\\"#fee2e2\\\" stroke=\\\"#d6432f\\\" stroke-width=\\\"3\\\"/>\\n    <circle cx=\\\"255\\\" cy=\\\"112\\\" r=\\\"18\\\" fill=\\\"#fee2e2\\\" stroke=\\\"#d6432f\\\" stroke-width=\\\"3\\\"/>\\n    <circle cx=\\\"325\\\" cy=\\\"112\\\" r=\\\"18\\\" fill=\\\"#fee2e2\\\" stroke=\\\"#d6432f\\\" stroke-width=\\\"3\\\"/>\\n    <circle cx=\\\"395\\\" cy=\\\"112\\\" r=\\\"18\\\" fill=\\\"#fee2e2\\\" stroke=\\\"#d6432f\\\" stroke-width=\\\"3\\\"/>\\n    <circle cx=\\\"465\\\" cy=\\\"112\\\" r=\\\"18\\\" fill=\\\"#fee2e2\\\" stroke=\\\"#d6432f\\\" stroke-width=\\\"3\\\"/>\\n    <circle cx=\\\"535\\\" cy=\\\"112\\\" r=\\\"18\\\" fill=\\\"#fee2e2\\\" strok",
+        "combined_preview": ""
+      }
+    ],
+    "error_stage": "scene_svg_lint",
+    "scene_svg_preview": "<g font-family=\"Arial, sans-serif\" fill=\"#2b2b2b\">\n  <g id=\"cage\" class=\"svg-elem\" x-show=\"sceneStep >= 1\">\n    <rect x=\"128\" y=\"218\" width=\"564\" height=\"190\" rx=\"14\" fill=\"#f4efe3\" fill-opacity=\"0.72\" stroke=\"#b9ad95\" stroke-width=\"3\"/>\n    <rect x=\"142\" y=\"232\" width=\"536\" height=\"158\" rx=\"10\" fill=\"none\" stroke=\"#b9ad95\" stroke-width=\"2\"/>\n    <text x=\"410\" y=\"447\" text-anchor=\"middle\" font-size=\"22\" fill=\"#2b2b2b\">一个笼子里共有 8 个头</text>\n  </g>\n  <g id=\"headRow\" class=\"svg-elem\" x-show=\"sceneStep >= 1\">\n    <circle cx=\"185\" cy=\"112\" r=\"18\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"3\"/>\n    <circle cx=\"255\" cy=\"112\" r=\"18\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"3\"/>\n    <circle cx=\"325\" cy=\"112\" r=\"18\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"3\"/>\n    <circle cx=\"395\" cy=\"112\" r=\"18\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"3\"/>\n    <circle cx=\"465\" cy=\"112\" r=\"18\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"3\"/>\n    <circle cx=\"535\" cy=\"112\" r=\"18\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"3\"/>\n    <circle cx=\"605\" cy=\"112\" r=\"18\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"3\"/>\n    <circle cx=\"675\" cy=\"112\" r=\"18\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"3\"/>\n    <text x=\"410\" y=\"67\" text-anchor=\"middle\" font-size=\"25\" fill=\"#d6432f\">先数头：8 个头</text>\n  </g>\n  <g id=\"allChickens\" class=\"svg-elem\" x-show=\"sceneStep >= 2\" opacity=\"0.75\">\n    <g transform=\"translate(185,0)\"><ellipse cx=\"0\" cy=\"312\" rx=\"27\" ry=\"42\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"0\" cy=\"265\" r=\"16\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"6\" cy=\"262\" r=\"2.5\" fill=\"#2b2b2b\"/><polygon points=\"16,266 29,271 16,276\" fill=\"#d6432f\"/><circle cx=\"-8\" cy=\"246\" r=\"5\" fill=\"#d6432f\"/></g>\n    <g transform=\"translate(255,0)\"><ellipse cx=\"0\" cy=\"312\" rx=\"27\" ry=\"42\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"0\" cy=\"265\" r=\"16\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"6\" cy=\"262\" r=\"2.5\" fill=\"#2b2b2b\"/><polygon points=\"16,266 29,271 16,276\" fill=\"#d6432f\"/><circle cx=\"-8\" cy=\"246\" r=\"5\" fill=\"#d6432f\"/></g>\n    <g transform=\"translate(325,0)\"><ellipse cx=\"0\" cy=\"312\" rx=\"27\" ry=\"42\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"0\" cy=\"265\" r=\"16\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"6\" cy=\"262\" r=\"2.5\" fill=\"#2b2b2b\"/><polygon points=\"16,266 29,271 16,276\" fill=\"#d6432f\"/><circle cx=\"-8\" cy=\"246\" r=\"5\" fill=\"#d6432f\"/></g>\n    <g transform=\"translate(395,0)\"><ellipse cx=\"0\" cy=\"312\" rx=\"27\" ry=\"42\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"0\" cy=\"265\" r=\"16\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"6\" cy=\"262\" r=\"2.5\" fill=\"#2b2b2b\"/><polygon points=\"16,266 29,271 16,276\" fill=\"#d6432f\"/><circle cx=\"-8\" cy=\"246\" r=\"5\" fill=\"#d6432f\"/></g>\n    <g transform=\"translate(465,0)\"><ellipse cx=\"0\" cy=\"312\" rx=\"27\" ry=\"42\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"0\" cy=\"265\" r=\"16\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"6\" cy=\"262\" r=\"2.5\" fill=\"#2b2b2b\"/><polygon points=\"16,266 29,271 16,276\" fill=\"#d6432f\"/><circle cx=\"-8\" cy=\"246\" r=\"5\" fill=\"#d6432f\"/></g>\n    <g transform=\"translate(535,0)\"><ellipse cx=\"0\" cy=\"312\" rx=\"27\" ry=\"42\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"0\" cy=\"265\" r=\"16\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"6\" cy=\"262\" r=\"2.5\" fill=\"#2b2b2b\"/><polygon points=\"16,266 29,271 16,276\" fill=\"#d6432f\"/><circle cx=\"-8\" cy=\"246\" r=\"5\" fill=\"#d6432f\"/></g>\n    <g transform=\"translate(605,0)\"><ellipse cx=\"0\" cy=\"312\" rx=\"27\" ry=\"42\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"0\" cy=\"265\" r=\"16\" fill=\"#fffaf0\" stroke=\"#b9ad95\" stroke-width=\"2\"/><circle cx=\"6\" cy=\"262\" r=\"2.5\" fill=\"#2b2b2b\"/><polygon points=\"16,266 29,271 16,276\" fill=\"#d6432f\"/><circle cx=\"-8\" cy=\"246\" r=\"5\" fill=\"#d6432f\"/></g>\n    <g transform=\"translate(675,0)\"><ellipse cx=\"0\" cy=\"312\" rx=\"27\"",
+    "lint_report": {
+      "passed": false,
+      "hard": [
+        {
+          "rule": "bbox_in_bounds",
+          "message": "元素 <ellipse> bbox=(-27,270)-(27,354) 越出 820×620 画布（容差 ±24px），请把图形/文字移入画布或整体缩小；若含 motions 运动主体，须保证「初始位置 + 各步 translate 最大位移」仍落在画布内"
+        }
+      ],
+      "warnings": [
+        {
+          "rule": "text_on_shape_warn",
+          "message": "文字 @254,570 与 <rect> @245,548 交叠 312×19px 且未完全落入图形内；若文字是图形内标签请整体移入，否则请移到图形外侧避让"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <rect>@128,218 与 <rect>@142,232 交叠 IoU=0.79，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <ellipse>@-27,270 与 <ellipse>@-27,270 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        },
+        {
+          "rule": "shape_coincident_warn",
+          "message": "图形 <circle>@-16,249 与 <circle>@-16,249 交叠 IoU=1.00，疑似重复/贴死，请确认是否为同一图形画了两遍"
+        }
+      ]
+    },
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "task_id": "7cceadf5-fbbb-4208-9d61-136be6de686e",
+    "max_output_tokens": 32768
+  }
+}

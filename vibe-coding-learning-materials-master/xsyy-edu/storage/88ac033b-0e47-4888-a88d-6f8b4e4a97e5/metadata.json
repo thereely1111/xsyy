@@ -1,0 +1,23 @@
+{
+  "question": "6.56 ÷ 4.1",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/88ac033b-0e47-4888-a88d-6f8b4e4a97e5/ScreenShot_2026-01-23_235634_478.png",
+  "task_id": "88ac033b-0e47-4888-a88d-6f8b4e4a97e5",
+  "generated_at": "2026-01-24T00:00:54.857826Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "小数除法计算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "题目是纯粹的小数四则运算，考察计算能力。",
+    "main_tag": "运算能力",
+    "sub_tags": [
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-24T00:00:54.857842Z",
+  "preview_image": "Preview.webp"
+}

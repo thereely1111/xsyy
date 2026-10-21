@@ -1,0 +1,23 @@
+{
+  "question": "阿姨给小朋友分糖块，如果每人分 3 块，还多 2 块，如果每个分 4 块，则少 4 块，阿姨一共有( )块糖，要分给( )个小朋友。小琼老师带 17 个小朋友去划船，每艘船最多能够乘坐 4 人。要让",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/2f9a4dda-b0eb-4aa9-b054-0d4b0d8d4632/pasted-image-1767153235421.png",
+  "task_id": "2f9a4dda-b0eb-4aa9-b054-0d4b0d8d4632",
+  "generated_at": "2025-12-31T11:55:29.505232Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "盈亏问题与分配应用",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "题目是涉及生活情境的典型应用题。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-31T11:55:29.505417Z",
+  "preview_image": "Preview.webp"
+}

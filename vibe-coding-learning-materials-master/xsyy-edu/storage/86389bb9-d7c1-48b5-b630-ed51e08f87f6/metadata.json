@@ -1,0 +1,18 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "七上",
+    "main_tag": "一元一次方程",
+    "sub_tags": [
+      "一元一次方程应用题"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-31T01:19:10.398790Z",
+  "knowledge_tags_confirmed": true,
+  "title": "工程问题",
+  "question": "修一条路，甲队单独修需12天完成，乙队单独修需18天完成。两队合修，几天能完成？",
+  "prompt": "修一条路，甲队单独修需12天完成，乙队单独修需18天完成。两队合修，几天能完成？"
+}

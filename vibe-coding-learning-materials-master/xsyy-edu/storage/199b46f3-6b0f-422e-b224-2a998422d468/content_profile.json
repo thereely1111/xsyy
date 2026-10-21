@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "stage": "junior_high",
+  "domain": "函数",
+  "display_class": "function",
+  "grade": "九上",
+  "tags": {
+    "main_tag": "二次函数",
+    "sub_tags": [
+      "二次函数的图象、性质与平移"
+    ],
+    "second_tag": null
+  },
+  "question_type": "反比例函数与一次函数交点",
+  "figure_info": {
+    "has_figure": false,
+    "figures": []
+  },
+  "visual_requirements": {
+    "style_key": "junior_function",
+    "steps_min": 5,
+    "steps_max": 7,
+    "motion_policy": "answer_first",
+    "must_show": []
+  },
+  "method_lock": null,
+  "is_math_problem": true,
+  "confidence": 0.95,
+  "engine": "agent",
+  "is_composite": true,
+  "parts": [
+    {
+      "label": "（1）",
+      "text": "(1)顶点",
+      "domain": "函数",
+      "display_class": "function",
+      "question_type": "二次函数"
+    },
+    {
+      "label": "（2）",
+      "text": "(2)与 x 轴交点",
+      "domain": "函数",
+      "display_class": "function",
+      "question_type": "反比例函数与一次函数交点"
+    },
+    {
+      "label": "（3）",
+      "text": "(3)上移 k 个单位后与 x 轴只一个公共点",
+      "domain": "函数",
+      "display_class": "function",
+      "question_type": ""
+    }
+  ],
+  "domains": [
+    "function"
+  ]
+}

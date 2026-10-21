@@ -1,0 +1,31 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "用三角函数来证明相似三角形",
+  "prompt": "用三角函数来证明相似三角形",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "63375057-e72e-432b-914a-184a0e3ad930",
+  "generated_at": "2026-08-24T03:26:22.243029Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "三角形相似",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "含几何证明要求"
+  },
+  "tags_updated_at": "2026-08-24T03:26:22.243029Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "九上",
+    "main_tag": "全等三角形",
+    "sub_tags": [
+      "相似判定注意"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-26T07:49:20.237999Z",
+  "knowledge_tags_confirmed": true,
+  "second_tag": null
+}

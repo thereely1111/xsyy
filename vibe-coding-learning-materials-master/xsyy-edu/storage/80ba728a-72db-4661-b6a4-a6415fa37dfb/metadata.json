@@ -1,0 +1,22 @@
+{
+  "question": "将被除数个位的0去掉与除数相等，被除数与除数和为374，则被除数、除数各是多少?",
+  "prompt": "将被除数个位的0去掉与除数相等，被除数与除数和为374，则被除数、除数各是多少?",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "80ba728a-72db-4661-b6a4-a6415fa37dfb",
+  "generated_at": "2025-12-05T19:09:36.664699",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "和倍问题",
+  "tags": {
+    "reasoning": "涉及被除数与除数的倍数关系",
+    "main_tag": "符号意识",
+    "sub_tags": [
+      "模型意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-05T19:09:36.664699",
+  "preview_image": "Preview.webp"
+}

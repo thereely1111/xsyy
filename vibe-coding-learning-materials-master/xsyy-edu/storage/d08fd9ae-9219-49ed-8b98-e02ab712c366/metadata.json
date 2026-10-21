@@ -1,0 +1,35 @@
+{
+  "question": "小明从家到学校要走 800 米，他走了 350 米后休息了一下，还剩多少米？",
+  "prompt": "小明从家到学校要走 800 米，他走了 350 米后休息了一下，还剩多少米？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "d08fd9ae-9219-49ed-8b98-e02ab712c366",
+  "generated_at": "2026-08-05T16:28:33.477622Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "整数减法应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境需列式解决",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "数感",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-08-05T16:28:33.477637Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "三上",
+    "main_tag": "万以内加减法",
+    "sub_tags": [
+      "整十整百加减"
+    ]
+  },
+  "preview_image": "Preview.webp",
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T09:13:16.972919Z",
+  "knowledge_tags_confirmed": true
+}

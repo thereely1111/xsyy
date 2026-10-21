@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>番茄钟</title>
+	<style>
+		:root {
+			--primary: #e74c3c;
+			--secondary: #2ecc71;
+			--bg: #f7f7f7;
+			--text: #222;
+			--radius: 180px;
+		}
+		body {
+			background: var(--bg);
+			color: var(--text);
+			font-family: 'Segoe UI', 'PingFang SC', Arial, sans-serif;
+			margin: 0;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+		.container {
+			background: #fff;
+			border-radius: 24px;
+			box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+			padding: 32px 24px 24px 24px;
+			max-width: 350px;
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 24px;
+		}
+		.stage-tabs {
+			display: flex;
+			gap: 12px;
+			margin-bottom: 8px;
+		}
+		.stage-tab {
+			padding: 6px 18px;
+			border-radius: 16px;
+			border: none;
+			background: #eee;
+			color: #888;
+			font-weight: 500;
+			cursor: pointer;
+			transition: background 0.2s, color 0.2s;
+		}
+		.stage-tab.active {
+			background: var(--primary);
+			color: #fff;
+		}
+		.timer {
+			position: relative;
+			width: var(--radius);
+			height: var(--radius);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.timer svg {
+			position: absolute;
+			top: 0; left: 0;
+			width: 100%; height: 100%;
+			transform: rotate(-90deg);
+		}
+		.timer-time {
+			font-size: 2.8rem;
+			font-weight: bold;
+			z-index: 1;
+			letter-spacing: 2px;
+		}
+		.controls {
+			display: flex;
+			gap: 16px;
+			margin-top: 8px;
+		}
+		.controls button {
+			padding: 8px 20px;
+			border-radius: 20px;
+			border: none;
+			background: var(--primary);
+			color: #fff;
+			font-size: 1rem;
+			font-weight: 500;
+			cursor: pointer;
+			transition: background 0.2s;
+		}
+		.controls button:disabled {
+			background: #ccc;
+			cursor: not-allowed;
+		}
+		.settings {
+			width: 100%;
+			margin-top: 12px;
+			background: #fafafa;
+			border-radius: 12px;
+			padding: 12px 16px;
+			font-size: 0.98rem;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+		.settings label {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-weight: 500;
+		}
+		.settings input {
+			width: 48px;
+			padding: 2px 6px;
+			border-radius: 6px;
+			border: 1px solid #ddd;
+			font-size: 1rem;
+			text-align: right;
+		}
+		@media (max-width: 480px) {
+			.container {
+				max-width: 98vw;
+				padding: 16px 2vw 12px 2vw;
+			}
+			.timer {
+				--radius: 120px;
+			}
+			.timer-time {
+				font-size: 2rem;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="stage-tabs">
+			<button class="stage-tab active" data-stage="work">专注</button>
+			<button class="stage-tab" data-stage="shortBreak">短休息</button>
+			<button class="stage-tab" data-stage="longBreak">长休息</button>
+		</div>
+		<div class="timer">
+			<svg>
+				<circle cx="90" cy="90" r="80" stroke="#eee" stroke-width="14" fill="none"/>
+				<circle id="progress" cx="90" cy="90" r="80" stroke="var(--primary)" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="502" stroke-dashoffset="0"/>
+			</svg>
+			<div class="timer-time" id="timerDisplay">25:00</div>
+		</div>
+		<div class="controls">
+			<button id="startBtn">开始</button>
+			<button id="pauseBtn" disabled>暂停</button>
+			<button id="resetBtn">重置</button>
+		</div>
+		<form class="settings" id="settingsForm">
+			<label>专注(分钟): <input type="number" min="1" max="90" id="workInput" value="25"></label>
+			<label>短休息: <input type="number" min="1" max="30" id="shortBreakInput" value="5"></label>
+			<label>长休息: <input type="number" min="1" max="60" id="longBreakInput" value="15"></label>
+			<label>每几轮长休息: <input type="number" min="1" max="10" id="roundsInput" value="4"></label>
+			<button type="submit" style="margin-top:8px;background:var(--secondary);color:#fff;">保存设置</button>
+		</form>
+	</div>
+	<script>
+		// 阶段定义
+		const stages = {
+			work: { label: '专注', color: 'var(--primary)' },
+			shortBreak: { label: '短休息', color: 'var(--secondary)' },
+			longBreak: { label: '长休息', color: '#3498db' }
+		};
+		// 默认设置
+		const defaultSettings = {
+			work: 25,
+			shortBreak: 5,
+			longBreak: 15,
+			rounds: 4
+		};
+		// 本地存储
+		function loadSettings() {
+			try {
+				return JSON.parse(localStorage.getItem('pomodoro-settings')) || { ...defaultSettings };
+			} catch {
+				return { ...defaultSettings };
+			}
+		}
+		function saveSettings(settings) {
+			localStorage.setItem('pomodoro-settings', JSON.stringify(settings));
+		}
+		// 通知权限
+		function requestNotification() {
+			if ('Notification' in window && Notification.permission !== 'granted') {
+				Notification.requestPermission();
+			}
+		}
+		function notify(msg) {
+			if ('Notification' in window && Notification.permission === 'granted') {
+				new Notification(msg);
+			}
+		}
+		// 状态
+		let settings = loadSettings();
+		let stage = 'work';
+		let timer = null;
+		let timeLeft = settings[stage] * 60;
+		let round = 1;
+		let isRunning = false;
+		// DOM
+		const timerDisplay = document.getElementById('timerDisplay');
+		const progressCircle = document.getElementById('progress');
+		const startBtn = document.getElementById('startBtn');
+		const pauseBtn = document.getElementById('pauseBtn');
+		const resetBtn = document.getElementById('resetBtn');
+		const stageTabs = document.querySelectorAll('.stage-tab');
+		const settingsForm = document.getElementById('settingsForm');
+		const workInput = document.getElementById('workInput');
+		const shortBreakInput = document.getElementById('shortBreakInput');
+		const longBreakInput = document.getElementById('longBreakInput');
+		const roundsInput = document.getElementById('roundsInput');
+		// 环形进度
+		const CIRCUM = 2 * Math.PI * 80;
+		function setProgress(percent) {
+			progressCircle.style.stroke = stages[stage].color;
+			progressCircle.setAttribute('stroke', stages[stage].color);
+			progressCircle.setAttribute('stroke-dasharray', CIRCUM);
+			progressCircle.setAttribute('stroke-dashoffset', CIRCUM * (1 - percent));
+		}
+		// 时间格式化
+		function formatTime(sec) {
+			const m = Math.floor(sec / 60).toString().padStart(2, '0');
+			const s = (sec % 60).toString().padStart(2, '0');
+			return `${m}:${s}`;
+		}
+		// 更新显示
+		function updateDisplay() {
+			timerDisplay.textContent = formatTime(timeLeft);
+			setProgress(1 - timeLeft / (settings[stage] * 60));
+		}
+		// 阶段切换
+		function switchStage(newStage, manual = false) {
+			stage = newStage;
+			timeLeft = settings[stage] * 60;
+			isRunning = false;
+			clearInterval(timer);
+			updateDisplay();
+			startBtn.disabled = false;
+			pauseBtn.disabled = true;
+			stageTabs.forEach(tab => {
+				tab.classList.toggle('active', tab.dataset.stage === stage);
+			});
+			if (!manual) notify(`进入${stages[stage].label}阶段！`);
+		}
+		// 计时逻辑
+		function startTimer() {
+			if (isRunning) return;
+			isRunning = true;
+			startBtn.disabled = true;
+			pauseBtn.disabled = false;
+			timer = setInterval(() => {
+				if (timeLeft > 0) {
+					timeLeft--;
+					updateDisplay();
+				} else {
+					clearInterval(timer);
+					isRunning = false;
+					pauseBtn.disabled = true;
+					startBtn.disabled = false;
+					// 阶段切换
+					if (stage === 'work') {
+						if (round % settings.rounds === 0) {
+							switchStage('longBreak');
+						} else {
+							switchStage('shortBreak');
+						}
+						round++;
+					} else {
+						switchStage('work');
+					}
+				}
+			}, 1000);
+		}
+		function pauseTimer() {
+			isRunning = false;
+			clearInterval(timer);
+			startBtn.disabled = false;
+			pauseBtn.disabled = true;
+		}
+		function resetTimer() {
+			isRunning = false;
+			clearInterval(timer);
+			timeLeft = settings[stage] * 60;
+			updateDisplay();
+			startBtn.disabled = false;
+			pauseBtn.disabled = true;
+		}
+		// 事件绑定
+		startBtn.onclick = startTimer;
+		pauseBtn.onclick = pauseTimer;
+		resetBtn.onclick = resetTimer;
+		stageTabs.forEach(tab => {
+			tab.onclick = () => {
+				switchStage(tab.dataset.stage, true);
+			};
+		});
+		settingsForm.onsubmit = e => {
+			e.preventDefault();
+			settings = {
+				work: Math.max(1, Math.min(90, parseInt(workInput.value) || 25)),
+				shortBreak: Math.max(1, Math.min(30, parseInt(shortBreakInput.value) || 5)),
+				longBreak: Math.max(1, Math.min(60, parseInt(longBreakInput.value) || 15)),
+				rounds: Math.max(1, Math.min(10, parseInt(roundsInput.value) || 4))
+			};
+			saveSettings(settings);
+			switchStage(stage, true);
+			notify('设置已保存！');
+		};
+		// 初始化
+		function init() {
+			workInput.value = settings.work;
+			shortBreakInput.value = settings.shortBreak;
+			longBreakInput.value = settings.longBreak;
+			roundsInput.value = settings.rounds;
+			updateDisplay();
+			requestNotification();
+		}
+		init();
+		window.onfocus = updateDisplay;
+	</script>
+</body>
+</html>

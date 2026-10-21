@@ -1,0 +1,31 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "某服装店用4000元购进甲、乙两种新款夏装共80件。已知甲种进价每件40元，售价每件60元；乙种进价每件80元，售价每件130元。服装店在销售时，甲种按售价出售，乙种因款式新颖，在售价的基础上加价10% 出售。全部售完后，服装店共获利多少元？",
+  "prompt": "某服装店用4000元购进甲、乙两种新款夏装共80件。已知甲种进价每件40元，售价每件60元；乙种进价每件80元，售价每件130元。服装店在销售时，甲种按售价出售，乙种因款式新颖，在售价的基础上加价10% 出售。全部售完后，服装店共获利多少元？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "0325f7c0-f77f-4586-b8fd-8658436ed40e",
+  "generated_at": "2026-08-25T01:19:35.412441Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "利润折扣问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中售价成本利润结构"
+  },
+  "tags_updated_at": "2026-08-25T01:19:35.412441Z",
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "七下",
+    "main_tag": "二元一次方程组",
+    "sub_tags": [
+      "二元一次方程组应用题"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-27T08:21:53.662604Z",
+  "knowledge_tags_confirmed": true,
+  "second_tag": null
+}

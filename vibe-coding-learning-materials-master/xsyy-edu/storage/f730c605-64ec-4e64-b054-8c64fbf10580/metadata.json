@@ -1,0 +1,23 @@
+{
+  "question": "一个箱子里有红、橙、黄、绿4种颜色的小球各5个,菲菲每次从中拿1个球,拿出后小球不放回箱中，那么菲菲至少要拿次，才能保证拿出红色小球.",
+  "prompt": "一个箱子里有红、橙、黄、绿4种颜色的小球各5个,菲菲每次从中拿1个球,拿出后小球不放回箱中，那么菲菲至少要拿次，才能保证拿出红色小球.",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "f730c605-64ec-4e64-b054-8c64fbf10580",
+  "generated_at": "2025-12-12T16:57:02.203831",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "最不利原则",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及保证与最坏情况",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "模型意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-12T16:57:02.204832",
+  "preview_image": "Preview.webp"
+}

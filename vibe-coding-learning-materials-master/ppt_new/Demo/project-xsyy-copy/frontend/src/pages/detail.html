@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>应用详情 - 象数演易</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'xsyy-blue': '#1a365d',
+                        'xsyy-cream': '#f7f3e9',
+                        'xsyy-gold': '#d4a574',
+                        'xsyy-orange': '#f5b042'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in-up': 'fadeInUp 0.5s ease-out forwards'
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/styles/tailwind.css">
+    <style>
+        .step-item {
+            position: relative;
+            border-left: 3px solid transparent;
+        }
+        
+        .step-item.step-active {
+            background: linear-gradient(135deg, #f5b04215 0%, #f28e2b10 100%);
+            border-left-color: #f5b042;
+            box-shadow: 0 2px 8px rgba(245, 176, 66, 0.15);
+        }
+        
+        .step-number {
+            transition: all 0.3s ease;
+        }
+        
+        .step-number.step-number-active {
+            background: linear-gradient(135deg, #f5b042 0%, #f28e2b 100%);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 12px rgba(245, 176, 66, 0.5);
+        }
+        
+        .step-indicator {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #f5b042 0%, #f28e2b 100%);
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(245, 176, 66, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(245, 176, 66, 0);
+            }
+        }
+        
+        #speechBubble {
+            transition: all 0.3s ease;
+        }
+        
+        #canvasArea {
+            transition: all 0.3s ease;
+        }
+        
+        .animate-fade-in-up {
+            opacity: 0;
+        }
+        
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-xsyy-cream">
+    <nav class="bg-xsyy-blue text-white py-4 sticky top-0 z-50">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <a href="/" class="text-2xl font-bold">象数演易</a>
+            <div class="flex items-center gap-3">
+                <button onclick="toggleFavorite()" id="favoriteBtn" class="btn-icon hidden" title="收藏">
+                    🤍
+                </button>
+                <button onclick="toggleLike()" id="likeBtn" class="btn-icon hidden" title="点赞">
+                    🤍
+                </button>
+                <a href="/" class="btn-secondary btn-sm">返回首页</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <div id="loadingState" class="flex items-center justify-center py-20">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-xsyy-blue mr-4"></div>
+            <span class="text-lg text-gray-600">加载中...</span>
+        </div>
+
+        <div id="contentArea" class="hidden">
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
+                <div class="bg-xsyy-blue text-white p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 id="appTitle" class="text-2xl font-bold mb-2">应用标题</h1>
+                            <div class="flex items-center gap-4 text-xsyy-gold">
+                                <span id="appTag" class="px-3 py-1 bg-white/10 rounded-full text-sm">标签</span>
+                                <span id="appDifficulty" class="px-3 py-1 bg-white/10 rounded-full text-sm">难度</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xsyy-gold text-sm">浏览</p>
+                            <p id="viewCount" class="text-2xl font-bold">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 教学区域：步骤列表 + 画布 -->
+                <div id="teachingArea" class="flex min-h-[600px]">
+                    <!-- 右侧步骤列表 -->
+                    <div id="stepsPanel" class="w-80 bg-gray-50 border-l border-gray-200 overflow-y-auto flex-shrink-0">
+                        <div class="p-4 border-b border-gray-200 bg-white">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-bold text-xsyy-blue">讲解步骤</h3>
+                                <div class="flex gap-2">
+                                    <button id="prevStepBtn" class="btn-icon" title="上一步" onclick="goToPrevStep()">
+                                        ◀
+                                    </button>
+                                    <button id="autoPlayBtn" class="btn-icon" title="自动播放" onclick="toggleAutoPlay()">
+                                        ▶
+                                    </button>
+                                    <button id="nextStepBtn" class="btn-icon" title="下一步" onclick="goToNextStep()">
+                                        ▶▶
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span id="stepProgress" class="text-sm text-gray-500">1/0</span>
+                                <div class="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                    <div id="progressBar" class="h-full bg-gradient-to-r from-[#f5b042] to-[#f28e2b] transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="stepsList" class="p-2">
+                            <!-- 步骤列表将动态生成 -->
+                        </div>
+                    </div>
+
+                    <!-- 左侧画布区域 -->
+                    <div id="canvasArea" class="flex-1 p-6 bg-white relative">
+                        <!-- 讲解气泡 -->
+                        <div id="speechBubble" class="hidden absolute top-4 right-4 bg-[#f5b042] text-[#2d2a24] px-4 py-3 rounded-2xl shadow-lg max-w-xs z-10">
+                            <div class="absolute -bottom-3 left-8 w-6 h-6 bg-[#f5b042] rotate-45"></div>
+                            <p id="bubbleText" class="font-medium"></p>
+                        </div>
+
+                        <!-- 步骤详情 -->
+                        <div id="stepDetail" class="mb-6">
+                            <h2 id="stepTitle" class="text-xl font-bold text-xsyy-blue mb-2"></h2>
+                            <p id="stepDescription" class="text-gray-600"></p>
+                        </div>
+
+                        <!-- 内容画布 -->
+                        <div id="appContent" class="min-h-[400px]">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-6 mb-8">
+                <h3 class="text-xl font-bold text-xsyy-blue mb-4">评论</h3>
+
+                <div id="commentForm" class="mb-6 hidden">
+                    <textarea id="commentInput" rows="3" class="input-field" placeholder="发表您的评论..."></textarea>
+                    <button onclick="submitComment()" class="mt-3 btn-primary">
+                        发表评论
+                    </button>
+                </div>
+
+                <div id="commentsList" class="space-y-4">
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-xl font-bold text-xsyy-blue mb-4">相关推荐</h3>
+                <div id="recommendList" class="grid md:grid-cols-4 gap-4">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/src/utils/api.js"></script>
+    <script src="/src/utils/auth.js"></script>
+    <script src="/src/utils/ui.js"></script>
+    <script src="/src/utils/feedback.js"></script>
+    <script>
+        let currentAppId = null;
+        let isFavorited = false;
+        let isLiked = false;
+        let isFavoriteLoading = false;
+        let isLikeLoading = false;
+        
+        // 教学状态管理
+        let currentStep = 0;
+        let teachingData = null;
+        let isAutoPlaying = false;
+        let autoPlayTimer = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentAppId = urlParams.get('id');
+
+            if (!currentAppId) {
+                showToast('缺少应用ID', 'error');
+                window.location.href = '/';
+                return;
+            }
+
+            initAuth();
+            loadApplication();
+
+            if (auth.isAuthenticated()) {
+                document.getElementById('favoriteBtn').classList.remove('hidden');
+                document.getElementById('likeBtn').classList.remove('hidden');
+                document.getElementById('commentForm').classList.remove('hidden');
+            }
+        });
+
+        async function loadApplication() {
+            try {
+                const response = await api.applications.get(currentAppId);
+                const app = response.data;
+
+                document.getElementById('appTitle').textContent = app.title;
+                document.getElementById('appTag').textContent = app.primary_tag;
+                document.getElementById('appDifficulty').textContent = getDifficultyLabel(app.difficulty);
+                document.getElementById('viewCount').textContent = app.view_count || 0;
+
+                // 解析教学数据
+                if (app.teaching_data) {
+                    teachingData = typeof app.teaching_data === 'string' 
+                        ? JSON.parse(app.teaching_data) 
+                        : app.teaching_data;
+                } else {
+                    // 如果没有教学数据，生成模拟数据
+                    teachingData = generateMockTeachingData(app);
+                }
+
+                // 渲染步骤列表
+                renderStepsList();
+                
+                // 如果有步骤，显示第一步
+                if (teachingData && teachingData.steps && teachingData.steps.length > 0) {
+                    goToStep(0);
+                } else {
+                    // 显示原始 HTML 内容
+                    if (app.html_content) {
+                        document.getElementById('appContent').innerHTML = app.html_content;
+                    }
+                }
+
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('contentArea').classList.remove('hidden');
+
+                loadComments();
+                loadRecommendations();
+
+            } catch (error) {
+                showToast('加载失败: ' + error.message, 'error');
+                document.getElementById('loadingState').innerHTML = `
+                    <div class="text-center">
+                        <p class="text-red-500 mb-4">加载失败</p>
+                        <a href="/" class="px-6 py-2 bg-xsyy-blue text-white rounded-lg">返回首页</a>
+                    </div>
+                `;
+            }
+        }
+
+        // 生成模拟教学数据（当后端没有提供时）
+        function generateMockTeachingData(app) {
+            return {
+                steps: [
+                    {
+                        id: 1,
+                        title: "理解题意",
+                        description: "首先，我们需要仔细阅读题目，明确已知条件和要求解的问题。找出题目中的关键信息，理解各个条件之间的关系。",
+                        canvasState: { 
+                            type: "highlight", 
+                            elements: ["condition1", "condition2"] 
+                        },
+                        bubbleText: "找已知数和未知数",
+                        duration: 5
+                    },
+                    {
+                        id: 2,
+                        title: "分析数量关系",
+                        description: "根据题目描述，分析各个量之间的关系，确定哪些是已知量，哪些是未知量，以及它们之间存在什么样的数学关系。",
+                        canvasState: { 
+                            type: "draw", 
+                            content: "已知条件分析" 
+                        },
+                        bubbleText: "画出关系图帮助理解",
+                        duration: 6
+                    },
+                    {
+                        id: 3,
+                        title: "建立方程",
+                        description: "设未知数 x，根据等量关系列出方程。这是解决问题的关键步骤，需要确保方程能够准确表达题目中的数量关系。",
+                        canvasState: { 
+                            type: "equation", 
+                            equation: "x + 2 = 5" 
+                        },
+                        bubbleText: "列方程的关键是找到等号两边相等的关系",
+                        duration: 7
+                    },
+                    {
+                        id: 4,
+                        title: "解方程",
+                        description: "运用等式的基本性质，逐步求解方程。注意每一步的变形都要保持等式两边相等。",
+                        canvasState: { 
+                            type: "animate", 
+                            steps: ["x + 2 - 2 = 5 - 2", "x = 3"] 
+                        },
+                        bubbleText: "两边同时减去2",
+                        duration: 6
+                    },
+                    {
+                        id: 5,
+                        title: "检验答案",
+                        description: "将求得的解代入原方程，检验是否满足等式。确保答案的正确性，避免计算错误。",
+                        canvasState: { 
+                            type: "verify", 
+                            value: 3,
+                            equation: "3 + 2 = 5"
+                        },
+                        bubbleText: "代入检验确保正确",
+                        duration: 4
+                    }
+                ]
+            };
+        }
+
+        // 渲染步骤列表
+        function renderStepsList() {
+            const container = document.getElementById('stepsList');
+            if (!teachingData || !teachingData.steps) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">暂无讲解步骤</p>';
+                return;
+            }
+
+            const steps = teachingData.steps;
+            container.innerHTML = steps.map((step, index) => `
+                <div 
+                    class="step-item p-3 rounded-xl cursor-pointer transition-all duration-200 mb-2 ${index === currentStep ? 'step-active' : 'hover:bg-gray-100'}"
+                    onclick="goToStep(${index})"
+                >
+                    <div class="flex items-start gap-3">
+                        <div class="step-number w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center text-sm font-bold flex-shrink-0 ${index === currentStep ? 'step-number-active' : ''}">
+                            ${index + 1}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-medium text-gray-800 text-sm truncate">${step.title}</h4>
+                            <p class="text-xs text-gray-500 mt-1 line-clamp-2">${step.description}</p>
+                        </div>
+                        ${index === currentStep ? '<div class="step-indicator"></div>' : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            // 更新进度显示
+            updateProgress();
+        }
+
+        // 切换到指定步骤
+        function goToStep(index) {
+            if (!teachingData || !teachingData.steps) return;
+            if (index < 0 || index >= teachingData.steps.length) return;
+
+            // 停止自动播放
+            stopAutoPlay();
+
+            currentStep = index;
+            const step = teachingData.steps[index];
+
+            // 更新步骤高亮
+            updateStepHighlight();
+
+            // 更新步骤详情
+            document.getElementById('stepTitle').textContent = step.title;
+            document.getElementById('stepDescription').textContent = step.description;
+
+            // 更新画布内容
+            updateCanvas(step);
+
+            // 更新讲解气泡
+            updateSpeechBubble(step);
+
+            // 更新进度
+            updateProgress();
+
+            // 滚动到当前步骤
+            scrollToStep(index);
+        }
+
+        // 更新步骤高亮
+        function updateStepHighlight() {
+            const items = document.querySelectorAll('.step-item');
+            const numbers = document.querySelectorAll('.step-number');
+            
+            items.forEach((item, index) => {
+                if (index === currentStep) {
+                    item.classList.add('step-active');
+                    item.classList.remove('hover:bg-gray-100');
+                } else {
+                    item.classList.remove('step-active');
+                    item.classList.add('hover:bg-gray-100');
+                }
+            });
+
+            numbers.forEach((num, index) => {
+                if (index === currentStep) {
+                    num.classList.add('step-number-active');
+                } else {
+                    num.classList.remove('step-number-active');
+                }
+            });
+        }
+
+        // 更新画布内容
+        function updateCanvas(step) {
+            const canvas = document.getElementById('appContent');
+            const state = step.canvasState;
+
+            if (!state) {
+                canvas.innerHTML = '<div class="flex items-center justify-center h-64 text-gray-400">暂无图形内容</div>';
+                return;
+            }
+
+            switch (state.type) {
+                case 'highlight':
+                    canvas.innerHTML = `
+                        <div class="bg-yellow-50 rounded-xl p-6 border-2 border-dashed border-yellow-300">
+                            <h4 class="font-bold text-xsyy-blue mb-4">重点标记</h4>
+                            <div class="space-y-2">
+                                ${(state.elements || []).map((el, i) => `
+                                    <div class="flex items-center gap-2 p-3 bg-white rounded-lg shadow-sm">
+                                        <span class="w-2 h-2 bg-[#f5b042] rounded-full"></span>
+                                        <span>关键条件 ${i + 1}: ${el}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                case 'draw':
+                    canvas.innerHTML = `
+                        <div class="bg-blue-50 rounded-xl p-6 border-2 border-dashed border-blue-300">
+                            <h4 class="font-bold text-xsyy-blue mb-4">图形示意</h4>
+                            <div class="flex items-center justify-center h-48">
+                                <div class="text-center">
+                                    <div class="text-6xl mb-4">📐</div>
+                                    <p class="text-gray-600">${state.content || state.equation || '绘制图形'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                case 'equation':
+                    canvas.innerHTML = `
+                        <div class="bg-gradient-to-br from-[#f5b042]/10 to-[#f28e2b]/10 rounded-xl p-8">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-xsyy-blue mb-4 tracking-wider">
+                                    ${state.equation || 'x = ?'}
+                                </div>
+                                <div class="flex justify-center gap-4">
+                                    <button class="px-4 py-2 btn-secondary btn-sm" onclick="showEquationHint()">💡 提示</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                case 'animate':
+                    canvas.innerHTML = `
+                        <div class="bg-green-50 rounded-xl p-6 border-2 border-dashed border-green-300">
+                            <h4 class="font-bold text-xsyy-blue mb-4">解题过程</h4>
+                            <div class="space-y-3">
+                                ${(state.steps || []).map((eq, i) => `
+                                    <div class="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm animate-fade-in-up" style="animation-delay: ${i * 0.3}s">
+                                        <span class="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm">${i + 1}</span>
+                                        <span class="font-medium text-gray-800">${eq}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                case 'verify':
+                    canvas.innerHTML = `
+                        <div class="bg-gray-50 rounded-xl p-8">
+                            <div class="text-center">
+                                <div class="text-2xl mb-4">✅ 检验结果</div>
+                                <div class="text-xl font-bold text-green-600 mb-2">${state.equation}</div>
+                                <div class="text-gray-500">左边 = ${state.equation.split('=')[0].trim()} = ${state.value}</div>
+                                <div class="text-gray-500">右边 = ${state.equation.split('=')[1].trim()}</div>
+                                <div class="mt-4 text-lg font-bold text-green-600">✓ 等式成立！</div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                default:
+                    canvas.innerHTML = `
+                        <div class="flex items-center justify-center h-64 text-gray-400">
+                            <div class="text-center">
+                                <div class="text-4xl mb-2">📚</div>
+                                <p>第 ${currentStep + 1} 步: ${step.title}</p>
+                            </div>
+                        </div>
+                    `;
+            }
+        }
+
+        // 更新讲解气泡
+        function updateSpeechBubble(step) {
+            const bubble = document.getElementById('speechBubble');
+            const bubbleText = document.getElementById('bubbleText');
+
+            if (step.bubbleText) {
+                bubbleText.textContent = step.bubbleText;
+                bubble.classList.remove('hidden');
+                
+                // 添加淡入动画
+                bubble.style.opacity = '0';
+                bubble.style.transform = 'translateY(-10px)';
+                requestAnimationFrame(() => {
+                    bubble.style.opacity = '1';
+                    bubble.style.transform = 'translateY(0)';
+                });
+            } else {
+                bubble.classList.add('hidden');
+            }
+        }
+
+        // 更新进度显示
+        function updateProgress() {
+            if (!teachingData || !teachingData.steps) return;
+            
+            const total = teachingData.steps.length;
+            const progress = ((currentStep + 1) / total) * 100;
+            
+            document.getElementById('stepProgress').textContent = `${currentStep + 1}/${total}`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        // 滚动到当前步骤
+        function scrollToStep(index) {
+            const stepItem = document.querySelector(`.step-item:nth-child(${index + 1})`);
+            if (stepItem) {
+                stepItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // 上一步
+        function goToPrevStep() {
+            if (currentStep > 0) {
+                goToStep(currentStep - 1);
+            }
+        }
+
+        // 下一步
+        function goToNextStep() {
+            if (!teachingData || !teachingData.steps) return;
+            if (currentStep < teachingData.steps.length - 1) {
+                goToStep(currentStep + 1);
+            }
+        }
+
+        // 切换自动播放
+        function toggleAutoPlay() {
+            if (!teachingData || !teachingData.steps) return;
+
+            const btn = document.getElementById('autoPlayBtn');
+            
+            if (isAutoPlaying) {
+                stopAutoPlay();
+                btn.innerHTML = '▶';
+                btn.title = '自动播放';
+            } else {
+                startAutoPlay();
+                btn.innerHTML = '⏸';
+                btn.title = '暂停播放';
+            }
+        }
+
+        // 开始自动播放
+        function startAutoPlay() {
+            isAutoPlaying = true;
+            playNextStep();
+        }
+
+        // 停止自动播放
+        function stopAutoPlay() {
+            isAutoPlaying = false;
+            if (autoPlayTimer) {
+                clearTimeout(autoPlayTimer);
+                autoPlayTimer = null;
+            }
+        }
+
+        // 播放下一步
+        function playNextStep() {
+            if (!isAutoPlaying) return;
+            
+            const step = teachingData.steps[currentStep];
+            const duration = (step.duration || 5) * 1000;
+            
+            autoPlayTimer = setTimeout(() => {
+                if (currentStep < teachingData.steps.length - 1) {
+                    goToStep(currentStep + 1);
+                    playNextStep();
+                } else {
+                    // 播放完毕
+                    stopAutoPlay();
+                    document.getElementById('autoPlayBtn').innerHTML = '▶';
+                    document.getElementById('autoPlayBtn').title = '自动播放';
+                    showToast('讲解播放完毕', 'info');
+                }
+            }, duration);
+        }
+
+        // 显示方程提示
+        function showEquationHint() {
+            showToast('提示：可以尝试移项或合并同类项来求解方程', 'info');
+        }
+
+        function getDifficultyLabel(difficulty) {
+            const labels = { easy: '简单', medium: '中等', hard: '困难', olympiad: '竞赛级' };
+            return labels[difficulty] || '中等';
+        }
+
+        async function loadComments() {
+            try {
+                const response = await api.comments.list(currentAppId);
+                const comments = response.data.items || [];
+
+                const container = document.getElementById('commentsList');
+
+                if (comments.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 text-center py-4">暂无评论</p>';
+                    return;
+                }
+
+                container.innerHTML = comments.map(comment => `
+                    <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-xsyy-blue">用户${comment.user_id}</span>
+                            <span class="text-gray-400 text-sm">${formatDateTime(comment.created_at)}</span>
+                        </div>
+                        <p class="text-gray-700">${comment.content}</p>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Failed to load comments:', error);
+            }
+        }
+
+        async function submitComment() {
+            const input = document.getElementById('commentInput');
+            const content = input.value.trim();
+
+            if (!content) {
+                showToast('请输入评论内容', 'warning');
+                return;
+            }
+
+            try {
+                await api.comments.create({
+                    application_id: parseInt(currentAppId),
+                    content: content
+                });
+                input.value = '';
+                showToast('评论成功', 'success');
+                loadComments();
+            } catch (error) {
+                showToast('评论失败: ' + error.message, 'error');
+            }
+        }
+
+        async function loadRecommendations() {
+            try {
+                const response = await api.recommend.similar({ app_id: currentAppId, limit: 4 });
+                const items = response.data.items || [];
+
+                const container = document.getElementById('recommendList');
+
+                if (items.length === 0) {
+                    container.innerHTML = '<p class="text-gray-500 col-span-4 text-center py-4">暂无相关推荐</p>';
+                    return;
+                }
+
+                container.innerHTML = items.map(item => `
+                    <a href="/pages/detail.html?id=${item.id}" class="bg-xsyy-cream rounded-lg p-4 hover:shadow-md transition block">
+                        <h4 class="font-bold text-xsyy-blue mb-2 truncate">${item.title}</h4>
+                        <p class="text-sm text-gray-500">${item.primary_tag} · ${getDifficultyLabel(item.difficulty)}</p>
+                    </a>
+                `).join('');
+
+            } catch (error) {
+                console.error('Failed to load recommendations:', error);
+            }
+        }
+
+        async function toggleFavorite() {
+            const button = document.getElementById('favoriteBtn');
+            
+            if (isFavoriteLoading) return;
+            isFavoriteLoading = true;
+            
+            // 乐观更新
+            const wasFavorited = isFavorited;
+            isFavorited = !isFavorited;
+            button.innerHTML = isFavorited ? '❤️' : '🤍';
+            button.classList.toggle('active', isFavorited);
+            
+            try {
+                if (wasFavorited) {
+                    await api.users.removeFavorite(currentAppId, { showSuccessToast: false, showErrorToast: false });
+                    showToast('已取消收藏', 'info');
+                } else {
+                    await api.users.addFavorite(currentAppId, { showSuccessToast: false, showErrorToast: false });
+                    showToast('收藏成功', 'success');
+                }
+            } catch (error) {
+                // 回滚乐观更新
+                isFavorited = wasFavorited;
+                button.innerHTML = isFavorited ? '❤️' : '🤍';
+                button.classList.toggle('active', isFavorited);
+                showToast('操作失败', 'error');
+            } finally {
+                isFavoriteLoading = false;
+            }
+        }
+
+        async function toggleLike() {
+            const button = document.getElementById('likeBtn');
+            
+            if (isLikeLoading) return;
+            isLikeLoading = true;
+            
+            // 乐观更新
+            const wasLiked = isLiked;
+            isLiked = !isLiked;
+            button.innerHTML = isLiked ? '👍' : '🤍';
+            button.classList.toggle('active', isLiked);
+            
+            try {
+                if (wasLiked) {
+                    await api.users.removeLike(currentAppId, { showSuccessToast: false, showErrorToast: false });
+                    showToast('已取消点赞', 'info');
+                } else {
+                    await api.users.addLike(currentAppId, { showSuccessToast: false, showErrorToast: false });
+                    showToast('点赞成功', 'success');
+                }
+            } catch (error) {
+                // 回滚乐观更新
+                isLiked = wasLiked;
+                button.innerHTML = isLiked ? '👍' : '🤍';
+                button.classList.toggle('active', isLiked);
+                showToast('操作失败', 'error');
+            } finally {
+                isLikeLoading = false;
+            }
+        }
+    </script>
+</body>
+</html>

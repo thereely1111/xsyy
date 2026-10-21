@@ -1,0 +1,24 @@
+{
+  "question": "小伟和小明从学校到电影院看电影, 小伟以每分钟 60 米的速度向影院走去, 5 分钟后, 小明以每分钟 80 米的速度向影院走去, 结果两人同时到达影院学校到电影院的路程是多少米?",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\11b58410-7355-4547-9584-bea6f170d085\\pasted-image-1766484593182.png",
+  "task_id": "11b58410-7355-4547-9584-bea6f170d085",
+  "generated_at": "2025-12-23T18:11:20.823130Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "行程问题-追及应用",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境下的路程问题，需要构建数学模型求解。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2025-12-23T18:11:20.823130Z",
+  "preview_image": "Preview.webp"
+}

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "stage": "junior_high",
+  "domain": "图形与几何",
+  "display_class": "geometry",
+  "grade": "八下",
+  "tags": {
+    "main_tag": "平行四边形",
+    "sub_tags": [
+      "平行四边形的性质与判定"
+    ],
+    "second_tag": null
+  },
+  "question_type": "",
+  "figure_info": {
+    "has_figure": false,
+    "figures": []
+  },
+  "visual_requirements": {
+    "style_key": "junior_geometry",
+    "steps_min": 5,
+    "steps_max": 8,
+    "motion_policy": "answer_first",
+    "must_show": [
+      "几何标注规范",
+      "辅助线分层"
+    ]
+  },
+  "method_lock": null,
+  "is_math_problem": true,
+  "confidence": 0.9,
+  "engine": "agent",
+  "is_composite": false,
+  "parts": [],
+  "domains": []
+}

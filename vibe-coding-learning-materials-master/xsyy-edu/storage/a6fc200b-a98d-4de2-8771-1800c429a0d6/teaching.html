@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>桥隧问题求火车长 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">桥隧问题求火车长</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('把过桥的 $60v=1000+L$ 与在桥上的 $40v=1000-L$ 两式相加消去车长 $L$，得 $100v=2000$，所以速度为 $20$ 米/秒，再回代求得车长 $200$ 米。')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <defs>
+                                <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L8,3 z" fill="#b91c1c"></path>
+                                </marker>
+                                <marker id="arrowCyan" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                                    <path d="M0,0 L0,6 L8,3 z" fill="#0e7490"></path>
+                                </marker>
+                            </defs>
+
+                            <!-- 装饰水印（始终可见） -->
+                            <g x-show="sceneStep >= 0">
+                                <text x="400" y="585" text-anchor="middle" font-size="26" fill="#e7e5e4" font-family="'Noto Serif SC', serif" letter-spacing="14">桥 隧 问 题</text>
+                            </g>
+
+                            <!-- 桥梁结构（全程显示） -->
+                            <g x-show="sceneStep >= 1"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100">
+                                <rect x="200" y="312" width="16" height="110" fill="#d6d3d1"></rect>
+                                <rect x="330" y="312" width="16" height="110" fill="#d6d3d1"></rect>
+                                <rect x="460" y="312" width="16" height="110" fill="#d6d3d1"></rect>
+                                <rect x="590" y="312" width="16" height="110" fill="#d6d3d1"></rect>
+                                <rect x="150" y="300" width="500" height="12" rx="2" fill="#a8a29e"></rect>
+                                <line x1="150" y1="300" x2="650" y2="300" stroke="#78716c" stroke-width="2"></line>
+                                <line x1="150" y1="288" x2="150" y2="322" stroke="#57534e" stroke-width="2"></line>
+                                <line x1="650" y1="288" x2="650" y2="322" stroke="#57534e" stroke-width="2"></line>
+                                <text x="150" y="342" text-anchor="middle" font-size="13" fill="#57534e" font-family="'Noto Serif SC', serif">桥头</text>
+                                <text x="650" y="342" text-anchor="middle" font-size="13" fill="#57534e" font-family="'Noto Serif SC', serif">桥尾</text>
+                                <line x1="150" y1="322" x2="150" y2="470" stroke="#d6d3d1" stroke-width="1" stroke-dasharray="4"></line>
+                                <line x1="650" y1="322" x2="650" y2="470" stroke="#d6d3d1" stroke-width="1" stroke-dasharray="4"></line>
+                                <line x1="150" y1="470" x2="650" y2="470" stroke="#78716c" stroke-width="1.5"></line>
+                                <line x1="150" y1="462" x2="150" y2="478" stroke="#57534e" stroke-width="1.5"></line>
+                                <line x1="650" y1="462" x2="650" y2="478" stroke="#57534e" stroke-width="1.5"></line>
+                                <foreignObject x="300" y="480" width="200" height="34">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-sm text-stone-600 bg-white/85 border border-stone-200 rounded px-1 py-0.5" x-html="renderMath('桥长 $1000$ 米')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- 第1步：整理已知条件（火车待命） -->
+                            <g x-show="sceneStep >= 1 && sceneStep < 2"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100"
+                               x-transition:leave="transition ease-in duration-300"
+                               x-transition:leave-start="opacity-100"
+                               x-transition:leave-end="opacity-0">
+                                <rect x="50" y="256" width="100" height="36" rx="6" fill="#dc2626" stroke="#7f1d1d" stroke-width="2"></rect>
+                                <rect x="62" y="264" width="18" height="14" rx="2" fill="#fee2e2"></rect>
+                                <rect x="90" y="264" width="18" height="14" rx="2" fill="#fee2e2"></rect>
+                                <rect x="118" y="264" width="18" height="14" rx="2" fill="#fee2e2"></rect>
+                                <circle cx="146" cy="281" r="3" fill="#fbbf24"></circle>
+                                <circle cx="72" cy="296" r="6" fill="#292524"></circle>
+                                <circle cx="128" cy="296" r="6" fill="#292524"></circle>
+                                <text x="100" y="243" text-anchor="middle" font-size="14" fill="#7f1d1d" font-family="'Noto Serif SC', serif" font-weight="bold">火车（车长 L 米）</text>
+                                <line x1="152" y1="274" x2="196" y2="274" stroke="#b91c1c" stroke-width="3" marker-end="url(#arrowRed)"></line>
+                                <foreignObject x="430" y="120" width="330" height="170">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="bg-white/90 border border-stone-300 rounded-lg shadow px-3 py-2 text-sm text-stone-800 leading-relaxed" x-html="renderMath('已知条件：\n桥长 $1000$ 米\n① 完全过桥用时 $60$ 秒\n② 整列火车完全在桥上用时 $40$ 秒\n求：速度 $v$＝？ 车长 $L$＝？')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- 第2步：完全过桥（车头进 → 车尾出） -->
+                            <g x-show="sceneStep >= 2 && sceneStep < 3"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100"
+                               x-transition:leave="transition ease-in duration-300"
+                               x-transition:leave-start="opacity-100"
+                               x-transition:leave-end="opacity-0">
+                                <rect x="50" y="256" width="100" height="36" rx="6" fill="#fecaca" fill-opacity="0.25" stroke="#b91c1c" stroke-width="2" stroke-dasharray="6 4"></rect>
+                                <text x="100" y="243" text-anchor="middle" font-size="12" fill="#b91c1c" font-family="'Noto Serif SC', serif">开始：车头上桥</text>
+                                <rect x="650" y="256" width="100" height="36" rx="6" fill="#dc2626" stroke="#7f1d1d" stroke-width="2"></rect>
+                                <rect x="662" y="264" width="18" height="14" rx="2" fill="#fee2e2"></rect>
+                                <rect x="690" y="264" width="18" height="14" rx="2" fill="#fee2e2"></rect>
+                                <rect x="718" y="264" width="18" height="14" rx="2" fill="#fee2e2"></rect>
+                                <circle cx="746" cy="281" r="3" fill="#fbbf24"></circle>
+                                <circle cx="672" cy="296" r="6" fill="#292524"></circle>
+                                <circle cx="728" cy="296" r="6" fill="#292524"></circle>
+                                <text x="700" y="243" text-anchor="middle" font-size="12" fill="#7f1d1d" font-family="'Noto Serif SC', serif">结束：车尾离桥</text>
+                                <line x1="150" y1="228" x2="744" y2="228" stroke="#b91c1c" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#arrowRed)"></line>
+                                <line x1="150" y1="220" x2="150" y2="236" stroke="#b91c1c" stroke-width="1.5"></line>
+                                <foreignObject x="300" y="150" width="280" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-sm text-red-800 bg-white/90 border border-red-200 rounded px-2 py-1 font-bold" x-html="renderMath('车头共走了 $1000 + L$ 米')"></div>
+                                </foreignObject>
+                                <foreignObject x="430" y="360" width="330" height="130">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="bg-white/90 border border-stone-300 rounded-lg shadow px-3 py-2 text-sm text-stone-800 leading-relaxed" x-html="renderMath('过桥路程＝桥长＋车长\n$S_1 = 1000 + L$\n用时 $60$ 秒，得 $60v = 1000 + L$ ①')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- 第3步：完全在桥上（车尾进 → 车头出） -->
+                            <g x-show="sceneStep >= 3 && sceneStep < 4"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100"
+                               x-transition:leave="transition ease-in duration-300"
+                               x-transition:leave-start="opacity-100"
+                               x-transition:leave-end="opacity-0">
+                                <rect x="150" y="256" width="100" height="36" rx="6" fill="#cffafe" fill-opacity="0.3" stroke="#0e7490" stroke-width="2" stroke-dasharray="6 4"></rect>
+                                <text x="200" y="243" text-anchor="middle" font-size="12" fill="#0e7490" font-family="'Noto Serif SC', serif">开始：车尾上桥</text>
+                                <rect x="550" y="256" width="100" height="36" rx="6" fill="#0891b2" stroke="#155e75" stroke-width="2"></rect>
+                                <rect x="562" y="264" width="18" height="14" rx="2" fill="#cffafe"></rect>
+                                <rect x="590" y="264" width="18" height="14" rx="2" fill="#cffafe"></rect>
+                                <rect x="618" y="264" width="18" height="14" rx="2" fill="#cffafe"></rect>
+                                <circle cx="646" cy="281" r="3" fill="#fbbf24"></circle>
+                                <circle cx="572" cy="296" r="6" fill="#292524"></circle>
+                                <circle cx="628" cy="296" r="6" fill="#292524"></circle>
+                                <text x="600" y="243" text-anchor="middle" font-size="12" fill="#155e75" font-family="'Noto Serif SC', serif">结束：车头到桥尾</text>
+                                <line x1="250" y1="228" x2="644" y2="228" stroke="#0e7490" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#arrowCyan)"></line>
+                                <line x1="250" y1="220" x2="250" y2="236" stroke="#0e7490" stroke-width="1.5"></line>
+                                <foreignObject x="300" y="150" width="280" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="text-center text-sm text-cyan-800 bg-white/90 border border-cyan-200 rounded px-2 py-1 font-bold" x-html="renderMath('车头共走了 $1000 - L$ 米')"></div>
+                                </foreignObject>
+                                <foreignObject x="430" y="360" width="330" height="130">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="bg-white/90 border border-stone-300 rounded-lg shadow px-3 py-2 text-sm text-stone-800 leading-relaxed" x-html="renderMath('在桥上路程＝桥长－车长\n$S_2 = 1000 - L$\n用时 $40$ 秒，得 $40v = 1000 - L$ ②')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- 第4步：列出方程组 -->
+                            <g x-show="sceneStep >= 4 && sceneStep < 5"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100"
+                               x-transition:leave="transition ease-in duration-300"
+                               x-transition:leave-start="opacity-100"
+                               x-transition:leave-end="opacity-0">
+                                <foreignObject x="170" y="120" width="460" height="170">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="bg-white/95 border border-red-800 rounded-lg shadow px-4 py-3 text-base text-stone-800 leading-relaxed">
+                                        <div class="font-bold text-red-800 mb-2" x-html="renderMath('设速度为 $v$ 米/秒，车长为 $L$ 米')"></div>
+                                        <div x-html="renderMath('过桥：$60v = 1000 + L$ ①')"></div>
+                                        <div x-html="renderMath('在桥上：$40v = 1000 - L$ ②')"></div>
+                                    </div>
+                                </foreignObject>
+                                <text x="400" y="380" text-anchor="middle" font-size="15" fill="#57534e" font-family="'Noto Serif SC', serif" font-weight="bold">两个情景写成两个方程</text>
+                            </g>
+
+                            <!-- 第5步：相加消去车长 -->
+                            <g x-show="sceneStep >= 5 && sceneStep < 6"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100"
+                               x-transition:leave="transition ease-in duration-300"
+                               x-transition:leave-start="opacity-100"
+                               x-transition:leave-end="opacity-0">
+                                <foreignObject x="120" y="110" width="560" height="200">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="bg-white/95 border border-red-800 rounded-lg shadow px-4 py-3 text-base text-stone-800 leading-relaxed">
+                                        <div class="font-bold text-red-800 mb-2">巧办法：①＋② 两式相加</div>
+                                        <div x-html="renderMath('$60v + 40v = (1000 + L) + (1000 - L)$')"></div>
+                                        <div x-html="renderMath('$100v = 2000$')"></div>
+                                        <div class="text-red-800 font-bold" x-html="renderMath('$+L$ 和 $-L$ 正好抵消，车长不见啦！')"></div>
+                                    </div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- 第6步：求速度 -->
+                            <g x-show="sceneStep >= 6 && sceneStep < 7"
+                               x-transition:enter="transition ease-out duration-500"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100"
+                               x-transition:leave="transition ease-in duration-300"
+                               x-transition:leave-start="opacity-100"
+                               x-transition:leave-end="opacity-0">
+                                <foreignObject x="150" y="130" width="430" height="170">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="bg-white/95 border border-red-800 rounded-lg shadow px-4 py-3 text-base text-stone-800 leading-relaxed">
+                                        <div class="font-bold text-red-800 mb-2">求速度</div>
+                                        <div x-html="renderMath('$100v = 2000$')"></div>
+                                        <div x-html="renderMath('$v = 2000 \\div 100 = 20$（米/秒）')"></div>
+                                    </div>
+                                </foreignObject>
+                                <circle cx="670" cy="200" r="52" fill="#fef2f2" fill-opacity="0.85" stroke="#b91c1c" stroke-width="3"></circle>
+                                <text x="670" y="192" text-anchor="middle" font-size="16" fill="#b91c1c" font-family="'Noto Serif SC', serif" font-weight="bold">速度</text>
+                                <text x="670" y="222" text-anchor="middle" font-size="21" fill="#b91c1c" font-family="'Noto Serif SC', serif" font-weight="bold">20米/秒</text>
+                            </g>
+
+                            <!-- 第7步：求车长并作答 -->
+                            <g x-show="sceneStep >= 7"
+                               x-transition:enter="transition ease-out duration-700"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100">
+                                <foreignObject x="100" y="115" width="440" height="195">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" class="bg-white/95 border border-red-800 rounded-lg shadow px-4 py-3 text-base text-stone-800 leading-relaxed">
+                                        <div class="font-bold text-red-800 mb-2" x-html="renderMath('把 $v = 20$ 代入 ①')"></div>
+                                        <div x-html="renderMath('$60 \\times 20 = 1000 + L$')"></div>
+                                        <div x-html="renderMath('$1200 = 1000 + L$')"></div>
+                                        <div x-html="renderMath('$L = 200$（米）')"></div>
+                                    </div>
+                                </foreignObject>
+                                <rect x="560" y="140" width="210" height="130" rx="12" fill="#fef2f2" fill-opacity="0.9" stroke="#b91c1c" stroke-width="3"></rect>
+                                <text x="665" y="176" text-anchor="middle" font-size="18" fill="#b91c1c" font-family="'Noto Serif SC', serif" font-weight="bold">答</text>
+                                <text x="665" y="212" text-anchor="middle" font-size="19" fill="#b91c1c" font-family="'Noto Serif SC', serif" font-weight="bold">速度 20米/秒</text>
+                                <text x="665" y="248" text-anchor="middle" font-size="19" fill="#b91c1c" font-family="'Noto Serif SC', serif" font-weight="bold">车长 200米</text>
+                            </g>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+                    {
+                        "title": "整理已知条件",
+                        "description": "桥长 $1000$ 米。两次测量：① 从车头上桥到车尾离桥（完全过桥）共用 $60$ 秒；② 从车尾上桥到车头离桥（整列在桥上）共用 $40$ 秒。求速度 $v$ 与车长 $L$。",
+                        "bubbleText": "先把题目理清楚：桥长 $1000$ 米。有两个计时：第一个是车头一上桥开始计时，到车尾离开桥停下，共 $60$ 秒；第二个量的是整列火车都待在桥上的时间，共 $40$ 秒。要求的是火车的速度和车身长度。",
+                        "bubblePos": { "x": 220, "y": 50 }
+                    },
+                    {
+                        "title": "分析「完全过桥」的路程",
+                        "description": "从车头上桥到车尾离桥，车头实际走了桥长＋车长：$S_1 = 1000 + L$，用时 $60$ 秒，故 $60v = 1000 + L$ ①。",
+                        "bubbleText": "看红色轨迹：开始时车头刚到桥头，结束时车尾才离开桥尾，车头已经多跑出一个车身那么远。所以走的路程是桥长加车长，也就是 $1000 + L$。路程＝速度×时间，得到 $60v = 1000 + L$。",
+                        "bubblePos": { "x": 40, "y": 50 }
+                    },
+                    {
+                        "title": "分析「完全在桥上」的路程",
+                        "description": "从车尾上桥到车头离桥，车头走了桥长－车长：$S_2 = 1000 - L$，用时 $40$ 秒，故 $40v = 1000 - L$ ②。",
+                        "bubbleText": "这次量的是整列车都在桥上：开始时车尾刚上桥（此时车头还在桥内一个车身处），结束时车头刚到桥尾。车头走的路比桥长少一个车身，即 $1000 - L$。同样写出 $40v = 1000 - L$。",
+                        "bubblePos": { "x": 40, "y": 50 }
+                    },
+                    {
+                        "title": "列出方程组",
+                        "description": "设速度为 $v$ 米/秒、车长为 $L$ 米，由两个情景得方程组：$60v = 1000 + L$ ①，$40v = 1000 - L$ ②。",
+                        "bubbleText": "把两个关系并排写出来：① 是过桥情景，② 是在桥上情景。两个方程里只有 $v$ 和 $L$ 两个未知数，正好能解出来！",
+                        "bubblePos": { "x": 40, "y": 320 }
+                    },
+                    {
+                        "title": "巧妙相加消去车长",
+                        "description": "①＋② 相加：$60v + 40v = (1000 + L) + (1000 - L)$，即 $100v = 2000$，$+L$ 与 $-L$ 互相抵消。",
+                        "bubbleText": "关键妙招：把两个方程左右两边分别相加。右边 $+L$ 和 $-L$ 正好抵消，只剩 $2000$；左边 $60v + 40v = 100v$。未知的车长一下子消失了！",
+                        "bubblePos": { "x": 40, "y": 330 }
+                    },
+                    {
+                        "title": "求出火车的速度",
+                        "description": "由 $100v = 2000$ 得 $v = 2000 \\div 100 = 20$（米/秒）。",
+                        "bubbleText": "方程变成 $100v = 2000$，两边同除以 $100$，得 $v = 20$ 米/秒。火车的速度求出来了，第一个空填上！",
+                        "bubblePos": { "x": 40, "y": 330 }
+                    },
+                    {
+                        "title": "求出车长并作答",
+                        "description": "把 $v = 20$ 代入 ①：$60 \\times 20 = 1000 + L$，即 $1200 = 1000 + L$，所以 $L = 200$（米）。答：速度是 $20$ 米/秒，车长是 $200$ 米。",
+                        "bubbleText": "最后把速度代回方程 ①：$60 \\times 20 = 1200 = 1000 + L$，所以 $L = 1200 - 1000 = 200$ 米。答：火车速度是 $20$ 米/秒，车长是 $200$ 米！",
+                        "bubblePos": { "x": 40, "y": 330 }
+                    }
+                ],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

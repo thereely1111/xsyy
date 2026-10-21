@@ -1,0 +1,25 @@
+{
+  "question": "小智和小慧从学校到森林公园春游，小智步行，每小时走5千米，他出发后4小时，小慧骑自行车，每小时行15千米，小慧追上小智时，正好到达森林公园，学校离森林公园有多少千米?",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\854111db-1dd4-4657-a576-6662e4cb441a\\pasted-image-1766545387488.png",
+  "task_id": "854111db-1dd4-4657-a576-6662e4cb441a",
+  "generated_at": "2025-12-24T11:05:10.366256Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "行程追及应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "考察行程问题中的追及模型。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "几何直观",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2025-12-24T11:05:10.366256Z",
+  "preview_image": "Preview.webp"
+}

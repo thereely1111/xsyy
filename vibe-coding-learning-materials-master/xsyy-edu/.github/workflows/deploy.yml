@@ -1,0 +1,118 @@
+name: Deploy XSYY
+
+# 触发条件：当代码推送到 main 或 develop 分支时自动运行
+on:
+  push:
+    branches:
+      - main      # 生产环境
+      - master     # 兼容 master 分支
+      - develop    # 开发环境
+  workflow_dispatch:  # 允许手动触发
+    inputs:
+      environment:
+        description: '部署环境'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prod
+
+# 全局环境变量
+env:
+  PROJECT_DIR: /opt/xsyy
+
+jobs:
+  # 开发环境部署
+  deploy-dev:
+    name: 部署到开发环境
+    # 只在推送到 develop 分支时运行
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'dev')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检查代码
+        uses: actions/checkout@v3
+      
+      - name: 显示部署信息
+        run: |
+          echo "部署环境: 开发环境"
+          echo "分支: ${{ github.ref }}"
+          echo "提交: ${{ github.sha }}"
+      
+      - name: 部署到开发服务器
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USER }}
+          key: ${{ secrets.DEV_SSH_KEY }}
+          script: |
+            cd /opt/xsyy
+            chmod +x deploy/*.sh
+            ./deploy/deploy-dev.sh
+      
+      - name: 部署完成通知
+        if: success()
+        run: |
+          echo "✓ 开发环境部署成功！"
+      
+      - name: 部署失败通知
+        if: failure()
+        run: |
+          echo "✗ 开发环境部署失败，请检查日志"
+
+  # 生产环境部署
+  deploy-prod:
+    name: 部署到生产环境
+    # 只在推送到 main/master 分支时运行
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prod')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检查代码
+        uses: actions/checkout@v3
+      
+      - name: 显示部署信息
+        run: |
+          echo "部署环境: 生产环境"
+          echo "分支: ${{ github.ref }}"
+          echo "提交: ${{ github.sha }}"
+          echo "⚠️  警告: 即将部署到生产环境！"
+      
+      - name: 部署到生产服务器
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            cd /opt/xsyy
+            chmod +x deploy/*.sh
+            ./deploy/deploy-prod.sh
+      
+      - name: 健康检查
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            sleep 10
+            if curl -f http://localhost:8000/api/health; then
+              echo "✓ 服务健康检查通过"
+            else
+              echo "✗ 服务健康检查失败"
+              exit 1
+            fi
+      
+      - name: 部署完成通知
+        if: success()
+        run: |
+          echo "✓ 生产环境部署成功！"
+      
+      - name: 部署失败通知
+        if: failure()
+        run: |
+          echo "✗ 生产环境部署失败，请检查日志"
+          echo "如需回滚，请在服务器上执行: ./deploy/rollback.sh"
+

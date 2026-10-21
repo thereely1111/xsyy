@@ -1,0 +1,23 @@
+{
+  "question": "31.3 × 1.02",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/7c954988-b1a3-4e45-87a0-c8f79250caf2/ScreenShot_2026-01-24_105238_431.png",
+  "task_id": "7c954988-b1a3-4e45-87a0-c8f79250caf2",
+  "generated_at": "2026-01-24T10:56:34.829920Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "小数乘法运算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "纯粹考察数字和小数的乘法计算能力。",
+    "main_tag": "运算能力",
+    "sub_tags": [
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-24T10:56:34.829933Z",
+  "preview_image": "Preview.webp"
+}

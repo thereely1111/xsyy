@@ -1,0 +1,23 @@
+{
+  "question": "11.一车间原有男工人数比女工多55人,假如调走男工5人,那么男工人数正好 是女工的3倍,原有男工多少人?",
+  "prompt": "11.一车间原有男工人数比女工多55人,假如调走男工5人,那么男工人数正好 是女工的3倍,原有男工多少人?",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "a501a530-db45-47a9-8469-8c6a21562f25",
+  "generated_at": "2025-12-23T23:08:17.337104Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "和差倍问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及人数差与倍数关系",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-23T23:08:17.337104Z",
+  "preview_image": "Preview.webp"
+}

@@ -1,0 +1,71 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "抛一枚均匀硬币两次，两次都正面朝上的概率是多少？",
+  "prompt": "抛一枚均匀硬币两次，两次都正面朝上的概率是多少？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "e903f5d1-4aa8-4f58-ab55-6718de380296",
+  "generated_at": "2026-09-28T03:15:13.495597Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "独立事件概率",
+  "title_quality": "ok",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "求两次正面概率"
+  },
+  "tags_updated_at": "2026-09-28T03:15:13.495597Z",
+  "knowledge_tags": {
+    "version": "统计与概率",
+    "grade": "九上",
+    "main_tag": "概率初步",
+    "sub_tags": [
+      "列举法求概率"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-28T03:15:13.523365Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "统计与概率",
+    "display_class": "statistics",
+    "grade": "九上",
+    "tags": {
+      "main_tag": "概率初步",
+      "sub_tags": [
+        "列举法求概率"
+      ],
+      "second_tag": null
+    },
+    "question_type": "概率",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_statistics",
+      "steps_min": 5,
+      "steps_max": 7,
+      "motion_policy": "answer_first",
+      "must_show": [
+        "数据忠于题干"
+      ]
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.95,
+    "engine": "agent",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "agent",
+    "action": "inject_official",
+    "confidence": 0.95
+  }
+}

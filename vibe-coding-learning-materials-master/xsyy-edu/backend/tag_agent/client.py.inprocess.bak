@@ -1,0 +1,97 @@
+# -*- coding: utf-8 -*-
+"""识别客户端（一体化部署：进程内直调智能体编排器）.
+
+原 HTTP 版调用 agent-platform 9000；一体化后智能体已搬入 xsyy 进程，
+直接调用 tag_agent.orchestrator，结果经 compat.py 映射为 xsyy 结构；
+失败/异常由调用方（pipeline.py）降级到 legacy 提示词识别。
+
+对外接口签名与原 HTTP 版保持一致（recognize_question / recognize_or_fallback）。
+"""
+from __future__ import annotations
+
+import logging
+from typing import Optional
+
+from tag_agent.compat import map_agent_result
+from tag_agent.config import get_tag_agent_settings
+from tag_agent.orchestrator import TagAgentOrchestrator
+from tag_agent.tag_library import TagLibrary
+
+logger = logging.getLogger(__name__)
+
+# 模块级单例（惰性初始化）：标签库 + 编排器
+_library: Optional[TagLibrary] = None
+_orchestrator: Optional[TagAgentOrchestrator] = None
+
+
+def get_orchestrator() -> TagAgentOrchestrator:
+    """获取进程内智能体编排器（惰性创建）. """
+    global _library, _orchestrator
+    if _orchestrator is None:
+        settings = get_tag_agent_settings()
+        _library = TagLibrary.load(settings)
+        _orchestrator = TagAgentOrchestrator(_library, settings)
+        logger.info("进程内智能体编排器就绪（标签库 source=%s）", _library.source)
+    return _orchestrator
+
+
+async def recognize_question(
+    question: str,
+    *,
+    title: str = "",
+    question_id: str = "",
+    creator_id: str = "system",
+    timeout: Optional[float] = None,
+) -> dict:
+    """调用进程内智能体识别题目，返回 xsyy 兼容的识别结果.
+
+    Returns:
+        同 compat.map_agent_result 的结构（primary/second/_meta/knowledge_tags 等）。
+
+    Raises:
+        RuntimeError: 识别失败（调用方据此降级 legacy）。
+    """
+    del title, timeout  # 进程内调用无需超时/标题透传
+    try:
+        outcome = await get_orchestrator().recognize(
+            question,
+            question_id=question_id,
+            creator_id=creator_id,
+        )
+    except Exception as e:  # noqa: BLE001
+        logger.warning("智能体识别失败: %s", e)
+        raise RuntimeError(f"智能体识别失败: {e}") from None
+    data = {"outcome": outcome.to_dict()}
+    return map_agent_result(data, question=question, title="")
+
+
+async def recognize_or_fallback(
+    question: str,
+    *,
+    title: str = "",
+    question_id: str = "",
+    legacy_caller=None,
+) -> tuple[dict, str]:
+    """智能体识别，失败自动降级 legacy（双保险）.
+
+    Args:
+        legacy_caller: async callable(question, title) → legacy 结果
+                       （如 inject_knowledge_tags_full），供降级使用。
+
+    Returns:
+        (result_dict, engine) — result_dict 含 knowledge_tags 或 legacy 结构。
+    """
+    try:
+        mapped = await recognize_question(
+            question, title=title, question_id=question_id,
+        )
+        return mapped, "agent"
+    except Exception as e:  # noqa: BLE001
+        logger.warning("智能体识别失败，降级 legacy: %s", e)
+        if legacy_caller is not None:
+            try:
+                legacy = await legacy_caller(question, title)
+                return legacy, "legacy"
+            except Exception as e2:  # noqa: BLE001
+                logger.error("legacy 识别也失败: %s", e2)
+        return {"primary": None, "second": None}, "none"

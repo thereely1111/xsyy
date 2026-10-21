@@ -1,0 +1,81 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "长方体长 4、宽 2、高 3，从正面、左面、上面各看一次，画出三视图并求主视图的面积",
+  "prompt": "长方体长 4、宽 2、高 3，从正面、左面、上面各看一次，画出三视图并求主视图的面积",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "4b6a0310-f8bd-4721-be98-42e3f8a6303a",
+  "generated_at": "2026-09-28T02:34:57.165635Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "长方体三视图",
+  "title_quality": "ok",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "含几何三视图与面积"
+  },
+  "tags_updated_at": "2026-09-28T02:34:57.165635Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "七上",
+    "main_tag": "投影与视图",
+    "sub_tags": [
+      "从不同方向看"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-28T02:34:57.194377Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "图形与几何",
+    "display_class": "geometry",
+    "grade": "七上",
+    "tags": {
+      "main_tag": "投影与视图",
+      "sub_tags": [
+        "从不同方向看"
+      ],
+      "second_tag": null
+    },
+    "question_type": "图形面积",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_geometry",
+      "steps_min": 5,
+      "steps_max": 8,
+      "motion_policy": "answer_first",
+      "must_show": [
+        "几何标注规范",
+        "辅助线分层"
+      ]
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": true,
+    "parts": [
+      {
+        "label": "（2）",
+        "text": "2、高 3，从正面、左面、上面各看一次，画出三视图并求主视图的面积",
+        "domain": "图形与几何",
+        "display_class": "geometry",
+        "question_type": "图形面积"
+      }
+    ],
+    "domains": [
+      "geometry"
+    ]
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  }
+}

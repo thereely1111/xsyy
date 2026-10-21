@@ -1,0 +1,24 @@
+{
+  "question": "用黑色小正方形按如下规律拼成图案：第1个图案：1个正方形；第2个图案：5个正方形（一个“十”字形）；第3个图案：13个正方形（一个更大的“十”字形）。设第n个图案需要S(n)个小正方形。请猜想S(n)的表达式（用n表示）。",
+  "prompt": "2. 用黑色小正方形按如下规律拼成图案：\n第1个图案：1个正方形\n第2个图案：5个正方形（一个“十”字形）\n第3个图案：13个正方形（一个更大的“十”字形）\n设第n个图案需要S(n)个小正方形。请猜想S(n)的表达式（用n表示）。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "3abf03b8-8eb3-45ff-b15b-b01fa0826969",
+  "generated_at": "2026-04-03T11:38:12.422754Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "图形规律与代数式",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "核心是观察图形规律并归纳代数式",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "符号意识",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-04-03T11:38:12.422769Z",
+  "preview_image": "Preview.webp"
+}

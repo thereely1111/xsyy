@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台登录 - 象数演易</title>
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+    </script>
+    <style>
+        .login-home-link {
+            display: inline-block;
+            margin-top: 16px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .login-home-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <link rel="stylesheet" href="css/theme-override.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1>象数演易</h1>
+            <p>管理后台</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="username" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="error-message" id="errorMessage"></div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">登录</button>
+                <a href="../index.html?v=3" class="login-home-link">返回首页</a>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-feedbacks.js') + '"><\/script>');
+    </script>
+    <script>
+        // 如果已经登录，检查是否为管理员
+        (async () => {
+            const token = getToken();
+            if (token) {
+                try {
+                    const result = await checkAdmin();
+                    if (result.is_admin) {
+                        // 已经是管理员，跳转到仪表盘
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        // 不是管理员，清除token
+                        removeToken();
+                    }
+                } catch (error) {
+                    // token无效，清除
+                    removeToken();
+                }
+            }
+        })();
+
+        // 登录表单提交
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // 清空错误信息
+            errorMessage.textContent = '';
+            errorMessage.classList.remove('show');
+            loginBtn.disabled = true;
+            loginBtn.textContent = '登录中...';
+            
+            try {
+                // 登录
+                await login(username, password);
+                
+                // 检查是否为管理员
+                const result = await checkAdmin();
+                if (result.is_admin) {
+                    // 跳转到仪表盘
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // 不是管理员
+                    errorMessage.textContent = '您没有管理员权限';
+                    errorMessage.classList.add('show');
+                    removeToken();
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = '登录';
+                }
+            } catch (error) {
+                console.error('登录错误:', error);
+                let errorText = error.message || '登录失败，请检查用户名和密码';
+                // 如果是网络错误，提供更详细的提示
+                if (error.message && error.message.includes('无法连接到服务器')) {
+                    errorText = error.message + '\n\n请确保：\n1. 后端服务正在运行\n2. 服务地址为 http://127.0.0.1:8000';
+                }
+                errorMessage.textContent = errorText;
+                errorMessage.classList.add('show');
+                loginBtn.disabled = false;
+                loginBtn.textContent = '登录';
+            }
+        });
+    </script>
+</body>
+</html>

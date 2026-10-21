@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>楼层高度计算 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">楼层高度计算</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('小云站在8楼阳台，从1楼地面到8楼阳台共有$8-1=7$个楼层间隔，每层$4$米，高度为$7\\times4=28$米。')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+
+                            <!-- Step 1: Building outline with 10 floors (sceneStep >= 1) -->
+                            <g x-show="sceneStep >= 1" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- Building main structure -->
+                                <rect x="180" y="60" width="200" height="480" fill="#f5f0e8" stroke="#78716c" stroke-width="2" rx="2"/>
+                                <!-- Floor lines -->
+                                <line x1="180" y1="108" x2="380" y2="108" stroke="#a8a29e" stroke-width="1"/>
+                                <line x1="180" y1="156" x2="380" y2="156" stroke="#a8a29e" stroke-width="1"/>
+                                <line x1="180" y1="204" x2="380" y2="204" stroke="#a8a29e" stroke-width="1"/>
+                                <line x1="180" y1="252" x2="380" y2="252" stroke="#a8a29e" stroke-width="1"/>
+                                <line x1="180" y1="300" x2="380" y2="300" stroke="#a8a29e" stroke-width="1"/>
+                                <line x1="180" y1="348" x2="380" y2="348" stroke="#a8a29e" stroke-width="1"/>
+                                <line x1="180" y1="396" x2="380" y2="396" stroke="#a8a29e" stroke-width="1"/>
+                                <line x1="180" y1="444" x2="380" y2="444" stroke="#a8a29e" stroke-width="1"/>
+                                <line x1="180" y1="492" x2="380" y2="492" stroke="#a8a29e" stroke-width="1"/>
+                                <!-- Floor numbers -->
+                                <text x="280" y="90" text-anchor="middle" font-size="13" fill="#57534e" font-family="Noto Sans SC, sans-serif">10楼</text>
+                                <text x="280" y="138" text-anchor="middle" font-size="13" fill="#57534e" font-family="Noto Sans SC, sans-serif">9楼</text>
+                                <text x="280" y="186" text-anchor="middle" font-size="13" fill="#57534e" font-family="Noto Sans SC, sans-serif">8楼</text>
+                                <text x="280" y="234" text-anchor="middle" font-size="13" fill="#57534e" font-family="Noto Sans SC, sans-serif">7楼</text>
+                                <text x="280" y="282" text-anchor="middle" font-size="13" fill="#57534e" font-family="Noto Sans SC, sans-serif">6楼</text>
+                                <text x="280" y="330" text-anchor="middle" font-size="13" fill="#57534e" font-family="Noto Sans SC, sans-serif">5楼</text>
+                                <text x="280" y="378" text-anchor="middle" font-size="13" fill="#57534e" font-family="Noto Sans SC, sans-serif">4楼</text>
+                                <text x="280" y="426" text-anchor="middle" font-size="13" fill="#57534e" font-family="Noto Sans SC, sans-serif">3楼</text>
+                                <text x="280" y="474" text-anchor="middle" font-size="13" fill="#57534e" font-family="Noto Sans SC, sans-serif">2楼</text>
+                                <text x="280" y="522" text-anchor="middle" font-size="13" fill="#57534e" font-family="Noto Sans SC, sans-serif">1楼</text>
+                                <!-- Ground line -->
+                                <line x1="140" y1="540" x2="420" y2="540" stroke="#44403c" stroke-width="3"/>
+                                <text x="280" y="565" text-anchor="middle" font-size="14" fill="#44403c" font-family="Noto Serif SC, serif">一楼地面</text>
+                                <!-- Title label -->
+                                <text x="280" y="45" text-anchor="middle" font-size="15" fill="#1c1917" font-weight="bold" font-family="Noto Serif SC, serif">大楼（共10层）</text>
+                            </g>
+
+                            <!-- Step 2: Height labels for each floor (sceneStep >= 2) -->
+                            <g x-show="sceneStep >= 2" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- Height annotations on the left side -->
+                                <line x1="160" y1="492" x2="160" y2="540" stroke="#8a1c1c" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                                <text x="145" y="520" text-anchor="middle" font-size="12" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif" transform="rotate(-90 145 520)">4米</text>
+                                <line x1="160" y1="444" x2="160" y2="492" stroke="#8a1c1c" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                                <text x="145" y="472" text-anchor="middle" font-size="12" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif" transform="rotate(-90 145 472)">4米</text>
+                                <line x1="160" y1="396" x2="160" y2="444" stroke="#8a1c1c" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                                <text x="145" y="424" text-anchor="middle" font-size="12" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif" transform="rotate(-90 145 424)">4米</text>
+                                <line x1="160" y1="348" x2="160" y2="396" stroke="#8a1c1c" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                                <text x="145" y="376" text-anchor="middle" font-size="12" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif" transform="rotate(-90 145 376)">4米</text>
+                                <line x1="160" y1="300" x2="160" y2="348" stroke="#8a1c1c" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                                <text x="145" y="328" text-anchor="middle" font-size="12" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif" transform="rotate(-90 145 328)">4米</text>
+                                <line x1="160" y1="252" x2="160" y2="300" stroke="#8a1c1c" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                                <text x="145" y="280" text-anchor="middle" font-size="12" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif" transform="rotate(-90 145 280)">4米</text>
+                                <line x1="160" y1="204" x2="160" y2="252" stroke="#8a1c1c" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+                                <text x="145" y="232" text-anchor="middle" font-size="12" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif" transform="rotate(-90 145 232)">4米</text>
+                                <!-- Label: each floor 4m -->
+                                <foreignObject x="90" y="555" width="200" height="35">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:13px; color:#8a1c1c; font-family:'Noto Sans SC',sans-serif; text-align:center;" x-html="renderMath('每层高$4$米')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 3: Xiao Yun on 8th floor balcony (sceneStep >= 3) -->
+                            <g x-show="sceneStep >= 3" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- Balcony railing at 8th floor (top of floor 7 = y=204) -->
+                                <rect x="370" y="192" width="30" height="12" fill="none" stroke="#8a1c1c" stroke-width="2" rx="1"/>
+                                <line x1="375" y1="192" x2="375" y2="204" stroke="#8a1c1c" stroke-width="1.5"/>
+                                <line x1="385" y1="192" x2="385" y2="204" stroke="#8a1c1c" stroke-width="1.5"/>
+                                <line x1="395" y1="192" x2="395" y2="204" stroke="#8a1c1c" stroke-width="1.5"/>
+                                <!-- Xiao Yun figure (stick figure) -->
+                                <circle cx="410" cy="172" r="10" fill="#fbbf24" stroke="#92400e" stroke-width="1.5"/>
+                                <line x1="410" y1="182" x2="410" y2="200" stroke="#92400e" stroke-width="2"/>
+                                <line x1="410" y1="188" x2="398" y2="196" stroke="#92400e" stroke-width="2"/>
+                                <line x1="410" y1="188" x2="422" y2="196" stroke="#92400e" stroke-width="2"/>
+                                <line x1="410" y1="200" x2="402" y2="212" stroke="#92400e" stroke-width="2"/>
+                                <line x1="410" y1="200" x2="418" y2="212" stroke="#92400e" stroke-width="2"/>
+                                <!-- Label -->
+                                <text x="440" y="180" font-size="13" fill="#92400e" font-weight="bold" font-family="Noto Sans SC, sans-serif">小云</text>
+                                <text x="440" y="198" font-size="12" fill="#78716c" font-family="Noto Sans SC, sans-serif">8楼阳台</text>
+                            </g>
+
+                            <!-- Step 4: Highlight 7 intervals (sceneStep >= 4) -->
+                            <g x-show="sceneStep >= 4" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- Highlight the 7 floors from ground to 8th floor balcony -->
+                                <rect x="182" y="204" width="196" height="336" fill="rgba(138,28,28,0.08)" stroke="#8a1c1c" stroke-width="2" stroke-dasharray="6 3" rx="2"/>
+                                <!-- Interval numbers on the right -->
+                                <text x="395" y="520" font-size="11" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif">①</text>
+                                <text x="395" y="472" font-size="11" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif">②</text>
+                                <text x="395" y="424" font-size="11" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif">③</text>
+                                <text x="395" y="376" font-size="11" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif">④</text>
+                                <text x="395" y="328" font-size="11" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif">⑤</text>
+                                <text x="395" y="280" font-size="11" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif">⑥</text>
+                                <text x="395" y="232" font-size="11" fill="#8a1c1c" font-family="Noto Sans SC, sans-serif">⑦</text>
+                                <!-- Annotation -->
+                                <foreignObject x="430" y="340" width="180" height="60">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:13px; color:#8a1c1c; font-family:'Noto Sans SC',sans-serif; font-weight:bold;" x-html="renderMath('共$7$个间隔')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 5: Dashed measurement line (trajectory) (sceneStep >= 5) -->
+                            <g x-show="sceneStep >= 5" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- Vertical dashed measurement line (trajectory) -->
+                                <line x1="470" y1="540" x2="470" y2="204" stroke="#8a1c1c" stroke-width="2.5" stroke-dasharray="8 4"/>
+                                <!-- Arrow heads -->
+                                <polygon points="470,200 465,212 475,212" fill="#8a1c1c"/>
+                                <polygon points="470,544 465,532 475,532" fill="#8a1c1c"/>
+                                <!-- Horizontal ticks -->
+                                <line x1="462" y1="540" x2="478" y2="540" stroke="#8a1c1c" stroke-width="2"/>
+                                <line x1="462" y1="204" x2="478" y2="204" stroke="#8a1c1c" stroke-width="2"/>
+                                <!-- Height label -->
+                                <foreignObject x="480" y="350" width="140" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:14px; color:#8a1c1c; font-family:'Noto Sans SC',sans-serif; font-weight:bold;" x-html="renderMath('高度$=?$米')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 6: Calculation formula (sceneStep >= 6) -->
+                            <g x-show="sceneStep >= 6" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- Formula box -->
+                                <rect x="490" y="240" width="220" height="120" fill="white" stroke="#a8a29e" stroke-width="1.5" rx="8" opacity="0.95"/>
+                                <foreignObject x="500" y="250" width="200" height="100">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:15px; color:#1c1917; font-family:'Noto Sans SC',sans-serif; text-align:center; line-height:2.2;">
+                                        <div x-html="renderMath('$8 - 1 = 7$（个间隔）')"></div>
+                                        <div x-html="renderMath('$7 \\times 4 = 28$（米）')"></div>
+                                    </div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Step 7: Final answer highlight (sceneStep >= 7) -->
+                            <g x-show="sceneStep >= 7" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- Answer box -->
+                                <rect x="490" y="400" width="220" height="60" fill="#fef2f2" stroke="#8a1c1c" stroke-width="2" rx="8"/>
+                                <foreignObject x="500" y="410" width="200" height="45">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:16px; color:#8a1c1c; font-family:'Noto Serif SC',serif; font-weight:bold; text-align:center; line-height:2;" x-html="renderMath('答：$28$米')"></div>
+                                </foreignObject>
+                                <!-- Checkmark -->
+                                <circle cx="720" cy="430" r="16" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+                                <path d="M712,430 L718,436 L729,424" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                <!-- Update height label -->
+                                <foreignObject x="480" y="350" width="140" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:14px; color:#16a34a; font-family:'Noto Sans SC',sans-serif; font-weight:bold;" x-html="renderMath('高度$=28$米')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [{"title":"认识大楼","description":"一栋大楼共$10$层，每层高$4$米。我们先在画布上画出这栋楼。","bubbleText":"小朋友，我们先来看看这栋大楼长什么样子。它一共有$10$层哦，每一层都有$4$米高，就像叠积木一样一层一层叠上去的。","bubblePos":{"x":420,"y":50}},{"title":"标出每层高度","description":"在楼的左侧标出每层的高度：每层$= 4$米。","bubbleText":"你看，左边标出了每一层的高度，都是$4$米。从$1$楼地面到$2$楼是$4$米，从$2$楼到$3$楼也是$4$米，每一层都一样高。","bubblePos":{"x":20,"y":250}},{"title":"找到小云的位置","description":"小云站在$8$楼的阳台上，用小人标出他的位置。","bubbleText":"小云站在第$8$楼的阳台上，你看，他在这里跟我们招手呢！$8$楼的阳台就是$8$楼的地板位置，也就是$7$楼的天花板。","bubblePos":{"x":430,"y":120}},{"title":"数出间隔数","description":"从$1$楼地面到$8$楼阳台，中间有$7$个间隔：$8-1=7$。","bubbleText":"关键来了！从$1$楼地面到$8$楼阳台，中间隔了多少层呢？我们数一数：①②③④⑤⑥⑦，一共是$7$个间隔！记住规律：从第$1$层到第$n$层，间隔数是$n-1$。","bubblePos":{"x":430,"y":280}},{"title":"画出测量线","description":"用虚线标出从$1$楼地面到$8$楼阳台的总高度。","bubbleText":"我们用一条虚线把这段高度标出来。从一楼地面一直到小云站的$8$楼阳台，这一整段就是我们要算的距离。","bubblePos":{"x":490,"y":300}},{"title":"列式计算","description":"$7$个间隔，每个$4$米：$7 \\times 4 = 28$（米）。","bubbleText":"每个间隔是$4$米高，一共有$7$个间隔，所以总高度就是$7$个$4$米加在一起。用乘法最快：$7 \\times 4 = 28$米！","bubblePos":{"x":490,"y":200}},{"title":"验证总结","description":"答：小云离一楼地面$28$米。验证：$28 \\div 4 = 7$，$7+1=8$楼，正确。","bubbleText":"我们来验证一下：$28 \\div 4 = 7$个间隔，加上起始的$1$楼，$7 + 1 = 8$，正好是第$8$楼！答案完全正确，小云离一楼地面$28$米。","bubblePos":{"x":490,"y":420}}],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "report_type": "rag_full_chain_ab",
+  "generated_at": "2026-08-27T10:29:22.335904",
+  "baseline": {
+    "total": 43,
+    "version_ok": 36,
+    "grade_ok": 19,
+    "main_ok": 22,
+    "sub_ok": 14,
+    "full_ok": 14,
+    "fail": 1,
+    "elapsed": 790.0981953144073
+  },
+  "rag": {
+    "total": 43,
+    "version_ok": 36,
+    "grade_ok": 19,
+    "main_ok": 22,
+    "sub_ok": 14,
+    "full_ok": 14,
+    "fail": 0,
+    "elapsed": 1160.0479142665863
+  }
+}

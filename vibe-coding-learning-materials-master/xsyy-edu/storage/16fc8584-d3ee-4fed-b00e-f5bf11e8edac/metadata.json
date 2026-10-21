@@ -1,0 +1,24 @@
+{
+  "question": "在平面直角坐标系中，点 A 的坐标为(2, 3)。先将点 A 关于 x 轴对称得到点 A‘，再将点 A’向右平移 4 个单位得到点 A“。求点 A“的坐标。如果对这个过程进行抽象，点 A(x, y)经过同样的变换后，坐标是多少？",
+  "prompt": "7. 在平面直角坐标系中，点 A 的坐标为(2, 3)。先将点 A 关于 x 轴对称得到点 A‘，再将点 A’向右平移 4 个单位得到点 A“。求点 A“的坐标。如果对这个过程进行抽象，点 A(x, y)经过同样的变换后，坐标是多少？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "16fc8584-d3ee-4fed-b00e-f5bf11e8edac",
+  "generated_at": "2026-04-03T14:29:43.539498Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "坐标变换规律",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及平面图形变换",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "符号意识",
+      "知识点梳理"
+    ]
+  },
+  "tags_updated_at": "2026-04-03T14:29:43.539514Z",
+  "preview_image": "preview.webp"
+}

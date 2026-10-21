@@ -1,0 +1,24 @@
+{
+  "question": "小华期末考试时,语文、数学和音乐三科的平均分是97分,英语成绩公布后,四科的平均分下降了5分,小华的英语成绩是__分。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\f873e665-9892-43fd-91c4-3a71face5c3e\\ScreenShot_2026-01-13_101411_954.png",
+  "task_id": "f873e665-9892-43fd-91c4-3a71face5c3e",
+  "generated_at": "2026-01-13T10:16:26.854604Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "平均数应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "题目考察平均数的计算和应用，属于统计类问题。",
+    "main_tag": "数据意识",
+    "sub_tags": [
+      "模型意识",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-13T10:16:26.854604Z",
+  "preview_image": "Preview.webp"
+}

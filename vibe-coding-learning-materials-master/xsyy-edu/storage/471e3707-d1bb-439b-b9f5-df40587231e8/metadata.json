@@ -1,0 +1,12 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "八上",
+    "main_tag": "轴对称",
+    "sub_tags": [
+      "等腰三角形的性质与判定"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-17T08:43:02.310151Z"
+}

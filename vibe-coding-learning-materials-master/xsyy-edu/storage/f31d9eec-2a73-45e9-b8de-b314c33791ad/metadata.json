@@ -1,0 +1,71 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "八上",
+    "main_tag": "全等三角形",
+    "sub_tags": [
+      "全等三角形判定"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-07T03:19:24.435562Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "图形与几何",
+    "display_class": "geometry",
+    "grade": "八上",
+    "tags": {
+      "main_tag": "全等三角形",
+      "sub_tags": [
+        "全等三角形判定"
+      ],
+      "second_tag": null
+    },
+    "question_type": "全等三角形",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_geometry",
+      "steps_min": 5,
+      "steps_max": 8,
+      "motion_policy": "answer_first",
+      "must_show": [
+        "几何标注规范",
+        "辅助线分层"
+      ]
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": true,
+    "parts": [
+      {
+        "label": "（1）",
+        "text": "（1）求证：三角形ABD 全等于 三角形ACE；",
+        "domain": "图形与几何",
+        "display_class": "geometry",
+        "question_type": "全等三角形"
+      },
+      {
+        "label": "（2）",
+        "text": "（2）若 AB = 5，BD = 3，求 CE 的长度。",
+        "domain": "图形与几何",
+        "display_class": "geometry",
+        "question_type": ""
+      }
+    ],
+    "domains": [
+      "geometry"
+    ]
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  },
+  "preview_image": "Preview.webp"
+}

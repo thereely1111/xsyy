@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 解题生成中 - 墨韵方圆（进度模拟版）</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/webp" href="/xsyy-logo.webp">
+    <style>
+        :root {
+            --ink-color: #2b2b2b;       
+            --paper-color: #f4f3ef;     
+            --cyan-color: #588c7e;      
+            --gold-color: #d4af37;      
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--paper-color);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            font-family: "Songti SC", "Noto Serif SC", "SimSun", "STSong", serif;
+            overflow: hidden;
+        }
+
+        .loader-container {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ink-svg {
+            width: 200px;
+            height: 200px;
+            filter: url('#ink-wash');
+            /* 让整体缓慢旋转，保持动态感，但进度由线条长度决定 */
+            animation: slowRotate 60s linear infinite; 
+        }
+
+        /* 
+           注意：这里去掉了CSS的stroke动画，改由JS控制 
+           stroke-dasharray 和 stroke-dashoffset 将在JS中动态计算
+        */
+
+        /* 外部圆环 - 第二阶段 - 墨色 */
+        .circle-path {
+            fill: none;
+            stroke: var(--ink-color);
+            stroke-width: 3;
+            stroke-linecap: round;
+            opacity: 0.9;
+            /* 初始状态：完全隐藏 */
+            stroke-dasharray: 220; /* 2 * PI * 35 ≈ 220 */
+            stroke-dashoffset: 220;
+            transition: stroke-dashoffset 0.2s linear; /* 增加一点平滑度 */
+        }
+
+        /* 内部方块 - 第一阶段 - 天青色 */
+        .square-rect {
+            fill: none;
+            stroke: var(--cyan-color);
+            stroke-width: 2;
+            opacity: 1;
+            transform-origin: center;
+            transform: rotate(45deg); /* 保持菱形形态 */
+            /* 初始状态：完全隐藏 */
+            stroke-dasharray: 120; /* 30 * 4 = 120 */
+            stroke-dashoffset: 120; 
+            transition: stroke-dashoffset 0.2s linear;
+        }
+
+        /* 几何辅助线 - 保持原有淡入效果 */
+        .geometry-line {
+            stroke: var(--ink-color);
+            stroke-width: 0.5;
+            opacity: 0;
+            animation: fadeInLines 2s ease-out forwards;
+        }
+
+        .ai-core {
+            position: absolute;
+            top: 38%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background-color: var(--gold-color);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--gold-color);
+            animation: pulse 1.5s infinite alternate;
+            z-index: 10;
+        }
+
+        .text-area {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--ink-color);
+            position: relative;
+            height: 50px; /* 固定高度防止跳动 */
+        }
+
+        .main-text {
+            font-size: 18px;
+            letter-spacing: 4px;
+            font-weight: 500;
+        }
+
+        .sub-text {
+            font-size: 12px;
+            color: var(--cyan-color);
+            margin-top: 8px;
+            letter-spacing: 1px;
+            transition: opacity 0.3s;
+        }
+
+        /* 进度百分比显示（可选，为了直观看到忽快忽慢） */
+        .progress-num {
+            font-size: 10px;
+            color: #999;
+            margin-top: 4px;
+            opacity: 0.6;
+        }
+
+        @keyframes slowRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInLines {
+            to { opacity: 0.3; }
+        }
+
+        @keyframes pulse {
+            from { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            to { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--ink-color);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatUp 3s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 0.6; }
+            100% { transform: translateY(-60px) scale(0); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <svg style="display: none;">
+        <defs>
+            <filter id="ink-wash">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" />
+                <feGaussianBlur stdDeviation="0.5" />
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="loader-container">
+        <svg class="ink-svg" viewBox="0 0 100 100">
+            <line x1="50" y1="10" x2="50" y2="90" class="geometry-line" />
+            <line x1="10" y1="50" x2="90" y2="50" class="geometry-line" />
+            
+            <!-- 圆环：ID用于JS控制 -->
+            <circle id="progress-circle" cx="50" cy="50" r="35" class="circle-path" />
+            
+            <!-- 方块：ID用于JS控制 -->
+            <rect id="progress-square" x="35" y="35" width="30" height="30" class="square-rect" />
+        </svg>
+        
+        <div class="ai-core"></div>
+        <div id="particles-container"></div>
+
+        <div class="text-area">
+            <div class="main-text">墨韵数理</div>
+            <div class="sub-text" id="status-text">AI 正在准备...</div>
+            <div class="progress-num" id="progress-text">0%</div>
+        </div>
+    </div>
+
+    <script>
+        // --- 核心配置 ---
+        // 两个阶段的目标耗时（单位：毫秒）
+        // 阶段1：方块（逻辑推理） ~20秒
+        // 阶段2：圆环（视频渲染） ~80秒
+        const TIME_PHASE_1 = 20000; 
+        const TIME_PHASE_2 = 80000;
+        
+        // 获取DOM元素
+        const elSquare = document.getElementById('progress-square');
+        const elCircle = document.getElementById('progress-circle');
+        const elStatus = document.getElementById('status-text');
+        const elProgressText = document.getElementById('progress-text');
+
+        // 图形周长参数 (对应CSS中的stroke-dasharray)
+        const PERIMETER_SQUARE = 120;
+        const PERIMETER_CIRCLE = 220;
+
+        // 状态变量
+        let startTime = null;
+        let isPhase1Complete = false;
+        
+        // 模拟变量：用于制造忽快忽慢的效果
+        let virtualTimeElapsed = 0; 
+        let speedFactor = 1.0; 
+        let nextSpeedChange = 0;
+
+        // 动画循环函数
+        function animateProgress(timestamp) {
+            if (!startTime) startTime = timestamp;
+            
+            // 计算真实流逝时间，用于基准参考（虽然我们主要靠虚拟时间驱动）
+            const realTimeElapsed = timestamp - startTime;
+
+            // --- 拟真速度算法 ---
+            // 每隔一段时间随机改变速度系数
+            if (timestamp > nextSpeedChange) {
+                // 随机生成 0.0（卡顿） 到 3.0（飞快） 之间的速度
+                // 大部分时候保持在 0.5 ~ 1.5 之间
+                const rand = Math.random();
+                if (rand < 0.2) speedFactor = 0.05; // 20%概率进入“思考卡顿”
+                else if (rand > 0.8) speedFactor = 3.0; // 20%概率“灵感爆发”
+                else speedFactor = 1.0; // 正常速度
+
+                // 下次变速在 0.5秒 ~ 2秒后
+                nextSpeedChange = timestamp + 500 + Math.random() * 1500;
+            }
+
+            // 更新虚拟时间（基准步长约为 16ms，即60fps）
+            virtualTimeElapsed += 16 * speedFactor;
+
+            // --- 阶段一：方块逻辑 (0 - 20s) ---
+            if (virtualTimeElapsed < TIME_PHASE_1) {
+                // 计算阶段1进度 (0.0 - 1.0)
+                const p1 = Math.min(virtualTimeElapsed / TIME_PHASE_1, 1);
+                
+                // 更新方块绘制
+                // stroke-dashoffset: 满值是完全隐藏，0是完全显示
+                const offset = PERIMETER_SQUARE * (1 - p1);
+                elSquare.style.strokeDashoffset = offset;
+                
+                // 更新文字
+                elStatus.innerText = "正在推导几何逻辑...";
+                // 总体进度的前20%
+                updatePercentage(p1 * 20);
+
+            // --- 阶段二：圆环渲染 (20s - 100s) ---
+            } else if (virtualTimeElapsed < (TIME_PHASE_1 + TIME_PHASE_2)) {
+                // 确保方块画完
+                if (!isPhase1Complete) {
+                    elSquare.style.strokeDashoffset = 0;
+                    isPhase1Complete = true;
+                    // 可以加入一个简单的闪烁特效表示阶段完成，这里保持简洁
+                }
+
+                // 计算阶段2进度 (0.0 - 1.0)
+                const phase2Time = virtualTimeElapsed - TIME_PHASE_1;
+                const p2 = Math.min(phase2Time / TIME_PHASE_2, 1);
+
+                // 更新圆环绘制
+                const offset = PERIMETER_CIRCLE * (1 - p2);
+                elCircle.style.strokeDashoffset = offset;
+
+                // 阶段2文案变化（可以根据p2细分）
+                if (p2 < 0.3) elStatus.innerText = "逻辑构建完成，正在铺设画布...";
+                else if (p2 < 0.7) elStatus.innerText = "AI 正在绘制解题视频...";
+                else elStatus.innerText = "正在进行最后渲染...";
+
+                // 总体进度的后80% (20% + p2 * 80%)
+                updatePercentage(20 + (p2 * 80));
+
+            } else {
+                // --- 完成状态 ---
+                elCircle.style.strokeDashoffset = 0;
+                elStatus.innerText = "生成完毕";
+                updatePercentage(100);
+                return; // 结束动画
+            }
+
+            requestAnimationFrame(animateProgress);
+        }
+
+        function updatePercentage(num) {
+            elProgressText.innerText = Math.floor(num) + "%";
+        }
+
+        // 启动动画
+        requestAnimationFrame(animateProgress);
+
+        // --- 粒子特效 (保持原有装饰) ---
+        const container = document.getElementById('particles-container');
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 3 + 1;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            const x = Math.random() * 60 - 30;
+            particle.style.left = `calc(50% + ${x}px)`;
+            particle.style.top = `40%`;
+            const duration = Math.random() * 2 + 2;
+            particle.style.animation = `floatUp ${duration}s ease-out forwards`;
+            container.appendChild(particle);
+            setTimeout(() => particle.remove(), duration * 1000);
+        }
+        setInterval(createParticle, 400);
+
+    </script>
+</body>
+</html>

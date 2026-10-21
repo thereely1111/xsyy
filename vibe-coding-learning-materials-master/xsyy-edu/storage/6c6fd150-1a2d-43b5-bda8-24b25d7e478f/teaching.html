@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>环形跑道追及相遇 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">环形跑道追及相遇</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('艾迪和薇儿在300米环形跑道上同时同地起跑，同向跑150秒追上、背向跑30秒相遇，列方程组求得艾迪速度6米\/秒、薇儿速度4米\/秒。')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                        <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#8a1c1c" />
+                        </marker>
+                        <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#1e40af" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+
+                            <!-- Scene 0: 环形跑道基础 (sceneStep >= 1) -->
+                            <g x-show="sceneStep >= 1" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- 跑道底色 -->
+                                <ellipse cx="400" cy="310" rx="250" ry="155" fill="none" stroke="#e7e5e4" stroke-width="30" opacity="0.5"/>
+                                <!-- 跑道内圈线 -->
+                                <ellipse cx="400" cy="310" rx="235" ry="140" fill="none" stroke="#a8a29e" stroke-width="1.5"/>
+                                <!-- 跑道外圈线 -->
+                                <ellipse cx="400" cy="310" rx="265" ry="170" fill="none" stroke="#a8a29e" stroke-width="1.5"/>
+                                <!-- 跑道中线 -->
+                                <ellipse cx="400" cy="310" rx="250" ry="155" fill="none" stroke="#78716c" stroke-width="2"/>
+                                <!-- 300米标注 -->
+                                <foreignObject x="330" y="285" width="140" height="50">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:22px; font-weight:bold; color:#44403c; font-family:'Noto Serif SC',serif;">300米</div>
+                                </foreignObject>
+                                <!-- 起点标记 -->
+                                <rect x="394" y="147" width="12" height="18" fill="#8a1c1c" rx="2"/>
+                                <foreignObject x="365" y="120" width="70" height="30">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center; font-size:14px; color:#8a1c1c; font-weight:bold; font-family:'Noto Serif SC',serif;">起点</div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Scene 1: 同向追及 - 两人同方向 (sceneStep >= 2) -->
+                            <g x-show="sceneStep >= 2" x-transition:enter="transition ease-out duration-600" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- 艾迪 (红色圆点) -->
+                                <circle cx="400" cy="155" r="13" fill="#8a1c1c" stroke="#fff" stroke-width="2.5"/>
+                                <foreignObject x="415" y="138" width="70" height="28">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:14px; color:#8a1c1c; font-weight:bold;">艾迪</div>
+                                </foreignObject>
+                                <!-- 薇儿 (蓝色圆点) -->
+                                <circle cx="375" cy="162" r="10" fill="#1e40af" stroke="#fff" stroke-width="2"/>
+                                <foreignObject x="320" y="165" width="70" height="28">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:14px; color:#1e40af; font-weight:bold;">薇儿</div>
+                                </foreignObject>
+                                <!-- 同方向箭头 (顺时针) -->
+                                <path d="M 500 190 A 210 130 0 0 1 610 310" fill="none" stroke="#8a1c1c" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+                                <path d="M 480 200 A 190 115 0 0 1 580 310" fill="none" stroke="#1e40af" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+                                <!-- 同向标签 -->
+                                <foreignObject x="590" y="230" width="140" height="35">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:15px; color:#44403c; font-weight:bold;">同方向跑</div>
+                                </foreignObject>
+                                <!-- 追及轨迹虚线 -->
+                                <ellipse cx="400" cy="310" rx="250" ry="155" fill="none" stroke="#8a1c1c" stroke-width="2" stroke-dasharray="10 6" opacity="0.4"/>
+                            </g>
+
+                            <!-- Scene 2: 追及方程说明 (sceneStep >= 3) -->
+                            <g x-show="sceneStep >= 3" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- 追及核心说明框 -->
+                                <rect x="60" y="420" width="320" height="100" rx="12" fill="#fef2f2" stroke="#8a1c1c" stroke-width="1.5"/>
+                                <foreignObject x="72" y="428" width="296" height="85">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:14px; color:#1f2937; line-height:1.9; padding:4px; font-family:'Noto Sans SC',sans-serif;">
+                                        <div style="font-weight:bold; color:#8a1c1c; margin-bottom:3px;">追及问题核心：</div>
+                                        <div>快的比慢的<span style="color:#8a1c1c;font-weight:bold;">多跑一整圈</span>才能追上</div>
+                                        <div>多跑的距离 = 跑道一圈 = 300米</div>
+                                    </div>
+                                </foreignObject>
+                                <!-- 时间标注 -->
+                                <foreignObject x="430" y="430" width="280" height="45">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:16px; color:#44403c; font-weight:bold;" x-html="renderMath('追及时间：$2$分$30$秒 $= 150$秒')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Scene 3: 背向相遇 (sceneStep >= 4) -->
+                            <g x-show="sceneStep >= 4" x-transition:enter="transition ease-out duration-600" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- 艾迪反方向箭头 (逆时针) -->
+                                <path d="M 310 185 A 210 130 0 0 0 190 310" fill="none" stroke="#8a1c1c" stroke-width="2.5" marker-end="url(#arrowRed)"/>
+                                <!-- 薇儿正方向箭头 (顺时针) -->
+                                <path d="M 490 185 A 210 130 0 0 1 610 310" fill="none" stroke="#1e40af" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+                                <!-- 背向标签 -->
+                                <foreignObject x="310" y="65" width="180" height="35">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:15px; color:#44403c; font-weight:bold; text-align:center;">背向而跑</div>
+                                </foreignObject>
+                                <!-- 相遇点标记 -->
+                                <circle cx="210" cy="400" r="9" fill="none" stroke="#16a34a" stroke-width="3"/>
+                                <circle cx="210" cy="400" r="3.5" fill="#16a34a"/>
+                                <foreignObject x="140" y="415" width="100" height="28">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:13px; color:#16a34a; font-weight:bold;">相遇点</div>
+                                </foreignObject>
+                                <!-- 薇儿跑的轨迹虚线 -->
+                                <path d="M 400 155 A 250 155 0 0 1 610 380" fill="none" stroke="#1e40af" stroke-width="2" stroke-dasharray="8 5" opacity="0.4"/>
+                            </g>
+
+                            <!-- Scene 4: 相遇方程说明 (sceneStep >= 5) -->
+                            <g x-show="sceneStep >= 5" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- 相遇核心说明框 -->
+                                <rect x="420" y="420" width="320" height="100" rx="12" fill="#eff6ff" stroke="#1e40af" stroke-width="1.5"/>
+                                <foreignObject x="432" y="428" width="296" height="85">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:14px; color:#1f2937; line-height:1.9; padding:4px; font-family:'Noto Sans SC',sans-serif;">
+                                        <div style="font-weight:bold; color:#1e40af; margin-bottom:3px;">相遇问题核心：</div>
+                                        <div>两人跑的路程<span style="color:#1e40af;font-weight:bold;">加起来 = 一圈</span></div>
+                                        <div>路程和 = 跑道一圈 = 300米</div>
+                                    </div>
+                                </foreignObject>
+                                <!-- 时间标注 -->
+                                <foreignObject x="60" y="535" width="280" height="45">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:16px; color:#44403c; font-weight:bold;" x-html="renderMath('相遇时间：半分钟 $= 30$秒')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Scene 5: 联立方程组 (sceneStep >= 6) -->
+                            <g x-show="sceneStep >= 6" x-transition:enter="transition ease-out duration-600" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- 方程组背景框 -->
+                                <rect x="210" y="195" width="380" height="210" rx="14" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+                                <foreignObject x="230" y="203" width="340" height="38">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:17px; font-weight:bold; color:#92400e; text-align:center; font-family:'Noto Serif SC',serif;">联立方程组</div>
+                                </foreignObject>
+                                <foreignObject x="240" y="245" width="320" height="55">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:17px; color:#1f2937; text-align:center;" x-html="renderMath('$v_1 - v_2 = 2$（速度差）')"></div>
+                                </foreignObject>
+                                <foreignObject x="240" y="305" width="320" height="55">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:17px; color:#1f2937; text-align:center;" x-html="renderMath('$v_1 + v_2 = 10$（速度和）')"></div>
+                                </foreignObject>
+                                <foreignObject x="240" y="360" width="320" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:15px; color:#78716c; text-align:center;" x-html="renderMath('两式相加：$2v_1 = 12$')"></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- Scene 6: 最终答案 (sceneStep >= 7) -->
+                            <g x-show="sceneStep >= 7" x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100">
+                                <!-- 答案高亮框 -->
+                                <rect x="240" y="440" width="320" height="120" rx="14" fill="#f0fdf4" stroke="#16a34a" stroke-width="2.5"/>
+                                <foreignObject x="260" y="450" width="280" height="38">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:17px; font-weight:bold; color:#166534; text-align:center; font-family:'Noto Serif SC',serif;">最终答案</div>
+                                </foreignObject>
+                                <foreignObject x="260" y="492" width="280" height="55">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:18px; color:#1f2937; text-align:center; font-weight:bold;" x-html="renderMath('艾迪 $= 6$ 米/秒，薇儿 $= 4$ 米/秒')"></div>
+                                </foreignObject>
+                                <!-- 验证标记 -->
+                                <foreignObject x="540" y="450" width="50" height="40">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="font-size:26px; color:#16a34a;">&#10003;</div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [{"title":"认识环形跑道","description":"题目告诉我们：跑道一圈是 $300$ 米，艾迪和薇儿从同一个起点同时出发。","bubbleText":"我们先看清楚题目的场景：这是一个300米的环形跑道，两个人从同一个点同时开始跑。环形跑道问题的关键就是——跑道是圆的，跑着跑着会回到原点！","bubblePos":{"x":450,"y":80}},{"title":"同向追及分析","description":"同向而跑时，艾迪快、薇儿慢，艾迪要追上薇儿，必须比薇儿<span style=\"color:#8a1c1c;font-weight:bold\">多跑整整一圈</span>（300米）。","bubbleText":"同方向跑的时候，艾迪跑得快，薇儿跑得慢。艾迪要追上薇儿，不是只比她多跑一点点，而是必须多跑整整一圈（300米）才能从后面追上她！这就像你在操场跑步，要追上前面的人，得比人家多跑一整圈。","bubblePos":{"x":460,"y":90}},{"title":"建立追及方程","description":"追及时间 $= 150$ 秒，多跑的距离 $= 300$ 米。<br>所以：$(v_1 - v_2) \\times 150 = 300$<br>化简得：$v_1 - v_2 = 2$","bubbleText":"追及问题的公式是：速度差 × 时间 = 多跑的距离。艾迪每秒比薇儿多跑 $(v_1 - v_2)$ 米，跑了150秒，一共多跑了300米（一圈）。所以 $(v_1-v_2)\\times150=300$，两边除以150，得到 $v_1-v_2=2$，也就是艾迪每秒比薇儿快2米。","bubblePos":{"x":80,"y":370}},{"title":"背向相遇分析","description":"背向而跑时，两人面对面跑，<span style=\"color:#1e40af;font-weight:bold\">两人跑的路程之和</span>等于一圈（300米）就相遇。","bubbleText":"背向而跑就是两个人面对面、反方向跑。这时候不需要谁追上谁，而是两个人跑的路程加在一起刚好等于一圈300米，他们就碰面了！就像两个人从一根绳子的两端往中间走，走的路加起来等于绳子长度就碰头了。","bubblePos":{"x":420,"y":75}},{"title":"建立相遇方程","description":"相遇时间 $= 30$ 秒，两人路程之和 $= 300$ 米。<br>所以：$(v_1 + v_2) \\times 30 = 300$<br>化简得：$v_1 + v_2 = 10$","bubbleText":"相遇问题的公式是：速度和 × 时间 = 总路程。两个人每秒一共跑 $(v_1+v_2)$ 米，跑了30秒，合计跑了300米。所以 $(v_1+v_2)\\times30=300$，两边除以30，得到 $v_1+v_2=10$，也就是两人速度加起来是每秒10米。","bubblePos":{"x":430,"y":370}},{"title":"联立方程组求解","description":"$\\begin{cases} v_1 - v_2 = 2 \\\\ v_1 + v_2 = 10 \\end{cases}$<br>两式相加：$2v_1 = 12$，所以 $v_1 = 6$<br>代入得：$v_2 = 10 - 6 = 4$","bubbleText":"现在我们有两个方程：速度差是2，速度和是10。把两个方程加在一起，左边 $(v_1-v_2)+(v_1+v_2)=2v_1$，右边 $2+10=12$，所以 $2v_1=12$，$v_1=6$。再把6代回去，$v_2=10-6=4$。就这么简单！","bubblePos":{"x":440,"y":130}},{"title":"得出最终答案","description":"艾迪的速度为 $6$ 米\/秒，薇儿的速度为 $4$ 米\/秒。<br>验证：$(6-4)\\times150=300$ ✓，$(6+4)\\times30=300$ ✓","bubbleText":"最终答案：艾迪每秒跑6米，薇儿每秒跑4米。我们来验证一下：同向跑时速度差 $6-4=2$，$2\\times150=300$ 米刚好一圈，追上了！背向跑时速度和 $6+4=10$，$10\\times30=300$ 米刚好一圈，相遇了！完全正确！","bubblePos":{"x":420,"y":100}}],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "七下",
+    "main_tag": "二元一次方程组",
+    "sub_tags": [
+      "二元一次方程组应用题"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-27T09:32:23.171771Z",
+  "knowledge_tags_confirmed": true,
+  "title": "鸡兔同笼",
+  "question": "一片牧草，每天匀速生长。这片牧草可供 10头 牛吃 20天，或者供 15头 牛吃 10天。问：可供 25头 牛吃几天？若想使这片牧草永远吃不完，最多只能放牧多少头牛？",
+  "prompt": "一片牧草，每天匀速生长。这片牧草可供 10头 牛吃 20天，或者供 15头 牛吃 10天。问：可供 25头 牛吃几天？若想使这片牧草永远吃不完，最多只能放牧多少头牛？",
+  "preview_image": "Preview.webp"
+}

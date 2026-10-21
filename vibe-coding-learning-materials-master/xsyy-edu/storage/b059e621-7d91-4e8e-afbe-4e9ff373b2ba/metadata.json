@@ -1,0 +1,20 @@
+{
+  "question": "一副扑克牌去掉大小王有52张，其中有黑桃、红心、梅花和方块四种花色，每种花色有点数为1~13的13张.扑克牌中，A表示点数1，J、Q、K分别表示点数11、12、13。至少抽多少张，才能保证抽到两种不同花色的牌",
+  "prompt": "一副扑克牌去掉大小王有52张，其中有黑桃、红心、梅花和方块四种花色，每种花色有点数为1~13的13张.扑克牌中，A表示点数1，J、Q、K分别表示点数11、12、13。至少抽多少张，才能保证抽到两种不同花色的牌",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "b059e621-7d91-4e8e-afbe-4e9ff373b2ba",
+  "generated_at": "2025-12-08T18:36:00.954422",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "抽屉原理应用",
+  "tags": {
+    "reasoning": "最不利原则保证不同花色",
+    "main_tag": "推理意识",
+    "sub_tags": []
+  },
+  "tags_updated_at": "2025-12-08T18:36:00.954422",
+  "preview_image": "Preview.webp"
+}

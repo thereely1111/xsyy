@@ -1,0 +1,24 @@
+{
+  "question": "如图,在600米的环形跑道上,A、B两点相距150米。甲、乙两人分别从A、B两点同时出发,甲每秒跑6米,乙每秒跑4米,如果两人都沿顺时针方向跑,从出发到甲第二次追上乙一共用了______秒。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\138b1f8d-b2a1-420c-9e0d-37cf71ce9ea9\\ScreenShot_2026-02-03_002334_423.png",
+  "task_id": "138b1f8d-b2a1-420c-9e0d-37cf71ce9ea9",
+  "generated_at": "2026-02-03T00:26:48.012094Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "环形跑道追及问题",
+  "has_pic": true,
+  "tags": {
+    "reasoning": "题目是生活情境下的行程应用题。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "量感",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-02-03T00:26:48.012094Z",
+  "preview_image": "Preview.webp"
+}

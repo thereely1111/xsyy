@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>几何可视化：平行四边形内的秘密</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+
+        :root {
+            --ink-black: #1c1917;
+            --paper-bg: #fdfbf7;
+            --cinnabar: #991b1b;
+            --indigo: #312e81;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper-bg);
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            color: var(--ink-black);
+            overflow-x: hidden;
+        }
+
+        /* 卷轴滚动条美化 */
+        .scroll-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scroll-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .scroll-container::-webkit-scrollbar-thumb {
+            background-color: #d6d3d1;
+            border-radius: 10px;
+        }
+
+        /* 动画过渡 */
+        .smooth-transition {
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .fade-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 虚线轨迹动画 */
+        .dash-draw {
+            stroke-dasharray: 10;
+            animation: dash 30s linear infinite;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: -1000; }
+        }
+
+        /* 高亮列表项 */
+        .step-active {
+            background-color: #fef2f2; /* red-50 */
+            border-left-color: var(--cinnabar) !important;
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        /* 浮动气泡的小箭头 */
+        .bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 8px 8px 0;
+            border-style: solid;
+            border-color: rgba(255, 255, 255, 0.95) transparent transparent transparent;
+        }
+
+        /* 几何图形样式 */
+        .point-label { font-size: 14px; font-weight: bold; fill: #444; user-select: none; }
+        .angle-arc { fill: none; stroke-width: 2; opacity: 0; transition: opacity 0.5s; }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <!-- 顶部匾额 -->
+    <header class="flex-none bg-stone-100/60 border-y border-stone-300 py-4 px-6 shadow-sm z-10">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <h1 class="text-3xl font-bold tracking-widest text-stone-800">平行四边形</h1>
+            <div class="text-sm md:text-base text-stone-600 text-center font-serif leading-relaxed">
+                题目：P是平行四边形ABCD内一点，且 <span class="text-indigo-800 font-bold">∠PBA = ∠PDA</span>。求证：<span class="text-red-800 font-bold">∠PAB = ∠PCB</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容 -->
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        
+        <!-- 左侧：互动画布 -->
+        <div class="flex-1 relative bg-white/40 m-2 md:m-6 rounded-2xl shadow-inner border border-stone-100 overflow-hidden" id="canvas-container">
+            
+            <!-- 浮动讲解气泡 -->
+            <div id="bubble" class="bubble absolute z-20 px-4 py-3 bg-white/95 backdrop-blur-md rounded-xl shadow-lg border border-stone-200 text-stone-800 text-sm md:text-base transition-all duration-700 ease-out opacity-0 pointer-events-none" style="top: 20%; left: 50%;">
+                <span id="bubble-text">点击“下一步”开始</span>
+                <div class="mt-1 text-xs text-stone-400 font-mono" id="bubble-math"></div>
+            </div>
+
+            <svg id="geo-canvas" class="w-full h-full" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <!-- 箭头定义 -->
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#999" />
+                    </marker>
+                </defs>
+
+                <!-- 背景网格（极淡） -->
+                <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                    <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#e5e7eb" stroke-width="1"/>
+                </pattern>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+
+                <!-- 静态底图：平行四边形 ABCD -->
+                <!-- A(150,100), B(50,350), C(350,350), D(450,100) -->
+                <!-- P(250, 220) -->
+                <!-- Q(550, 220) -->
+                
+                <!-- 辅助轨迹线 (虚线) -->
+                <g id="trails" class="opacity-0 transition-opacity duration-1000">
+                    <line x1="150" y1="100" x2="450" y2="100" stroke="#9ca3af" stroke-width="2" stroke-dasharray="8 4" />
+                    <line x1="50" y1="350" x2="350" y2="350" stroke="#9ca3af" stroke-width="2" stroke-dasharray="8 4" />
+                    <line x1="250" y1="220" x2="550" y2="220" stroke="#9ca3af" stroke-width="2" stroke-dasharray="8 4" />
+                </g>
+
+                <!-- 辅助圆 (Step 7) -->
+                <circle id="cyclic-circle" cx="400" cy="272" r="158" fill="none" stroke="#d6d3d1" stroke-width="2" stroke-dasharray="10 5" class="opacity-0 transition-opacity duration-1000" />
+
+                <!-- 平行四边形主体 -->
+                <polygon points="150,100 50,350 350,350 450,100" fill="none" stroke="#444" stroke-width="2" />
+                
+                <!-- 连线 -->
+                <line x1="250" y1="220" x2="150" y2="100" stroke="#444" stroke-width="1" /> <!-- PA -->
+                <line x1="250" y1="220" x2="50"  y2="350" stroke="#444" stroke-width="1" /> <!-- PB -->
+                <line x1="250" y1="220" x2="350" y2="350" stroke="#444" stroke-width="1" /> <!-- PC -->
+                <line x1="250" y1="220" x2="450" y2="100" stroke="#444" stroke-width="1" /> <!-- PD -->
+
+                <!-- 移动的三角形 APB (Clone for Animation) -->
+                <g id="tri-apb-group" class="smooth-transition" style="transform-box: fill-box; transform-origin: center;">
+                    <polygon id="tri-apb" points="150,100 50,350 250,220" fill="rgba(254, 242, 242, 0.5)" stroke="#991b1b" stroke-width="2" class="opacity-0" />
+                    <!-- 移动时的角 PBA -->
+                    <path d="M 68 315 A 40 40 0 0 1 78 335" fill="none" stroke="#312e81" stroke-width="3" class="opacity-0" id="angle-pba-move" />
+                    <!-- 移动时的角 PAB -->
+                    <path d="M 160 120 A 30 30 0 0 0 145 130" fill="none" stroke="#991b1b" stroke-width="3" class="opacity-0" id="angle-pab-move" />
+                </g>
+
+                <!-- 目标三角形 DQC (Ghost) -->
+                <g id="tri-dqc-group" class="opacity-0 transition-opacity duration-1000">
+                    <polygon points="450,100 350,350 550,220" fill="none" stroke="#9ca3af" stroke-dasharray="4 2" />
+                    <!-- PQ Line -->
+                    <line x1="250" y1="220" x2="550" y2="220" stroke="#444" stroke-width="2" />
+                    <!-- CQ Line -->
+                    <line x1="350" y1="350" x2="550" y2="220" stroke="#444" stroke-width="2" />
+                    <!-- DQ Line -->
+                    <line x1="450" y1="100" x2="550" y2="220" stroke="#444" stroke-width="2" />
+                </g>
+
+                <!-- 角的标记 -->
+                <!-- Angle PBA (Given) -->
+                <path id="angle-pba" d="M 68 315 A 40 40 0 0 1 78 335" fill="none" stroke="#312e81" stroke-width="3" class="opacity-0 transition-opacity duration-500" />
+                <!-- Angle PDA (Given) -->
+                <path id="angle-pda" d="M 430 115 A 40 40 0 0 0 422 135" fill="none" stroke="#312e81" stroke-width="3" class="opacity-0 transition-opacity duration-500" />
+                
+                <!-- Angle QCD (Transferred) -->
+                <path id="angle-qcd" d="M 375 325 A 40 40 0 0 1 385 340" fill="none" stroke="#312e81" stroke-width="3" class="opacity-0 transition-opacity duration-500" />
+
+                <!-- Target Angles -->
+                <!-- Angle PAB (Target) -->
+                <path id="angle-pab" d="M 160 120 A 30 30 0 0 0 145 130" fill="none" stroke="#991b1b" stroke-width="3" class="opacity-0 transition-opacity duration-500" />
+                <!-- Angle PCB (Target) -->
+                <path id="angle-pcb" d="M 330 330 A 40 40 0 0 0 340 310" fill="none" stroke="#991b1b" stroke-width="3" class="opacity-0 transition-opacity duration-500" />
+                
+                <!-- Angle CDQ (Target moved) -->
+                <path id="angle-cdq" d="M 460 120 A 30 30 0 0 0 445 130" fill="none" stroke="#991b1b" stroke-width="3" class="opacity-0 transition-opacity duration-500" />
+                <!-- Angle CPQ (Bridge) -->
+                <path id="angle-cpq" d="M 280 230 A 40 40 0 0 1 300 235" fill="none" stroke="#991b1b" stroke-width="3" class="opacity-0 transition-opacity duration-500" />
+
+
+                <!-- 顶点标签 -->
+                <text x="140" y="90" class="point-label">A</text>
+                <text x="30" y="360" class="point-label">B</text>
+                <text x="360" y="360" class="point-label">C</text>
+                <text x="460" y="90" class="point-label">D</text>
+                <text x="230" y="215" class="point-label">P</text>
+                <text x="560" y="225" class="point-label opacity-0 transition-opacity duration-500" id="label-q">Q</text>
+            </svg>
+        </div>
+
+        <!-- 右侧：解题卷轴 -->
+        <div class="w-full md:w-[350px] flex-none bg-stone-50 border-l border-stone-200 flex flex-col shadow-xl z-10">
+            <div class="p-5 border-b border-stone-200 bg-stone-100">
+                <h2 class="text-xl font-serif font-bold text-stone-800">完整解法</h2>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto scroll-container p-4">
+                <ul class="space-y-2 text-stone-500 text-sm leading-relaxed" id="step-list">
+                    <!-- 列表项将由 JS 生成 -->
+                </ul>
+            </div>
+
+            <!-- 底部控制区 -->
+            <div class="p-6 bg-white border-t border-stone-200 flex justify-between items-center gap-4">
+                <button onclick="prevStep()" class="flex-1 py-3 px-4 border border-stone-400 text-stone-600 rounded-lg hover:bg-stone-50 transition font-serif">
+                    &lt; 回看
+                </button>
+                <button onclick="nextStep()" class="flex-1 py-3 px-4 bg-red-800 text-white rounded-lg shadow-md hover:bg-red-900 transition font-serif font-bold tracking-widest flex items-center justify-center gap-2">
+                    下一步 
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // 核心数据与状态
+        let currentStep = 0;
+        
+        // 步骤配置
+        const steps = [
+            {
+                title: "审题：观察已知条件",
+                desc: "首先，我们标记出题目给的条件。这两个蓝色的角是相等的。",
+                math: "∠PBA = ∠PDA",
+                bubble: "这是题目送给我们的礼物！",
+                bubblePos: { top: "65%", left: "15%" },
+                action: () => {
+                    setOpacity(['angle-pba', 'angle-pda'], 1);
+                    setOpacity(['angle-pab', 'angle-pcb'], 0.2); // Target faint
+                    resetTransform();
+                }
+            },
+            {
+                title: "目标：锁定要证明的角",
+                desc: "我们的任务是证明这两个红色的角也是相等的。",
+                math: "求证：∠PAB = ∠PCB",
+                bubble: "这两个红色角离得太远了，要想办法把它们凑近点。",
+                bubblePos: { top: "20%", left: "25%" },
+                action: () => {
+                    setOpacity(['angle-pab', 'angle-pcb'], 1);
+                }
+            },
+            {
+                title: "魔法第一步：移形换影",
+                desc: "把左边的三角形 △ABP 剪下来，向右平移。让 AB 边和 DC 边重合。",
+                math: "\\triangle ABP \\to \\triangle DCQ",
+                bubble: "剪下来，平移过去！A变成D，B变成C。",
+                bubblePos: { top: "40%", left: "40%" },
+                action: () => {
+                    document.getElementById('tri-apb').classList.remove('opacity-0');
+                    document.getElementById('angle-pba-move').classList.remove('opacity-0');
+                    document.getElementById('angle-pab-move').classList.remove('opacity-0');
+                    document.getElementById('trails').classList.remove('opacity-0');
+                    
+                    // Trigger translation
+                    const group = document.getElementById('tri-apb-group');
+                    group.style.transform = "translateX(300px)"; // Vector A(150)->D(450) is +300
+                }
+            },
+            {
+                title: "观察：蓝色角的传递",
+                desc: "平移后，原来的 ∠PBA 跑到了 ∠QCD 的位置。因为题目说 ∠PBA = ∠PDA，所以...",
+                math: "\\angle QCD = \\angle PBA = \\angle PDA",
+                bubble: "看！现在右边有了两个相等的蓝色角。",
+                bubblePos: { top: "65%", left: "60%" },
+                action: () => {
+                    // Show ghost shape
+                    document.getElementById('tri-dqc-group').classList.remove('opacity-0');
+                    document.getElementById('label-q').classList.remove('opacity-0');
+                    setOpacity(['angle-qcd'], 1);
+                    // Hide moving parts to clean up visual
+                    document.getElementById('tri-apb').classList.add('opacity-0');
+                    document.getElementById('angle-pba-move').classList.add('opacity-0');
+                    document.getElementById('angle-pab-move').classList.add('opacity-0');
+                }
+            },
+            {
+                title: "发现：四点共圆",
+                desc: "连接 PQ。因为平移，PQ 平行且等于 AD。这构成了一个特殊的图形。观察点 P, D, C, Q。",
+                math: "P, D, C, Q \\text{ 四点共圆}",
+                bubble: "最神奇的一步！这两个蓝色角对着同一条边，说明它们在一个圆上。",
+                bubblePos: { top: "50%", left: "65%" },
+                action: () => {
+                    document.getElementById('cyclic-circle').classList.remove('opacity-0');
+                }
+            },
+            {
+                title: "红色角的传递",
+                desc: "因为四点共圆，同弧 CQ 所对的圆周角相等。所以 ∠CDQ = ∠CPQ。",
+                math: "\\angle CDQ = \\angle CPQ",
+                bubble: "圆的性质：蝴蝶翅膀上的角是相等的。",
+                bubblePos: { top: "30%", left: "60%" },
+                action: () => {
+                    // Highlight the red angles in the circle
+                    setOpacity(['angle-cdq', 'angle-cpq'], 1);
+                }
+            },
+            {
+                title: "最后一步：Z字形",
+                desc: "四边形 BCQP 是平行四边形（因为 PQ // BC）。所以内错角相等。",
+                math: "\\angle CPQ = \\angle PCB",
+                bubble: "这是个平行四边形，走个Z字，角就相等啦！",
+                bubblePos: { top: "55%", left: "40%" },
+                action: () => {
+                    // Highlight the connection
+                }
+            },
+            {
+                title: "结论：证毕",
+                desc: "我们把红色角连起来了：∠PAB 平移变成 ∠CDQ，通过圆变成 ∠CPQ，通过平行变成 ∠PCB。",
+                math: "\\angle PAB = \\angle PCB",
+                bubble: "大功告成！红色角确实相等。",
+                bubblePos: { top: "45%", left: "50%" },
+                action: () => {
+                    // Celebrate
+                    setOpacity(['angle-pab', 'angle-cdq', 'angle-cpq', 'angle-pcb'], 1);
+                }
+            }
+        ];
+
+        // 初始化
+        function init() {
+            const list = document.getElementById('step-list');
+            steps.forEach((step, index) => {
+                const li = document.createElement('li');
+                li.className = `p-3 rounded-lg border-l-4 border-transparent hover:bg-stone-100 transition cursor-pointer`;
+                li.innerHTML = `
+                    <div class="font-bold mb-1">步骤 ${index + 1}：${step.title}</div>
+                    <div class="text-xs opacity-80">${step.desc}</div>
+                    <div class="mt-1 font-mono text-xs bg-stone-200/50 inline-block px-1 rounded text-stone-700">${step.math}</div>
+                `;
+                li.onclick = () => jumpToStep(index);
+                li.id = `step-${index}`;
+                list.appendChild(li);
+            });
+            render();
+        }
+
+        // 辅助函数：批量设置透明度
+        function setOpacity(ids, val) {
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    if (val > 0) el.classList.remove('opacity-0');
+                    else el.classList.add('opacity-0');
+                }
+            });
+        }
+
+        // 辅助函数：重置变换
+        function resetTransform() {
+            const group = document.getElementById('tri-apb-group');
+            group.style.transform = "translateX(0px)";
+            document.getElementById('tri-apb').classList.add('opacity-0');
+            document.getElementById('trails').classList.add('opacity-0');
+            document.getElementById('tri-dqc-group').classList.add('opacity-0');
+            document.getElementById('label-q').classList.add('opacity-0');
+            document.getElementById('cyclic-circle').classList.add('opacity-0');
+            
+            // Reset angles
+            const allAngles = ['angle-pba', 'angle-pda', 'angle-qcd', 'angle-pab', 'angle-pcb', 'angle-cdq', 'angle-cpq'];
+            setOpacity(allAngles, 0);
+        }
+
+        // 状态渲染机
+        function render() {
+            // 1. 更新侧边栏高亮
+            document.querySelectorAll('#step-list li').forEach((li, idx) => {
+                if (idx === currentStep) {
+                    li.classList.add('step-active');
+                    li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    li.classList.remove('step-active');
+                }
+            });
+
+            // 2. 更新气泡
+            const bubble = document.getElementById('bubble');
+            const data = steps[currentStep];
+            
+            // 气泡淡出再淡入
+            bubble.classList.remove('opacity-100');
+            bubble.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                document.getElementById('bubble-text').innerText = data.bubble;
+                document.getElementById('bubble-math').innerText = data.math; // Simple text render
+                bubble.style.top = data.bubblePos.top;
+                bubble.style.left = data.bubblePos.left;
+                bubble.classList.remove('opacity-0');
+                bubble.classList.add('opacity-100');
+            }, 300);
+
+            // 3. 执行画布动画逻辑 (累积状态或重置后执行)
+            // 为了简化逻辑，每次先重置到基础状态，然后按顺序执行到当前步骤
+            // 注意：这对于简单的SVG动画是可行的，复杂的可能需要精确的状态管理
+            
+            // 简单的回溯策略：
+            // 如果是 Step 0, 重置所有.
+            // 如果是 Step N, 确保 Step N-1 的视觉状态保持，并执行 Step N 的 unique action
+            
+            // 这里我们采用一种混合模式：
+            // 先重置关键的"动作"元素，然后根据 currentStep 重放关键帧
+            
+            if (currentStep === 0) {
+                resetTransform();
+                steps[0].action();
+            } else {
+                // 如果是后续步骤，我们假设用户是线性操作的。
+                // 如果用户跳跃，我们需要一种机制。
+                // 简便起见，我们重新运行 0 到 currentStep 的所有 action，但去除动画延迟？
+                // 不，直接运行当前 step 的 action 即可，因为我们的 action 设计包含了 setup。
+                // 但是对于 "平移" 这种动作，必须确保它处于平移后的状态如果我们在 step 4。
+                
+                // 修正策略：根据 step index 设置静态属性
+                if (currentStep < 2) { 
+                    resetTransform();
+                    steps[0].action(); // Highlight Blue
+                    if(currentStep === 1) steps[1].action(); // Highlight Red target
+                }
+                
+                if (currentStep >= 2) {
+                    // Step 2 is the animation.
+                    document.getElementById('tri-apb').classList.remove('opacity-0');
+                    document.getElementById('angle-pba-move').classList.remove('opacity-0');
+                    document.getElementById('angle-pab-move').classList.remove('opacity-0');
+                    document.getElementById('trails').classList.remove('opacity-0');
+                    
+                    // Force transform immediately if we are past the animation step
+                    const group = document.getElementById('tri-apb-group');
+                    group.style.transform = "translateX(300px)";
+                }
+
+                if (currentStep >= 3) {
+                    // Step 3 logic: Show ghost, hide mover
+                    document.getElementById('tri-dqc-group').classList.remove('opacity-0');
+                    document.getElementById('label-q').classList.remove('opacity-0');
+                    setOpacity(['angle-qcd'], 1);
+                    setOpacity(['angle-pda'], 1);
+                    // Hide moving parts
+                    document.getElementById('tri-apb').classList.add('opacity-0');
+                    document.getElementById('angle-pba-move').classList.add('opacity-0');
+                    document.getElementById('angle-pab-move').classList.add('opacity-0');
+                } else {
+                    // hide ghost if step < 3
+                    document.getElementById('tri-dqc-group').classList.add('opacity-0');
+                    document.getElementById('label-q').classList.add('opacity-0');
+                }
+
+                if (currentStep >= 4) {
+                    document.getElementById('cyclic-circle').classList.remove('opacity-0');
+                } else {
+                    document.getElementById('cyclic-circle').classList.add('opacity-0');
+                }
+
+                if (currentStep >= 5) {
+                    setOpacity(['angle-cdq', 'angle-cpq'], 1);
+                } else {
+                    setOpacity(['angle-cdq', 'angle-cpq'], 0);
+                }
+
+                if (currentStep >= 7) {
+                    setOpacity(['angle-pab', 'angle-cdq', 'angle-cpq', 'angle-pcb'], 1);
+                }
+                
+                // 每次执行当前步骤特定的 visual cue (Optional)
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                render();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                render();
+            }
+        }
+
+        function jumpToStep(idx) {
+            currentStep = idx;
+            render();
+        }
+
+        // 启动
+        window.onload = init;
+
+    </script>
+</body>
+</html>

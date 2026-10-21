@@ -1,0 +1,24 @@
+{
+  "question": "三角形的内角和",
+  "prompt": "三角形的内角和",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "13d4fada-2f9c-44fc-9aca-694368585708",
+  "generated_at": "2026-07-31T14:11:09.095278Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "三角形内角和",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "几何图形基础性质求和",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "推理意识",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-07-31T14:11:09.095290Z",
+  "preview_image": "preview.webp"
+}

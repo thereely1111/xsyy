@@ -1,0 +1,14 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "统计与概率",
+    "grade": "八下",
+    "main_tag": "数据的分析",
+    "sub_tags": [
+      "中位数与众数"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-01T06:43:44.149574Z"
+}

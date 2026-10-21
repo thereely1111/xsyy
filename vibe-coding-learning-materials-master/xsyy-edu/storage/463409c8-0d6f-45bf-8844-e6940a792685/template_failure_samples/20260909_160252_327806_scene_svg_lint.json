@@ -1,0 +1,42 @@
+{
+  "failure_stage": "scene_svg_lint",
+  "error_message": "【动画与完整解题（动态片段）生成失败】模板动态片段生成失败，已重试 2 次，最终错误: 模板动态片段生成失败：SVG 纪律 Lint 未通过\n请检查并修正以下纪律违规，然后重新输出完整 JSON：\n- [text_text_overlap] 同屏两段文字互相压叠：<text>@196,241 与 <text>@235,240（交叠 32×17px）。请错开 y 坐标/分行/加行距（≥字号 1.3 倍），禁止文字压字\n（另有告警，建议一并优化：\n  - [text_on_shape_warn] 文字 @290,565 与 <rect> @265,540 交叠 239×22px 且未完全落入图形内；若文字是图形内标签请整体移入，否则请移到图形外侧避让\n）（stage=scene_svg_lint）",
+  "generated_at": "2026-09-09T08:02:52.327806Z",
+  "task_id": "463409c8-0d6f-45bf-8844-e6940a792685",
+  "debug_info": {
+    "question": "一辆汽车加满油后从甲地出发前往乙地，油箱中的剩余油量 y（升）与行驶时间 x（小时）之间的关系为一次函数。已知行驶 2 小时后剩余油量为 48 升，行驶 5 小时后剩余油量为 30 升。请问这辆汽车加满油时油箱中有多少升油？",
+    "title": "一次函数求初值",
+    "model_name": "gpt-5.5",
+    "end_marker": "<!--PARTS_END-->",
+    "attempts": [
+      {
+        "round_idx": 0,
+        "round_max_tokens": 32768,
+        "finish_reason": "stop",
+        "response_text_preview": "我会把题目建模为“剩余油量—行驶时间”的一次函数图象：先固定坐标系和两已知点，再逐步求斜率、截距，并在底部完成代入验证。由于这里的教学动作是函数求解而非展示车辆实际位移，将省略 `motions`。{\"title\":\"一次函数求初值\",\"summary\":\"根据两组油量数据求汽车加满油量\",\"scene_svg\":\"<g>\\n  <g id=\\\"coordinate-base\\\" x-show=\\\"sceneStep >= 1\\\">\\n    <line id=\\\"axis-x\\\" class=\\\"svg-elem\\\" x-show=\\\"sceneStep >= 1\\\" x1=\\\"170\\\" y1=\\\"450\\\" x2=\\\"690\\\" y2=\\\"450\\\" stroke=\\\"#2b2b2b\\\" stroke-width=\\\"2\\\"/>\\n    <line id=\\\"axis-y\\\" class=\\\"svg-elem\\\" x-show=\\\"sceneStep >= 1\\\" x1=\\\"220\\\" y1=\\\"480\\\" x2=\\\"220\\\" y2=\\\"220\\\" stroke=\\\"#2b2b2b\\\" stroke-width=\\\"2\\\"/>\\n    <path id=\\\"axis-x-arrow\\\" class=\\\"svg-elem\\\" x-show=\\\"sceneStep >= 1\\\" d=\\\"M690 450 l-12 -6 M690 450 l-12 6\\\" fill=\\\"none\\\" stroke=\\\"#2b2b2b\\\" stroke-width=\\\"2\\\"/>\\n    <path id=\\\"axis-y-arrow\\\" class=\\\"svg-elem\\\" x-show=\\\"sceneStep >= 1\\\" d=\\\"M220 220 l-6 12 M220 220 l6 12\\\" fill=\\\"none\\\" stroke=\\\"#2b2b2b\\\" stroke-width=\\\"2\\\"/>\\n    <line id=\\\"grid-y30\\\" class=\\\"svg-elem\\\" x-show=\\\"sceneStep >= 1\\\" x1=\\\"220\\\" y1=\\\"350\\\" x2=\\\"650\\\" y2=\\\"350\\\" stroke=\\\"#b9ad95\\\" stroke-width=\\\"1\\\" stroke-dasharray=\\\"4 5\\\" opacity=\\\"0.55\\\"/>\\n    <line id=\\\"grid-y48\\\" class=\\\"svg-elem\\\" x-show=\\\"sceneStep >= 1\\\" x1=\\\"220\\\" y1=\\\"290\\\" x2=\\\"650\\\" y2=\\\"290\\\" stroke=\\\"#b9ad95\\\" stro",
+        "combined_preview": ""
+      }
+    ],
+    "error_stage": "scene_svg_lint",
+    "scene_svg_preview": "<g>\n  <g id=\"coordinate-base\" x-show=\"sceneStep >= 1\">\n    <line id=\"axis-x\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" x1=\"170\" y1=\"450\" x2=\"690\" y2=\"450\" stroke=\"#2b2b2b\" stroke-width=\"2\"/>\n    <line id=\"axis-y\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" x1=\"220\" y1=\"480\" x2=\"220\" y2=\"220\" stroke=\"#2b2b2b\" stroke-width=\"2\"/>\n    <path id=\"axis-x-arrow\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" d=\"M690 450 l-12 -6 M690 450 l-12 6\" fill=\"none\" stroke=\"#2b2b2b\" stroke-width=\"2\"/>\n    <path id=\"axis-y-arrow\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" d=\"M220 220 l-6 12 M220 220 l6 12\" fill=\"none\" stroke=\"#2b2b2b\" stroke-width=\"2\"/>\n    <line id=\"grid-y30\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" x1=\"220\" y1=\"350\" x2=\"650\" y2=\"350\" stroke=\"#b9ad95\" stroke-width=\"1\" stroke-dasharray=\"4 5\" opacity=\"0.55\"/>\n    <line id=\"grid-y48\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" x1=\"220\" y1=\"290\" x2=\"650\" y2=\"290\" stroke=\"#b9ad95\" stroke-width=\"1\" stroke-dasharray=\"4 5\" opacity=\"0.55\"/>\n    <line id=\"tick-x2\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" x1=\"340\" y1=\"444\" x2=\"340\" y2=\"456\" stroke=\"#2b2b2b\" stroke-width=\"1.5\"/>\n    <line id=\"tick-x5\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" x1=\"520\" y1=\"444\" x2=\"520\" y2=\"456\" stroke=\"#2b2b2b\" stroke-width=\"1.5\"/>\n    <line id=\"tick-y30\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" x1=\"214\" y1=\"350\" x2=\"226\" y2=\"350\" stroke=\"#2b2b2b\" stroke-width=\"1.5\"/>\n    <line id=\"tick-y48\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" x1=\"214\" y1=\"290\" x2=\"226\" y2=\"290\" stroke=\"#2b2b2b\" stroke-width=\"1.5\"/>\n    <text x=\"700\" y=\"456\" font-size=\"16\" fill=\"#2b2b2b\">x（小时）</text>\n    <text x=\"230\" y=\"224\" font-size=\"16\" fill=\"#2b2b2b\">y（升）</text>\n    <text x=\"332\" y=\"478\" font-size=\"15\" fill=\"#2b2b2b\">2</text>\n    <text x=\"512\" y=\"478\" font-size=\"15\" fill=\"#2b2b2b\">5</text>\n    <text x=\"188\" y=\"355\" font-size=\"14\" fill=\"#2b2b2b\">30</text>\n    <text x=\"188\" y=\"295\" font-size=\"14\" fill=\"#2b2b2b\">48</text>\n    <path id=\"function-line\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" d=\"M220 250 L650 393\" fill=\"none\" stroke=\"#315a73\" stroke-width=\"3\"/>\n    <circle id=\"point-a\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" cx=\"340\" cy=\"290\" r=\"7\" fill=\"#d6432f\"/>\n    <circle id=\"point-b\" class=\"svg-elem\" x-show=\"sceneStep >= 1\" cx=\"520\" cy=\"350\" r=\"7\" fill=\"#d6432f\"/>\n    <text x=\"300\" y=\"266\" font-size=\"16\" fill=\"#2b2b2b\">A（2，48）</text>\n    <text x=\"530\" y=\"332\" font-size=\"16\" fill=\"#2b2b2b\">B（5，30）</text>\n    <text x=\"196\" y=\"245\" font-size=\"14\" fill=\"#b9ad95\">乾一：起点</text>\n  </g>\n  <g id=\"step-1\" x-show=\"sceneStep === 1\">\n    <text x=\"270\" y=\"72\" font-size=\"21\" fill=\"#d6432f\">设一次函数：y＝kx＋b</text>\n    <text x=\"270\" y=\"103\" font-size=\"16\" fill=\"#2b2b2b\">其中 b 表示 x＝0 时的油量</text>\n    <path id=\"guide-1\" class=\"svg-elem\" x-show=\"sceneStep === 1\" d=\"M410 112 L430 318\" fill=\"none\" stroke=\"#d6432f\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\" opacity=\"0.7\"/>\n  </g>\n  <g id=\"step-2\" x-show=\"sceneStep === 2\">\n    <text x=\"265\" y=\"78\" font-size=\"21\" fill=\"#d6432f\">k＝（30－48）÷（5－2）＝－6</text>\n    <text x=\"300\" y=\"111\" font-size=\"16\" fill=\"#2b2b2b\">油量每小时减少 6 升</text>\n    <path id=\"guide-2\" class=\"svg-elem\" x-show=\"sceneStep === 2\" d=\"M430 120 L430 318\" fill=\"none\" stroke=\"#d6432f\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\" opacity=\"0.7\"/>\n    <path id=\"slope-highlight\" class=\"svg-elem\" x-show=\"sceneStep === 2\" d=\"M340 290 L520 350\" fill=\"none\" stroke=\"#d6432f\" stroke-width=\"5\" opacity=\"0.75\"/>\n  </g>\n  <g id=\"step-3\" x-show=\"sceneStep === 3\">\n    <text x=\"280\" y=\"78\" font-size=\"21\" fill=\"#d6432f\">代入点 A：48＝－6×2＋b</text>\n    <text x=\"300\" y=\"111\" font-size=\"16\" fill=\"#2b2b2b\">把已知点代入函数式</text>\n    <path id=\"guide-3\" class=\"svg-elem\" x-show=\"sceneStep === 3\" d=\"M430 120 L340 290\" fill=\"none\" stroke=\"#d6432f\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\" opacity=\"0.7\"/>\n  </g>\n  <g id=\"step-4\" x-show=\"sceneStep === 4\">\n    <text x=\"315\" y=\"78\" font-size=\"21\" fill=\"#d6432f\">b＝48＋12＝60</text>\n    <text x=\"304\" y=\"111\" font-size=\"16\" fill=\"#2b2b2b\">所以函数关系为 y＝－6x＋60</text>\n    <p",
+    "lint_report": {
+      "passed": false,
+      "hard": [
+        {
+          "rule": "text_text_overlap",
+          "message": "同屏两段文字互相压叠：<text>@196,241 与 <text>@235,240（交叠 32×17px）。请错开 y 坐标/分行/加行距（≥字号 1.3 倍），禁止文字压字"
+        }
+      ],
+      "warnings": [
+        {
+          "rule": "text_on_shape_warn",
+          "message": "文字 @290,565 与 <rect> @265,540 交叠 239×22px 且未完全落入图形内；若文字是图形内标签请整体移入，否则请移到图形外侧避让"
+        }
+      ]
+    },
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "task_id": "463409c8-0d6f-45bf-8844-e6940a792685",
+    "max_output_tokens": 32768
+  }
+}

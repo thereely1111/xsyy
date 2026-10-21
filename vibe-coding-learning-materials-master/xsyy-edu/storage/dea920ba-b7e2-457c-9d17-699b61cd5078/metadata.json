@@ -1,0 +1,19 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "圆台的体积计算",
+  "prompt": "圆台的体积计算",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "dea920ba-b7e2-457c-9d17-699b61cd5078",
+  "generated_at": "2026-08-31T01:54:57.970769Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "圆与扇形问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中圆相关长度面积结构"
+  },
+  "tags_updated_at": "2026-08-31T01:54:57.970769Z"
+}

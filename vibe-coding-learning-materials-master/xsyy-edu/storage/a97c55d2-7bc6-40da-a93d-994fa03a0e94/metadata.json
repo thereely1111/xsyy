@@ -1,0 +1,10 @@
+{
+  "question": "能否将下图分成4个形状、大小都相同的图形，然后拼成一个正方形呢？A. 能 B. 不能",
+  "title": "图形分割与重组",
+  "plan": {
+    "steps": []
+  },
+  "is_math_problem": true,
+  "has_pic": true,
+  "preview_image": "preview.webp"
+}

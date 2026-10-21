@@ -1,0 +1,24 @@
+{
+  "question": "甲、乙两地相距 200 千米，牛牛 去时速度是 10 千米/时，返回时速度是 40 千米/时。牛牛 往返的平均速度是( )千米/时。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/1ab2c8d3-3c7e-40c5-ab0a-7c8f721f3311/ScreenShot_2026-01-23_235624_160.png",
+  "task_id": "1ab2c8d3-3c7e-40c5-ab0a-7c8f721f3311",
+  "generated_at": "2026-01-24T00:02:31.960777Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "往返平均速度计算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的行程应用题，需构建模型求解。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "量感",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-24T00:02:31.960791Z",
+  "preview_image": "Preview.webp"
+}

@@ -1,0 +1,368 @@
+/* ============================================================
+   管理后台 · 水墨主题统一覆盖层（2026-09-02 v2）
+   引入方式：各 admin 页面在 </head> 前 <link css/theme-override.css>
+   位置晚于页面内联 <style>，用于把各页仍残留的旧蓝/直角/硬白统一到
+   站点水墨体系（纸 #EFE9DC · 卡纸白 · 黛蓝 #3E5C76 · 朱砂 #B83B43 · 墨 #1A1917）。
+   仅影响外观，不影响任何功能/布局。
+   注意：样式只作用于「弹窗内部」，避免误伤 .sidebar-header/.content-header
+   等非弹窗元素（v1 的 [class$="-header"] 通配曾把侧栏头染白）。
+   ============================================================ */
+
+/* ---------- 主内容区与卡片 ---------- */
+.main-content {
+    background: linear-gradient(180deg, #EFE9DC 0%, #F2EDE2 100%);
+}
+
+.card,
+.stat-card {
+    background: #FDFBF4;
+    border: 1px solid #E8E1D0;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px rgba(43, 43, 43, 0.05);
+}
+
+.card-title {
+    letter-spacing: 1px;
+    position: relative;
+    padding-left: 14px;
+}
+
+.card-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 3px;
+    bottom: 3px;
+    width: 3px;
+    border-radius: 2px;
+    background: #B83B43;
+}
+
+.stat-card {
+    border-left: 4px solid var(--primary-blue, #3E5C76);
+}
+
+.content-header h1 {
+    letter-spacing: 2px;
+}
+
+/* ---------- 侧栏/内容头 显式恢复（防误伤） ---------- */
+.sidebar-header {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 0 22px 18px !important;
+}
+
+.sidebar-header h2 {
+    color: #EFE6CE !important;
+    font-family: var(--font-serif, "Songti SC", SimSun, serif) !important;
+    letter-spacing: 2px !important;
+}
+
+.content-header {
+    background: transparent !important;
+    padding: 0 !important;
+    border-bottom: none !important;
+}
+
+.content-header h1 {
+    color: var(--ink-black, #2B2B2B) !important;
+    font-family: var(--font-serif, "Songti SC", SimSun, serif) !important;
+}
+
+/* ---------- 按钮：统一小圆角与悬停动效 ---------- */
+.btn,
+.btn-inline,
+.search-bar button,
+.filter-btn,
+.reset-filter-btn,
+.modal-close,
+.admin-modal-close {
+    font-family: var(--font-sans, "PingFang SC", "Microsoft YaHei", sans-serif);
+}
+
+.btn:hover,
+.btn-inline:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(43, 43, 43, 0.16);
+}
+
+/* 兼容各页内联的“旧蓝”主按钮（#4a90d9 系 → 黛蓝） */
+.btn-primary,
+.btn-save-all,
+.btn-apply,
+.advanced-filter-btn,
+.announce-btn-primary {
+    background: #3E5C76 !important;
+    border-color: #3E5C76 !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover,
+.btn-save-all:hover,
+.btn-apply:hover {
+    background: #2E4C66 !important;
+    border-color: #2E4C66 !important;
+}
+
+/* ---------- 弹窗家族：纸白卡 + 描边 + 柔和影 ---------- */
+[class$="-modal"],
+.modal-content,
+.admin-modal,
+.pin-manager-modal,
+.commission-modal,
+.advanced-filter-dialog {
+    background: #FDFBF4 !important;
+    border: 1px solid #E4DECE !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 48px rgba(30, 27, 22, 0.18) !important;
+}
+
+[class$="-overlay"],
+[class$="-mask"],
+.modal-mask {
+    background: rgba(24, 22, 18, 0.52) !important;
+    backdrop-filter: blur(3px);
+}
+
+/* 弹窗标题栏：衬线墨字 + 米金渐变（仅弹窗内部） */
+[class$="-modal"] > [class$="-header"],
+.modal-content > [class$="-header"],
+[class$="-modal"] > .modal-header,
+.modal-header,
+.admin-modal-header,
+[class$="-modal"] > [class$="-modal-head"] {
+    border-bottom: 1px solid #EADFC6 !important;
+    background: linear-gradient(180deg, #F7F0E1, #F1E9D8) !important;
+    padding-left: 20px !important;
+}
+
+[class$="-modal"] > [class$="-header"] h3,
+[class$="-modal"] > [class$="-header"] h4,
+[class$="-modal"] > [class$="-modal-head"] h3,
+.modal-header h3,
+.admin-modal-header h3 {
+    font-family: var(--font-serif, "Songti SC", SimSun, serif) !important;
+    letter-spacing: 2px !important;
+    color: #3E382E !important;
+}
+
+/* 弹窗关闭按钮（仅弹窗内部） */
+[class$="-modal"] [class$="-close"],
+[class$="-modal"] > [class$="-close"],
+.modal-content > [class$="-close"],
+[class$="-modal"] .modal-close,
+[class$="-modal"] .admin-modal-close,
+[class$="-modal"] .close-btn {
+    color: #9C9382 !important;
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-radius: 50% !important;
+    transition: color 0.2s ease, transform 0.25s ease !important;
+    line-height: 1;
+}
+
+[class$="-modal"] [class$="-close"]:hover,
+[class$="-modal"] > [class$="-close"]:hover,
+.modal-close:hover,
+.admin-modal-close:hover,
+.close-btn:hover {
+    color: #B83B43 !important;
+    background: rgba(184, 59, 67, 0.08) !important;
+    transform: rotate(90deg);
+}
+
+/* 弹窗页脚（仅弹窗内部） */
+[class$="-modal"] > [class$="-footer"],
+[class$="-modal"] > [class$="-modal-footer"],
+.modal-content > [class$="-footer"],
+[class$="-modal"] .modal-footer {
+    border-top: 1px solid #EADFC6 !important;
+    background: #F8F2E6 !important;
+}
+
+/* ---------- 表格细节 ---------- */
+.table-container table {
+    background: #FDFBF4;
+    border: 1px solid #E8E1D0;
+    border-radius: 12px;
+}
+
+.table-container thead {
+    background: #ECE4D1 !important;
+}
+
+.table-container thead th {
+    font-family: var(--font-serif, "Songti SC", SimSun, serif);
+    letter-spacing: 1px;
+    color: #4A4438;
+    border-bottom: 1px solid #DDD3BA;
+}
+
+.table-container tbody tr:hover {
+    background: #F5EEDC !important;
+}
+
+.table-container td,
+.table-container th {
+    padding: 10px 16px;
+}
+
+/* ---------- 表单/输入 ---------- */
+.search-bar input,
+[class$="-editor"] input,
+[class$="-editor"] select,
+[class$="-editor"] textarea,
+.edit-input,
+.edit-textarea {
+    border-color: #D8D0BC !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.search-bar input:focus,
+[class$="-editor"] input:focus,
+[class$="-editor"] select:focus,
+.edit-input:focus,
+.edit-textarea:focus {
+    border-color: #3E5C76 !important;
+    box-shadow: 0 0 0 3px rgba(62, 92, 118, 0.12) !important;
+    outline: none;
+}
+
+/* ---------- 徽章/状态/分页 ---------- */
+.tag-primary,
+.tag-success,
+.tag-warning,
+.tag-danger {
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 12px;
+}
+
+.pagination .active,
+.pagination button.active {
+    background: #1A1917 !important;
+    border-color: #1A1917 !important;
+    color: #F3E7C8 !important;
+}
+
+.nav-badge {
+    background: #B83B43 !important;
+}
+
+/* 兼容 tag-group 弹窗（标签手动选择）里残留的 4a90d9 旧蓝选中态 */
+.tag-group-subtag.selected,
+.tag-group-modal-footer .btn-save-all {
+    background: #3E5C76 !important;
+    border-color: #3E5C76 !important;
+}
+
+.tag-group-subtag:hover {
+    border-color: #3E5C76 !important;
+    color: #3E5C76 !important;
+}
+
+/* ---------- 动画柔和化 ---------- */
+.card,
+.stat-card,
+.btn,
+[class$="-modal"],
+.modal-content {
+    transition: box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ============================================================
+   易经主题点缀 + 按钮几何美化（2026-09-03 追加，仅微调不改色）
+   ============================================================ */
+
+/* 侧栏 Logo 下方：卦象注脚（乾坎坤 · 一阴一阳之谓道） */
+.sidebar-header h2::after {
+    content: '☰  ☵  ☷  ·  一阴一阳之谓道';
+    display: block;
+    margin-top: 10px;
+    font-size: 11px;
+    font-weight: 400;
+    font-family: 'Segoe UI Symbol', 'Noto Sans Symbols2', 'Arial Unicode MS', sans-serif;
+    color: rgba(236, 227, 201, 0.55);
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+/* 登录框标题前：卦徽（太极），不落俗 */
+.login-box h1::before {
+    content: '☯ ';
+    font-size: 0.8em;
+    font-family: 'Segoe UI Symbol', 'Noto Sans Symbols2', 'Arial Unicode MS', sans-serif;
+    color: var(--accent-gold, #CFA976);
+}
+
+/* 管理后台按钮：只调形状 / 字距 / 动效，颜色一律不动 */
+.btn,
+.btn-inline,
+.btn-home,
+.btn-logout,
+.btn-announce,
+.btn-primary,
+.btn-danger,
+.btn-warning,
+.btn-success,
+.btn-approve,
+.btn-save-all,
+.btn-cancel,
+.btn-apply,
+.btn-clear,
+.error-modal-btn {
+    border-radius: 8px !important;
+    letter-spacing: 0.5px;
+    transition: transform 0.22s cubic-bezier(0.22, 0.61, 0.36, 1),
+        box-shadow 0.25s ease, opacity 0.2s ease, filter 0.2s ease !important;
+}
+
+.btn:hover,
+.btn-inline:hover,
+.btn-home:hover,
+.btn-logout:hover,
+.btn-announce:hover,
+.btn-primary:hover,
+.btn-danger:hover,
+.btn-warning:hover,
+.btn-success:hover,
+.btn-approve:hover,
+.btn-save-all:hover,
+.btn-apply:hover,
+.error-modal-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(43, 43, 43, 0.16);
+}
+
+.btn:active,
+.btn-inline:active,
+.btn-home:active,
+.btn-logout:active,
+.btn-primary:active,
+.btn-danger:active,
+.btn-warning:active,
+.btn-success:active,
+.btn-approve:active,
+.btn-save-all:active,
+.btn-apply:active,
+.error-modal-btn:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: 0 2px 6px rgba(43, 43, 43, 0.12);
+}
+
+.btn:focus-visible,
+.btn-inline:focus-visible,
+.btn-primary:focus-visible,
+.btn-danger:focus-visible,
+.btn-save-all:focus-visible,
+.btn-apply:focus-visible {
+    outline: 2px solid rgba(184, 59, 67, 0.55);
+    outline-offset: 2px;
+}
+
+/* 表格行内小按钮间距更舒展 */
+.btn-inline {
+    padding: 6px 12px;
+}

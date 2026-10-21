@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="H54qv9Z6VnkYPxxdP2eJoX">
+<head data-page-node-id="U7E5mpDbTJEDZoxihkrxu1">
+    <meta charset="UTF-8" data-page-node-id="GDrC3Z8MespDEdyGuZSrNz">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="5PjG4OTr9DpGStNiaOu89f">
+    <title>注册页「所在年级」下拉美化预览</title>
+    <!-- 直接复用线上真实样式，保证预览即所见 -->
+    <link rel="stylesheet" href="css/auth.css" data-page-node-id="tgRq6Tds5PBcbcr0UgvZ7Z">
+    <style>
+        :root {
+            --ink-black: #2B2B2B;
+            --ink-grey: #5A6A76;
+            --primary-red: #B83B43;
+            --primary-blue: #3E5C76;
+            --accent-gold: #cfaa76;
+            --border-color: #E0DCD3;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f6f2ea 0%, #efe9dd 100%);
+            font-family: var(--font-sans);
+            padding: 24px;
+        }
+        .preview-card {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(43, 43, 43, 0.10);
+            padding: 32px 28px;
+            box-sizing: border-box;
+        }
+        .preview-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--ink-black);
+            margin: 0 0 4px;
+            font-family: "Kaiti SC", "KaiTi", serif;
+        }
+        .preview-sub {
+            font-size: 13px;
+            color: var(--ink-grey);
+            margin: 0 0 24px;
+        }
+        .preview-note {
+            margin-top: 18px;
+            font-size: 12px;
+            color: var(--ink-grey);
+            line-height: 1.6;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 14px;
+        }
+    </style>
+</head>
+<body data-page-node-id="2trvhZ3OvwlYfwCTtgnotn">
+    <div class="preview-card" data-page-node-id="3CivYHI5EAqxYQOBgFUwWM">
+        <h2 class="preview-title" data-page-node-id="kEG3dVOMoev2WS2XV75LAB">创建账号</h2>
+        <p class="preview-sub" data-page-node-id="gFNDKLDwbAwKGOf7aE1BwV">用户名密码注册（下拉框为本次美化对象）</p>
+
+        <form data-page-node-id="CFO62bKENWPIHiUBCJaFFr">
+            <div class="form-group" data-page-node-id="vNfVyd1I6e2ZwHymHL9aTD">
+                <label data-page-node-id="KUp8sNOzNUh5wwFldt5P9a">用户名</label>
+                <input type="text" placeholder="请输入用户名" data-page-node-id="ACgnUFBBpItxHEKtQ36TYX">
+            </div>
+            <div class="form-group" data-page-node-id="BeNNIfhOx4Mu1bjjbEJOrl">
+                <label data-page-node-id="lu4jYfB58dfbbtyzSjPyeG">密码</label>
+                <input type="password" placeholder="请输入密码" data-page-node-id="WF9VrWlcLZlNERTNxHxkU8">
+            </div>
+            <div class="form-group" data-page-node-id="nG9AqWlnTYRW1yIOIMIMOE">
+                <label data-page-node-id="S4GxAPOf3Kna7wnWa2R44U">确认密码</label>
+                <input type="password" placeholder="请再次输入密码" data-page-node-id="7sMz7opo7DJN7cDh9KpPWZ">
+            </div>
+            <div class="form-group last-form-group" style="margin-bottom: 0;" data-page-node-id="UeNIOwKBYUogh9CuvGCVON">
+                <label data-page-node-id="9tQHGgMUvwWpSBl1GfkynT">邀请码</label>
+                <input type="text" placeholder="请输入邀请码" data-page-node-id="PE3EcXRdBIBwevvkvDreWG">
+            </div>
+
+            <!-- ★ 本次美化：所在年级下拉，与输入框同款边框/圆角/聚焦红环 + 自定义箭头 -->
+            <div class="form-group" style="margin-top: 20px;" data-page-node-id="atjDQqhCvf1j4yb5zXn8Ka">
+                <label data-page-node-id="QLHKyhMWFXlFFhxHJYplnj">所在年级（选填）</label>
+                <select id="registerGrade" data-page-node-id="H8qgsgtJcw29LKbKfUPSXz">
+                    <option value="" data-page-node-id="okNVUlQt5Gg8LQVOaC6Mgy">请选择年级（选填）</option>
+                    <option value="1" data-page-node-id="VZnE2FRvsgd8q6wTr09wQN">一年级</option>
+                    <option value="2" data-page-node-id="eggdrQQBk0MvBya1iGOBlN">二年级</option>
+                    <option value="3" data-page-node-id="bLKo4ORYNakoGjJ5yF8QcC">三年级</option>
+                    <option value="4" data-page-node-id="zFCudgfV51RkMN0NxIN5bO">四年级</option>
+                    <option value="5" data-page-node-id="luwEcceiQBLyzpvpl98uyk">五年级</option>
+                    <option value="6" data-page-node-id="6GxAJvlBBl0yvY0v8W27d3">六年级</option>
+                    <option value="7" data-page-node-id="1wj6pgpyP7ZO2N8WCvHB6a">七年级</option>
+                    <option value="8" data-page-node-id="OJXgRAb2i8V91kVyasIZ6n">八年级</option>
+                    <option value="9" data-page-node-id="JoXhXMJEIkQIXwmUGur4F1">九年级</option>
+                </select>
+            </div>
+
+            <button type="button" class="modal-btn" data-page-node-id="9p8a2m7HUSPpRPGdgRA8pT">注册</button>
+        </form>
+
+        <p class="preview-note" data-page-node-id="pyCQ4VC5tHGF6ZyMZvWewa">
+            美化要点：① 去掉原生默认箭头，改用与整体克制冷静风格一致的自定义 chevron；
+            ② 边框 / 圆角(8px) / 内边距 / 字号(15px) 与上方输入框完全一致；
+            ③ 聚焦时主色红描边 + 15% 透明度红晕微交互；④ 占位项在展开列表中呈灰色提示。
+        </p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "question": "【例6】一列火车长150米, 每秒行60米, 问全车通过450米长的大桥, 需要行多少时间?",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\c31f7804-bce2-4cb7-bb96-eabf2755e18a\\pasted-image-1766487920256.png",
+  "task_id": "c31f7804-bce2-4cb7-bb96-eabf2755e18a",
+  "generated_at": "2025-12-23T19:09:52.336093Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "火车过桥问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的复杂行程问题，需要建立过桥总路程模型。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "量感",
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-23T19:09:52.336093Z",
+  "preview_image": "Preview.webp"
+}

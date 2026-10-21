@@ -1,0 +1,24 @@
+{
+  "question": "有一项工程，甲单独做需要 10 天完成，乙单独做需要 15 天完成。现在甲先做了 3 天，剩下的工程由甲乙合作完成，问还需要多少天？",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/05f4d50c-fad6-42ae-b655-f383feea9f83/68bd6ea2-1e14-48ec-8ac9-cb38fa13af4e.png",
+  "task_id": "05f4d50c-fad6-42ae-b655-f383feea9f83",
+  "generated_at": "2026-01-15T17:49:17.123969Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "分数应用题-工程问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的工程类应用题，需抽象总量并建模求解。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-15T17:49:17.123982Z",
+  "preview_image": "Preview.webp"
+}

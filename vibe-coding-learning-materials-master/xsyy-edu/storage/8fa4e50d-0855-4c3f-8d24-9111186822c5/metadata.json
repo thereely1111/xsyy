@@ -1,0 +1,30 @@
+{
+  "task_id": "8fa4e50d-0855-4c3f-8d24-9111186822c5",
+  "generated_at": "2026-08-28T09:08:54.246923Z",
+  "input_file": "",
+  "is_math_problem": true,
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "一上",
+    "main_tag": "6~10认识与加减",
+    "sub_tags": [
+      "8、9的认识与运算"
+    ]
+  },
+  "knowledge_tags_confirmed": true,
+  "knowledge_tags_updated_at": "2026-08-31T01:28:52.947329Z",
+  "needs_tag_selection": false,
+  "plan": {
+    "steps": []
+  },
+  "preview_image": "Preview.webp",
+  "prompt": "15. 猫妈妈给小白5条鱼,给小花4条鱼,小白和小花共吃了6  条,它们还有几条?",
+  "question": "猫妈妈给小白5条鱼,给小花4条鱼,小白和小花共吃了6条,它们还有几条?",
+  "second_tag": null,
+  "tags": {
+    "reasoning": "涉及数量关系"
+  },
+  "tags_updated_at": "2026-08-28T09:08:54.246923Z",
+  "teaching_html_file": "teaching_data.json",
+  "title": "加减应用题"
+}

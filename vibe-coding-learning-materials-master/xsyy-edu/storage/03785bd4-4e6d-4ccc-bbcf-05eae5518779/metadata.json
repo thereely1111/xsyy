@@ -1,0 +1,24 @@
+{
+  "question": "四年级二班有24名女生和12名男生参加运动会,已知女生平均得分是14分,二班所有参赛学生的平均得分是11分,则男生的平均得分是____分。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\03785bd4-4e6d-4ccc-bbcf-05eae5518779\\pasted-image-1766202732608.png",
+  "task_id": "03785bd4-4e6d-4ccc-bbcf-05eae5518779",
+  "generated_at": "2025-12-20T11:53:38.633405Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "加权平均数计算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "核心考察平均数的应用，属于统计范畴。",
+    "main_tag": "数据意识",
+    "sub_tags": [
+      "模型意识",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2025-12-20T11:53:38.634403Z",
+  "preview_image": "Preview.webp"
+}

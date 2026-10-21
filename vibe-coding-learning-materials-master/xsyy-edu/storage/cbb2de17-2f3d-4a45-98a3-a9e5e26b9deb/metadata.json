@@ -1,0 +1,29 @@
+{
+  "question": "某班有男生和女生共 48 人，女生人数是男生人数的 3 倍。现从该班随机选一位同学，求选到女生的概率。",
+  "prompt": "某班有男生和女生共 48 人，女生人数是男生人数的 3 倍。现从该班随机选一位同学，求选到女生的概率。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "cbb2de17-2f3d-4a45-98a3-a9e5e26b9deb",
+  "generated_at": "2026-08-18T07:17:07.250853Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "概率应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "含数量与概率"
+  },
+  "tags_updated_at": "2026-08-18T07:17:07.250853Z",
+  "knowledge_tags": {
+    "version": "统计与概率",
+    "grade": "九上",
+    "main_tag": "概率初步",
+    "sub_tags": [
+      "列举法求概率"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-18T07:17:07.286051Z",
+  "preview_image": "Preview.webp"
+}

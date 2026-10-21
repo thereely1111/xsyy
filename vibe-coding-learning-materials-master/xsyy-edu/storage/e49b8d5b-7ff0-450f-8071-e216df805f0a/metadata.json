@@ -1,0 +1,33 @@
+{
+  "question": "一个等腰三角形的顶角是底角的 4 倍，求这个三角形三个内角的度数。",
+  "prompt": "一个等腰三角形的顶角是底角的 4 倍，求这个三角形三个内角的度数。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "e49b8d5b-7ff0-450f-8071-e216df805f0a",
+  "generated_at": "2026-08-14T17:21:35.574699Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "等腰三角形内角",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "题目考查等腰三角形的性质与三角形内角和，通过设底角为x可列一元一次方程求解。",
+    "main_tag": "等腰三角形",
+    "sub_tags": [
+      "等腰三角形的性质"
+    ]
+  },
+  "tags_updated_at": "2026-08-14T17:21:35.574699Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "八上",
+    "main_tag": "轴对称",
+    "sub_tags": [
+      "等腰三角形的性质与判定"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-17T08:49:35.567476Z",
+  "preview_image": "Preview.webp"
+}

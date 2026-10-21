@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "stage": "primary_school",
+  "domain": "图形与几何",
+  "display_class": "geometry",
+  "grade": "四上",
+  "tags": {
+    "main_tag": "优化",
+    "sub_tags": [
+      "沏茶问题与烙饼问题"
+    ],
+    "second_tag": null
+  },
+  "question_type": "",
+  "figure_info": {
+    "has_figure": false,
+    "figures": []
+  },
+  "visual_requirements": {
+    "style_key": "primary_geometry",
+    "steps_min": 3,
+    "steps_max": 5,
+    "motion_policy": "playful",
+    "must_show": []
+  },
+  "method_lock": null,
+  "is_math_problem": true,
+  "confidence": 0.0,
+  "engine": "legacy",
+  "is_composite": true,
+  "parts": [
+    {
+      "label": "（1）",
+      "text": "1、接水",
+      "domain": "图形与几何",
+      "display_class": "geometry",
+      "question_type": ""
+    },
+    {
+      "label": "（1）",
+      "text": "1、烧水",
+      "domain": "图形与几何",
+      "display_class": "geometry",
+      "question_type": ""
+    },
+    {
+      "label": "（8）",
+      "text": "8、洗茶杯",
+      "domain": "图形与几何",
+      "display_class": "geometry",
+      "question_type": ""
+    },
+    {
+      "label": "（2）",
+      "text": "2、找茶叶",
+      "domain": "图形与几何",
+      "display_class": "geometry",
+      "question_type": ""
+    },
+    {
+      "label": "（1）",
+      "text": "1、沏茶1，最少几分钟？",
+      "domain": "图形与几何",
+      "display_class": "geometry",
+      "question_type": ""
+    }
+  ],
+  "domains": [
+    "geometry"
+  ]
+}

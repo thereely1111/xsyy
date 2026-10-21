@@ -1,0 +1,13 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "八下",
+    "main_tag": "平行四边形",
+    "sub_tags": [
+      "矩形、菱形与正方形"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-14T16:45:47.799528Z",
+  "knowledge_tags_confirmed": true
+}

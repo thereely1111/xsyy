@@ -1,0 +1,17 @@
+{
+  "failure_stage": "unexpected_exception",
+  "error_message": "【动画与完整解题（动态片段）生成失败】模板动态片段生成失败，已重试 2 次，最终错误: Error code: 503 - {'error': {'code': 'model_not_found', 'message': 'No available channel for model gpt-5.4 under group default (distributor) (request id: 20260907012107532612248RSHVNhg3B9p8gVJ9)', 'type': 'new_api_error'}}（stage=unexpected_exception）",
+  "generated_at": "2026-09-07T01:21:07.085601Z",
+  "task_id": "f151cd89-7876-4109-9b81-3c34e8f35bd2",
+  "debug_info": {
+    "error_stage": "unexpected_exception",
+    "exception_type": "InternalServerError",
+    "exception_message": "Error code: 503 - {'error': {'code': 'model_not_found', 'message': 'No available channel for model gpt-5.4 under group default (distributor) (request id: 20260907012107532612248RSHVNhg3B9p8gVJ9)', 'type': 'new_api_error'}}",
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "question": "已知关于 x 的不等式组：\r\n3x - 1 >= 2x + 5\r\n2x - a < 1 - x\r\n\r\n（1）若不等式组无解，求 a 的取值范围；\r\n（2）若不等式组恰好有 3 个整数解，求 a 的取值范围。",
+    "title": "不等式问题",
+    "task_id": "f151cd89-7876-4109-9b81-3c34e8f35bd2",
+    "max_output_tokens": 32768
+  }
+}

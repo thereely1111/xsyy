@@ -1,0 +1,20 @@
+{
+  "question": "甲以每小时 4千米的速度步行去学校,乙比甲晚4小时骑自行车从同一地点出发去追甲，乙每小时行 12 千米,乙几小时可追上甲",
+  "prompt": "甲以每小时 4千米的速度步行去学校,乙比甲晚4小时骑自行车从同一地点出发去追甲，乙每小时行 12 千米,乙几小时可追上甲",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "fcb11bb1-58b4-40f9-b93f-a3fec7237e33",
+  "generated_at": "2025-12-11T12:40:45.195125",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "追及问题",
+  "tags": {
+    "reasoning": "生活情境，多步计算",
+    "main_tag": "模型意识",
+    "sub_tags": []
+  },
+  "tags_updated_at": "2025-12-11T12:40:45.195125",
+  "preview_image": "Preview.webp"
+}

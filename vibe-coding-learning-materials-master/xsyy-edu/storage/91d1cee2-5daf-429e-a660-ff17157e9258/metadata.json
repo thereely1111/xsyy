@@ -1,0 +1,24 @@
+{
+  "question": "某工厂生产A、B两种产品。每件A产品利润300元，需耗时2小时；每件B产品利润400元，需耗时3小时。工厂每周总工时不超过60小时，且A产品每周至少生产5件。问：如何安排生产（A、B各多少件），才能使周利润最大？最大利润是多少？",
+  "prompt": "某工厂生产A、B两种产品。每件A产品利润300元，需耗时2小时；每件B产品利润400元，需耗时3小时。工厂每周总工时不超过60小时，且A产品每周至少生产5件。问：如何安排生产（A、B各多少件），才能使周利润最大？最大利润是多少？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "91d1cee2-5daf-429e-a660-ff17157e9258",
+  "generated_at": "2026-04-03T15:06:37.146270Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "线性规划应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境，约束优化",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "运算能力"
+    ]
+  },
+  "tags_updated_at": "2026-04-03T15:06:37.146287Z",
+  "preview_image": "Preview.webp"
+}

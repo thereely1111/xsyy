@@ -1,0 +1,30 @@
+{
+  "question": "现有浓度为 30% 的盐水 200克，以及浓度为 10% 的盐水若干克。现在要配制出浓度为 22% 的盐水。请问：需要加入多少克浓度为10%的盐水？如果配好后，倒掉一半的盐水，再加入多少克纯水，才能使最终盐水的浓度变为 15%？",
+  "prompt": "现有浓度为 30% 的盐水 200克，以及浓度为 10% 的盐水若干克。现在要配制出浓度为 22% 的盐水。请问：需要加入多少克浓度为10%的盐水？如果配好后，倒掉一半的盐水，再加入多少克纯水，才能使最终盐水的浓度变为 15%？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "e1727f42-e841-499e-af9b-4c9934375126",
+  "generated_at": "2026-08-25T07:49:50.740744Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "百分数问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中百分数应用结构"
+  },
+  "tags_updated_at": "2026-08-25T07:49:50.740744Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "六下",
+    "main_tag": "比例",
+    "sub_tags": [
+      "比例的意义与基本性质"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T08:49:25.996835Z",
+  "knowledge_tags_confirmed": true,
+  "preview_image": "Preview.webp"
+}

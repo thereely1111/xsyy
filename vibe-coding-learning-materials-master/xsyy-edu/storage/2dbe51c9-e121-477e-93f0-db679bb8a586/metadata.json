@@ -1,0 +1,68 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "会游泳 6 人、会滑冰 8 人、都会 3 人，每人至少会一样，共多少人？",
+  "prompt": "会游泳 6 人、会滑冰 8 人、都会 3 人，每人至少会一样，共多少人？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "2dbe51c9-e121-477e-93f0-db679bb8a586",
+  "generated_at": "2026-09-28T06:32:54.763523Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "容斥原理求人数",
+  "title_quality": "ok",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "集合重叠计数问题"
+  },
+  "tags_updated_at": "2026-09-28T06:32:54.763523Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "三上",
+    "main_tag": "集合",
+    "sub_tags": [
+      "韦恩图"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-28T06:32:54.870914Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "primary_school",
+    "domain": "图形与几何",
+    "display_class": "geometry",
+    "grade": "三上",
+    "tags": {
+      "main_tag": "集合",
+      "sub_tags": [
+        "韦恩图"
+      ],
+      "second_tag": null
+    },
+    "question_type": "",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "primary_geometry",
+      "steps_min": 3,
+      "steps_max": 5,
+      "motion_policy": "playful",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  }
+}

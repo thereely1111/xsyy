@@ -1,0 +1,23 @@
+{
+  "question": "小汽车每辆能坐4人，大客车能坐25人，有3辆小汽车和1辆大客车，一共能坐多少人?",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/5a352022-12a7-4269-9070-fea0d9556cd5/pasted-image-1767834678957.png",
+  "task_id": "5a352022-12a7-4269-9070-fea0d9556cd5",
+  "generated_at": "2026-01-08T09:12:50.030864Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "复合乘加应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "考察生活情境下的乘加复合运算。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2026-01-08T09:12:50.030877Z",
+  "preview_image": "Preview.webp"
+}

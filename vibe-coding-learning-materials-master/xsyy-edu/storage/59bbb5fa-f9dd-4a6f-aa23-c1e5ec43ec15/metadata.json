@@ -1,0 +1,35 @@
+{
+  "question": "正方体的体积计算",
+  "prompt": "正方体的体积计算",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "59bbb5fa-f9dd-4a6f-aa23-c1e5ec43ec15",
+  "generated_at": "2026-08-04T14:38:43.302577Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "正方体体积计算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "三维立体计算",
+    "main_tag": "空间观念",
+    "sub_tags": [
+      "几何直观",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-08-04T14:38:43.302590Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "五下",
+    "main_tag": "长方体和正方体",
+    "sub_tags": [
+      "体积公式"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T09:14:18.314654Z",
+  "preview_image": "Preview.webp",
+  "knowledge_tags_confirmed": true
+}

@@ -1,0 +1,19 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "圆锥的体积",
+  "prompt": "圆锥的体积",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "e812b78c-fcf0-4cc5-94e6-9eceecab3408",
+  "generated_at": "2026-08-31T01:01:19.445082Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "几何面积周长问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中平面图形面积周长结构"
+  },
+  "tags_updated_at": "2026-08-31T01:01:19.445082Z"
+}

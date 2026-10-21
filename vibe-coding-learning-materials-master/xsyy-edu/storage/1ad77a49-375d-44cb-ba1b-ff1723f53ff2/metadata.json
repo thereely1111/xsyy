@@ -1,0 +1,69 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "计算 −4 + 6 − 3 + 2，并把它搬到数轴上走一走",
+  "prompt": "计算 −4 + 6 − 3 + 2，并把它搬到数轴上走一走",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "1ad77a49-375d-44cb-ba1b-ff1723f53ff2",
+  "generated_at": "2026-09-28T03:05:09.228520Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "有理数加减法",
+  "title_quality": "ok",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "含运算与数轴表示"
+  },
+  "tags_updated_at": "2026-09-28T03:05:09.228520Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "七上",
+    "main_tag": "有理数",
+    "sub_tags": [
+      "加减混合"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-28T03:05:09.256879Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "数与式",
+    "display_class": "numbers",
+    "grade": "七上",
+    "tags": {
+      "main_tag": "有理数",
+      "sub_tags": [
+        "加减混合"
+      ],
+      "second_tag": null
+    },
+    "question_type": "",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_numbers",
+      "steps_min": 5,
+      "steps_max": 7,
+      "motion_policy": "answer_first",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.95,
+    "engine": "agent",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "agent",
+    "action": "inject_official",
+    "confidence": 0.95
+  }
+}

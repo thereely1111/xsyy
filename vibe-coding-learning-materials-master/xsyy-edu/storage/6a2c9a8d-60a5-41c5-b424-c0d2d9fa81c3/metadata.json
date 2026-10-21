@@ -1,0 +1,24 @@
+{
+  "question": "某铁路桥长1000米，现有一列火车从桥上通过，测得该火车从开始上桥到完全过桥共用了1分钟，整列火车完全在桥上的时间为40秒。那么火车的速度是______米/秒，火车的长度是______米。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/6a2c9a8d-60a5-41c5-b424-c0d2d9fa81c3/pasted-image-1766916525583.png",
+  "task_id": "6a2c9a8d-60a5-41c5-b424-c0d2d9fa81c3",
+  "generated_at": "2025-12-28T18:10:40.266619Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "火车过桥问题计算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的应用题，考察行程中的过桥模型。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2025-12-28T18:10:40.266630Z",
+  "preview_image": "Preview.webp"
+}

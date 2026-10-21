@@ -1,0 +1,35 @@
+{
+  "question": "一个三角形的三条边长分别是3厘米、4厘米和5厘米，求这个三角形的周长。",
+  "prompt": "一个三角形的三条边长分别是3厘米、4厘米和5厘米，求这个三角形的周长。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "847efbc5-c254-4182-b084-aad1ec00ef52",
+  "generated_at": "2026-08-10T11:49:38.339947Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "三角形周长",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "已知边长求周长",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "运算能力",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-08-10T11:49:38.339960Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "三上",
+    "main_tag": "长方形和正方形",
+    "sub_tags": [
+      "周长的意义与计算"
+    ]
+  },
+  "preview_image": "Preview.webp",
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T09:11:04.611594Z",
+  "knowledge_tags_confirmed": true
+}

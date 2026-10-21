@@ -1,0 +1,23 @@
+{
+  "question": "如图是一个残缺的乘法竖式，这个算式的结果是多少？",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\fde9cece-b7ff-458f-aa1d-ed613a0bfc51\\pasted-image-1766761739949.png",
+  "task_id": "fde9cece-b7ff-458f-aa1d-ed613a0bfc51",
+  "generated_at": "2025-12-26T23:10:57.628021Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "残缺乘法竖式推理",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "题目是典型的数字谜题，需要运用逻辑推理填充数字。",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2025-12-26T23:10:57.628021Z",
+  "preview_image": "Preview.webp"
+}

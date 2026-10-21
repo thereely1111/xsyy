@@ -1,0 +1,72 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "A、B、C 钉住，D 在对边线上滑动，拖到哪 ABCD 是平行四边形？",
+  "prompt": "A、B、C 钉住，D 在对边线上滑动，拖到哪 ABCD 是平行四边形？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "ee5c85f7-3e98-4ce5-b427-e07eac0c4755",
+  "generated_at": "2026-09-28T06:40:57.210982Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "动点平行四边形判定",
+  "title_quality": "ok",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "几何动点判定平行四边形"
+  },
+  "tags_updated_at": "2026-09-28T06:40:57.210982Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "八下",
+    "main_tag": "平行四边形",
+    "sub_tags": [
+      "平行四边形的性质与判定"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-28T06:40:57.241278Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "图形与几何",
+    "display_class": "geometry",
+    "grade": "八下",
+    "tags": {
+      "main_tag": "平行四边形",
+      "sub_tags": [
+        "平行四边形的性质与判定"
+      ],
+      "second_tag": null
+    },
+    "question_type": "",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_geometry",
+      "steps_min": 5,
+      "steps_max": 8,
+      "motion_policy": "answer_first",
+      "must_show": [
+        "几何标注规范",
+        "辅助线分层"
+      ]
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.9,
+    "engine": "agent",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "agent",
+    "action": "inject_official",
+    "confidence": 0.9
+  }
+}

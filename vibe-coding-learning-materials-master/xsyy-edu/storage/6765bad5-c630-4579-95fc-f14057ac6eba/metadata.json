@@ -1,0 +1,14 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "七上",
+    "main_tag": "一元一次方程",
+    "sub_tags": [
+      "实际问题建模"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-03T06:34:43.952578Z"
+}

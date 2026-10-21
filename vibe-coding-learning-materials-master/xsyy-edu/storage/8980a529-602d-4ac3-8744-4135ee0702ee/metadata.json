@@ -1,0 +1,20 @@
+{
+  "question": "1+5+9+13+……+1989+1993",
+  "prompt": "1+5+9+13+……+1989+1993",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "8980a529-602d-4ac3-8744-4135ee0702ee",
+  "generated_at": "2025-12-09T18:03:15.254172",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "等差数列求和",
+  "tags": {
+    "reasoning": "纯数字序列求和计算",
+    "main_tag": "运算能力",
+    "sub_tags": []
+  },
+  "tags_updated_at": "2025-12-09T18:03:15.254172",
+  "preview_image": "Preview.webp"
+}

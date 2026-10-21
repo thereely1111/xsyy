@@ -1,0 +1,22 @@
+{
+  "question": "甲、乙、丙三个数，甲、乙的和比丙多59，乙、丙的和比甲多49，甲、丙的和比乙多85，求这三个数。",
+  "prompt": "甲、乙、丙三个数，甲、乙的和比丙多59，乙、丙的和比甲多49，甲、丙的和比乙多85，求这三个数。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "4ed5d489-0b83-467d-aa7f-478d4ad33c0b",
+  "generated_at": "2025-12-03T16:38:46.003231",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "三元一次方程组",
+  "tags": {
+    "reasoning": "涉及三个未知数的等量关系",
+    "main_tag": "符号意识",
+    "sub_tags": [
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-03T16:38:46.003231",
+  "preview_image": "Preview.webp"
+}

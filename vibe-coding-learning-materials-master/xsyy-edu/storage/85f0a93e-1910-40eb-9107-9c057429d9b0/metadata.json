@@ -1,0 +1,23 @@
+{
+  "question": "甲、乙、丙、丁四位医生依次每天轮流到农村卫生所义诊.甲第30次义诊是星期三，那么当丙首次在周日义诊时，丁医生已经下乡义诊几次了？",
+  "prompt": "甲、乙、丙、丁四位医生依次每天轮流到农村卫生所义诊.甲第30次义诊是星期三，那么当丙首次在周日义诊时，丁医生已经下乡义诊几次了？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "85f0a93e-1910-40eb-9107-9c057429d9b0",
+  "generated_at": "2025-12-23T12:19:33.180401Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "周期排列与日期推算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及医生轮流周期与日期计算",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2025-12-23T12:19:33.180401Z",
+  "preview_image": "Preview.webp"
+}

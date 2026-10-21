@@ -1,0 +1,24 @@
+{
+  "question": "某商品原价 200 元，春节期间降价 15% 销售，节后又在降价后的价格基础上提价 10%，现在该商品的价格是多少元？",
+  "prompt": "某商品原价 200 元，春节期间降价 15% 销售，节后又在降价后的价格基础上提价 10%，现在该商品的价格是多少元？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "8a84b0aa-7b63-437c-9f70-6369fa803a87",
+  "generated_at": "2026-04-09T11:17:58.983721Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "百分数连续变化应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境，多步计算",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "运算能力",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-04-09T11:17:58.983737Z",
+  "preview_image": "Preview.webp"
+}

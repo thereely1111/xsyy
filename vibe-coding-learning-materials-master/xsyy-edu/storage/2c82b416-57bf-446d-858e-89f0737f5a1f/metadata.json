@@ -1,0 +1,23 @@
+{
+  "question": "小明要用一只平底锅烙饼。锅每次只能放2张饼，烙熟一面需要2分钟，两面都烙熟才算完成。请问烙熟3张饼至少需要多少分钟？",
+  "prompt": "小明要用一只平底锅烙饼。锅每次只能放2张饼，烙熟一面需要2分钟，两面都烙熟才算完成。请问烙熟3张饼至少需要多少分钟？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "2c82b416-57bf-446d-858e-89f0737f5a1f",
+  "generated_at": "2026-04-01T17:38:18.023439Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "烙饼问题优化",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境，需优化安排",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-04-01T17:38:18.023456Z",
+  "preview_image": "Preview.webp"
+}

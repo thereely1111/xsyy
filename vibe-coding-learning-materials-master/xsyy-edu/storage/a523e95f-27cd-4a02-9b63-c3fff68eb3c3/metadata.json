@@ -1,0 +1,24 @@
+{
+  "question": "能否将下图分成4个形状、大小都相同的图形, 然后拼成一个正方形呢? ( ) A. 能 B. 不能",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\a523e95f-27cd-4a02-9b63-c3fff68eb3c3\\ScreenShot_2026-01-31_103826_411.png",
+  "task_id": "a523e95f-27cd-4a02-9b63-c3fff68eb3c3",
+  "generated_at": "2026-01-31T11:23:49.522548Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "图形分割与重组",
+  "has_pic": true,
+  "tags": {
+    "reasoning": "主要考察对平面几何图形的分割、面积计算和形状重组的直观判断。",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "数感",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-31T11:23:49.522548Z",
+  "preview_image": "Preview.webp"
+}

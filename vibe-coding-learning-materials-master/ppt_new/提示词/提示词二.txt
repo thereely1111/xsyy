@@ -1,0 +1,63 @@
+# 角色
+你是全栈开发工程师，擅长 FastAPI、MySQL、ChromaDB、TailwindCSS 以及 AI 服务集成。你能根据产品需求和技术架构文档，快速搭建可运行的项目骨架。
+
+# 上下文
+已有以下两份完整文档（已提供）：
+- `产品需求文档.md`
+- `技术架构文档.md`
+
+# 任务
+基于上述文档，**开始实际搭建项目**，生成以下内容：
+
+1. **后端项目初始化**
+   - 目录结构（按技术架构文档 2.2）
+   - `requirements.txt`（包含 FastAPI、SQLAlchemy、PyMySQL、python-jose、passlib、chromadb、sentence-transformers、requests、prometheus-client、pydantic-settings 等）
+   - `app/config.py`（从环境变量读取配置）
+   - `app/database.py`（SQLAlchemy 异步引擎 + session）
+   - `app/vector_db.py`（ChromaDB 客户端）
+   - `app/main.py`（FastAPI 应用入口，含 CORS、路由注册、启动事件）
+   - 所有 API 路由存根（`api/auth.py`, `api/problems.py`, `api/applications.py`, `api/comments.py`, `api/users.py`, `api/admin.py`）——每个文件至少包含空路由函数及基础 Pydantic schema 引用
+   - 所有数据模型（`models/*.py` 对应 PRD 中的 6 张表：User, Problem, Application, Comment, Like, Favorite）
+   - 所有 Pydantic schemas（`schemas/*.py` 对应 PRD 7.1~7.6 中的请求/响应结构）
+   - 基本服务层空壳（`services/auth_service.py`, `problem_service.py`, `application_service.py`, `ai_service.py`, `vector_service.py`, `cache_service.py`）——每个服务至少实现一个占位方法（如 `register`, `upload_problem` 返回 mock 数据）
+
+2. **前端项目初始化**
+   - 目录结构（按技术架构文档 2.2）
+   - `frontend/index.html`（首页，包含新中式风格导航栏、英雄区、上传入口）
+   - `frontend/src/pages/upload.html`（题目上传页）
+   - `frontend/src/pages/application.html`（应用生成页，带进度条）
+   - `frontend/src/pages/detail.html`（应用详情页，展示 iframe 生成的 HTML）
+   - `frontend/src/pages/profile.html`（个人中心）
+   - `frontend/src/pages/admin.html`（管理后台仪表盘）
+   - `frontend/src/utils/api.js`（封装所有 API 调用，包括认证、上传、轮询等）
+   - `frontend/src/utils/auth.js`（JWT 存储与拦截）
+   - `frontend/src/utils/ui.js`（进度条、消息提示、MathJax 渲染）
+   - `frontend/styles/tailwind.css`（含新中式自定义主题）
+
+3. **配置文件与脚本**
+   - `.env.example`（列出所有必需环境变量）
+   - `docker-compose.yml`（MySQL + Redis + ChromaDB 服务，可选）
+   - `start_backend.sh`（启动 uvicorn）
+   - `nginx.conf`（反向代理示例）
+
+4. **AI 服务集成存根**
+   - `services/ai_service.py` 中实现 `analyze_problem`（调用 DeepSeek，返回 mock 或真实调用）和 `generate_application`（调用 Gemini，返回简单测试 HTML）
+   - 使用 `BackgroundTasks` 或创建异步任务队列的简化版本（可以先用 FastAPI 的 `BackgroundTasks` 占位）
+
+5. **数据初始化脚本**
+   - `init_db.sql` 或使用 Alembic 迁移初始化表结构（提供 SQL 脚本即可）
+   - `init_vector_db.py`（创建 ChromaDB collection）
+
+# 约束
+- 所有生成的代码必须**可直接运行**（至少能启动服务、访问前端首页、模拟核心流程）。
+- 对于真实 AI API 调用，请使用环境变量中的 key，若未提供则返回模拟数据并打印日志。
+- 生成的教学应用 HTML 示例：一个简单的二次函数交互绘图（带滑块），内嵌 Tailwind，无外部依赖。
+- 前端必须实现**新中式风格**：墨蓝色（#1a365d）、米白背景、柔和阴影、圆润卡片、水墨风格点缀。
+- 后端 API 需实现 JWT 认证中间件，除登录/注册外其他接口需验证 token。
+- 异步任务状态可使用内存字典模拟（生产可替换为 Redis），但必须提供 `GET /api/applications/{id}/status` 轮询。
+
+# 输出格式
+请以**文件树 + 每个文件的完整代码**形式输出。对于较长的文件，可以使用折叠或分块展示，但必须包含全部关键内容。优先输出后端核心文件（main, config, models, schemas, services 基础）和前端入口文件，其余可简述但需确保项目可启动。
+
+# 最终目标
+生成一个**最小可行产品（MVP）** 的项目代码，开发者 clone 后只需配置 `.env`、安装依赖、运行脚本即可本地访问 `http://localhost:8000` 并测试核心流程（上传题目 → 分析 → 生成应用 → 预览）。

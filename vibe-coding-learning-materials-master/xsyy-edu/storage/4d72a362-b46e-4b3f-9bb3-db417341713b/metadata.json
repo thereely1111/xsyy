@@ -1,0 +1,21 @@
+{
+  "question": "小强和小明在400米环形跑道上跑步，小强每秒跑5米，小明每秒跑3米。两人从同一地点同时同向出发。请问经过多少秒后，小强第一次追上小明？（追上时，小强刚好比小明多跑一圈）",
+  "prompt": "小强和小明在400米环形跑道上跑步，小强每秒跑5米，小明每秒跑3米。两人从同一地点同时同向出发。请问经过多少秒后，小强第一次追上小明？（追上时，小强刚好比小明多跑一圈）",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "4d72a362-b46e-4b3f-9bb3-db417341713b",
+  "generated_at": "2026-04-01T11:00:54.735974Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "环形跑道追及问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境，多步计算",
+    "main_tag": "模型意识",
+    "sub_tags": []
+  },
+  "tags_updated_at": "2026-04-01T11:00:54.735989Z",
+  "preview_image": "Preview.webp"
+}

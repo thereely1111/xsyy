@@ -1,0 +1,24 @@
+{
+  "question": "两名运动员在湖周围的环形跑道上练习长跑，甲每分钟跑250米，乙每分钟跑200米，两人同时同地同向出发，经过45分钟第5次甲追上乙；如果两人同时同地反向出发，经过___分钟两人第3次相遇。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\4dae7a77-e5af-47b4-af30-fe7208902a95\\ScreenShot_2026-02-03_002403_003.png",
+  "task_id": "4dae7a77-e5af-47b4-af30-fe7208902a95",
+  "generated_at": "2026-02-03T00:27:07.583398Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "环形跑道追及相遇",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "经典的行程问题应用题，需要建立数学模型求解。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "量感",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-02-03T00:27:07.583398Z",
+  "preview_image": "Preview.webp"
+}

@@ -1,0 +1,24 @@
+{
+  "question": "能不能将3×12的方格纸（左图）剪成形状、大小都相同的两部分（只能沿格线剪），然后拼成4×9的长方形（右图）呢？",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/2eaec00d-188f-48d4-8f63-b8ffb1b644fa/ScreenShot_2026-01-31_103735_610.png",
+  "task_id": "2eaec00d-188f-48d4-8f63-b8ffb1b644fa",
+  "generated_at": "2026-01-31T10:42:57.627550Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "方格纸分割与重组",
+  "has_pic": true,
+  "tags": {
+    "reasoning": "题目核心考查平面图形的分割与重组的逻辑推理。",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "推理意识",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-31T10:42:57.627776Z",
+  "preview_image": "Preview.webp"
+}

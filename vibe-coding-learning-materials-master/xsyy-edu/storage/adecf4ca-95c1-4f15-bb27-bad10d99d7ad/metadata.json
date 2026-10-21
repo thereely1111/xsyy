@@ -1,0 +1,17 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "统计与概率",
+    "grade": "四下",
+    "main_tag": "平均数与条形统计图",
+    "sub_tags": [
+      "求平均数"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-01T06:35:26.143702Z",
+  "question": "有5个数的平均数是25，若把其中一个数改为40，则这5个数的平均数变成30。被改动的那个数原来是多少？",
+  "prompt": "有5个数的平均数是25，若把其中一个数改为40，则这5个数的平均数变成30。被改动的那个数原来是多少？",
+  "title": "平均数问题"
+}

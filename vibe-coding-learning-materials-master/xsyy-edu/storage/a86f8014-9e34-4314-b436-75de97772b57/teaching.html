@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抽屉原理问题 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">抽屉原理问题</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('5种颜色袜子各15只混装，用抽屉原理的最坏情况思维，至少取出11只即可保证凑成3双。')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <!-- 步骤0：题目场景，一只装满混装袜子的箱子 -->
+                            <g x-show="sceneStep >= 0" x-transition:enter="transition ease-out duration-500">
+                                <text x="400" y="55" text-anchor="middle" font-size="26" font-weight="bold" fill="#1f2937" font-family="'Noto Serif SC', serif">箱子里的混装袜子</text>
+                                <rect x="300" y="150" width="200" height="150" rx="12" fill="#e7d9c3" stroke="#8a6d4b" stroke-width="3"/>
+                                <text x="400" y="235" text-anchor="middle" font-size="52">🧦</text>
+                                <text x="400" y="335" text-anchor="middle" font-size="16" fill="#44403c">5 种颜色 × 每种 15 只</text>
+                                <foreignObject x="250" y="360" width="300" height="60">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center;font-size:14px;color:#57534e;line-height:1.6;">袜子<b>不分左右</b>，只要颜色相同，任意两只就能配成一双。</div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- 步骤1：一双袜子 = 同色两只 -->
+                            <g x-show="sceneStep >= 1" x-transition:enter="transition ease-out duration-500">
+                                <text x="400" y="440" text-anchor="middle" font-size="20" font-weight="bold" fill="#8a1c1c">一双袜子 = 同颜色的两只</text>
+                                <ellipse cx="330" cy="500" rx="26" ry="34" fill="#ef4444" opacity="0.85"/>
+                                <ellipse cx="392" cy="500" rx="26" ry="34" fill="#ef4444" opacity="0.85"/>
+                                <path d="M356 500 h10" stroke="#8a1c1c" stroke-width="3" stroke-dasharray="4 3"/>
+                                <text x="361" y="565" text-anchor="middle" font-size="16" fill="#44403c">同色 → 1 双</text>
+                                <ellipse cx="520" cy="500" rx="26" ry="34" fill="#3b82f6" opacity="0.85"/>
+                                <ellipse cx="582" cy="500" rx="26" ry="34" fill="#22c55e" opacity="0.85"/>
+                                <text x="551" y="565" text-anchor="middle" font-size="16" fill="#44403c">异色 → 不能配</text>
+                                <line x1="500" y1="470" x2="600" y2="530" stroke="#b91c1c" stroke-width="4"/>
+                                <line x1="600" y1="470" x2="500" y2="530" stroke="#b91c1c" stroke-width="4"/>
+                            </g>
+
+                            <!-- 步骤2：最不利原则（一直存在） -->
+                            <g x-show="sceneStep >= 2">
+                                <rect x="180" y="80" width="440" height="46" rx="23" fill="#fee2e2" stroke="#8a1c1c" stroke-width="1.5"/>
+                                <text x="400" y="110" text-anchor="middle" font-size="18" font-weight="bold" fill="#8a1c1c">💡 最不利原则：先想最倒霉的取法</text>
+                            </g>
+
+                            <!-- 步骤3：五个颜色抽屉（一直存在） -->
+                            <g x-show="sceneStep >= 3">
+                                <rect x="60" y="200" width="120" height="150" rx="8" fill="#ffffff" stroke="#ef4444" stroke-width="3"/>
+                                <rect x="60" y="320" width="120" height="30" fill="#ef4444" opacity="0.85"/>
+                                <text x="120" y="342" text-anchor="middle" font-size="16" fill="#ffffff" font-weight="bold">红色</text>
+
+                                <rect x="200" y="200" width="120" height="150" rx="8" fill="#ffffff" stroke="#3b82f6" stroke-width="3"/>
+                                <rect x="200" y="320" width="120" height="30" fill="#3b82f6" opacity="0.85"/>
+                                <text x="260" y="342" text-anchor="middle" font-size="16" fill="#ffffff" font-weight="bold">蓝色</text>
+
+                                <rect x="340" y="200" width="120" height="150" rx="8" fill="#ffffff" stroke="#22c55e" stroke-width="3"/>
+                                <rect x="340" y="320" width="120" height="30" fill="#22c55e" opacity="0.85"/>
+                                <text x="400" y="342" text-anchor="middle" font-size="16" fill="#ffffff" font-weight="bold">绿色</text>
+
+                                <rect x="480" y="200" width="120" height="150" rx="8" fill="#ffffff" stroke="#eab308" stroke-width="3"/>
+                                <rect x="480" y="320" width="120" height="30" fill="#eab308" opacity="0.85"/>
+                                <text x="540" y="342" text-anchor="middle" font-size="16" fill="#ffffff" font-weight="bold">黄色</text>
+
+                                <rect x="620" y="200" width="120" height="150" rx="8" fill="#ffffff" stroke="#a855f7" stroke-width="3"/>
+                                <rect x="620" y="320" width="120" height="30" fill="#a855f7" opacity="0.85"/>
+                                <text x="680" y="342" text-anchor="middle" font-size="16" fill="#ffffff" font-weight="bold">紫色</text>
+                            </g>
+
+                            <!-- 步骤4：最坏情况，每种颜色先各取 1 只（共 5 只，0 双） -->
+                            <g x-show="sceneStep >= 4" x-transition:enter="transition ease-out duration-500">
+                                <ellipse cx="120" cy="280" rx="20" ry="26" fill="#ef4444" opacity="0.9"/>
+                                <ellipse cx="260" cy="280" rx="20" ry="26" fill="#3b82f6" opacity="0.9"/>
+                                <ellipse cx="400" cy="280" rx="20" ry="26" fill="#22c55e" opacity="0.9"/>
+                                <ellipse cx="540" cy="280" rx="20" ry="26" fill="#eab308" opacity="0.9"/>
+                                <ellipse cx="680" cy="280" rx="20" ry="26" fill="#a855f7" opacity="0.9"/>
+                                <foreignObject x="230" y="380" width="340" height="50">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center;font-size:16px;color:#1f2937;">已取 <b>5</b> 只，每种颜色各 1 只 → 还是 <b>0 双</b></div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- 步骤5：再各取 1 只，每种颜色凑成 1 双（共 10 只，5 双） -->
+                            <g x-show="sceneStep >= 5" x-transition:enter="transition ease-out duration-500">
+                                <ellipse cx="150" cy="280" rx="20" ry="26" fill="#ef4444" opacity="0.9" stroke="#8a1c1c" stroke-width="2"/>
+                                <ellipse cx="290" cy="280" rx="20" ry="26" fill="#3b82f6" opacity="0.9" stroke="#1e40af" stroke-width="2"/>
+                                <ellipse cx="430" cy="280" rx="20" ry="26" fill="#22c55e" opacity="0.9" stroke="#15803d" stroke-width="2"/>
+                                <ellipse cx="570" cy="280" rx="20" ry="26" fill="#eab308" opacity="0.9" stroke="#a16207" stroke-width="2"/>
+                                <ellipse cx="710" cy="280" rx="20" ry="26" fill="#a855f7" opacity="0.9" stroke="#7e22ce" stroke-width="2"/>
+
+                                <line x1="140" y1="245" x2="150" y2="254" stroke="#a8a29e" stroke-width="2" stroke-dasharray="4 3"/>
+                                <line x1="280" y1="245" x2="290" y2="254" stroke="#a8a29e" stroke-width="2" stroke-dasharray="4 3"/>
+                                <line x1="420" y1="245" x2="430" y2="254" stroke="#a8a29e" stroke-width="2" stroke-dasharray="4 3"/>
+                                <line x1="560" y1="245" x2="570" y2="254" stroke="#a8a29e" stroke-width="2" stroke-dasharray="4 3"/>
+                                <line x1="700" y1="245" x2="710" y2="254" stroke="#a8a29e" stroke-width="2" stroke-dasharray="4 3"/>
+
+                                <foreignObject x="200" y="430" width="400" height="60">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center;font-size:16px;color:#1f2937;">再各取 1 只 → 共 <b>10</b> 只，每种颜色都成了 <b>1 双</b>（共 5 双）</div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- 步骤6：第 11 只袜子无论什么颜色，都会让某种颜色变成 3 只 -->
+                            <g x-show="sceneStep >= 6" x-transition:enter="transition ease-out duration-500">
+                                <ellipse cx="120" cy="160" rx="20" ry="26" fill="#ef4444" opacity="0.95" stroke="#8a1c1c" stroke-width="3"/>
+                                <text x="120" y="125" text-anchor="middle" font-size="22">⬇️</text>
+                                <path d="M120 186 C 120 210, 120 230, 120 250" stroke="#8a1c1c" stroke-width="2.5" fill="none" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+                                <foreignObject x="180" y="140" width="440" height="60">
+                                    <div xmlns="http://www.w3.org/1999/xhtml" style="text-align:center;font-size:15px;color:#8a1c1c;font-weight:bold;">第 11 只不管什么颜色，都会让那种颜色变成 3 只，多出的 1 双跑不掉！</div>
+                                </foreignObject>
+                            </g>
+
+                            <!-- 步骤7：结论高亮 -->
+                            <g x-show="sceneStep >= 7" x-transition:enter="transition ease-out duration-500">
+                                <rect x="220" y="510" width="360" height="64" rx="32" fill="#8a1c1c"/>
+                                <text x="400" y="552" text-anchor="middle" font-size="26" font-weight="bold" fill="#ffffff">答案：至少取 11 只</text>
+                            </g>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+  {
+    "title": "读懂题目",
+    "description": "箱内有 $5$ 种颜色的袜子，每种颜色各 $15$ 只，全部混在一起。问：不论怎么取，至少取出多少只，就一定能凑出 $3$ 双袜子？",
+    "bubbleText": "先别急着算！题目说\"不论如何取\"，意思是不管你运气多差，都要保证能凑出 3 双。我们要找的是最保险的那个数量。",
+    "bubblePos": { "x": 250, "y": 60 }
+  },
+  {
+    "title": "弄清\"一双\"",
+    "description": "袜子没有左右之分，只要两只颜色相同，就能配成 $1$ 双；颜色不同则不能配。",
+    "bubbleText": "袜子不分左右脚，所以配双特别简单：颜色一样的两只就是一双。红色配红色，蓝色配蓝色，红配蓝可不行哦。",
+    "bubblePos": { "x": 430, "y": 430 }
+  },
+  {
+    "title": "最不利原则",
+    "description": "要保证一定成功，就要按\"最倒霉\"的情况来想：让凑双尽量慢，最后再多取 $1$ 只即可。",
+    "bubbleText": "这类\"保证\"题有个法宝：先想最倒霉的取法，也就是让你最难凑出 3 双的那种取法。把最坏情况扛过去，就一定能成功。",
+    "bubblePos": { "x": 230, "y": 130 }
+  },
+  {
+    "title": "摆好五个抽屉",
+    "description": "把 $5$ 种颜色看成 $5$ 个抽屉，取出的袜子按颜色分别放进对应抽屉。",
+    "bubbleText": "我们把红、蓝、绿、黄、紫 5 种颜色想象成 5 个抽屉。每取出一只袜子，就按颜色丢进对应的抽屉里，这样看得清清楚楚。",
+    "bubblePos": { "x": 250, "y": 380 }
+  },
+  {
+    "title": "最坏第一步：各取1只",
+    "description": "最倒霉时，先取出的 $5$ 只恰好每种颜色各 $1$ 只，此时一双也凑不成，共取 $5$ 只。",
+    "bubbleText": "最倒霉的情况开始了：你取出的前 5 只，红蓝绿黄紫各一只。每种颜色都落单，一双都配不成。别急，这才刚刚开始。",
+    "bubblePos": { "x": 250, "y": 430 }
+  },
+  {
+    "title": "最坏第二步：各凑1双",
+    "description": "继续最倒霉地取，再取 $5$ 只让每种颜色都变成 $2$ 只。共取 $10$ 只，恰好每种颜色 $1$ 双。",
+    "bubbleText": "接着再取 5 只，又是一种颜色一只。现在每种颜色都有 2 只，各成了 1 双。一共取了 10 只，这是能拖住不出现\"多余\"双数的极限。",
+    "bubblePos": { "x": 220, "y": 490 }
+  },
+  {
+    "title": "第11只锁定胜局",
+    "description": "再取第 $11$ 只，它必属于 $5$ 种颜色之一，使该颜色达到 $3$ 只，从而再多凑出 $1$ 双。",
+    "bubbleText": "关键的最后一击！第 11 只袜子不管是什么颜色，都会让那种颜色从 2 只变成 3 只。3 只同色里随便拿 2 只又是一双，第 3 双稳稳到手。",
+    "bubblePos": { "x": 250, "y": 200 }
+  },
+  {
+    "title": "得出结论",
+    "description": "最坏情况取 $10$ 只仍未\"多出\"双数，再多取 $1$ 只必成第 $3$ 双，故至少要取 $10+1=11$ 只。",
+    "bubbleText": "把最坏情况加起来：先 5 只各 1 只，再 5 只各成 1 双，最后 1 只锁定第 3 双。所以至少要取出 11 只，就能保证有 3 双袜子！",
+    "bubblePos": { "x": 240, "y": 60 }
+  }
+],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

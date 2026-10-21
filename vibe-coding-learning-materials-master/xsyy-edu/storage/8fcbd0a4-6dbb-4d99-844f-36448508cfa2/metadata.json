@@ -1,0 +1,24 @@
+{
+  "question": "在下面算式的空格内, 各填入一个数字, 使算式成立, 则被除数为____。(算式为一个带空格的长除法，被除数四位数，除数两位数，商两位数，余数是97)",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/8fcbd0a4-6dbb-4d99-844f-36448508cfa2/camera-photo-1767416222188.jpg",
+  "task_id": "8fcbd0a4-6dbb-4d99-844f-36448508cfa2",
+  "generated_at": "2026-01-03T12:58:46.793454Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "数字推理长除法",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "核心是利用长除法原理进行逆向逻辑推理和数字尝试。",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "数感",
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-03T12:58:46.793467Z",
+  "preview_image": "Preview.webp"
+}

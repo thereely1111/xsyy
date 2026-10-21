@@ -1,0 +1,69 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "一辆汽车加满油后从甲地出发前往乙地，油箱中的剩余油量 y（升）与行驶时间 x（小时）之间的关系为一次函数。已知行驶 2 小时后剩余油量为 48 升，行驶 5 小时后剩余油量为 30 升。请问这辆汽车加满油时油箱中有多少升油？",
+  "prompt": "一辆汽车加满油后从甲地出发前往乙地，油箱中的剩余油量 y（升）与行驶时间 x（小时）之间的关系为一次函数。已知行驶 2 小时后剩余油量为 48 升，行驶 5 小时后剩余油量为 30 升。请问这辆汽车加满油时油箱中有多少升油？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "008e2231-bfe1-41f8-bcff-4d860b3c9bb3",
+  "generated_at": "2026-09-09T08:51:43.483705Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "一次函数油量题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "考查一次函数关系的应用"
+  },
+  "tags_updated_at": "2026-09-09T08:51:43.483705Z",
+  "knowledge_tags": {
+    "version": "函数",
+    "grade": "七上",
+    "main_tag": "一次函数",
+    "sub_tags": [
+      "常量与变量"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-09T08:54:23.466466Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "函数",
+    "display_class": "function",
+    "grade": "八下",
+    "tags": {
+      "main_tag": "一次函数",
+      "sub_tags": [
+        "实际问题的函数建模"
+      ],
+      "second_tag": null
+    },
+    "question_type": "反比例函数与一次函数交点",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_function",
+      "steps_min": 5,
+      "steps_max": 7,
+      "motion_policy": "answer_first",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.98,
+    "engine": "agent",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "agent",
+    "action": "propose_modify",
+    "confidence": 0.98
+  },
+  "knowledge_tags_confirmed": true
+}

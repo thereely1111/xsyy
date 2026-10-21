@@ -1,0 +1,140 @@
+{
+  "report_id": "c6fd4aba-2277-4638-adf4-b025585676ca",
+  "created_at": "2026-08-27T14:37:54",
+  "sample_size": 20,
+  "result": {
+    "evaluated": 20,
+    "exact_match": 15,
+    "accuracy": 0.75,
+    "domain_accuracy": 1.0,
+    "grade_accuracy": 0.85,
+    "main_tag_accuracy": 0.85,
+    "sub_tag_accuracy": 0.75,
+    "per_domain": [
+      {
+        "domain": "函数",
+        "total": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      {
+        "domain": "图形与几何",
+        "total": 9,
+        "correct": 7,
+        "accuracy": 0.7778
+      },
+      {
+        "domain": "数与式",
+        "total": 6,
+        "correct": 4,
+        "accuracy": 0.6667
+      },
+      {
+        "domain": "方程与不等式",
+        "total": 1,
+        "correct": 1,
+        "accuracy": 1.0
+      },
+      {
+        "domain": "统计与概率",
+        "total": 2,
+        "correct": 1,
+        "accuracy": 0.5
+      }
+    ],
+    "confusion": {
+      "图形与几何": {
+        "图形与几何": 9
+      },
+      "数与式": {
+        "数与式": 6
+      },
+      "统计与概率": {
+        "统计与概率": 2
+      },
+      "方程与不等式": {
+        "方程与不等式": 1
+      },
+      "函数": {
+        "函数": 2
+      }
+    },
+    "errors": [
+      {
+        "question": "三角形的内角和怎么算",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "四下",
+          "main_tag": "三角形",
+          "sub_tag": "内角和与三边关系"
+        },
+        "predicted": {
+          "version": "图形与几何",
+          "grade": "八上",
+          "main_tag": "三角形",
+          "sub_tag": "三角形内角和与外角"
+        }
+      },
+      {
+        "question": "已知(x+4)^5=a0+a1(x+2)+a2(x+2)^2+a3(x+2)^3+a4(x+2)^4+a5(x+2)^5，则a1+2a2+3a3+4a4+5a5=____。",
+        "expected": {
+          "version": "数与式",
+          "grade": "八上",
+          "main_tag": "数与代数·综合基础",
+          "sub_tag": "性质与运算"
+        },
+        "predicted": {
+          "version": "数与式",
+          "grade": "八上",
+          "main_tag": "整式乘法与因式分解",
+          "sub_tag": "整式的乘法"
+        }
+      },
+      {
+        "question": "一个三角形的三条边长分别是3厘米、4厘米和5厘米，求这个三角形的周长。",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "三上",
+          "main_tag": "图形初步",
+          "sub_tag": "周长的意义与计算"
+        },
+        "predicted": {
+          "version": "图形与几何",
+          "grade": "四下",
+          "main_tag": "三角形",
+          "sub_tag": "内角和与三边关系"
+        }
+      },
+      {
+        "question": "小明从家到学校要走 800 米，他走了 350 米后休息了一下，还剩多少米？",
+        "expected": {
+          "version": "数与式",
+          "grade": "三上",
+          "main_tag": "万以内加减法",
+          "sub_tag": "笔算减法"
+        },
+        "predicted": {
+          "version": "数与式",
+          "grade": "三上",
+          "main_tag": "万以内加减法",
+          "sub_tag": "整十整百加减"
+        }
+      },
+      {
+        "question": "某班共有学生 45 人，其中男生 20 人，女生 25 人。 （1）从该班随机选一名学生，求选中男生的概率； （2）全班平均身高为 160 厘米，男生平均身高为 165 厘米，求女生的平均身高。",
+        "expected": {
+          "version": "统计与概率",
+          "grade": "四下",
+          "main_tag": "平均数与条形统计图",
+          "sub_tag": "求平均数"
+        },
+        "predicted": {
+          "version": "统计与概率",
+          "grade": "七下",
+          "main_tag": "概率初步",
+          "sub_tag": "事件分类"
+        }
+      }
+    ]
+  }
+}

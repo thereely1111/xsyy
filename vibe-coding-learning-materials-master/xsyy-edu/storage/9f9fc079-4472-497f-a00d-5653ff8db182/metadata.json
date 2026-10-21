@@ -1,0 +1,24 @@
+{
+  "question": "三年级有164名学生，参加美术兴趣小组的共有28人，参加音乐兴趣小组的人数是美术小组人数的2倍，参加体育兴趣小组的是音乐小组的2倍，如果每人至少参加一项兴趣小组，最多只能参加两项兴趣小组活动，那么参加两项至少有 ( ) 人。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/9f9fc079-4472-497f-a00d-5653ff8db182/pasted-image-1768620233848.png",
+  "task_id": "9f9fc079-4472-497f-a00d-5653ff8db182",
+  "generated_at": "2026-01-17T11:25:39.607510Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "容斥原理应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的多集合应用题，考察建模和逻辑推理。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-17T11:25:39.607528Z",
+  "preview_image": "Preview.webp"
+}

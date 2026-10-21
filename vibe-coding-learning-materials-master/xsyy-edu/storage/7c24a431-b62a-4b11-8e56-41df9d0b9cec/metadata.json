@@ -1,0 +1,33 @@
+{
+  "question": "一次函数 y = kx + b 的图象经过点 (1,4) 和 (3,10)。求 k 和 b 的值，并求当 x = 0 时 y 的值。",
+  "prompt": "一次函数 y = kx + b 的图象经过点 (1,4) 和 (3,10)。求 k 和 b 的值，并求当 x = 0 时 y 的值。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "7c24a431-b62a-4b11-8e56-41df9d0b9cec",
+  "generated_at": "2026-08-18T02:57:18.855345Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "一次函数求参数",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "含函数与求值",
+    "main_tag": "一次函数",
+    "sub_tags": [
+      "待定系数法求解析式"
+    ]
+  },
+  "tags_updated_at": "2026-08-18T02:57:18.855345Z",
+  "knowledge_tags": {
+    "version": "函数",
+    "grade": "八下",
+    "main_tag": "一次函数",
+    "sub_tags": [
+      "待定系数法求解析式"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-18T02:57:18.908395Z",
+  "preview_image": "Preview.webp"
+}

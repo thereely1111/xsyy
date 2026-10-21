@@ -1,0 +1,148 @@
+{
+  "report_id": "1d0f4081-4952-4f54-b867-2cdc64977d7b",
+  "created_at": "2026-08-27T11:31:12",
+  "sample_size": 20,
+  "result": {
+    "evaluated": 20,
+    "exact_match": 14,
+    "accuracy": 0.7,
+    "domain_accuracy": 0.9,
+    "grade_accuracy": 0.75,
+    "main_tag_accuracy": 0.75,
+    "sub_tag_accuracy": 0.7,
+    "per_domain": [
+      {
+        "domain": "函数",
+        "total": 2,
+        "correct": 1,
+        "accuracy": 0.5
+      },
+      {
+        "domain": "图形与几何",
+        "total": 7,
+        "correct": 5,
+        "accuracy": 0.7143
+      },
+      {
+        "domain": "数与式",
+        "total": 5,
+        "correct": 3,
+        "accuracy": 0.6
+      },
+      {
+        "domain": "方程与不等式",
+        "total": 6,
+        "correct": 5,
+        "accuracy": 0.8333
+      }
+    ],
+    "confusion": {
+      "图形与几何": {
+        "图形与几何": 7
+      },
+      "数与式": {
+        "(无识别)": 1,
+        "数与式": 4
+      },
+      "方程与不等式": {
+        "方程与不等式": 5,
+        "数与式": 1
+      },
+      "函数": {
+        "函数": 2
+      }
+    },
+    "errors": [
+      {
+        "question": "小红买了 3 支笔，每支笔 2 元，她给了售货员 10 元，应该找回多少钱？",
+        "expected": {
+          "version": "数与式",
+          "grade": "二上",
+          "main_tag": "表内乘法",
+          "sub_tag": "乘法应用题"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        }
+      },
+      {
+        "question": "一个三角形的三条边长分别是3厘米、4厘米和5厘米，求这个三角形的周长。",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "三上",
+          "main_tag": "图形初步",
+          "sub_tag": "周长的意义与计算"
+        },
+        "predicted": {
+          "version": "图形与几何",
+          "grade": "一下",
+          "main_tag": "认识图形",
+          "sub_tag": "图形辨认"
+        }
+      },
+      {
+        "question": "如图，在平面直角坐标系中，反比例函数  y = k/x ​（ k > 0 ）的图象经过点  A ( 2 , 3 ) 。过点  A 作  A B ⊥ x轴于点  B，连接  O A 。求  k 的值",
+        "expected": {
+          "version": "函数",
+          "grade": "八下",
+          "main_tag": "反比例函数",
+          "sub_tag": "k的几何意义"
+        },
+        "predicted": {
+          "version": "函数",
+          "grade": "八下",
+          "main_tag": "一次函数",
+          "sub_tag": "一次函数与方程/不等式及实际应用"
+        }
+      },
+      {
+        "question": "解分式方程：  2 x − 3 = 1 x−3 2 ​  =1 若求出的 x 是正整数，则从 1 到 x 的整数中随机取一个数，求取到偶数的概率。",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "八上",
+          "main_tag": "分式",
+          "sub_tag": "分式方程及其应用"
+        },
+        "predicted": {
+          "version": "数与式",
+          "grade": "七上",
+          "main_tag": "有理数",
+          "sub_tag": "有理数的分类"
+        }
+      },
+      {
+        "question": "已知(x+4)^5=a0+a1(x+2)+a2(x+2)^2+a3(x+2)^3+a4(x+2)^4+a5(x+2)^5，则a1+2a2+3a3+4a4+5a5=____。",
+        "expected": {
+          "version": "数与式",
+          "grade": "八上",
+          "main_tag": "数与代数·综合基础",
+          "sub_tag": "性质与运算"
+        },
+        "predicted": {
+          "version": "数与式",
+          "grade": "九上",
+          "main_tag": "比和比例·百分数",
+          "sub_tag": "简便计算应用"
+        }
+      },
+      {
+        "question": "三角形的内角和怎么算",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "四下",
+          "main_tag": "三角形",
+          "sub_tag": "内角和与三边关系"
+        },
+        "predicted": {
+          "version": "图形与几何",
+          "grade": "八上",
+          "main_tag": "三角形",
+          "sub_tag": "三角形内角和与外角"
+        }
+      }
+    ]
+  }
+}

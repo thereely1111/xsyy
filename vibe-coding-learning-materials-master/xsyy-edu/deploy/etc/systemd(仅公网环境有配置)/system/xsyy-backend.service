@@ -1,0 +1,20 @@
+[Unit]
+Description=XSYY Backend Service
+After=network.target mysqld.service
+Requires=mysqld.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/root/xsyy/backend
+Environment="PATH=/root/xsyy/backend/.venv/bin"
+EnvironmentFile=/root/xsyy/backend/.env
+ExecStart=/root/xsyy/backend/.venv/bin/uvicorn app:app --host 0.0.0.0 --port 8000 --workers 2 --limit-concurrency 40 --timeout-keep-alive 5 --log-level warning --no-access-log
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

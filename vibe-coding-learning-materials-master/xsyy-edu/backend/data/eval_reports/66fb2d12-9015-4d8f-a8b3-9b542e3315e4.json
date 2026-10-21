@@ -1,0 +1,117 @@
+{
+  "report_id": "66fb2d12-9015-4d8f-a8b3-9b542e3315e4",
+  "created_at": "2026-08-26T16:42:11",
+  "sample_size": 20,
+  "result": {
+    "evaluated": 20,
+    "exact_match": 16,
+    "accuracy": 0.8,
+    "domain_accuracy": 0.95,
+    "grade_accuracy": 0.8,
+    "main_tag_accuracy": 0.8,
+    "sub_tag_accuracy": 0.8,
+    "per_domain": [
+      {
+        "domain": "函数",
+        "total": 1,
+        "correct": 1,
+        "accuracy": 1.0
+      },
+      {
+        "domain": "图形与几何",
+        "total": 9,
+        "correct": 8,
+        "accuracy": 0.8889
+      },
+      {
+        "domain": "数与式",
+        "total": 5,
+        "correct": 3,
+        "accuracy": 0.6
+      },
+      {
+        "domain": "方程与不等式",
+        "total": 5,
+        "correct": 4,
+        "accuracy": 0.8
+      }
+    ],
+    "confusion": {
+      "图形与几何": {
+        "图形与几何": 9
+      },
+      "方程与不等式": {
+        "方程与不等式": 5
+      },
+      "函数": {
+        "函数": 1
+      },
+      "数与式": {
+        "数与式": 4,
+        "(无识别)": 1
+      }
+    },
+    "errors": [
+      {
+        "question": "一个三角形的三条边长分别是3厘米、4厘米和5厘米，求这个三角形的周长。",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "三上",
+          "main_tag": "图形初步",
+          "sub_tag": "周长的意义与计算"
+        },
+        "predicted": {
+          "version": "图形与几何",
+          "grade": "四下",
+          "main_tag": "三角形",
+          "sub_tag": "内角和与三边关系"
+        }
+      },
+      {
+        "question": "解分式方程：  2 x − 3 = 1 x−3 2 ​  =1 若求出的 x 是正整数，则从 1 到 x 的整数中随机取一个数，求取到偶数的概率。",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "八上",
+          "main_tag": "分式",
+          "sub_tag": "分式方程及其应用"
+        },
+        "predicted": {
+          "version": "方程与不等式",
+          "grade": "七下",
+          "main_tag": "分式方程",
+          "sub_tag": "增根成因"
+        }
+      },
+      {
+        "question": "已知(x+4)^5=a0+a1(x+2)+a2(x+2)^2+a3(x+2)^3+a4(x+2)^4+a5(x+2)^5，则a1+2a2+3a3+4a4+5a5",
+        "expected": {
+          "version": "数与式",
+          "grade": "八上",
+          "main_tag": "数与代数·综合基础",
+          "sub_tag": "性质与运算"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        }
+      },
+      {
+        "question": "小红买了 3 支笔，每支笔 2 元，她给了售货员 10 元，应该找回多少钱？",
+        "expected": {
+          "version": "数与式",
+          "grade": "二上",
+          "main_tag": "表内乘法",
+          "sub_tag": "乘法应用题"
+        },
+        "predicted": {
+          "version": "数与式",
+          "grade": "一下",
+          "main_tag": "20以内的退位减法",
+          "sub_tag": "实际应用"
+        }
+      }
+    ]
+  }
+}

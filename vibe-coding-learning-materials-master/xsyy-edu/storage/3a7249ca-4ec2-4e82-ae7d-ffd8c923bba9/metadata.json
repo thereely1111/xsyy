@@ -1,0 +1,14 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "九上",
+    "main_tag": "一元二次方程",
+    "sub_tags": [
+      "根与系数的关系"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-01T07:04:39.773012Z"
+}

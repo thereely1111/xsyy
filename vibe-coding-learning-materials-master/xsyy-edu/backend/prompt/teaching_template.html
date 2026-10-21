@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="JwwnaX6CTfmeVkE3kAtmGD">
+<head data-page-node-id="XGCP98ZXyP4QJMklXNxE5Q">
+    <meta charset="UTF-8" data-page-node-id="VHEbF1yXmAIoLN9IbcOLtD">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="NvVdEiWh9k1YkuM3QCRm8i">
+    <title>__TITLE__ - 互动教学</title>
+
+    <!-- Tailwind CSS（本地预编译，取代 cdn.tailwindcss.com 运行时 JIT，避免公网/国内不可达时整页裸奔） -->
+    <link rel="stylesheet" href="/vendor/teaching-tailwind.20260910.css">
+
+    <!-- KaTeX CSS & JS（本地化，同主站 web/katex） -->
+    <link rel="stylesheet" href="/katex/katex.min.20260902b.css">
+    <script src="/katex/katex.min.js?v=20260902"></script>
+
+    <!-- Alpine.js（本地化，取代 jsdelivr CDN） -->
+    <script defer src="/vendor/alpine.min.js?v=20260910"></script>
+
+    <style>
+        /* 字体与 demo 对齐：走系统字体栈，不引入 Google Fonts（公网可达性 + 首屏速度）。
+           demo 同样只用 'Noto Serif SC','Songti SC',serif，本机回退宋体，观感一致。 */
+        :root {
+            --font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'SimSun', serif;
+            --font-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+            /* 目标质量 demo 调色板（参照 demo_complex_all.html）：纸 / 墨 / 线 / 蓝 / 朱砂 / 鎏金 */
+            --paper: #f4efe3;
+            --ink: #2b2b2b;
+            --ink-1: #2b2b2b;
+            --ink-2: #5b5247;
+            --ink-3: #a89e8c;
+            --vermillion: #d6432f;
+            --vermillion-soft: #fbe9e6;
+            --blue: #3E5C76;
+            --blue-soft: #e7eef4;
+            --jade: #7D9F88;
+            --var: #2f5fde;     /* 变量蓝：当前步 / 按钮 / 进度 */
+            --const: #d6432f;   /* 朱砂：强调 / 公式数字 */
+            --gold: #c8901a;    /* 鎏金：老师说 / 提示条 / 已完成步 */
+            --line: rgba(43, 43, 43, .10);
+            --line-strong: #cfc8bb;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 600px at 20% -10%, #fbf7ec 0%, transparent 60%),
+                radial-gradient(900px 500px at 110% 120%, #efe7d4 0%, transparent 55%);
+        }
+
+        .font-serif {
+            font-family: var(--font-serif);
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: var(--font-sans);
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+
+        /* P1 文字纪律兜底（方案 §4.6.3）：scene_svg 中 foreignObject 内 HTML 文本
+           自动换行 + 软裁切，防止模型给的矩形固定过窄导致文字溢出遮挡。 */
+        #dynamicSceneRoot foreignObject div,
+        #dynamicSceneRoot foreignObject p,
+        #dynamicSceneRoot foreignObject span,
+        #dynamicSceneRoot foreignObject .svg-text {
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+        /* 气泡禁区兜底：气泡可拖拽但始终限制在 820×620 内（R4 辅助） */
+        #dynamicSceneRoot * {
+            box-sizing: border-box;
+        }
+
+        /* ===== P0（2026-09-04 回灌）：动态场景组切步淡入淡出，根治“硬跳变/没变化” ===== */
+        .scene-fade-enter { transition: opacity 480ms ease-out; }
+        .scene-fade-enter-start { opacity: 0; }
+        .scene-fade-enter-end { opacity: 1; }
+        .scene-fade-leave { transition: opacity 200ms ease-in; }
+        .scene-fade-leave-start { opacity: 1; }
+        .scene-fade-leave-end { opacity: 0; }
+
+        /* ===== 对齐目标质量 demo 视觉语言（2026-09-04，参照 demo_complex_all.html）=====
+           纸 #f4efe3 / 墨 #2b2b2b / 线 rgba(43,43,43,.10)
+           --var 蓝 #2f5fde（当前步·按钮·进度） / --const 朱砂 #d6432f（强调·公式数字） / --gold 鎏金 #c8901a（老师说·提示条·已完成步） */
+
+        /* 左：舞台卡 —— demo .stage：暖白渐变 + 1px 线描边 + 16px 圆角 + 投影 */
+        .stage-card {
+            background: linear-gradient(180deg, #fffdf8, #fbf6ea);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: 0 18px 40px -24px rgba(43, 43, 43, .45);
+        }
+
+        /* 右：老师说 —— demo .teacher：鎏金标签 + 鎏金左边框提示条 */
+        .teacher-panel {
+            background: #fffdf8;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: 0 18px 40px -24px rgba(43, 43, 43, .45);
+        }
+        .teacher-head {
+            border-bottom: 1px solid var(--line);
+            background: rgba(244, 239, 227, .9);
+        }
+        .teacher-dot { background-color: var(--gold); }
+        .teacher-label {
+            color: var(--gold) !important;
+            font-family: var(--font-sans) !important;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .08em;
+        }
+        /* 简单讲解提示条：鎏金左边框 + 鎏金淡底（demo .teacher-tip） */
+        .teacher-panel .bg-red-50\/70 { background-color: rgba(200, 144, 26, .10) !important; }
+        .teacher-panel .border-red-100 { border-color: rgba(200, 144, 26, .35) !important; }
+        .teacher-panel .text-red-800 { color: #6b6256 !important; }
+
+        /* 分段控件（简单 / 详细讲解）：选中态鎏金 */
+        .seg-btn { color: var(--ink-3); }
+        .seg-btn.is-active {
+            background: #fff;
+            color: var(--gold);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+        }
+
+        /* 右：解题步骤 —— demo .steps：当前步=蓝，已完成步=鎏金数字+绿底 */
+        .steps-panel {
+            background: #fffdf8;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: 0 18px 40px -24px rgba(43, 43, 43, .45);
+        }
+        .steps-head { border-bottom: 1px solid var(--line); background: rgba(244, 239, 227, .6); }
+        .steps-timeline {
+            background: linear-gradient(to bottom, transparent, var(--line-strong), transparent);
+        }
+        /* 当前步：蓝（demo .step-item.active） */
+        .steps-panel .bg-red-800 { background-color: var(--var) !important; }
+        .steps-panel .text-red-800 { color: var(--var) !important; }
+        .steps-panel .border-red-200 { border-color: rgba(47, 95, 222, .35) !important; }
+        .steps-panel .ring-red-200 { --tw-ring-color: rgba(47, 95, 222, .40) !important; }
+        .steps-panel .bg-red-50\/80 { background-color: rgba(47, 95, 222, .08) !important; }
+        /* 已完成步：鎏金数字 + 绿底（demo .step-item.done） */
+        .steps-panel .step-dot-done {
+            background-color: rgba(46, 158, 107, .18) !important;
+            border-color: rgba(46, 158, 107, .18) !important;
+        }
+        .steps-panel .step-done-text { color: #6b6256 !important; }
+
+        /* 主按钮：蓝（demo .btn:hover → 蓝） */
+        .btn-primary {
+            background-color: var(--var) !important;
+            border-color: var(--var) !important;
+        }
+        .btn-primary:hover:not(:disabled) { background-color: #2747b0 !important; }
+        /* 次按钮：1px 线描边 + 墨色文字 */
+        .btn-ghost {
+            border-color: var(--line-strong) !important;
+            color: var(--ink-2) !important;
+        }
+
+        /* ===== 对齐 demo 的补间手感：场景内元素 opacity / transform 走缓动 =====
+           - 用 :where() 把特异性降为 0，保证 P0 注入的 x-transition 淡入淡出仍能覆盖；
+           - 不设 transform-box / transform-origin，避免改写模型自带 transform 的渲染结果；
+           - 排除 #dynamicSceneRoot 自身，防止首帧居中变成整体滑动。 */
+        :where(#dynamicSceneRoot > *, #dynamicSceneRoot > * *) {
+            transition: opacity .42s ease,
+                        transform .62s cubic-bezier(.22, 1, .36, 1) .04s;
+        }
+
+        /* motion 运动主体采用"快速到位"过渡（0.12s linear，不缓动、不拖尾），
+           切一步=跳一格，近似定格动画逐格推进的节奏。仅作用于带 id 的显式运动主体，
+           其余元素仍走上面的平滑补间。 */
+        #dynamicSceneRoot g[id="train"],
+        #dynamicSceneRoot g[id="mover"] {
+            transition: transform .12s linear, opacity .42s ease;
+        }
+    </style>
+
+    <script>
+        // P0（2026-09-04 回灌）：给动态场景内的 x-show 组注入淡入淡出过渡，
+        // 切步从硬跳变变为淡入淡出。仅作用于 #dynamicSceneRoot 内的组，不影响静态水印。
+        // 仅用 opacity，避免与 SVG 元素自带的 transform 属性冲突。
+        document.addEventListener('alpine:init', function () {
+            document.querySelectorAll('#dynamicSceneRoot [x-show]').forEach(function (el) {
+                if (el.hasAttribute('x-transition')) return;
+                el.setAttribute('x-transition:enter', 'scene-fade-enter');
+                el.setAttribute('x-transition:enter-start', 'scene-fade-enter-start');
+                el.setAttribute('x-transition:enter-end', 'scene-fade-enter-end');
+                el.setAttribute('x-transition:leave', 'scene-fade-leave');
+                el.setAttribute('x-transition:leave-start', 'scene-fade-leave-start');
+                el.setAttribute('x-transition:leave-end', 'scene-fade-leave-end');
+            });
+
+            // 前景遮罩层置顶（通道/容器类场景的"钻入感"）：把 id 以 -front 结尾的层
+            // 移到父节点末尾（z 轴最上），运动主体进入时被遮罩盖住一部分，
+            // 呈"钻进/穿过"而非"从前面滑过"。无 -front 层的题 no-op，不影响其他题。
+            function promoteForeground() {
+                document.querySelectorAll('#dynamicSceneRoot [id$="-front"]').forEach(function (el) {
+                    if (el.parentNode) el.parentNode.appendChild(el);
+                });
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', promoteForeground);
+            } else {
+                requestAnimationFrame(promoteForeground);
+            }
+        });
+    </script>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()" data-page-node-id="tO8Y2m5QPrT6cBQA6KBr1X">
+
+    <div class="bg-noise" data-page-node-id="qvITvL6MIMnfPQV5Tw7N5F"></div>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden" data-page-node-id="T26aBzGBgJalRfJKxHhujr">
+
+        <!-- 左：动画演示区（占满剩余全部空间） -->
+        <div class="relative w-full md:flex-1 h-[56vh] md:h-full flex-none order-1 flex flex-col p-2 md:p-3.5 gap-3" data-page-node-id="lzREXVVlGFKSfE9RrMG7yC">
+
+            <!-- 演示图 -->
+            <div class="stage-card relative w-full flex-1 min-w-0 overflow-hidden flex items-center justify-center ink-fade-in" data-page-node-id="Xlmu06XVykzBGBGHmke7I9">
+                <svg id="stageSvg" viewBox="0 0 820 620" class="w-full h-full" preserveAspectRatio="xMidYMid meet" data-page-node-id="Qh4p2qwbTOpPeV1YPvwjX2">
+                    <defs data-page-node-id="JBnvWQCilQ2mpt2mmLX3ZC">
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth" data-page-node-id="Rs84JpCuwIYCTP0lM3IjDP">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" data-page-node-id="hG8ApEgbUivMcijTCdvzuU" />
+                        </marker>
+                </defs>
+
+                <!-- 易经数学装饰层（静态水印，位于动态内容之下，填空旷、强化「象数演易」品牌） -->
+                <g id="yijingDecor" opacity="0.16" aria-hidden="true" pointer-events="none" data-page-node-id="IlJsIiwEka2E1pUbDqsje9">
+                    <!-- 洛书九宫格：淡引导线，结构上呼应「上计算 / 中图形 / 下结论」三带 -->
+                    <g stroke="#a8a29e" stroke-width="1" opacity="0.5" data-page-node-id="MfXwZZYclMM0XysFsasb0T">
+                        <line id="decor-grid-v1" class="svg-elem" x-show="sceneStep data-page-node-id="VQdGBAYRUsUBcFrIRC3LFw" >= 1" x1="266.7" y1="44" x2="266.7" y2="556"/>
+                        <line id="decor-grid-v2" class="svg-elem" x-show="sceneStep data-page-node-id="Vc0NXBjMGPNn6RUXe7OEt1" >= 1" x1="533.3" y1="44" x2="533.3" y2="556"/>
+                        <line id="decor-grid-h1" class="svg-elem" x-show="sceneStep data-page-node-id="Ia15v9tvipqatBi9u6mpE3" >= 1" x1="44" y1="200" x2="756" y2="200"/>
+                        <line id="decor-grid-h2" class="svg-elem" x-show="sceneStep data-page-node-id="FDOlvGRcP0g2QwOuRDEX9O" >= 1" x1="44" y1="500" x2="756" y2="500"/>
+                    </g>
+                    <!-- 左上角太极（阴阳） -->
+                    <g id="decor-taiji" class="svg-elem" x-show="sceneStep data-page-node-id="QHjeXFQIBVNI9ZJVybhsnp" >= 1" transform="translate(24,24)" opacity="0.7">
+                        <circle cx="0" cy="0" r="15" fill="none" stroke="#a8a29e" stroke-width="1.3" data-page-node-id="4wVdVHBaI47P6KtePlNHHt"/>
+                        <path id="decor-taiji-s" class="svg-elem" x-show="sceneStep data-page-node-id="9LkLNnsSGH3X93drtmVohl" >= 1" d="M0,-15 A7.5,7.5 0 0,1 0,0 A7.5,7.5 0 0,0 0,15 A15,15 0 0,1 0,-15 Z" fill="#a8a29e"/>
+                        <circle cx="0" cy="-7.5" r="2.1" fill="#fdfbf7" data-page-node-id="99HBi0p3lZX0Sf8TCYaN5M"/>
+                        <circle cx="0" cy="7.5" r="2.1" fill="#a8a29e" data-page-node-id="oWQIUtm0Pk4GxyylhyM9Bv"/>
+                    </g>
+                </g>
+
+                <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY}) scale(${sceneScale})`" data-page-node-id="gjEmsMJQxrx3prMGhSX6Ls">
+                        <!-- DYNAMIC_SCENE_START -->
+                        __DYNAMIC_SCENE_SVG__
+                        <!-- DYNAMIC_SCENE_END -->
+                    </g>
+                </svg>
+            </div>
+            <!-- 控制按钮 -->
+            <div class="flex justify-center items-center pt-2 pb-1 relative z-30" data-page-node-id="ZinNUACZKPpnEYtlLVfmnw">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto" data-page-node-id="U4Qa1mngLO9GFlkd0qB4cV">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="btn-ghost px-4 py-1.5 rounded-full border text-sm font-medium hover:bg-stone-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all" data-page-node-id="LfdDqtDnSfyb48KkYHZXBf">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="btn-primary md:hidden px-3 py-1.5 rounded-full text-white text-sm font-bold shadow-md active:scale-95 transition-all flex items-center gap-1" data-page-node-id="1aZCGTL2fVbzcp8BtGU4QJ">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse" data-page-node-id="hWHiSCCc2xLQA6PZZl1m1j"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="btn-primary px-6 py-1.5 rounded-full text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide" data-page-node-id="vhsUIDgChwpvNxyCWo0ioJ">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右栏：老师说（上） + 解题步骤（下） -->
+        <aside class="aside relative w-full md:w-[32%] md:max-w-[400px] md:min-w-[330px] h-auto md:h-full flex-none order-2 flex flex-row md:flex-col gap-2 md:gap-3 p-2 md:p-3.5" data-page-node-id="EOJrBrWLnuXtrSjx1eYUQ2">
+
+            <!-- 老师说（上，让出更多高度给下方解题步骤） -->
+            <section class="teacher-panel relative w-full flex-1 md:flex-[0.85] min-h-0 md:min-h-0 flex flex-col md:overflow-hidden" data-page-node-id="Vc8oEBJVQxR9esxs5hFbCA">
+                <div class="teacher-head flex items-center gap-2 px-2.5 py-2 md:px-4 md:py-2.5" data-page-node-id="rAuvJCaoAb4CfhmiyXz6PN">
+                    <span class="teacher-dot w-2 h-2 rounded-full" data-page-node-id="LnloMuuZ5i97842Y97nCJw"></span>
+                    <span class="teacher-label font-serif font-bold" data-page-node-id="Gmx95z2pD4DGW4wKYMUUfB">老师说</span>
+                    <div class="ml-auto flex items-center rounded-full bg-stone-200/70 p-0.5 text-xs select-none" data-page-node-id="xs9qCWPn3HEo3bXwdaENmN">
+                        <button type="button" @click="teacherMode = 'plain'"
+                                :class="teacherMode === 'plain' ? 'is-active' : ''"
+                                class="seg-btn px-2.5 py-1 rounded-full font-medium transition-colors" data-page-node-id="g3jg6eH2mffqZiDAKFn4ty">简单讲解</button>
+                        <button type="button" @click="teacherMode = 'detail'"
+                                :class="teacherMode === 'detail' ? 'is-active' : ''"
+                                class="seg-btn px-2.5 py-1 rounded-full font-medium transition-colors" data-page-node-id="hSS1CbE5xkRRXwH6FnD3Fe">详细讲解</button>
+                    </div>
+                </div>
+                <div class="flex-1 md:overflow-y-auto p-2.5 md:p-4 space-y-2 md:space-y-3 no-scrollbar" data-page-node-id="eCTb7FHMes54UhulAS15D3">
+                    <div x-show="teacherMode === 'plain'" class="rounded-xl bg-red-50/70 border border-red-100 p-3" data-page-node-id="8hpsdf71eGT0vf7E1CaGvn">
+                        <div class="text-[11px] font-bold tracking-[0.08em] text-red-800 mb-1" data-page-node-id="FtV0PFkEiCMMTvuHcXHXws">简单讲解</div>
+                        <div class="text-sm text-stone-700 leading-relaxed teacher-bubble-text" x-html="renderMath(currentStepData.bubbleText)" data-page-node-id="pRCCq6cQXR5P4uEZZw3hGt"></div>
+                    </div>
+                    <div x-show="teacherMode === 'detail'" data-page-node-id="9uWYi7ccfyax0E0sgDoL97">
+                        <div class="text-[11px] font-bold tracking-[0.08em] text-stone-500 mb-1" data-page-node-id="ZMKD8O2OYXYKnzP0AUQof8">详细讲解</div>
+                        <div class="text-sm text-stone-800 leading-relaxed" x-html="renderMath(currentStepData.description)" data-page-node-id="RA3YHlsSfBoUVlsdK3w8wc"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 解题步骤（下，● 居中滑动窗：上一步在上 / 当前步居中 / 下一步在下） -->
+            <section class="steps-panel relative w-full flex-1 md:flex-[1.55] min-h-0 md:min-h-0 flex flex-col md:overflow-hidden" data-page-node-id="DYUEI1aeXEuXDv40FFkV1Q">
+                <div class="steps-head p-2 md:p-3 flex items-center gap-2" data-page-node-id="mmEFhtofAx2w5vZqVAHZf0">
+                    <span class="text-lg leading-none opacity-60" data-page-node-id="pA07MXXevH5WYRFMzPTLCO">☯</span>
+                    <span class="text-base font-bold text-stone-800" data-page-node-id="rCACBeaK96xSEwcm52ykEy">解题步骤</span>
+                    <span class="ml-auto text-[11px] tabular-nums text-stone-400" x-text="(currentStep+1) + ' / ' + steps.length" data-page-node-id="x1zZiPWpukF5BgWZaXf3kF"></span>
+                </div>
+                <div class="relative flex-1 overflow-y-auto p-2.5 md:p-4 flex flex-col justify-center gap-2 md:gap-3 no-scrollbar scroll-smooth" id="stepsList" data-page-node-id="1vsEfJJoCobruZI645LGKg">
+                    <!-- 时间轴竖线（demo .steps ol::before：1px，两端淡出） -->
+                    <div class="steps-timeline absolute left-[22px] top-5 bottom-5 w-px" data-page-node-id="GyonU1xH6exJIbmNbKvTUv"></div>
+                    <template x-for="(step, index) in steps" :key="index" data-page-node-id="vSrhZaHDiYbgCgEdUusPz5">
+                        <div :id="'step-' + index"
+                             class="relative pl-9 pr-2 py-2 rounded-lg cursor-pointer transition-all duration-300"
+                             :class="currentStep === index
+                                ? 'bg-red-50/80 ring-1 ring-red-200 scale-[1.02] shadow-sm'
+                                : 'opacity-80 hover:bg-stone-50'"
+                             x-show="index === currentStep - 1 || index === currentStep || index === currentStep + 1"
+                             @click="setStep(index)" data-page-node-id="sZ4Hm5ZK9VsFR4KxIUc7Og">
+                            <!-- ● 节点 -->
+                            <span class="absolute left-[15px] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-300"
+                                  :class="currentStep === index
+                                    ? 'bg-red-800 border-red-800 scale-125 shadow-[0_0_0_4px_rgba(138,28,28,0.15)]'
+                                    : (index < currentStep ? 'step-dot-done' : 'bg-white border-stone-300')" data-page-node-id="ooXXVuAnDCBIdDOTfT3fE4">
+                                <span x-show="currentStep === index" class="w-1.5 h-1.5 rounded-full bg-white" data-page-node-id="1EH4J8QCwBj8Rm8Q65Z7fF"></span>
+                            </span>
+                            <div class="flex justify-between items-center mb-0.5" data-page-node-id="AIXwUHgNNjzv4cmY1DTztB">
+                                <span class="text-[11px] font-bold uppercase tracking-wider"
+                                      :class="currentStep === index ? 'text-red-800' : 'text-stone-400'"
+                                      x-text="'STEP ' + (index + 1)" data-page-node-id="mxjweAb0Xcy8xs2uSELguy"></span>
+                                <span x-show="currentStep === index" class="text-red-800 text-[11px] font-bold animate-pulse" data-page-node-id="0n75vjdaXBbybLU7D12Qnj">● 当前</span>
+                            </div>
+                            <h3 class="font-bold text-sm leading-snug"
+                                :class="currentStep === index ? 'text-stone-900' : (index < currentStep ? 'step-done-text' : 'text-stone-400')"
+                                x-text="step.title" data-page-node-id="g32aNjaYKMydxT2G3ydzDr"></h3>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+        </aside>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                teacherMode: 'plain',
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                get currentStepData() {
+                    const s = (this.steps && this.steps[this.currentStep]) || {};
+                    return {
+                        title: s.title || '',
+                        description: s.description || '',
+                        bubbleText: s.bubbleText || '',
+                    };
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                sceneScale: 1,
+                bubbleX: 536,
+                bubbleY: 476,
+                forbiddenZone: { x: 500, y: 450, width: 304, height: 154 },
+                bubbleBounds: {
+                    expanded: { width: 248, height: 108 },
+                    collapsed: { width: 92, height: 36 },
+                },
+                scenePadding: { left: 16, right: 16, top: 16, bottom: 16 },
+                sceneContentPadding: { left: 40, right: 28, top: 24, bottom: 28 },
+                // P1 纪律（方案 2026-09-03 §4.6）：切步默认不再整画布 getBBox 重居中。
+                // 临时层元素（轨迹/高亮/辅助线）在切步瞬间的 bbox 波动曾导致画面整体
+                // 平移跳动（R3）；现改为仅首帧居中一次 + 用户双击画布手动回中，
+                // 画面位置保持稳定。autoCenterOnStep 可经 __SCENE_CONFIG__ 注入强制旧行为。
+                autoCenterOnStep: false,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                currentArrowTarget: { x: 400, y: 300 },
+                teacherArrowPath: '',
+                get showTeacherArrow() {
+                    return this.isBubbleExpanded && !this.isDraggingBubble && !!this.teacherArrowPath;
+                },
+                // 防御：即使 steps 数据异常也保证 Alpine 初始化成功（按钮/气泡拖拽始终可用）
+                steps: (function () { try { return __STEPS_JSON__; } catch (e) { return []; } })(),
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene(true);
+                        this.resetBubblePosition();
+                        this.applyStepMotions();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getBubbleSize() {
+                    return this.isBubbleExpanded ? this.bubbleBounds.expanded : this.bubbleBounds.collapsed;
+                },
+                clampToStage(x, y, width, height) {
+                    const pad = this.scenePadding;
+                    return {
+                        x: Math.max(pad.left, Math.min(820 - width - pad.right, x)),
+                        y: Math.max(pad.top, Math.min(620 - height - pad.bottom, y)),
+                    };
+                },
+                rectsOverlap(a, b) {
+                    return a.x < b.x + b.width
+                        && a.x + a.width > b.x
+                        && a.y < b.y + b.height
+                        && a.y + a.height > b.y;
+                },
+                snapBubbleToCornerIfNeeded() {
+                    const size = this.getBubbleSize();
+                    const clamped = this.clampToStage(this.bubbleX, this.bubbleY, size.width, size.height);
+                    this.bubbleX = clamped.x;
+                    this.bubbleY = clamped.y;
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 536, y: 476 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    const size = this.getBubbleSize();
+                    const clamped = this.clampToStage(pos.x, pos.y, size.width, size.height);
+                    this.bubbleX = clamped.x;
+                    this.bubbleY = clamped.y;
+                    this.currentArrowTarget = this.getCurrentStepArrowTarget();
+                    this.updateTeacherArrowPath();
+                },
+                getCurrentStepArrowTarget() {
+                    const defaultTarget = { x: 400, y: 300 };
+                    const step = this.steps?.[this.currentStep];
+                    const target = step?.arrowTarget;
+                    if (!target) {
+                        return {
+                            x: defaultTarget.x * this.sceneScale + this.sceneOffsetX,
+                            y: defaultTarget.y * this.sceneScale + this.sceneOffsetY,
+                        };
+                    }
+                    const x = Number(target.x);
+                    const y = Number(target.y);
+                    return {
+                    x: Number.isFinite(x) ? Math.max(0, Math.min(820, x)) * this.sceneScale + this.sceneOffsetX : defaultTarget.x * this.sceneScale + this.sceneOffsetX,
+                    y: Number.isFinite(y) ? Math.max(0, Math.min(620, y)) * this.sceneScale + this.sceneOffsetY : defaultTarget.y * this.sceneScale + this.sceneOffsetY,
+                    };
+                },
+                updateTeacherArrowPath() {
+                    const target = this.currentArrowTarget || { x: 400, y: 300 };
+                    const bubbleSize = this.getBubbleSize();
+                    const bubbleWidth = bubbleSize.width;
+                    const bubbleHeight = bubbleSize.height;
+                    const centerX = this.bubbleX + bubbleWidth / 2;
+                    const centerY = this.bubbleY + bubbleHeight / 2;
+                    const dx = target.x - centerX;
+                    const dy = target.y - centerY;
+
+                    let startX;
+                    let startY;
+                    if (Math.abs(dx) > Math.abs(dy)) {
+                        startX = this.bubbleX + (dx >= 0 ? bubbleWidth : 0);
+                        startY = centerY;
+                    } else {
+                        startX = centerX;
+                        startY = this.bubbleY + (dy >= 0 ? bubbleHeight : 0);
+                    }
+
+                    const arrowDx = target.x - startX;
+                    const arrowDy = target.y - startY;
+                    const length = Math.sqrt(arrowDx * arrowDx + arrowDy * arrowDy) || 1;
+                    const endX = target.x - (arrowDx / length) * 12;
+                    const endY = target.y - (arrowDy / length) * 12;
+                    const curve = Math.max(18, Math.min(80, length * 0.18));
+                    const controlX = startX + arrowDx * 0.5;
+                    const controlY = startY + arrowDy * 0.5 - curve;
+                    this.teacherArrowPath = `M ${startX} ${startY} Q ${controlX} ${controlY} ${endX} ${endY}`;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+                    const bubbleSize = this.getBubbleSize();
+                    const clamped = this.clampToStage(nextX, nextY, bubbleSize.width, bubbleSize.height);
+
+                    this.bubbleX = clamped.x;
+                    this.bubbleY = clamped.y;
+                    this.updateTeacherArrowPath();
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                    this.snapBubbleToCornerIfNeeded();
+                    this.updateTeacherArrowPath();
+                },
+                centerDynamicScene(forceFit) {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    const margin = 16;  // 画布内安全留白（px）：所有元素须落在 [margin, 820-margin]×[margin, 620-margin] 内
+                    try {
+                        // 关键修复：分步元素经 x-show 隐藏后，getBBox 只量到「当前步」，
+                        // 首帧便按第1步子集居中，后续步元素向右下溢出 → 观感偏右下。
+                        // 这里临时显示全部分步元素，量出整段动画真实包围盒，再整体居中
+                        // （非全屏 / 全屏通用：居中落在 viewBox 坐标系，由 preserveAspectRatio 映射到面板）。
+                        const _gated = Array.prototype.slice.call(sceneEl.querySelectorAll('[x-show]'));
+                        const _savedDisplay = _gated.map(function (el) {
+                            const d = el.style.display;
+                            el.style.display = '';
+                            return d;
+                        });
+                        let bbox;
+                        try {
+                            bbox = sceneEl.getBBox();
+                        } finally {
+                            _gated.forEach(function (el, i) {
+                                el.style.display = _savedDisplay[i];
+                            });
+                        }
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            this.sceneScale = 1;
+                            return;
+                        }
+
+                        // 内容已完整落在安全区内时，保持首帧取景不动（避免 R3 切步跳动）；
+                        // 仅当内容溢出安全区（含运动主体越界）才重算适配，保证永不裁切。
+                        const overflow = bbox.x < margin
+                            || bbox.y < margin
+                            || bbox.x + bbox.width > 820 - margin
+                            || bbox.y + bbox.height > 620 - margin;
+                        if (!forceFit && !overflow) {
+                            return;
+                        }
+
+                        // 自适应缩放：内容超出安全区时整体缩小到可容纳（绝不放大，避免糊化）
+                        const safeW = 820 - 2 * margin;
+                        const safeH = 620 - 2 * margin;
+                        let scale = 1;
+                        if (bbox.width > safeW || bbox.height > safeH) {
+                            scale = Math.min(safeW / bbox.width, safeH / bbox.height);
+                        }
+                        this.sceneScale = Math.round(scale * 1000) / 1000;
+
+                        const cx = bbox.x + bbox.width / 2;
+                        const cy = bbox.y + bbox.height / 2;
+                        // 先把缩放后内容居中到画布中心
+                        let offsetX = 410 - cx * scale;
+                        let offsetY = 310 - cy * scale;
+                        // 再夹回画布内：左侧 ≥ margin、右侧 ≤ 820-margin（缩放后内容不越界）。
+                        // 当内容宽于安全区时 min>max，Math.max(min, Math.min(max, v)) 退化为保留边界，
+                        // 不会再出现"反向推出画布"的旧 clamp 失效。
+                        offsetX = Math.max(
+                            margin - bbox.x * scale,
+                            Math.min(offsetX, 820 - margin - (bbox.x + bbox.width) * scale)
+                        );
+                        offsetY = Math.max(
+                            margin - bbox.y * scale,
+                            Math.min(offsetY, 620 - margin - (bbox.y + bbox.height) * scale)
+                        );
+
+                        this.sceneOffsetX = Math.round(offsetX * 10) / 10;
+                        this.sceneOffsetY = Math.round(offsetY * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                        this.sceneScale = 1;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                // ===== 运动主体引擎（2026-09-04 新增，对齐 demo 的跨步补间）=====
+                // steps[i].motions 声明「第 i 步时，某个持久元素应该处在什么 transform」。
+                // 切步时把 transform 写到元素 style 上，配合已有的 CSS transition 产生
+                // 真实补间位移（火车行驶、点沿曲线移动、图形平移/旋转/缩放）。
+                // 兼容两种写法：
+                //   "motions": {"train": "translate(300,0)"}
+                //   "motions": [{"id":"train","transform":"translate(300,0)"}]
+                // 未声明 motions 的步骤不改动任何元素 —— 向后兼容，老数据包行为不变。
+                applyStepMotions() {
+                    const root = document.getElementById('dynamicSceneRoot');
+                    if (!root) return;
+                    const step = this.steps ? this.steps[this.currentStep] : null;
+                    const motions = step ? step.motions : null;
+                    if (!motions) return;
+
+                    const entries = Array.isArray(motions)
+                        ? motions
+                        : Object.keys(motions).map(function (id) {
+                            return { id: id, transform: motions[id] };
+                        });
+
+                    entries.forEach(function (m) {
+                        if (!m || m.id == null) return;
+                        const safeId = String(m.id).replace(/["\\]/g, '\\$&');
+                        let el = null;
+                        try {
+                            el = root.querySelector('[id="' + safeId + '"]');
+                        } catch (e) {
+                            el = null;
+                        }
+                        if (!el) return;
+                        if (m.transform != null) {
+                            // CSS transform 的长度参数必须带单位（px）：
+                            // motions 里常见写法是 SVG 属性语法 translate(280,0)（无单位），
+                            // 直接赋给 el.style.transform 会被 CSS 解析为「无效声明」而静默忽略，
+                            // 导致运动主体看起来完全不动。这里把 translate 的长度补上 px。
+                            el.style.transform = String(m.transform).replace(
+                                /translate\(([^)]*)\)/g,
+                                function (_, args) {
+                                    const parts = args.split(',').map(function (v) {
+                                        v = v.trim();
+                                        if (v === '0' || /[a-z%]$/i.test(v)) return v;
+                                        return v + 'px';
+                                    });
+                                    return 'translate(' + parts.join(', ') + ')';
+                                }
+                            );
+                        }
+                        if (m.opacity != null) el.style.opacity = m.opacity;
+                    });
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.currentArrowTarget = this.getCurrentStepArrowTarget();
+                    this.$nextTick(() => {
+                        // P1 纪律（方案 §4.6 R3）：切步默认不再整画布重居中——
+                        // 临时元素切步消失前后 getBBox 波动会造成整体跳动。
+                        // 仅在显式开启 autoCenterOnStep（__SCENE_CONFIG__）时保持旧行为。
+                        // 每步切步后用 ensureInView 兜底：先应用本步 motions（让运动主体到位），
+                        // 再测量最终几何；内容已落安全区则保持取景不动（不抖动），
+                        // 仅当本步出现越界（如运动主体滑出右侧）才重算缩放/位移把它收回到画布内。
+                        this.applyStepMotions();
+                        this.centerDynamicScene(false);
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

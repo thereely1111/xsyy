@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>几何可视化：平行四边形内的角</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stone: {
+                            50: '#fdfbf7', // 宣纸白
+                            100: '#f5f2eb',
+                            800: '#44403c', // 浓墨
+                            900: '#1c1917', // 焦墨
+                        },
+                        red: {
+                            50: '#fff1f2',
+                            800: '#9b2c2c', // 朱砂
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif SC"', '"Songti SC"', 'SimSun', 'serif'],
+                        sans: ['"Noto Sans SC"', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 新中式纹理背景 */
+        body {
+            background-color: #fdfbf7;
+            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            font-family: "Songti SC", "SimSun", serif;
+        }
+
+        /* 动画过渡 */
+        .smooth-transition {
+            transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.8s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* 浮动气泡动画 */
+        .float-bubble {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* 卷轴高亮左边框 */
+        .active-step {
+            border-left-width: 4px;
+            border-color: #9b2c2c;
+            background-color: #fff1f2;
+            color: #1c1917;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="text-stone-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- 顶部横幅：匾额风格 -->
+    <header class="h-20 shrink-0 border-y border-stone-300 bg-stone-100/50 flex items-center justify-between px-8 relative z-10 shadow-sm">
+        <div class="flex flex-col">
+            <h1 class="text-3xl font-bold tracking-widest text-stone-900">几何·平行四边形</h1>
+            <span class="text-xs text-stone-500 tracking-widest uppercase">Visual Geometry</span>
+        </div>
+        <div class="absolute left-1/2 -translate-x-1/2 text-center hidden md:block">
+            <p class="text-sm text-stone-600 font-serif italic">“设 P 是平行四边形 ABCD 内部一点，且 ∠PBA=∠PDA，求证：∠PAB=∠PCB”</p>
+        </div>
+        <div class="w-24"></div> <!-- 占位 -->
+    </header>
+
+    <!-- 主体内容 -->
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
+        
+        <!-- 左侧：互动画布 -->
+        <div class="relative w-full md:w-[70%] bg-white/40 m-4 rounded-xl shadow-[inset_0_0_20px_rgba(0,0,0,0.02)] border border-white flex flex-col justify-center items-center overflow-hidden" id="canvas-container">
+            
+            <!-- 浮动讲解气泡 (动态定位) -->
+            <div id="bubble" class="absolute z-20 bg-white/90 backdrop-blur-md border border-stone-200 px-4 py-2 rounded-lg shadow-lg text-sm transition-all duration-700 pointer-events-none opacity-0 float-bubble text-stone-800">
+                <span id="bubble-text">准备开始...</span>
+                <span id="bubble-math" class="block text-xs text-red-800 font-mono mt-1"></span>
+                <!-- 小箭头 -->
+                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white border-b border-r border-stone-200 rotate-45"></div>
+            </div>
+
+            <svg viewBox="0 0 800 500" class="w-full h-full max-w-4xl select-none" id="geo-svg">
+                <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                        <path d="M0,0 L0,6 L9,3 z" fill="#9ca3af" />
+                    </marker>
+                </defs>
+
+                <!-- 辅助圆 (默认隐藏) -->
+                <circle id="circle-aux" cx="480" cy="270" r="160" fill="none" stroke="#9b2c2c" stroke-width="1" stroke-dasharray="5,5" class="opacity-0 transition-opacity duration-1000" />
+
+                <!-- 平行四边形主体 -->
+                <!-- A(200, 100), B(100, 400), C(500, 400), D(600, 100) -->
+                <!-- Vector AD = (400, 0), Vector BC = (400, 0) -->
+                <!-- P point: Needs to satisfy angle PBA = angle PDA visually -->
+                <!-- Let's pick P roughly at (350, 250) -->
+                
+                <path d="M200,100 L600,100 L500,400 L100,400 Z" fill="none" stroke="#57534e" stroke-width="2" />
+                
+                <!-- 顶点标签 -->
+                <text x="180" y="90" class="text-xs font-serif fill-stone-600">A</text>
+                <text x="80" y="410" class="text-xs font-serif fill-stone-600">B</text>
+                <text x="510" y="410" class="text-xs font-serif fill-stone-600">C</text>
+                <text x="610" y="90" class="text-xs font-serif fill-stone-600">D</text>
+
+                <!-- 静态线条 (DP) -->
+                <line id="line-dp" x1="600" y1="100" x2="350" y2="250" stroke="#a8a29e" stroke-width="1.5" />
+                <!-- 静态线条 (CP) - 一开始需要隐藏，后面作为目标 -->
+                <line id="line-cp" x1="500" y1="400" x2="350" y2="250" stroke="#a8a29e" stroke-width="1" class="opacity-20" />
+
+                <!-- 轨迹线 (虚线) -->
+                <path id="trajectory-path" d="M200,100 L600,100" stroke="#9b2c2c" stroke-width="1" stroke-dasharray="4 4" class="opacity-0" />
+                <path id="trajectory-p" d="M350,250 L750,250" stroke="#9b2c2c" stroke-width="1" stroke-dasharray="4 4" class="opacity-0" />
+
+                <!-- 移动的三角形 ABP 组 -->
+                <g id="triangle-group" class="smooth-transition" style="transform-box: fill-box; transform-origin: center;">
+                    <!-- 填充 -->
+                    <path d="M200,100 L100,400 L350,250 Z" fill="#e7e5e4" fill-opacity="0.3" stroke="none" />
+                    <!-- 边框 -->
+                    <line x1="200" y1="100" x2="100" y2="400" stroke="#44403c" stroke-width="2" /> <!-- AB -->
+                    <line x1="100" y1="400" x2="350" y2="250" stroke="#44403c" stroke-width="2" /> <!-- BP -->
+                    <line x1="350" y1="250" x2="200" y2="100" stroke="#44403c" stroke-width="2" /> <!-- PA -->
+                    
+                    <!-- 角PBA (Angle 1) -->
+                    <path id="angle-pba" d="M100,370 Q115,365 125,385" fill="none" stroke="#9b2c2c" stroke-width="2" />
+                    
+                    <!-- 角PAB (Target Left) -->
+                    <path id="angle-pab" d="M200,130 Q210,125 215,115" fill="none" stroke="#1d4ed8" stroke-width="2" class="opacity-0" />
+
+                    <!-- 标签 P -->
+                    <text x="330" y="240" class="text-xs font-serif fill-stone-800">P</text>
+                </g>
+
+                <!-- 幽灵三角形 (原位置) -->
+                <g id="ghost-triangle" class="opacity-0">
+                    <path d="M200,100 L100,400 L350,250 Z" fill="none" stroke="#d6d3d1" stroke-width="1" stroke-dasharray="4 4" />
+                </g>
+
+                <!-- 新点 Q -->
+                <text id="label-q" x="760" y="240" class="text-xs font-serif fill-stone-800 opacity-0 transition-opacity">Q</text>
+                
+                <!-- 角PDA -->
+                <path id="angle-pda" d="M570,110 Q580,120 590,125" fill="none" stroke="#9b2c2c" stroke-width="2" class="opacity-100" />
+                
+                <!-- 角DPQ (Alt interior) -->
+                <path id="angle-dpq" d="M380,250 Q390,260 400,250" fill="none" stroke="#9b2c2c" stroke-width="2" class="opacity-0" />
+
+                <!-- 角QPC -->
+                <path id="angle-qpc" d="M720,250 Q730,260 725,280" fill="none" stroke="#d97706" stroke-width="2" class="opacity-0" />
+
+                <!-- 角PCB (Target Right) -->
+                <path id="angle-pcb" d="M480,380 Q490,370 495,390" fill="none" stroke="#1d4ed8" stroke-width="2" class="opacity-0" />
+
+                <!-- 连线 PQ (构造后显示) -->
+                <line id="line-pq" x1="350" y1="250" x2="750" y2="250" stroke="#78716c" stroke-width="1.5" stroke-dasharray="4 4" class="opacity-0" />
+
+                <!-- 连线 CQ (构造后显示) -->
+                <line id="line-cq" x1="500" y1="400" x2="750" y2="250" stroke="#78716c" stroke-width="1.5" class="opacity-0" />
+
+            </svg>
+
+            <!-- 控制按钮 -->
+            <div class="absolute bottom-6 flex gap-4">
+                <button onclick="prevStep()" class="px-6 py-2 rounded-full border border-stone-400 text-stone-600 hover:bg-stone-100 transition focus:outline-none font-serif">
+                    &lt; 回看
+                </button>
+                <button onclick="nextStep()" class="px-6 py-2 rounded-full bg-red-800 text-white shadow-md hover:bg-red-900 transition focus:outline-none font-serif flex items-center gap-2">
+                    下一步 &gt;
+                </button>
+            </div>
+        </div>
+
+        <!-- 右侧：解题卷轴 -->
+        <div class="w-full md:w-[30%] bg-[#fdfbf7] border-l border-stone-200 overflow-y-auto p-6 shadow-xl z-20">
+            <h2 class="text-2xl font-serif font-bold text-stone-900 mb-6 border-b-2 border-stone-800 pb-2 inline-block">完整解法</h2>
+            
+            <ul class="space-y-4 font-serif text-stone-500 text-sm leading-relaxed" id="steps-list">
+                <li class="p-3 transition-all duration-300 rounded hover:bg-stone-50" data-step="0">
+                    <span class="block text-xs uppercase tracking-wider mb-1 opacity-50">题目</span>
+                    已知 P 是平行四边形内一点，且 <span class="font-mono text-red-800">∠PBA = ∠PDA</span>。
+                </li>
+                <li class="p-3 transition-all duration-300 rounded" data-step="1">
+                    <span class="block text-xs uppercase tracking-wider mb-1 opacity-50">步骤一</span>
+                    将 <span class="font-mono">△ABP</span> 沿向量 <span class="font-mono">AD</span> 平移至右侧，得到 <span class="font-mono">△DCQ</span>。
+                    <br><span class="text-xs opacity-70">(此时 AB 与 DC 重合，P 移动到 Q)</span>
+                </li>
+                <li class="p-3 transition-all duration-300 rounded" data-step="2">
+                    <span class="block text-xs uppercase tracking-wider mb-1 opacity-50">步骤二</span>
+                    由平移性质可知：<span class="font-mono text-red-800">∠DCQ = ∠ABP</span>。
+                    <br>结合已知条件，得 <span class="font-mono text-red-800">∠DCQ = ∠PDA</span>。
+                </li>
+                <li class="p-3 transition-all duration-300 rounded" data-step="3">
+                    <span class="block text-xs uppercase tracking-wider mb-1 opacity-50">步骤三</span>
+                    观察四边形 <span class="font-mono">ADQP</span>，<span class="font-mono">PQ // AD</span>。
+                    <br>由平行线性质（内错角相等）：<span class="font-mono">∠PDA = ∠DPQ</span>。
+                </li>
+                <li class="p-3 transition-all duration-300 rounded" data-step="4">
+                    <span class="block text-xs uppercase tracking-wider mb-1 opacity-50">步骤四</span>
+                    结合步骤二与三：<span class="font-mono text-red-800">∠DCQ = ∠DPQ</span>。
+                    <br>因为这两个角对着同一条线段 DQ，所以点 <span class="font-mono font-bold">P, D, C, Q 四点共圆</span>。
+                </li>
+                <li class="p-3 transition-all duration-300 rounded" data-step="5">
+                    <span class="block text-xs uppercase tracking-wider mb-1 opacity-50">步骤五</span>
+                    在圆中，同弧所对圆周角相等：
+                    <br><span class="font-mono text-blue-800">∠QDC = ∠QPC</span>。
+                    <br>注意：<span class="font-mono">∠QDC</span> 其实就是平移前的 <span class="font-mono">∠PAB</span>。
+                </li>
+                <li class="p-3 transition-all duration-300 rounded" data-step="6">
+                    <span class="block text-xs uppercase tracking-wider mb-1 opacity-50">结论</span>
+                    因为 <span class="font-mono">PQ // BC</span> (均平行于 AD)，内错角相等：
+                    <br><span class="font-mono text-orange-600">∠QPC = ∠PCB</span>。
+                    <br>综上所述：<span class="font-mono text-blue-800 font-bold">∠PAB = ∠PCB</span>。证毕。
+                </li>
+            </ul>
+
+            <div class="h-20"></div> <!-- 底部留白 -->
+        </div>
+
+    </main>
+
+    <script>
+        const state = {
+            step: 0,
+            maxStep: 6
+        };
+
+        const elements = {
+            group: document.getElementById('triangle-group'),
+            ghost: document.getElementById('ghost-triangle'),
+            bubble: document.getElementById('bubble'),
+            bubbleText: document.getElementById('bubble-text'),
+            bubbleMath: document.getElementById('bubble-math'),
+            qLabel: document.getElementById('label-q'),
+            steps: document.querySelectorAll('#steps-list li'),
+            circle: document.getElementById('circle-aux'),
+            // Angles and Lines
+            anglePBA: document.getElementById('angle-pba'), // Red
+            anglePDA: document.getElementById('angle-pda'), // Red target
+            angleDPQ: document.getElementById('angle-dpq'),
+            angleQPC: document.getElementById('angle-qpc'),
+            anglePAB: document.getElementById('angle-pab'), // Blue target
+            anglePCB: document.getElementById('angle-pcb'), // Blue target
+            linePQ: document.getElementById('line-pq'),
+            lineCQ: document.getElementById('line-cq'),
+            trajPath: document.getElementById('trajectory-path'),
+            trajP: document.getElementById('trajectory-p'),
+        };
+
+        // 教学脚本配置
+        const script = [
+            { // 0
+                text: "这就是我们的题目，注意看那两个红色的角。",
+                math: "∠PBA = ∠PDA",
+                pos: { top: '380px', left: '150px' },
+                action: () => resetBoard()
+            },
+            { // 1
+                text: "把左边的三角形剪下来，向右平移拼上去！",
+                math: "△ABP → △DCQ",
+                pos: { top: '220px', left: '400px' },
+                action: () => animateTranslate()
+            },
+            { // 2
+                text: "平移后，这个角没变。题目说它和上面的角相等。",
+                math: "∠DCQ = ∠PBA = ∠PDA",
+                pos: { top: '380px', left: '600px' },
+                action: () => highlightAngleEquality1()
+            },
+            { // 3
+                text: "看上面！因为平移是平行的，所以这儿有个 'Z' 字形。",
+                math: "PQ // AD => ∠PDA = ∠DPQ",
+                pos: { top: '230px', left: '380px' },
+                action: () => highlightParallel()
+            },
+            { // 4
+                text: "神奇的事情发生了！这两个角相等，意味着它们在一个圆上。",
+                math: "∠DCQ = ∠DPQ => P,D,C,Q 共圆",
+                pos: { top: '150px', left: '550px' },
+                action: () => showCircle()
+            },
+            { // 5
+                text: "在这个圆里，看向同一段弧的角是相等的。",
+                math: "∠QDC = ∠QPC (同弧QC)",
+                pos: { top: '260px', left: '680px' },
+                action: () => highlightCyclicAngles()
+            },
+            { // 6
+                text: "最后，顺着平行的梯形滑下来，证明完成！",
+                math: "∠QPC = ∠PCB => ∠PAB = ∠PCB",
+                pos: { top: '360px', left: '500px' },
+                action: () => finalProof()
+            }
+        ];
+
+        function updateUI() {
+            // 1. 更新侧边栏高亮
+            elements.steps.forEach((li, idx) => {
+                if (idx === state.step) {
+                    li.classList.add('active-step');
+                    li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    li.classList.remove('active-step');
+                }
+            });
+
+            // 2. 执行动作
+            const currentScript = script[state.step];
+            currentScript.action();
+
+            // 3. 更新气泡
+            elements.bubble.style.opacity = '0';
+            setTimeout(() => {
+                elements.bubble.style.top = currentScript.pos.top;
+                elements.bubble.style.left = currentScript.pos.left;
+                elements.bubbleText.innerText = currentScript.text;
+                elements.bubbleMath.innerText = currentScript.math;
+                elements.bubble.style.opacity = '1';
+            }, 300);
+        }
+
+        function nextStep() {
+            if (state.step < state.maxStep) {
+                state.step++;
+                updateUI();
+            }
+        }
+
+        function prevStep() {
+            if (state.step > 0) {
+                state.step--;
+                updateUI();
+            }
+        }
+
+        // --- 动画逻辑函数 ---
+
+        function resetBoard() {
+            // 归位
+            elements.group.style.transform = 'translate(0, 0)';
+            elements.ghost.classList.add('opacity-0');
+            elements.qLabel.classList.add('opacity-0');
+            elements.circle.classList.add('opacity-0');
+            
+            elements.linePQ.classList.add('opacity-0');
+            elements.lineCQ.classList.add('opacity-0');
+            elements.trajPath.classList.add('opacity-0');
+            elements.trajP.classList.add('opacity-0');
+
+            // Reset Angles colors/visibility
+            elements.anglePBA.style.stroke = "#9b2c2c"; // red
+            elements.anglePAB.classList.add('opacity-0');
+            elements.angleDPQ.classList.add('opacity-0');
+            elements.angleQPC.classList.add('opacity-0');
+            elements.anglePCB.classList.add('opacity-0');
+            
+            // Remove highlight class (width)
+            document.querySelectorAll('path').forEach(p => p.setAttribute('stroke-width', '2'));
+        }
+
+        function animateTranslate() {
+            // Step 1: Translate
+            // Vector AD is (400, 0)
+            elements.group.style.transform = 'translate(400px, 0)';
+            
+            // Show Ghost and Trajectory
+            elements.ghost.classList.remove('opacity-0');
+            elements.trajPath.classList.remove('opacity-0');
+            elements.trajP.classList.remove('opacity-0');
+            
+            // Show construction lines
+            setTimeout(() => {
+                elements.qLabel.classList.remove('opacity-0');
+                elements.linePQ.classList.remove('opacity-0');
+                elements.lineCQ.classList.remove('opacity-0');
+            }, 1000);
+
+            // Clean other visual clutter from future steps
+            elements.circle.classList.add('opacity-0');
+            elements.angleDPQ.classList.add('opacity-0');
+        }
+
+        function highlightAngleEquality1() {
+            // Ensure translation is done
+            elements.group.style.transform = 'translate(400px, 0)';
+            elements.ghost.classList.remove('opacity-0');
+            elements.qLabel.classList.remove('opacity-0');
+            elements.linePQ.classList.remove('opacity-0');
+            elements.lineCQ.classList.remove('opacity-0');
+
+            // Highlight ∠DCQ (which is the moved ∠PBA) and ∠PDA
+            // Note: The path inside group `angle-pba` is now at C.
+            // Highlight PDA
+            elements.anglePDA.setAttribute('stroke-width', '4');
+            elements.anglePBA.setAttribute('stroke-width', '4');
+        }
+
+        function highlightParallel() {
+            // Show Z angle
+            elements.angleDPQ.classList.remove('opacity-0');
+            elements.angleDPQ.setAttribute('stroke-width', '4');
+            elements.anglePDA.setAttribute('stroke-width', '4');
+            elements.anglePBA.setAttribute('stroke-width', '2'); // dim previous
+        }
+
+        function showCircle() {
+            // Show Circle
+            elements.circle.classList.remove('opacity-0');
+            
+            // Highlight the two angles "looking" at DQ
+            // Wait, logic in step 4 is ∠DCQ = ∠DPQ looking at... 
+            // Actually ∠DPQ = ∠DCQ. 
+            // Point P and C subtend same angle on DQ? No.
+            // D, P, C, Q are concyclic.
+            // The segment DQ subtends ∠DPQ at P? No.
+            // ∠DPQ is angle at P. ∠DCQ is angle at C.
+            // They are equal. They are subtended by segment DQ? 
+            // Yes, if we consider P and C on same side of DQ.
+            
+            elements.angleDPQ.setAttribute('stroke', '#9b2c2c');
+            // The moved angle PBA is now at C.
+            elements.

@@ -1,0 +1,70 @@
+{
+  "question": "某校有100名学生到离学校33千米的郊区参加采摘活动，学校只有一辆限乘25人的中型面包车，为了让全体学生尽快地到达目的地，决定采取步行与乘车相结合的办法，已知学生步行的速度是每小时5千米，汽车行驶的速度是每小时55千米，请你设计一个方案，使全体学生都能到达目的地的最短时间是多少小时？",
+  "prompt": "某校有100名学生到离学校33千米的郊区参加采摘活动，学校只有一辆限乘25人的中型面包车，为了让全体学生尽快地到达目的地，决定采取步行与乘车相结合的办法，已知学生步行的速度是每小时5千米，汽车行驶的速度是每小时55千米，请你设计一个方案，使全体学生都能到达目的地的最短时间是多少小时？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "59f1d54a-f5f3-40ad-a145-6def64b016eb",
+  "generated_at": "2026-09-10T09:09:15.578025Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "相遇与追及问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中行程双向运动结构"
+  },
+  "tags_updated_at": "2026-09-10T09:09:15.579025Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "九上",
+    "main_tag": "图形与几何·综合与实践",
+    "sub_tags": [
+      "动点问题"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-10T09:09:15.670057Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "图形与几何",
+    "display_class": "geometry",
+    "grade": "九上",
+    "tags": {
+      "main_tag": "图形与几何·综合与实践",
+      "sub_tags": [
+        "动点问题"
+      ],
+      "second_tag": null
+    },
+    "question_type": "行程问题",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_geometry",
+      "steps_min": 5,
+      "steps_max": 8,
+      "motion_policy": "answer_first",
+      "must_show": [
+        "几何标注规范",
+        "辅助线分层"
+      ]
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  },
+  "preview_image": "Preview.webp"
+}

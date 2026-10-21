@@ -1,0 +1,10 @@
+{
+  "question": "把下面图形分成三个部分，最后都拼在一起，成为一个正方形，下面不可行的剪法是 ( )。",
+  "title": "几何图形的剪拼",
+  "plan": {
+    "steps": []
+  },
+  "is_math_problem": true,
+  "has_pic": true,
+  "preview_image": "preview.webp"
+}

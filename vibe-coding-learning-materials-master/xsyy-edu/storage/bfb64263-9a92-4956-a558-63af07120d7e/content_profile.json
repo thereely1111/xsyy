@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "stage": "junior_high",
+  "domain": "方程与不等式",
+  "display_class": "equation",
+  "grade": "七上",
+  "tags": {
+    "main_tag": "一元一次方程",
+    "sub_tags": [
+      "一元一次方程应用题"
+    ],
+    "second_tag": null
+  },
+  "question_type": "",
+  "figure_info": {
+    "has_figure": false,
+    "figures": []
+  },
+  "visual_requirements": {
+    "style_key": "junior_equation",
+    "steps_min": 5,
+    "steps_max": 7,
+    "motion_policy": "answer_first",
+    "must_show": []
+  },
+  "method_lock": null,
+  "is_math_problem": true,
+  "confidence": 0.0,
+  "engine": "legacy",
+  "is_composite": false,
+  "parts": [],
+  "domains": []
+}

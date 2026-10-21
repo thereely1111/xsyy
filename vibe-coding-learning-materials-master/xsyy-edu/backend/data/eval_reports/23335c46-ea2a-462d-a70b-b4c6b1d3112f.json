@@ -1,0 +1,211 @@
+{
+  "report_id": "23335c46-ea2a-462d-a70b-b4c6b1d3112f",
+  "created_at": "2026-08-27T16:35:38",
+  "sample_size": 10,
+  "result": {
+    "evaluated": 10,
+    "backend": "semantic",
+    "backend_status": "semantic",
+    "exact_match": 6,
+    "accuracy": 0.6,
+    "domain_accuracy": 0.9,
+    "grade_accuracy": 0.6,
+    "main_tag_accuracy": 0.7,
+    "sub_tag_accuracy": 0.6,
+    "per_domain": [
+      {
+        "domain": "图形与几何",
+        "total": 3,
+        "correct": 2,
+        "accuracy": 0.6667
+      },
+      {
+        "domain": "数与式",
+        "total": 2,
+        "correct": 2,
+        "accuracy": 1.0
+      },
+      {
+        "domain": "方程与不等式",
+        "total": 3,
+        "correct": 1,
+        "accuracy": 0.3333
+      },
+      {
+        "domain": "统计与概率",
+        "total": 2,
+        "correct": 1,
+        "accuracy": 0.5
+      }
+    ],
+    "confusion": {
+      "方程与不等式": {
+        "方程与不等式": 2,
+        "(无识别)": 1
+      },
+      "数与式": {
+        "数与式": 2
+      },
+      "统计与概率": {
+        "统计与概率": 2
+      },
+      "图形与几何": {
+        "图形与几何": 3
+      }
+    },
+    "errors": [
+      {
+        "question": "解方程组：x + y = 7\\n2x - y = 5",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "七下",
+          "main_tag": "二元一次方程组",
+          "sub_tag": "二元一次方程组解法"
+        },
+        "predicted": {
+          "version": "方程与不等式",
+          "grade": "七上",
+          "main_tag": "一元一次方程",
+          "sub_tag": "一元一次方程的解法"
+        },
+        "source": "rag_direct",
+        "confidence": 0.3137234472760967
+      },
+      {
+        "question": "某班共有学生 45 人，其中男生 20 人，女生 25 人。 （1）从该班随机选一名学生，求选中男生的概率； （2）全班平均身高为 160 厘米，男生平均身高为 165 厘米，求女生的平均身高。",
+        "expected": {
+          "version": "统计与概率",
+          "grade": "四下",
+          "main_tag": "平均数与条形统计图",
+          "sub_tag": "求平均数"
+        },
+        "predicted": {
+          "version": "统计与概率",
+          "grade": "七下",
+          "main_tag": "概率初步",
+          "sub_tag": "事件分类"
+        },
+        "source": "rag_direct",
+        "confidence": 0.32325755731732236
+      },
+      {
+        "question": "某校有若干个学生寄宿宿舍，若每一间宿舍住6人，则多出34人；若每一间宿舍住7人，则多出4间宿舍。问宿舍有多少间？寄宿学生有多少人？",
+        "expected": {
+          "version": "方程与不等式",
+          "grade": "七上",
+          "main_tag": "一元一次方程",
+          "sub_tag": "分配与配套问题"
+        },
+        "predicted": {
+          "version": "",
+          "grade": "",
+          "main_tag": "",
+          "sub_tag": ""
+        },
+        "source": "none",
+        "confidence": null
+      },
+      {
+        "question": "三角形的内角和怎么算",
+        "expected": {
+          "version": "图形与几何",
+          "grade": "四下",
+          "main_tag": "三角形",
+          "sub_tag": "内角和与三边关系"
+        },
+        "predicted": {
+          "version": "图形与几何",
+          "grade": "八上",
+          "main_tag": "三角形",
+          "sub_tag": "三角形内角和与外角"
+        },
+        "source": "llm",
+        "confidence": 0.98
+      }
+    ],
+    "source_distribution": [
+      {
+        "source": "llm",
+        "count": 4,
+        "pct": 0.4
+      },
+      {
+        "source": "route",
+        "count": 3,
+        "pct": 0.3
+      },
+      {
+        "source": "rag_direct",
+        "count": 2,
+        "pct": 0.2
+      },
+      {
+        "source": "none",
+        "count": 1,
+        "pct": 0.1
+      }
+    ],
+    "accuracy_by_source": [
+      {
+        "source": "llm",
+        "count": 4,
+        "correct": 3,
+        "accuracy": 0.75
+      },
+      {
+        "source": "none",
+        "count": 1,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      {
+        "source": "rag_direct",
+        "count": 2,
+        "correct": 0,
+        "accuracy": 0.0
+      },
+      {
+        "source": "route",
+        "count": 3,
+        "correct": 3,
+        "accuracy": 1.0
+      }
+    ],
+    "confidence": {
+      "avg": 0.7645,
+      "avg_correct": 0.99,
+      "buckets": [
+        {
+          "range": "0.0-0.4",
+          "total": 2,
+          "correct": 0,
+          "accuracy": 0.0
+        },
+        {
+          "range": "0.4-0.6",
+          "total": 0,
+          "correct": 0,
+          "accuracy": 0
+        },
+        {
+          "range": "0.6-0.8",
+          "total": 0,
+          "correct": 0,
+          "accuracy": 0
+        },
+        {
+          "range": "0.8-1.0",
+          "total": 4,
+          "correct": 3,
+          "accuracy": 0.75
+        },
+        {
+          "range": "no_conf",
+          "total": 4,
+          "correct": 3,
+          "accuracy": 0.75
+        }
+      ]
+    }
+  }
+}

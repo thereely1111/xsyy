@@ -1,0 +1,25 @@
+{
+  "question": "长180米的客车速度是每秒25米，它追上并超过长100米的货车用了28秒，如果两车相向而行，从相遇到完全离开需要____秒。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\a3f0fc99-d062-4b0b-86e8-bdb9ae5cd5b2\\pasted-image-1767510948765.png",
+  "task_id": "a3f0fc99-d062-4b0b-86e8-bdb9ae5cd5b2",
+  "generated_at": "2026-01-04T15:17:23.911762Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "列车追及相遇应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的行程问题，需构建模型计算相对速度。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识",
+      "符号意识",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2026-01-04T15:17:23.911762Z",
+  "preview_image": "Preview.webp"
+}

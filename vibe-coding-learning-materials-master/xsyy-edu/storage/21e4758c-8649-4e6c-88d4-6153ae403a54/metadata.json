@@ -1,0 +1,24 @@
+{
+  "question": "上午6时从汽车站同时发出1路和2路公共汽车，1路车每隔12分钟发一次，2路车每隔18分钟发一次，求下次同时发车时间。",
+  "prompt": "上午6时从汽车站同时发出1路和2路公共汽车，1路车每隔12分钟发一次，2路车每隔18分钟发一次，求下次同时发车时间。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "21e4758c-8649-4e6c-88d4-6153ae403a54",
+  "generated_at": "2026-07-28T10:54:06.134077Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "最小公倍数应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "实际发车间隔应用问题",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-07-28T10:54:06.134077Z",
+  "preview_image": "Preview.webp"
+}

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>环形跑道行程问题 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">环形跑道行程问题</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('根据环形跑道同向和反向相遇间隔求快者一圈时间')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <defs> <filter id='dropShadow' x='-50%' y='-50%' width='200%' height='200%'><feDropShadow dx='2' dy='4' stdDeviation='3' flood-color='#4a4a4a' flood-opacity='0.25'/></filter> <filter id='glow' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur stdDeviation='2.5' result='coloredBlur'/><feMerge><feMergeNode in='coloredBlur'/><feMergeNode in='SourceGraphic'/></feMerge></filter> <linearGradient id='trackGrad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='#7a7a7a'/><stop offset='100%' stop-color='#4a4a4a'/></linearGradient> <radialGradient id='paperGrad' cx='50%' cy='50%' r='50%'><stop offset='0%' stop-color='#f7f3e8' stop-opacity='0.7'/><stop offset='100%' stop-color='#f7f3e8' stop-opacity='0'/></radialGradient> <marker id='arrowRed' markerUnits='userSpaceOnUse' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 z' fill='#c23a30'/></marker> <marker id='arrowGray' markerUnits='userSpaceOnUse' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 z' fill='#7a7a7a'/></marker> </defs> <style> .svg-elem{transition:all .7s cubic-bezier(0.4,0,0.2,1); transform-box:fill-box; transform-origin:center;} .track-shadow{filter:url(#dropShadow);} .dashed-line{fill:none;stroke:#c23a30;stroke-width:2;stroke-dasharray:8,6;stroke-linecap:round;animation:dashFlow 2s linear infinite;} @keyframes dashFlow{to{stroke-dashoffset:-28;}} .float{animation:float 3s ease-in-out infinite;} @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}} .pulse{animation:pulseScale 2s ease-in-out infinite;} @keyframes pulseScale{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}} .formula-box{font-family:'KaiTi','STKaiti',serif;background:#f7f3e8;border-left:4px solid #c23a30;color:#4a4a4a;padding:10px 14px;border-radius:4px;box-shadow:0 4px 10px rgba(74,74,74,0.15);font-size:18px;} .badge{display:inline-block;background:#c23a30;color:#f7f3e8;padding:12px 20px;border-radius:50%;font-weight:bold;font-size:28px;box-shadow:0 4px 12px rgba(194,58,48,0.35);} text{font-family:'KaiTi','STKaiti',serif;} </style> <circle class='svg-elem' cx='400' cy='300' r='260' fill='url(#paperGrad)' opacity='0.6'/> <g class='svg-elem' x-show='sceneStep >= 0' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 transform -translate-y-4' x-transition:enter-end='opacity-100 transform translate-y-0' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 transform translate-y-0' x-transition:leave-end='opacity-0 transform -translate-y-4'> <text x='400' y='45' text-anchor='middle' font-size='26' fill='#4a4a4a' font-weight='bold'>环形跑道行程问题</text> <text x='400' y='68' text-anchor='middle' font-size='14' fill='#7a7a7a'>新中式·行程拆解</text> </g> <g class='svg-elem track-shadow' transform='translate(400,300) scale(2.2)'> <circle class='svg-elem' cx='0' cy='0' r='95.493' fill='none' stroke='url(#trackGrad)' stroke-width='6' stroke-linecap='round'/> <line class='svg-elem' x1='0' y1='-95.493' x2='0' y2='-78' stroke='#c23a30' stroke-width='3'/> <text class='svg-elem' x='0' y='-70' text-anchor='middle' font-size='11' fill='#4a4a4a'>起点</text> <g class='svg-elem pulse' x-show='sceneStep >= 0' transform='translate(-8,-95.5)'> <circle class='svg-elem' r='7' fill='#c23a30' stroke='#f7f3e8' stroke-width='1.5' filter='url(#glow)'/> <text class='svg-elem' x='0' y='2.5' text-anchor='middle' font-size='8' fill='#f7f3e8'>哥</text> </g> <g class='svg-elem pulse' x-show='sceneStep >= 0' transform='translate(8,-95.5)'> <circle class='svg-elem' r='7' fill='#7a7a7a' stroke='#f7f3e8' stroke-width='1.5'/> <text class='svg-elem' x='0' y='2.5' text-anchor='middle' font-size='8' fill='#f7f3e8'>弟</text> </g> </g> <g class='svg-elem' x-show='sceneStep === 0' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 transform scale-90' x-transition:enter-end='opacity-100 transform scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 transform scale-100' x-transition:leave-end='opacity-0 transform scale-90'> <foreignObject class='svg-elem' x='80' y='95' width='640' height='90'> <div xmlns='http://www.w3.org/1999/xhtml' class='formula-box' style='font-size:18px; line-height:1.6; text-align:center;'> 跑道全长 <strong style='color:#c23a30;'>600 米</strong>，兄弟两人同时同地出发。<br/>第一次：都按顺时针跑，每 <strong style='color:#c23a30;'>12 分钟</strong>相遇一次；<br/>第二次：哥哥逆时针跑，每 <strong style='color:#c23a30;'>4 分钟</strong>相遇一次。 </div> </foreignObject> </g> <g class='svg-elem' x-show='sceneStep === 1 || sceneStep === 2' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 transform translate-x-8' x-transition:enter-end='opacity-100 transform translate-x-0' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 transform translate-x-0' x-transition:leave-end='opacity-0 transform translate-x-8'> <path class='svg-elem' d='M0,-125 A125 125 0 0 1 125,0' fill='none' stroke='#c23a30' stroke-width='3' marker-end='url(#arrowRed)' transform='translate(400,300) scale(2.2)'/> <text class='svg-elem' x='520' y='220' text-anchor='middle' font-size='18' fill='#c23a30'>两人均顺时针</text> </g> <g class='svg-elem' x-show='sceneStep === 2 || sceneStep === 3' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0' x-transition:enter-end='opacity-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0'> <path class='dashed-line svg-elem' d='M0,-82 A82 82 0 1 1 0,82 A82 82 0 1 1 0,-82' fill='none' stroke='#c23a30' stroke-width='2' transform='translate(400,300) scale(2.2)'/> <text class='svg-elem' x='400' y='520' text-anchor='middle' font-size='18' fill='#c23a30'>快者比慢者多跑一圈</text> <text class='svg-elem' x='400' y='545' text-anchor='middle' font-size='15' fill='#7a7a7a'>相遇间隔 12 分钟</text> </g> <g class='svg-elem float' x-show='sceneStep === 3' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 transform translate-y-6' x-transition:enter-end='opacity-100 transform translate-y-0' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 transform translate-y-0' x-transition:leave-end='opacity-0 transform translate-y-6'> <foreignObject class='svg-elem' x='120' y='450' width='560' height='80'> <div xmlns='http://www.w3.org/1999/xhtml' class='formula-box' style='font-size:22px; text-align:center;'> <strong>同向追及：</strong>速度差 = 600 ÷ 12 = <span style='color:#c23a30; font-size:28px;'>50</span>（米/分） </div> </foreignObject> </g> <g class='svg-elem' x-show='sceneStep === 4 || sceneStep === 5' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 transform scale-95' x-transition:enter-end='opacity-100 transform scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 transform scale-100' x-transition:leave-end='opacity-0 transform scale-95'> <path class='dashed-line svg-elem' d='M0,-82 A82 82 0 1 1 -71.014,41' fill='none' stroke='#c23a30' stroke-width='2' marker-end='url(#arrowRed)' transform='translate(400,300) scale(2.2)'/> <path class='dashed-line svg-elem' d='M0,-108 A108 108 0 0 0 -93.531,54' fill='none' stroke='#7a7a7a' stroke-width='2' marker-end='url(#arrowGray)' transform='translate(400,300) scale(2.2)'/> <text class='svg-elem' x='400' y='120' text-anchor='middle' font-size='18' fill='#c23a30'>哥哥逆时针</text> <text class='svg-elem' x='400' y='145' text-anchor='middle' font-size='18' fill='#7a7a7a'>弟弟顺时针</text> <text class='svg-elem' x='400' y='545' text-anchor='middle' font-size='15' fill='#4a4a4a'>4 分钟相遇</text> </g> <g class='svg-elem float' x-show='sceneStep === 5' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 transform translate-y-6' x-transition:enter-end='opacity-100 transform translate-y-0' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 transform translate-y-0' x-transition:leave-end='opacity-0 transform translate-y-6'> <foreignObject class='svg-elem' x='120' y='450' width='560' height='80'> <div xmlns='http://www.w3.org/1999/xhtml' class='formula-box' style='font-size:22px; text-align:center;'> <strong>反向相遇：</strong>速度和 = 600 ÷ 4 = <span style='color:#c23a30; font-size:28px;'>150</span>（米/分） </div> </foreignObject> </g> <g class='svg-elem' x-show='sceneStep === 6' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 transform scale-90' x-transition:enter-end='opacity-100 transform scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 transform scale-100' x-transition:leave-end='opacity-0 transform scale-90'> <foreignObject class='svg-elem' x='80' y='420' width='640' height='120'> <div xmlns='http://www.w3.org/1999/xhtml' class='formula-box' style='font-size:20px; line-height:1.8; text-align:center;'> 速度差 = 快 − 慢 = 50 米/分<br/> 速度和 = 快 + 慢 = 150 米/分<br/> <span style='color:#c23a30;'>两式相加 → 2×快 = 200</span> </div> </foreignObject> </g> <g class='svg-elem pulse' x-show='sceneStep === 7' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 transform scale-80' x-transition:enter-end='opacity-100 transform scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 transform scale-100' x-transition:leave-end='opacity-0 transform scale-80'> <foreignObject class='svg-elem' x='120' y='430' width='560' height='90'> <div xmlns='http://www.w3.org/1999/xhtml' class='formula-box' style='font-size:22px; text-align:center;'> 快者速度 = (150 + 50) ÷ 2 = <span style='color:#c23a30; font-size:32px;'>100</span> 米/分 </div> </foreignObject> </g> <g class='svg-elem pulse' x-show='sceneStep === 8' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 transform scale-50' x-transition:enter-end='opacity-100 transform scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 transform scale-100' x-transition:leave-end='opacity-0 transform scale-50'> <foreignObject class='svg-elem' x='300' y='240' width='200' height='160'> <div xmlns='http://www.w3.org/1999/xhtml' style='display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;'> <div class='badge'>6 分钟</div> <div style='margin-top:10px; font-size:18px; color:#4a4a4a; font-family:KaiTi,serif;'>跑一圈所需时间</div> <div style='font-size:14px; color:#7a7a7a; margin-top:6px;'>600 ÷ 100 = 6</div> </div> </foreignObject> </g> <g class='svg-elem float' x-show='sceneStep === 9' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 transform translate-y-6' x-transition:enter-end='opacity-100 transform translate-y-0' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 transform translate-y-0' x-transition:leave-end='opacity-0 transform translate-y-6'> <foreignObject class='svg-elem' x='80' y='420' width='640' height='130'> <div xmlns='http://www.w3.org/1999/xhtml' class='formula-box' style='font-size:18px; line-height:1.7; text-align:center;'> <strong>验证：</strong><br/> 同向：速度差 100 − 50 = 50，600 ÷ 50 = <span style='color:#c23a30;'>12 分钟</span> ✓<br/> 反向：速度和 100 + 50 = 150，600 ÷ 150 = <span style='color:#c23a30;'>4 分钟</span> ✓<br/> 答案符合题意，<strong style='color:#c23a30;'>跑得快者跑一圈需要 6 分钟。</strong> </div> </foreignObject> </g>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+    {
+        "title": "读题：环形跑道行程问题",
+        "description": "在600米的环形跑道上，兄弟两人同时同地出发。先按顺时针方向跑，每隔12分钟相遇一次；哥哥改为逆时针后，每隔4分钟相遇一次。求快者跑一圈的时间。",
+        "bubbleText": "我们先理解题意，标出跑道和出发点。",
+        "bubblePos": {
+            "x": 400,
+            "y": 90
+        }
+    },
+    {
+        "title": "情形一：同向顺时针",
+        "description": "两人同向跑时，快者从后面追上慢者，每追上一圈就相遇一次。这里每12分钟相遇，说明快者比慢者多跑一圈需要12分钟。",
+        "bubbleText": "看箭头，两人都是顺时针方向。",
+        "bubblePos": {
+            "x": 520,
+            "y": 220
+        }
+    },
+    {
+        "title": "追及：快者比慢者多跑600米",
+        "description": "从同一出发点开始，到下一次相遇，快者恰好比慢者多跑整整一圈，即600米。",
+        "bubbleText": "虚线轨迹表示快者相对慢者多跑的一圈。",
+        "bubblePos": {
+            "x": 400,
+            "y": 530
+        }
+    },
+    {
+        "title": "列出速度差",
+        "description": "同向追及时，相对速度等于速度差。用600米除以相遇时间12分钟，得到每分钟快者比慢者多跑50米。",
+        "bubbleText": "公式：速度差 = 600 ÷ 12 = 50 米/分。",
+        "bubblePos": {
+            "x": 400,
+            "y": 480
+        }
+    },
+    {
+        "title": "情形二：反向而行",
+        "description": "哥哥改为逆时针，两人相向运动，相遇时合起来跑完一圈。",
+        "bubbleText": "红色虚线是哥哥，灰色虚线是弟弟，两人朝相反方向跑。",
+        "bubblePos": {
+            "x": 400,
+            "y": 130
+        }
+    },
+    {
+        "title": "列出速度和",
+        "description": "反向相遇时，相对速度等于速度和。600米除以4分钟，得到两人速度和为150米/分。",
+        "bubbleText": "公式：速度和 = 600 ÷ 4 = 150 米/分。",
+        "bubblePos": {
+            "x": 400,
+            "y": 480
+        }
+    },
+    {
+        "title": "对比两个关系式",
+        "description": "同向得到速度差50，反向得到速度和150。把两式相加，就能消去慢者速度。",
+        "bubbleText": "速度差与速度和，正好对应和差问题。",
+        "bubblePos": {
+            "x": 400,
+            "y": 500
+        }
+    },
+    {
+        "title": "求解快者速度",
+        "description": "快者速度 = （速度和 + 速度差）÷ 2 =（150 + 50）÷ 2 = 100 米/分。",
+        "bubbleText": "快者每分钟跑100米。",
+        "bubblePos": {
+            "x": 400,
+            "y": 480
+        }
+    },
+    {
+        "title": "计算一圈时间",
+        "description": "跑道长600米，快者速度100米/分，跑一圈需要 600 ÷ 100 = 6 分钟。",
+        "bubbleText": "所以答案是：跑得快者跑一圈需要6分钟。",
+        "bubblePos": {
+            "x": 400,
+            "y": 320
+        }
+    },
+    {
+        "title": "验证答案",
+        "description": "若快者100米/分、慢者50米/分：同向速度差50，600÷50=12分钟；反向速度和150，600÷150=4分钟，均符合题意。",
+        "bubbleText": "验证通过，答案正确！",
+        "bubblePos": {
+            "x": 400,
+            "y": 500
+        }
+    }
+],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

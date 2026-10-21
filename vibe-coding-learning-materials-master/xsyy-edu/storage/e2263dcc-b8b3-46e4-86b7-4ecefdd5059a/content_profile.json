@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "stage": "primary_school",
+  "domain": "图形与几何",
+  "display_class": "geometry",
+  "grade": "四下",
+  "tags": {
+    "main_tag": "鸡兔同笼",
+    "sub_tags": [
+      "假设法解决"
+    ],
+    "second_tag": null
+  },
+  "question_type": "",
+  "figure_info": {
+    "has_figure": false,
+    "figures": []
+  },
+  "visual_requirements": {
+    "style_key": "primary_geometry",
+    "steps_min": 3,
+    "steps_max": 5,
+    "motion_policy": "playful",
+    "must_show": []
+  },
+  "method_lock": null,
+  "is_math_problem": true,
+  "confidence": 0.98,
+  "engine": "agent",
+  "is_composite": false,
+  "parts": [],
+  "domains": []
+}

@@ -1,0 +1,93 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "已知 y = x² − 2x − 3，求(1)顶点(2)与 x 轴交点(3)上移 k 个单位后与 x 轴只一个公共点",
+  "prompt": "已知 y = x² − 2x − 3，求(1)顶点(2)与 x 轴交点(3)上移 k 个单位后与 x 轴只一个公共点",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "199b46f3-6b0f-422e-b224-2a998422d468",
+  "generated_at": "2026-09-28T03:10:23.351512Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "二次函数图象性质",
+  "title_quality": "ok",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "二次函数顶点交点平移"
+  },
+  "tags_updated_at": "2026-09-28T03:10:23.351512Z",
+  "knowledge_tags": {
+    "version": "函数",
+    "grade": "九上",
+    "main_tag": "二次函数",
+    "sub_tags": [
+      "二次函数的图象、性质与平移"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-28T03:10:23.374454Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "junior_high",
+    "domain": "函数",
+    "display_class": "function",
+    "grade": "九上",
+    "tags": {
+      "main_tag": "二次函数",
+      "sub_tags": [
+        "二次函数的图象、性质与平移"
+      ],
+      "second_tag": null
+    },
+    "question_type": "反比例函数与一次函数交点",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "junior_function",
+      "steps_min": 5,
+      "steps_max": 7,
+      "motion_policy": "answer_first",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.95,
+    "engine": "agent",
+    "is_composite": true,
+    "parts": [
+      {
+        "label": "（1）",
+        "text": "(1)顶点",
+        "domain": "函数",
+        "display_class": "function",
+        "question_type": "二次函数"
+      },
+      {
+        "label": "（2）",
+        "text": "(2)与 x 轴交点",
+        "domain": "函数",
+        "display_class": "function",
+        "question_type": "反比例函数与一次函数交点"
+      },
+      {
+        "label": "（3）",
+        "text": "(3)上移 k 个单位后与 x 轴只一个公共点",
+        "domain": "函数",
+        "display_class": "function",
+        "question_type": ""
+      }
+    ],
+    "domains": [
+      "function"
+    ]
+  },
+  "recognition_meta": {
+    "engine": "agent",
+    "action": "inject_official",
+    "confidence": 0.95
+  }
+}

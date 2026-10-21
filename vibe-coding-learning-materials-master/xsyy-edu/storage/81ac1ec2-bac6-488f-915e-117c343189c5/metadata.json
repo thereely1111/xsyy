@@ -1,0 +1,25 @@
+{
+  "question": "明明去参观全国博物馆文创市集, 他用 100 元买了一些相同的文创产品后, 还剩 36 元, 买的可能是什么? 买了多少? 冰箱贴 12元，书签 4元，明信片 2元。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/81ac1ec2-bac6-488f-915e-117c343189c5/pasted-image-1769471634721.png",
+  "task_id": "81ac1ec2-bac6-488f-915e-117c343189c5",
+  "generated_at": "2026-01-27T07:55:28.839380Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "购物应用题与整除",
+  "has_pic": true,
+  "tags": {
+    "reasoning": "生活情境应用题，需多步计算。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识",
+      "符号意识",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2026-01-27T07:55:28.839444Z",
+  "preview_image": "Preview.webp"
+}

@@ -1,0 +1,23 @@
+{
+  "question": "四边形 ABCD 为正方形, DE // AC, 且 CE = CA, 直线 EC 交 DA 延长线于 F, 求证: AE = AF.",
+  "prompt": "四边形 ABCD 为正方形, DE // AC, 且 CE = CA, 直线 EC 交 DA 延长线于 F, 求证: AE = AF.",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "4c2032cc-9cd4-4b56-be1b-70ce6d3beb7b",
+  "generated_at": "2026-01-06T23:53:21.310736Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "正方形几何证明",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "平面几何证明题",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-06T23:53:21.310751Z",
+  "preview_image": "Preview.webp"
+}

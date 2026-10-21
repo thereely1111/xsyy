@@ -1,0 +1,24 @@
+{
+  "question": "某大楼共十层，每层4米，小云站在8楼的阳台，他离一楼地面多少米？",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/22bc1ef3-551a-47a8-9345-82642825a00b/pasted-image-1767942780320.png",
+  "task_id": "22bc1ef3-551a-47a8-9345-82642825a00b",
+  "generated_at": "2026-01-09T15:14:34.352644Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "楼层高度计算",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "根据生活情境构建数学模型。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2026-01-09T15:14:34.352655Z",
+  "preview_image": "preview.webp"
+}

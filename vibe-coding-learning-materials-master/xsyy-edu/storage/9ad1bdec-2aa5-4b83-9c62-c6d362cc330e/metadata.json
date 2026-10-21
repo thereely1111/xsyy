@@ -1,0 +1,36 @@
+{
+  "question": "在比例尺1：6000000的地图上，量得甲乙两地距离是9厘米，两列火车同时从甲乙两地相对开出，甲车每小时行57千米，乙车每小时行43千米，几小时后两车相遇？",
+  "prompt": "在比例尺1：6000000的地图上，量得甲乙两地距离是9厘米，两列火车同时从甲乙两地相对开出，甲车每小时行57千米，乙车每小时行43千米，几小时后两车相遇？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "9ad1bdec-2aa5-4b83-9c62-c6d362cc330e",
+  "generated_at": "2026-08-03T16:33:18.883616Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "比例尺相遇问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境应用题",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "量感",
+      "几何直观"
+    ]
+  },
+  "tags_updated_at": "2026-08-03T16:33:18.883616Z",
+  "knowledge_tags": {
+    "version": "方程与不等式",
+    "grade": "七上",
+    "main_tag": "一元一次方程",
+    "sub_tags": [
+      "行程问题"
+    ]
+  },
+  "preview_image": "Preview.webp",
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-26T07:50:19.049994Z",
+  "knowledge_tags_confirmed": true,
+  "second_tag": null
+}

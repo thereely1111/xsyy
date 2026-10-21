@@ -1,0 +1,67 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "由已知条件可知，一张桌子比一把椅子多的288元，正好是一把椅子价钱的（10-1）倍，由此可求得一把椅子的价钱。再根据椅子的价钱，就可求得一张桌子的价钱。",
+  "prompt": "由已知条件可知，一张桌子比一把椅子多的288元，正好是一把椅子价钱的（10-1）倍，由此可求得一把椅子的价钱。再根据椅子的价钱，就可求得一张桌子的价钱。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "E:\\象数演易\\1\\xsyy\\vibe-coding-learning-materials-master\\xsyy-edu\\storage\\2fa1c3dc-59b8-4bf7-8ece-61172e9c46bb\\cropped-1789114147453.jpg",
+  "task_id": "2fa1c3dc-59b8-4bf7-8ece-61172e9c46bb",
+  "generated_at": "2026-09-11T08:19:26.161607Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "差倍问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "图片仅包含解答过程，未包含题干。内容为桌子与椅子价钱的差倍关系分析，属于差倍问题，无独立插图。"
+  },
+  "tags_updated_at": "2026-09-11T08:19:26.161607Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "三上",
+    "main_tag": "除数是一位数的除法",
+    "sub_tags": [
+      "除法应用"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-11T08:19:26.215063Z",
+  "content_profile": {
+    "version": 1,
+    "stage": "primary_school",
+    "domain": "数与式",
+    "display_class": "numbers",
+    "grade": "三上",
+    "tags": {
+      "main_tag": "除数是一位数的除法",
+      "sub_tags": [
+        "除法应用"
+      ],
+      "second_tag": null
+    },
+    "question_type": "",
+    "figure_info": {
+      "has_figure": false,
+      "figures": []
+    },
+    "visual_requirements": {
+      "style_key": "primary_numbers",
+      "steps_min": 3,
+      "steps_max": 5,
+      "motion_policy": "playful",
+      "must_show": []
+    },
+    "method_lock": null,
+    "is_math_problem": true,
+    "confidence": 0.0,
+    "engine": "legacy",
+    "is_composite": false,
+    "parts": [],
+    "domains": []
+  },
+  "recognition_meta": {
+    "engine": "legacy",
+    "fallback_from": "agent"
+  }
+}

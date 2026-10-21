@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四区块布局示例 - 象数演易</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'xsyy-blue': '#1a365d',
+                        'xsyy-cream': '#f7f3e9',
+                        'xsyy-gold': '#d4a574',
+                        'xsyy-cyan': '#a3d9ff'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+        body { font-family: 'Noto Serif SC', serif; }
+        .paper-texture { background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); }
+        .step-dashed-border { border-top: 1px dashed #cbd5e1; }
+    </style>
+</head>
+<body class="min-h-screen bg-xsyy-cream paper-texture">
+    
+    <!-- 区块1: 标题区 (全宽顶部) -->
+    <header class="bg-gradient-to-r from-xsyy-blue to-blue-900 text-white py-6 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div class="flex-1">
+                    <h1 class="text-2xl md:text-3xl font-bold mb-3">二次函数图像</h1>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <span class="px-3 py-1 bg-xsyy-cyan/20 text-xsyy-cyan rounded-full text-sm font-medium">函数</span>
+                        <span class="px-3 py-1 bg-white/10 rounded-full text-sm">二次方程</span>
+                        <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm font-medium">简单</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-xsyy-gold text-sm">难度:</span>
+                    <div class="flex gap-1">
+                        <span class="w-3 h-3 bg-green-400 rounded-full"></span>
+                        <span class="w-3 h-3 bg-gray-500 rounded-full"></span>
+                        <span class="w-3 h-3 bg-gray-500 rounded-full"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-7xl">
+        
+        <!-- 桌面端布局: 画布区 + 步骤区 并排 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            
+            <!-- 区块2: 画布区 (视觉中心) -->
+            <section class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div class="bg-gradient-to-r from-xsyy-blue to-blue-800 text-white px-6 py-4">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <span class="text-2xl">🎨</span> 动态演示
+                    </h2>
+                </div>
+                <div id="canvasArea" class="p-6 bg-gradient-to-br from-xsyy-cream to-white min-h-[400px] flex items-center justify-center">
+                    <div class="w-full max-w-md">
+                        <canvas id="demoCanvas" width="350" height="300" class="w-full rounded-xl shadow-inner border border-gray-200"></canvas>
+                        <div class="mt-4 text-center text-gray-600 text-sm">
+                            <p>二次函数 y = ax² + bx + c</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 区块3: 步骤区 (卡片列表) -->
+            <section class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                <div class="bg-gradient-to-r from-xsyy-blue to-blue-800 text-white px-6 py-4 flex items-center justify-between">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <span class="text-2xl">📝</span> 解题步骤
+                    </h2>
+                    <button onclick="toggleAllSteps()" class="px-3 py-1 bg-white/20 rounded-lg hover:bg-white/30 transition text-sm">
+                        <span id="toggleBtnText">收起全部</span>
+                    </button>
+                </div>
+                <div id="stepsContainer" class="divide-y divide-dashed divide-gray-300">
+                    
+                    <div class="step-item p-6 cursor-pointer hover:bg-xsyy-cream/50 transition border-l-4 border-xsyy-blue" data-step="1" onclick="selectStep(1)">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 bg-xsyy-blue text-white rounded-full flex items-center justify-center font-bold text-lg">1</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-xsyy-blue text-lg mb-2">识别二次项系数</h3>
+                                <p class="text-gray-700 leading-relaxed mb-2">首先确定二次函数的标准形式 y = ax² + bx + c，其中 a 是二次项系数，决定开口方向。</p>
+                                <div class="bg-blue-50 border-l-3 border-blue-500 p-3 rounded-r-lg">
+                                    <p class="text-blue-800 text-sm font-mono">示例：y = 2x² + 3x - 1 中，a = 2</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item p-6 cursor-pointer hover:bg-xsyy-cream/50 transition border-l-4 border-gray-300 opacity-70" data-step="2" onclick="selectStep(2)">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 bg-gray-400 text-white rounded-full flex items-center justify-center font-bold text-lg">2</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-gray-700 text-lg mb-2">计算顶点坐标</h3>
+                                <p class="text-gray-600 leading-relaxed mb-2">使用公式计算顶点位置：x = -b/(2a)，然后代入求 y 值。</p>
+                                <div class="bg-gray-50 border-l-3 border-gray-400 p-3 rounded-r-lg">
+                                    <p class="text-gray-700 text-sm font-mono">顶点 x = -3/(2×2) = -0.75</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-item p-6 cursor-pointer hover:bg-xsyy-cream/50 transition border-l-4 border-gray-300 opacity-70" data-step="3" onclick="selectStep(3)">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-10 h-10 bg-gray-400 text-white rounded-full flex items-center justify-center font-bold text-lg">3</div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-gray-700 text-lg mb-2">绘制图像</h3>
+                                <p class="text-gray-600 leading-relaxed">根据顶点和系数，绘制抛物线图像。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- 区块4: 控制区 (跨列底部) -->
+        <section class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-xsyy-gold to-yellow-600 text-white px-6 py-4">
+                <h2 class="text-lg font-bold flex items-center gap-2">
+                    <span class="text-2xl">🎮</span> 交互练习
+                </h2>
+            </div>
+            <div class="p-6">
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <div class="bg-xsyy-cream rounded-xl p-5">
+                        <label class="block text-sm font-bold text-xsyy-blue mb-2">系数 a (二次项)</label>
+                        <input type="range" id="sliderA" min="-3" max="3" step="0.1" value="1" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" oninput="updateCanvas()">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>-3</span>
+                            <span id="valueA" class="font-bold text-xsyy-blue text-lg">1</span>
+                            <span>3</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-xsyy-cream rounded-xl p-5">
+                        <label class="block text-sm font-bold text-xsyy-blue mb-2">系数 b (一次项)</label>
+                        <input type="range" id="sliderB" min="-5" max="5" step="0.1" value="0" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" oninput="updateCanvas()">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>-5</span>
+                            <span id="valueB" class="font-bold text-xsyy-blue text-lg">0</span>
+                            <span>5</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-xsyy-cream rounded-xl p-5">
+                        <label class="block text-sm font-bold text-xsyy-blue mb-2">系数 c (常数项)</label>
+                        <input type="range" id="sliderC" min="-4" max="4" step="0.1" value="0" class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer" oninput="updateCanvas()">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>-4</span>
+                            <span id="valueC" class="font-bold text-xsyy-blue text-lg">0</span>
+                            <span>4</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="feedbackArea" class="mt-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg hidden">
+                    <p class="text-green-800 font-medium" id="feedbackText"></p>
+                </div>
+
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <button onclick="resetCanvas()" class="px-6 py-3 bg-gray-500 text-white rounded-xl hover:bg-gray-600 transition font-medium">
+                        🔄 重置
+                    </button>
+                    <button onclick="showTip()" class="px-6 py-3 bg-xsyy-blue text-white rounded-xl hover:bg-blue-800 transition font-medium">
+                        💡 提示
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 题目描述区 -->
+        <section class="mt-8 bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-gray-700 to-gray-800 text-white px-6 py-4">
+                <h2 class="text-lg font-bold flex items-center gap-2">
+                    <span class="text-2xl">📖</span> 题目描述
+                </h2>
+            </div>
+            <div class="p-6">
+                <p class="text-lg text-gray-800 leading-relaxed">
+                    请观察二次函数 y = ax² + bx + c 的图像，通过调节系数 a、b、c 来探索：
+                </p>
+                <ul class="mt-4 space-y-2 text-gray-700">
+                    <li class="flex items-start gap-2">
+                        <span class="text-xsyy-gold font-bold">•</span>
+                        <span>系数 a 如何影响抛物线的开口方向和开口大小？</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-xsyy-gold font-bold">•</span>
+                        <span>系数 c 如何影响抛物线的上下位置？</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-xsyy-blue text-white py-6 mt-12">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-sm text-gray-300">&copy; 2026 象数演易 (XSYY) - AI驱动的数学教学平台</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentStep = 1;
+        let allExpanded = true;
+        let ctx = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('demoCanvas');
+            ctx = canvas.getContext('2d');
+            updateCanvas();
+        });
+
+        function selectStep(stepNum) {
+            currentStep = stepNum;
+            document.querySelectorAll('.step-item').forEach((item, index) => {
+                const itemStep = index + 1;
+                if (itemStep <= stepNum) {
+                    item.classList.remove('border-gray-300', 'opacity-70');
+                    item.classList.add('border-xsyy-blue', 'opacity-100');
+                    item.querySelector('.flex-shrink-0').classList.remove('bg-gray-400');
+                    item.querySelector('.flex-shrink-0').classList.add('bg-xsyy-blue');
+                    item.querySelector('h3').classList.remove('text-gray-700');
+                    item.querySelector('h3').classList.add('text-xsyy-blue');
+                } else {
+                    item.classList.add('border-gray-300', 'opacity-70');
+                    item.classList.remove('border-xsyy-blue', 'opacity-100');
+                    item.querySelector('.flex-shrink-0').classList.add('bg-gray-400');
+                    item.querySelector('.flex-shrink-0').classList.remove('bg-xsyy-blue');
+                    item.querySelector('h3').classList.add('text-gray-700');
+                    item.querySelector('h3').classList.remove('text-xsyy-blue');
+                }
+            });
+            
+            showFeedback(`正在学习第 ${stepNum} 步...`, 'info');
+        }
+
+        function toggleAllSteps() {
+            const btnText = document.getElementById('toggleBtnText');
+            if (allExpanded) {
+                allExpanded = false;
+                btnText.textContent = '展开全部';
+            } else {
+                allExpanded = true;
+                btnText.textContent = '收起全部';
+            }
+        }
+
+        function updateCanvas() {
+            const a = parseFloat(document.getElementById('sliderA').value);
+            const b = parseFloat(document.getElementById('sliderB').value);
+            const c = parseFloat(document.getElementById('sliderC').value);
+            
+            document.getElementById('valueA').textContent = a.toFixed(1);
+            document.getElementById('valueB').textContent = b.toFixed(1);
+            document.getElementById('valueC').textContent = c.toFixed(1);
+
+            drawParabola(a, b, c);
+        }
+
+        function drawParabola(a, b, c) {
+            const canvas = document.getElementById('demoCanvas');
+            const w = canvas.width;
+            const h = canvas.height;
+            const scale = 30;
+            const ox = w / 2;
+            const oy = h / 2;
+
+            ctx.clearRect(0, 0, w, h);
+            
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
+            for (let i = -10; i <= 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(ox + i * scale, 0);
+                ctx.lineTo(ox + i * scale, h);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, oy + i * scale);
+                ctx.lineTo(w, oy + i * scale);
+                ctx.stroke();
+            }
+            
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, oy);
+            ctx.lineTo(w, oy);
+            ctx.moveTo(ox, 0);
+            ctx.lineTo(ox, h);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#1a365d';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            let firstPoint = true;
+            for (let xPixel = 0; xPixel < w; xPixel++) {
+                const x = (xPixel - ox) / scale;
+                const y = a * x * x + b * x + c;
+                const yPixel = oy - y * scale;
+                
+                if (firstPoint) {
+                    ctx.moveTo(xPixel, yPixel);
+                    firstPoint = false;
+                } else {
+                    ctx.lineTo(xPixel, yPixel);
+                }
+            }
+            ctx.stroke();
+
+            const vertexX = -b / (2 * a);
+            const vertexY = a * vertexX * vertexX + b * vertexX + c;
+            ctx.fillStyle = '#d4a574';
+            ctx.beginPath();
+            ctx.arc(ox + vertexX * scale, oy - vertexY * scale, 6, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        function resetCanvas() {
+            document.getElementById('sliderA').value = 1;
+            document.getElementById('sliderB').value = 0;
+            document.getElementById('sliderC').value = 0;
+            updateCanvas();
+            selectStep(1);
+            showFeedback('已重置为默认状态', 'success');
+        }
+
+        function showTip() {
+            const tips = [
+                '当 a > 0 时，抛物线开口向上！',
+                '当 a < 0 时，抛物线开口向下！',
+                '|a| 越大，抛物线开口越小！',
+                'c 决定了抛物线与 y 轴的交点！'
+            ];
+            const randomTip = tips[Math.floor(Math.random() * tips.length)];
+            showFeedback(randomTip, 'info');
+        }
+
+        function showFeedback(text, type = 'info') {
+            const area = document.getElementById('feedbackArea');
+            const textEl = document.getElementById('feedbackText');
+            textEl.textContent = text;
+            area.classList.remove('hidden', 'bg-green-50', 'bg-blue-50', 'border-green-500', 'border-blue-500');
+            
+            if (type === 'success') {
+                area.classList.add('bg-green-50', 'border-green-500');
+            } else {
+                area.classList.add('bg-blue-50', 'border-blue-500');
+            }
+            
+            area.classList.remove('hidden');
+            setTimeout(() => {
+                area.classList.add('hidden');
+            }, 4000);
+        }
+    </script>
+
+</body>
+</html>

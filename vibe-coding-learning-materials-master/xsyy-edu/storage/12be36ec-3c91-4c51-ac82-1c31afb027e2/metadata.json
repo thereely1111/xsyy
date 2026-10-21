@@ -1,0 +1,23 @@
+{
+  "question": "100个和尚分100个馒头，大和尚每人分3个馒头，小和尚3人分1个馒头，恰好分完。问大和尚、小和尚各多少人？",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/12be36ec-3c91-4c51-ac82-1c31afb027e2/pasted-image-1768445096477.png",
+  "task_id": "12be36ec-3c91-4c51-ac82-1c31afb027e2",
+  "generated_at": "2026-01-15T10:46:44.157227Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "鸡兔同笼应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "经典应用题，需列二元方程求解。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-15T10:46:44.157413Z",
+  "preview_image": "Preview.webp"
+}

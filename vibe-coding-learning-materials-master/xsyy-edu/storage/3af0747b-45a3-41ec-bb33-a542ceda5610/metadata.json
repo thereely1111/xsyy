@@ -1,0 +1,18 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "三下",
+    "main_tag": "搭配",
+    "sub_tags": [
+      "简单排列组合"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-01T07:27:26.864141Z",
+  "question": "有10位选手参加乒乓球选拔赛，每人都要和其他所有人各赛一场。问一共需要进行多少场比赛？",
+  "prompt": "有10位选手参加乒乓球选拔赛，每人都要和其他所有人各赛一场。问一共需要进行多少场比赛？",
+  "title": "握手问题",
+  "knowledge_tags_confirmed": true
+}

@@ -1,0 +1,24 @@
+{
+  "question": "一列长120米的火车通过长330米的大桥需要18秒，那么它以同样的速度通过长480米的大桥需要____秒。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\dcab4bb3-7eab-459c-8478-2ef63d35ead8\\ScreenShot_2026-01-11_155150_303.png",
+  "task_id": "dcab4bb3-7eab-459c-8478-2ef63d35ead8",
+  "generated_at": "2026-01-11T15:59:12.011201Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "火车过桥应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "典型的行程问题，需构建模型计算。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "量感",
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-11T15:59:12.011201Z",
+  "preview_image": "Preview.webp"
+}

@@ -1,0 +1,23 @@
+{
+  "question": "停车场里停着一些自行车和三轮车，小丽数了数，共有10辆车，26个轮子。请问自行车和三轮车各有多少辆？",
+  "prompt": "停车场里停着一些自行车和三轮车，小丽数了数，共有10辆车，26个轮子。请问自行车和三轮车各有多少辆？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "69e70b95-3be6-4dec-b76b-fe5b375343f0",
+  "generated_at": "2026-04-01T09:14:16.861448Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "鸡兔同笼问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境，多步列式求解",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2026-04-01T09:14:16.861464Z",
+  "preview_image": "Preview.webp"
+}

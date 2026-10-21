@@ -1,0 +1,25 @@
+{
+  "question": "甲、乙两人在周长为400米的环形跑道上同时同地同向而行,甲每分钟走60米,乙每分钟走40米,甲每追上乙一次,两人就会击一次掌,当两人击了第3次掌时,甲掉头往回走,每相遇一次仍击一次掌,两人又击了5次掌,此时甲走了____米,乙走了____米。",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\92fec182-8d0b-492b-ab6f-e67362e3422f\\ScreenShot_2026-02-03_002407_541.png",
+  "task_id": "92fec182-8d0b-492b-ab6f-e67362e3422f",
+  "generated_at": "2026-02-03T00:27:03.144320Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "环形跑道追及相遇问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "复杂的行程应用题，需分段建立追及和相遇模型。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "符号意识",
+      "几何直观",
+      "量感"
+    ]
+  },
+  "tags_updated_at": "2026-02-03T00:27:03.144320Z",
+  "preview_image": "Preview.webp"
+}

@@ -1,0 +1,12 @@
+{
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "七上",
+    "main_tag": "有理数",
+    "sub_tags": [
+      "有理数四则运算"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-17T08:39:16.425632Z"
+}

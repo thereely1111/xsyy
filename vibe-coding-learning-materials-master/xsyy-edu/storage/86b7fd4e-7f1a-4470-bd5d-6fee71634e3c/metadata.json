@@ -1,0 +1,10 @@
+{
+  "question": "能不能将3×12的方格纸（左图）剪成形状、大小都相同的两部分（只能沿格线剪），然后拼成4×9的长方形（右图）呢？（ ）",
+  "title": "图形的剪切与拼组",
+  "plan": {
+    "steps": []
+  },
+  "is_math_problem": true,
+  "has_pic": true,
+  "preview_image": "preview.webp"
+}

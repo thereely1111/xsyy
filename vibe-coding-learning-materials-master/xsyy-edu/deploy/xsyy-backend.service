@@ -1,0 +1,36 @@
+[Unit]
+Description=XSYY Backend Service
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/xsyy/backend
+Environment="PATH=/opt/xsyy/backend/.venv/bin"
+# 工作进程数优化：根据 CPU 核心数调整（2026-09-01：由 1 提升至 4）
+# 2核服务器：--workers 2
+# 4核服务器：--workers 4（默认）
+# 8核服务器：--workers 8
+# 计算公式：workers = CPU核心数 × 1（I/O密集型应用）
+# ⚠️ 部署前必须用 `nproc` 确认生产 CPU 核数，按上表修正 workers，
+#    与 .env 的 DB_POOL_SIZE/DB_MAX_OVERFLOW 相乘后的峰值连接数
+#    （workers × (10+20)）不得超过该环境 MySQL max_connections。
+# 多 worker 安全性已验证：任务状态每次更新落库(task_status 表)，
+#    /api/tasks/{id} 内存 miss 时从 DB 回填，跨进程轮询不受影响。
+ExecStart=/opt/xsyy/backend/.venv/bin/uvicorn app:app --host 0.0.0.0 --port 8000 --workers 4
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=xsyy-backend
+
+# 环境变量文件
+EnvironmentFile=/opt/xsyy/backend/.env
+
+# 资源限制
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+

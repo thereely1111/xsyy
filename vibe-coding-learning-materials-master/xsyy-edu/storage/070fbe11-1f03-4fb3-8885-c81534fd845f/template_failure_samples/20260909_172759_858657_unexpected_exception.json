@@ -1,0 +1,17 @@
+{
+  "failure_stage": "unexpected_exception",
+  "error_message": "【动画与完整解题（动态片段）生成失败】模板动态片段生成失败，已重试 2 次，最终错误: Error code: 524 - {'error': {'message': 'The origin web server did not return a complete response within the 120-second Proxy Read Timeout window. The connection was established, but the origin took too long to respond.', 'type': 'bad_response_status_code', 'param': '', 'code': 'bad_response_status_code'}}（stage=unexpected_exception）",
+  "generated_at": "2026-09-09T09:27:59.858657Z",
+  "task_id": "070fbe11-1f03-4fb3-8885-c81534fd845f",
+  "debug_info": {
+    "error_stage": "unexpected_exception",
+    "exception_type": "InternalServerError",
+    "exception_message": "Error code: 524 - {'error': {'message': 'The origin web server did not return a complete response within the 120-second Proxy Read Timeout window. The connection was established, but the origin took too long to respond.', 'type': 'bad_response_status_code', 'param': '', 'code': 'bad_response_status_code'}}",
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "question": "在平面直角坐标系中，一次函数 y = kx + b 的图象与反比例函数 y = m/x 的图象交于 A(2, 3) 和 B(-1, -6) 两点，且一次函数图象与 y 轴交于点 C。求三角形 OBC 的面积，其中 O 为坐标原点。",
+    "title": "函数图象问题",
+    "task_id": "070fbe11-1f03-4fb3-8885-c81534fd845f",
+    "max_output_tokens": 32768
+  }
+}

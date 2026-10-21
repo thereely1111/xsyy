@@ -1,0 +1,43 @@
+{
+  "failure_stage": "scene_svg_lint",
+  "error_message": "【动画与完整解题（动态片段）生成失败】模板动态片段生成失败，已重试 2 次，最终错误: 模板动态片段生成失败：SVG 纪律 Lint 未通过\n请检查并修正以下纪律违规，然后重新输出完整 JSON：\n- [no_full_canvas_background] 检测到疑似全画布背景层 <rect <rect id=\"bg_洛书\" x=\"16\" y=\"16\" width=\"788\" height=\"588\" fill=\"none\"/>>，请移除整幅背景\n（另有告警，建议一并优化：\n  - [text_box_ratio_warn] 检测到较长 <text> 未分行: “= 6\" x=\"410\" y=\"580\" text-anch…”（99 字），建议 tspan 换行或扩矩形避免溢出\n）（stage=scene_svg_lint）",
+  "generated_at": "2026-09-11T07:10:59.139121Z",
+  "task_id": "c1c0665f-a63d-4e56-902e-bdb393b15356",
+  "debug_info": {
+    "question": "化简：2a+3b-a+2b",
+    "title": "合并同类项",
+    "model_name": "gemini-3-flash-preview",
+    "end_marker": "<!--PARTS_END-->",
+    "attempts": [
+      {
+        "round_idx": 0,
+        "round_max_tokens": 32768,
+        "finish_reason": "stop",
+        "streaming": true,
+        "response_text_preview": "{\n  \"title\": \"合并同类项\",\n  \"summary\": \"通过识别相同字母及指数的项，运用交换律和结合律化简代数式。\",\n  \"scene_svg\": \"<g id=\\\"container\\\" transform=\\\"translate(0,0)\\\"><rect id=\\\"bg_洛书\\\" x=\\\"16\\\" y=\\\"16\\\" width=\\\"788\\\" height=\\\"588\\\" fill=\\\"none\\\"/><g id=\\\"terms_group\\\" x-show=\\\"sceneStep >= 1\\\"><g id=\\\"card_2a\\\" x-show=\\\"sceneStep <= 3\\\"><rect class=\\\"svg-elem\\\" x=\\\"120\\\" y=\\\"240\\\" width=\\\"120\\\" height=\\\"140\\\" rx=\\\"8\\\" fill=\\\"#fee2e2\\\" stroke=\\\"#b9ad95\\\" stroke-width=\\\"2\\\"/><text x=\\\"180\\\" y=\\\"290\\\" text-anchor=\\\"middle\\\" font-size=\\\"32\\\" fill=\\\"#2b2b2b\\\">2a</text><circle class=\\\"svg-elem\\\" cx=\\\"160\\\" cy=\\\"340\\\" r=\\\"8\\\" fill=\\\"#d6432f\\\"/><circle class=\\\"svg-elem\\\" cx=\\\"200\\\" cy=\\\"340\\\" r=\\\"8\\\" fill=\\\"#d6432f\\\"/></g><g id=\\\"card_3b\\\" x-show=\\\"sceneStep <= 4\\\"><rect class=\\\"svg-elem\\\" x=\\\"280\\\" y=\\\"240\\\" width=\\\"120\\\" height=\\\"140\\\" rx=\\\"8\\\" fill=\\\"#f4efe3\\\" stroke=\\\"#b9ad95\\\" stroke-width=\\\"2\\\"/><text x=\\\"340\\\" y=\\\"290\\\" text-anchor=\\\"middle\\\" font-size=\\\"32\\\" fill=\\\"#2b2b2b\\\">3b</text><path class=\\\"svg-elem\\\" d=\\\"M320 350 L340 320 L360 350 Z\\\" fill=\\\"#2b2b2b\\\" opacity=\\\"0.6\\\"/><path class=\\\"svg-elem\\\" d=\\\"M340 350 L360 320 L380 350 Z\\\" fill=\\\"#2b2b2b\\\" opacity=\\\"0.6\\\" transform=\\\"translate(-40,0)\\\"/><path class=\\\"s",
+        "combined_preview": ""
+      }
+    ],
+    "error_stage": "scene_svg_lint",
+    "scene_svg_preview": "<g id=\"container\" transform=\"translate(0,0)\"><rect id=\"bg_洛书\" x=\"16\" y=\"16\" width=\"788\" height=\"588\" fill=\"none\"/><g id=\"terms_group\" x-show=\"sceneStep >= 1\"><g id=\"card_2a\" x-show=\"sceneStep <= 3\"><rect class=\"svg-elem\" x=\"120\" y=\"240\" width=\"120\" height=\"140\" rx=\"8\" fill=\"#fee2e2\" stroke=\"#b9ad95\" stroke-width=\"2\"/><text x=\"180\" y=\"290\" text-anchor=\"middle\" font-size=\"32\" fill=\"#2b2b2b\">2a</text><circle class=\"svg-elem\" cx=\"160\" cy=\"340\" r=\"8\" fill=\"#d6432f\"/><circle class=\"svg-elem\" cx=\"200\" cy=\"340\" r=\"8\" fill=\"#d6432f\"/></g><g id=\"card_3b\" x-show=\"sceneStep <= 4\"><rect class=\"svg-elem\" x=\"280\" y=\"240\" width=\"120\" height=\"140\" rx=\"8\" fill=\"#f4efe3\" stroke=\"#b9ad95\" stroke-width=\"2\"/><text x=\"340\" y=\"290\" text-anchor=\"middle\" font-size=\"32\" fill=\"#2b2b2b\">3b</text><path class=\"svg-elem\" d=\"M320 350 L340 320 L360 350 Z\" fill=\"#2b2b2b\" opacity=\"0.6\"/><path class=\"svg-elem\" d=\"M340 350 L360 320 L380 350 Z\" fill=\"#2b2b2b\" opacity=\"0.6\" transform=\"translate(-40,0)\"/><path class=\"svg-elem\" d=\"M360 350 L380 320 L400 350 Z\" fill=\"#2b2b2b\" opacity=\"0.6\" transform=\"translate(-80,0)\"/></g><g id=\"card_ma\" x-show=\"sceneStep <= 3\"><rect class=\"svg-elem\" x=\"440\" y=\"240\" width=\"120\" height=\"140\" rx=\"8\" fill=\"#fee2e2\" stroke=\"#b9ad95\" stroke-width=\"2\"/><text x=\"500\" y=\"290\" text-anchor=\"middle\" font-size=\"32\" fill=\"#2b2b2b\">-a</text><circle class=\"svg-elem\" cx=\"500\" cy=\"340\" r=\"8\" fill=\"#d6432f\" opacity=\"0.4\"/></g><g id=\"card_2b\" x-show=\"sceneStep <= 4\"><rect class=\"svg-elem\" x=\"600\" y=\"240\" width=\"120\" height=\"140\" rx=\"8\" fill=\"#f4efe3\" stroke=\"#b9ad95\" stroke-width=\"2\"/><text x=\"660\" y=\"290\" text-anchor=\"middle\" font-size=\"32\" fill=\"#2b2b2b\">2b</text><path class=\"svg-elem\" d=\"M630 350 L650 320 L670 350 Z\" fill=\"#2b2b2b\" opacity=\"0.6\"/><path class=\"svg-elem\" d=\"M650 350 L670 320 L690 350 Z\" fill=\"#2b2b2b\" opacity=\"0.6\"/></g><g id=\"res_a\" x-show=\"sceneStep >= 4\"><rect class=\"svg-elem\" x=\"200\" y=\"420\" width=\"160\" height=\"100\" rx=\"8\" fill=\"#fee2e2\" stroke=\"#d6432f\" stroke-width=\"2\"/><text x=\"280\" y=\"470\" text-anchor=\"middle\" font-size=\"36\" fill=\"#d6432f\">a</text><circle class=\"svg-elem\" cx=\"280\" cy=\"500\" r=\"8\" fill=\"#d6432f\"/></g><g id=\"res_5b\" x-show=\"sceneStep >= 5\"><rect class=\"svg-elem\" x=\"460\" y=\"420\" width=\"200\" height=\"100\" rx=\"8\" fill=\"#f4efe3\" stroke=\"#2b2b2b\" stroke-width=\"2\"/><text x=\"560\" y=\"470\" text-anchor=\"middle\" font-size=\"36\" fill=\"#2b2b2b\">5b</text><path class=\"svg-elem\" d=\"M510 500 L520 485 L530 500 Z\" fill=\"#2b2b2b\"/><path class=\"svg-elem\" d=\"M535 500 L545 485 L555 500 Z\" fill=\"#2b2b2b\"/><path class=\"svg-elem\" d=\"M560 500 L570 485 L580 500 Z\" fill=\"#2b2b2b\"/><path class=\"svg-elem\" d=\"M585 500 L595 485 L605 500 Z\" fill=\"#2b2b2b\"/><path class=\"svg-elem\" d=\"M610 500 L620 485 L630 500 Z\" fill=\"#2b2b2b\"/></g></g><g id=\"calc_box\" x-show=\"sceneStep >= 1\"><rect x=\"120\" y=\"60\" width=\"580\" height=\"80\" rx=\"10\" fill=\"#f4efe3\" opacity=\"0.8\" stroke=\"#b9ad95\"/><text id=\"formula\" x=\"410\" y=\"110\" text-anchor=\"middle\" font-size=\"36\" fill=\"#2b2b2b\">2a + 3b - a + 2b</text></g><line id=\"line_guide\" class=\"svg-elem\" x1=\"410\" y1=\"140\" x2=\"410\" y2=\"230\" stroke=\"#d6432f\" stroke-dasharray=\"4 4\" x-show=\"sceneStep === 2\"/><text id=\"final_ans\" x-show=\"sceneStep >= 6\" x=\"410\" y=\"580\" text-anchor=\"middle\" font-size=\"40\" fill=\"#d6432f\" font-weight=\"bold\">= a + 5b</text></g>",
+    "lint_report": {
+      "passed": false,
+      "hard": [
+        {
+          "rule": "no_full_canvas_background",
+          "message": "检测到疑似全画布背景层 <rect <rect id=\"bg_洛书\" x=\"16\" y=\"16\" width=\"788\" height=\"588\" fill=\"none\"/>>，请移除整幅背景"
+        }
+      ],
+      "warnings": [
+        {
+          "rule": "text_box_ratio_warn",
+          "message": "检测到较长 <text> 未分行: “= 6\" x=\"410\" y=\"580\" text-anch…”（99 字），建议 tspan 换行或扩矩形避免溢出"
+        }
+      ]
+    },
+    "retry_attempt": 2,
+    "retry_limit": 2,
+    "task_id": "c1c0665f-a63d-4e56-902e-bdb393b15356",
+    "max_output_tokens": 32768
+  }
+}

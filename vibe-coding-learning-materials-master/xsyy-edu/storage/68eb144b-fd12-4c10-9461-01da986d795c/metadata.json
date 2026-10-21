@@ -1,0 +1,24 @@
+{
+  "question": "小王去网吧办会员卡，开卡要20元，小王没找到零钱，就给了网管一张50的，网管找回30元给小王后，小王找到20元零的，给网管20元后，网管把先前的50元还给了他，请问谁亏了？",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/68eb144b-fd12-4c10-9461-01da986d795c/pasted-image-1769394971108.png",
+  "task_id": "68eb144b-fd12-4c10-9461-01da986d795c",
+  "generated_at": "2026-01-26T10:38:26.909532Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "金钱逻辑推理应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "是涉及复杂交易情境的生活应用题。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "推理意识",
+      "数感"
+    ]
+  },
+  "tags_updated_at": "2026-01-26T10:38:26.909549Z",
+  "preview_image": "Preview.webp"
+}

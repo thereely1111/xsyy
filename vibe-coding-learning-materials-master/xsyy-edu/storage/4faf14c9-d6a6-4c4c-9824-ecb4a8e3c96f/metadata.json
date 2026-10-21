@@ -1,0 +1,24 @@
+{
+  "question": "将以下4个图形全部使用(只能旋转,不能翻转),能否拼成右边的大图形呢？",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/4faf14c9-d6a6-4c4c-9824-ecb4a8e3c96f/ScreenShot_2026-01-31_103507_542.png",
+  "task_id": "4faf14c9-d6a6-4c4c-9824-ecb4a8e3c96f",
+  "generated_at": "2026-01-31T10:51:41.578010Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "图形旋转与组合拼图",
+  "has_pic": true,
+  "tags": {
+    "reasoning": "核心考察图形的旋转和空间想象。",
+    "main_tag": "空间观念",
+    "sub_tags": [
+      "几何直观",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-31T10:51:41.578239Z",
+  "preview_image": "Preview.webp"
+}

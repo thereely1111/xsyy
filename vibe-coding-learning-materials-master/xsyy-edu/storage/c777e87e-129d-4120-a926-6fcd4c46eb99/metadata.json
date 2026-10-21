@@ -1,0 +1,18 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "七上",
+    "main_tag": "几何图形初步",
+    "sub_tags": [
+      "点到直线的距离"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-03T03:31:12.623312Z",
+  "knowledge_tags_confirmed": true,
+  "title": "列车过桥过隧道问题",
+  "question": "无人驾驶汽车速度20米/秒，刹车后每秒减速4米/秒，几秒停下？刹车距离是多少？",
+  "prompt": "无人驾驶汽车速度20米/秒，刹车后每秒减速4米/秒，几秒停下？刹车距离是多少？"
+}

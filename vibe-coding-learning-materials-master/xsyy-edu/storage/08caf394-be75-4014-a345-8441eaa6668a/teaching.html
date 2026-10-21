@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图形分割拼凑 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">图形分割拼凑</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('选出无法将图形剪成三块后拼成正方形的剪法')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <defs>\n  <linearGradient id="paperGradient" x1="0%" y1="0%" x2="100%" y2="100%">\n    <stop offset="0%" stop-color="#f7f3e8"/>\n    <stop offset="100%" stop-color="#ebe4d4"/>\n  </linearGradient>\n  <linearGradient id="cinnabarGradient" x1="0%" y1="0%" x2="0%" y2="100%">\n    <stop offset="0%" stop-color="#d46a5a"/>\n    <stop offset="100%" stop-color="#b54a3f"/>\n  </linearGradient>\n  <filter id="paperShadow" x="-20%" y="-20%" width="140%" height="140%">\n    <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>\n    <feOffset dx="3" dy="4" result="offsetblur"/>\n    <feComponentTransfer>\n      <feFuncA type="linear" slope="0.25"/>\n    </feComponentTransfer>\n    <feMerge>\n      <feMergeNode in="offsetblur"/>\n      <feMergeNode in="SourceGraphic"/>\n    </feMerge>\n  </filter>\n  <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">\n    <feGaussianBlur stdDeviation="5" result="coloredBlur"/>\n    <feMerge>\n      <feMergeNode in="coloredBlur"/>\n      <feMergeNode in="SourceGraphic"/>\n    </feMerge>\n  </filter>\n</defs>\n<style>\n  .svg-elem { transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); }\n  .dashed-line { fill: none; stroke: #c45c48; stroke-width: 2.5; stroke-dasharray: 10 8; animation: flowDash 1.6s linear infinite; }\n  @keyframes flowDash { from { stroke-dashoffset: 36; } to { stroke-dashoffset: 0; } }\n  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }\n  @keyframes pulseScale { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }\n  @keyframes inkShimmer { 0% { opacity: 0.78; } 50% { opacity: 1; } 100% { opacity: 0.78; } }\n  .floating { animation: float 3s ease-in-out infinite; }\n  .pulsing { animation: pulseScale 2.2s ease-in-out infinite; }\n  .shimmer { animation: inkShimmer 2.5s ease-in-out infinite; }\n  .piece-a { fill: url(#cinnabarGradient); stroke: #3a3a3a; stroke-width: 2.2; filter: url(#paperShadow); }\n  .piece-b { fill: #d8cfc0; stroke: #3a3a3a; stroke-width: 2.2; filter: url(#paperShadow); }\n  .piece-c { fill: #e8e0d0; stroke: #3a3a3a; stroke-width: 2.2; filter: url(#paperShadow); }\n  .target-ghost { fill: none; stroke: #c45c48; stroke-width: 2.2; stroke-dasharray: 6 4; opacity: 0.55; }\n  .label-text { font-family: 'KaiTi', 'STKaiti', 'SimSun', serif; font-size: 17px; fill: #3a3a3a; }\n  .dim-line { stroke: #5a5a5a; stroke-width: 1.4; }\n  .formula-box { background: rgba(247,243,232,0.96); border: 1.5px solid #c45c48; border-radius: 8px; padding: 10px 14px; font-family: 'KaiTi', serif; color: #3a3a3a; box-shadow: 0 2px 10px rgba(0,0,0,0.08); font-size: 15px; text-align: center; line-height: 1.6; }\n  .gap-marker { fill: none; stroke: #b54a3f; stroke-width: 3; }\n  .answer-glow { filter: url(#softGlow); }\n  .state-hidden { opacity: 0; transform: scale(0.9) translateY(16px); }\n  .state-visible { opacity: 1; transform: scale(1) translateY(0); }\n  .state-leave { opacity: 0; transform: scale(0.95); }\n</style>\n<g x-show="sceneStep &gt;= 1" x-transition:enter="transition-all duration-700 ease-in-out" x-transition:enter-start="state-hidden" x-transition:enter-end="state-visible">\n  <path d="M 60 60 L 110 60 L 110 80 L 80 80 L 80 110 L 60 110 Z" fill="none" stroke="#c45c48" stroke-width="1.8" opacity="0.35"/>\n  <path d="M 740 60 L 690 60 L 690 80 L 720 80 L 720 110 L 740 110 Z" fill="none" stroke="#c45c48" stroke-width="1.8" opacity="0.35"/>\n  <path d="M 60 540 L 110 540 L 110 520 L 80 520 L 80 490 L 60 490 Z" fill="none" stroke="#c45c48" stroke-width="1.8" opacity="0.35"/>\n  <path d="M 740 540 L 690 540 L 690 520 L 720 520 L 720 490 L 740 490 Z" fill="none" stroke="#c45c48" stroke-width="1.8" opacity="0.35"/>\n</g>\n<g x-show="sceneStep == 3 || sceneStep == 5" class="svg-elem">\n  <path d="M 280 240 Q 200 180 260 120" class="dashed-line" opacity="0.7"/>\n  <path d="M 560 180 Q 620 120 520 100" class="dashed-line" opacity="0.7"/>\n</g>\n<rect x="240" y="140" width="320" height="320" class="target-ghost svg-elem pulsing" x-show="sceneStep &gt;= 1 &amp;&amp; sceneStep &lt;= 8"/>\n<g x-show="sceneStep &lt;= 3 || sceneStep == 4 || sceneStep == 6" class="svg-elem shimmer">\n  <polygon points="200,100 600,100 600,260 440,260 440,420 200,420" fill="#f7f3e8" stroke="#3a3a3a" stroke-width="3" filter="url(#paperShadow)"/>\n  <g x-show="sceneStep &lt;= 7">\n    <line x1="200" y1="450" x2="600" y2="450" class="dim-line"/>\n    <line x1="190" y1="440" x2="190" y2="460" class="dim-line"/>\n    <line x1="610" y1="440" x2="610" y2="460" class="dim-line"/>\n    <text x="400" y="472" text-anchor="middle" class="label-text">5</text>\n    <line x1="175" y1="100" x2="175" y2="420" class="dim-line"/>\n    <line x1="165" y1="110" x2="185" y2="110" class="dim-line"/>\n    <line x1="165" y1="410" x2="185" y2="410" class="dim-line"/>\n    <text x="165" y="270" text-anchor="middle" class="label-text">5</text>\n    <line x1="440" y1="270" x2="600" y2="270" class="dim-line"/>\n    <line x1="450" y1="280" x2="450" y2="260" class="dim-line"/>\n    <line x1="590" y1="280" x2="590" y2="260" class="dim-line"/>\n    <text x="520" y="295" text-anchor="middle" class="label-text">3</text>\n    <line x1="450" y1="260" x2="450" y2="420" class="dim-line"/>\n    <line x1="440" y1="270" x2="460" y2="270" class="dim-line"/>\n    <line x1="440" y1="410" x2="460" y2="410" class="dim-line"/>\n    <text x="470" y="350" text-anchor="middle" class="label-text">3</text>\n  </g>\n</g>\n<foreignObject x="280" y="40" width="240" height="90" x-show="sceneStep == 1" x-transition:enter="transition-all duration-700 ease-in-out" x-transition:enter-start="state-hidden" x-transition:enter-end="state-visible">\n  <div xmlns="http://www.w3.org/1999/xhtml" class="formula-box">\n    面积 = 5² − 3² = 25 − 9 = 16<br/>\n    正方形边长 = √16 = 4\n  </div>\n</foreignObject>\n<g x-show="sceneStep == 2 || sceneStep == 3" class="svg-elem">\n  <line x1="360" y1="260" x2="600" y2="260" class="dashed-line"/>\n  <line x1="520" y1="100" x2="520" y2="260" class="dashed-line"/>\n</g>\n<g x-show="sceneStep == 3" class="svg-elem" x-transition:enter="transition-all duration-1000 ease-in-out" x-transition:enter-start="state-hidden" x-transition:enter-end="state-visible" x-transition:leave="transition-all duration-700 ease-in-out" x-transition:leave-start="state-visible" x-transition:leave-end="state-leave">\n  <polygon points="240,300 560,300 560,460 240,460" class="piece-a"/>\n  <polygon points="240,140 480,140 480,300 240,300" class="piece-c"/>\n  <polygon points="480,140 560,140 560,300 480,300" class="piece-b"/>\n  <text x="400" y="395" text-anchor="middle" class="label-text" fill="#f7f3e8">4×2</text>\n  <text x="360" y="225" text-anchor="middle" class="label-text">3×2</text>\n  <text x="520" y="225" text-anchor="middle" class="label-text">1×2</text>\n</g>\n<g x-show="sceneStep == 4 || sceneStep == 5" class="svg-elem">\n  <line x1="360" y1="100" x2="360" y2="500" class="dashed-line"/>\n  <line x1="200" y1="420" x2="360" y2="420" class="dashed-line"/>\n</g>\n<g x-show="sceneStep == 5" class="svg-elem" x-transition:enter="transition-all duration-1000 ease-in-out" x-transition:enter-start="state-hidden" x-transition:enter-end="state-visible" x-transition:leave="transition-all duration-700 ease-in-out" x-transition:leave-start="state-visible" x-transition:leave-end="state-leave">\n  <polygon points="240,300 560,300 560,460 240,460" class="piece-a"/>\n  <polygon points="240,140 480,140 480,300 240,300" class="piece-b"/>\n  <polygon points="480,140 560,140 560,300 480,300" class="piece-c"/>\n  <text x="400" y="395" text-anchor="middle" class="label-text" fill="#f7f3e8">4×2</text>\n  <text x="360" y="225" text-anchor="middle" class="label-text">3×2</text>\n  <text x="520" y="225" text-anchor="middle" class="label-text">2×1</text>\n</g>\n<g x-show="sceneStep == 6 || sceneStep == 7" class="svg-elem">\n  <line x1="360" y1="260" x2="600" y2="260" class="dashed-line"/>\n  <line x1="360" y1="260" x2="360" y2="500" class="dashed-line"/>\n</g>\n<g x-show="sceneStep == 7" class="svg-elem" x-transition:enter="transition-all duration-1000 ease-in-out" x-transition:enter-start="state-hidden" x-transition:enter-end="state-visible" x-transition:leave="transition-all duration-700 ease-in-out" x-transition:leave-start="state-visible" x-transition:leave-end="state-leave">\n  <polygon points="240,300 400,300 400,460 240,460" class="piece-a" opacity="0.85"/>\n  <polygon points="400,300 640,300 640,460 400,460" class="piece-b" opacity="0.85"/>\n  <polygon points="240,140 400,140 400,380 240,380" class="piece-c" opacity="0.85"/>\n  <line x1="400" y1="300" x2="560" y2="140" class="gap-marker"/>\n  <line x1="560" y1="300" x2="400" y2="140" class="gap-marker"/>\n  <text x="480" y="220" text-anchor="middle" class="label-text" fill="#b54a3f" font-size="20px">缺口</text>\n</g>\n<g x-show="sceneStep == 8" class="svg-elem pulsing answer-glow" x-transition:enter="transition-all duration-1000 ease-in-out" x-transition:enter-start="state-hidden" x-transition:enter-end="state-visible">\n  <circle cx="400" cy="300" r="160" fill="none" stroke="#c45c48" stroke-width="3" opacity="0.4"/>\n  <text x="400" y="310" text-anchor="middle" class="label-text" font-size="42px" fill="#b54a3f" font-weight="bold">C</text>\n  <text x="400" y="360" text-anchor="middle" class="label-text" font-size="18px">不可行</text>\n</g>\n<g x-show="sceneStep &gt;= 1" class="svg-elem floating" x-transition:enter="transition-all duration-700 ease-in-out" x-transition:enter-start="state-hidden" x-transition:enter-end="state-visible">\n  <text x="690" y="520" font-size="56px">🦉</text>\n</g>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+    {
+        "title": "图形与目标",
+        "description": "观察这个L形图形，题目要求把它沿虚线剪成三块，再拼成一个边长相等的正方形。",
+        "bubbleText": "先看清原图和目标正方形哦！",
+        "bubblePos": {
+            "x": 680,
+            "y": 450
+        }
+    },
+    {
+        "title": "计算面积",
+        "description": "图形可看作边长5的大正方形减去右上角边长3的小正方形，面积为25减9等于16，所以目标正方形边长应为4。",
+        "bubbleText": "面积 = 5² − 3² = 16，边长 = 4",
+        "bubblePos": {
+            "x": 400,
+            "y": 80
+        }
+    },
+    {
+        "title": "方案A的剪法",
+        "description": "方案A沿横向凹口向右剪开，再纵向剪开右下角，得到4×2、1×2、2×3三块矩形。",
+        "bubbleText": "A的剪裁线把图形分成了三块矩形",
+        "bubblePos": {
+            "x": 520,
+            "y": 180
+        }
+    },
+    {
+        "title": "方案A验证",
+        "description": "把2×3块旋转90°变成3×2，与1×2块拼成4×2，再叠到4×2块上方，正好得到4×4正方形。",
+        "bubbleText": "A可行，三块无缝拼成正方形！",
+        "bubblePos": {
+            "x": 400,
+            "y": 120
+        }
+    },
+    {
+        "title": "方案B的剪法",
+        "description": "方案B沿左侧竖直剪到底，再横向剪开左上角，得到2×4、2×1、3×2三块矩形。",
+        "bubbleText": "B的剪法也很规则，三块都是矩形",
+        "bubblePos": {
+            "x": 280,
+            "y": 180
+        }
+    },
+    {
+        "title": "方案B验证",
+        "description": "把2×4块旋转成4×2放在底部，3×2块放左上，2×1块旋转后放右上，同样拼成4×4正方形。",
+        "bubbleText": "B也可行，又一种拼法成功啦！",
+        "bubblePos": {
+            "x": 400,
+            "y": 120
+        }
+    },
+    {
+        "title": "方案C的剪法",
+        "description": "方案C从凹角处横向、竖向剪开，得到2×2、3×2、2×3三块。",
+        "bubbleText": "C也是从凹角剪，但分块尺寸不同",
+        "bubblePos": {
+            "x": 360,
+            "y": 220
+        }
+    },
+    {
+        "title": "方案C验证",
+        "description": "尝试把三块拼入4×4方框：2×2、3×2、2×3的边长无法同时匹配4的边界，无论怎样旋转平移都会留下缺口或重叠。",
+        "bubbleText": "C拼不回去，出现缺口啦！",
+        "bubblePos": {
+            "x": 480,
+            "y": 220
+        }
+    },
+    {
+        "title": "得出结论",
+        "description": "经过逐一验证，方案A、B都能拼成正方形，只有方案C无法做到。因此不可行的剪法是C。",
+        "bubbleText": "答案：C",
+        "bubblePos": {
+            "x": 400,
+            "y": 260
+        }
+    }
+],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

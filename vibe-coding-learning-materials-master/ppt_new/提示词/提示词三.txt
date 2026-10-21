@@ -1,0 +1,111 @@
+【阶段一】
+# 任务：为 XSYY 平台添加“输入判定”阶段
+## 目标
+在用户提交题目（文本/图片）后，后端首先进行智能判定：
+1. **是否为数学题**（概率阈值 ≥ 0.7）
+2. **是否存在独立图形**（如几何图形、函数图像、数据图表等）
+3. 若判定失败，返回友好错误信息，避免无效 AI 调用。
+
+## 已有上下文
+- 后端使用 FastAPI，已有 `api/problems.py` 上传接口，调用了 `problem_service.upload()` 和 `ai_service.analyze_problem()`。
+- `ai_service.py` 目前直接调用 DeepSeek 进行完整分析。
+
+## 需修改/新增的文件
+### 1. 修改 `app/services/ai_service.py`
+新增两个方法：
+- `async def check_if_math(content: str) -> dict`  
+  调用 DeepSeek API，Prompt 要求返回 JSON：  
+  `{"is_math": bool, "confidence": float, "has_graph": bool, "reason": str}`
+- `async def check_if_math_from_image(image_base64: str) -> dict`  
+  同样调用 DeepSeek（支持视觉或图片描述），返回相同结构。
+
+> Prompt 示例（文本）：  
+> “你是一个数学题目判定专家。请判断以下内容是否为数学题，并判断题目描述中是否包含独立的几何图形、函数图像或图表（如三角形、圆、抛物线、柱状图等）。只返回 JSON，不要有其他文字。内容：{content}”
+
+### 2. 修改 `app/services/problem_service.py`
+在 `upload` 方法中，先调用上述判定函数：
+- 若 `is_math == False` 或 `confidence < 0.7`，抛出 `HTTPException(400, detail="Not a valid math problem")`
+- 若通过，则将 `has_graph` 存入临时变量（后续阶段 2 可能会用到），继续后续分析。
+
+### 3. 修改 `app/schemas/problem.py`
+添加新的响应模型 `ProblemValidationResponse`（用于判定阶段），但暂不暴露给前端，只在服务层使用。
+
+## 约束
+- 保持原有 API 签名不变，仅内部增加判定逻辑。
+- 判定结果需记录日志（便于监控无效请求）。
+- 若 DeepSeek 调用失败，回退规则：字符串包含常见数学关键词（+、-、×、÷、方程、几何等）则视为数学题，默认 `has_graph=False`。
+
+请输出修改后的 `ai_service.py` 和 `problem_service.py` 完整代码片段（仅显示新增/修改部分），并说明如何在 `main.py` 中捕获判定异常返回 400。
+
+【阶段二】
+# 任务：实现“题干抽取”阶段
+## 目标
+在确认是数学题后，对原始题目文本进行清洗：
+- 去除题号（如“1.”、“(1)”）
+- 去除无关描述（如“请解答下列问题”、“思考一下”）
+- 去除冗余空格、换行
+- 保留完整的已知条件、求解目标、公式等核心数学内容
+- 输出纯净的“核心题干”，供后续分析使用。
+
+## 已有上下文
+- 阶段 1 已完成，`problem_service.upload` 中已获得 `is_math` 判定结果。
+- 现需要插入题干抽取步骤，在判定通过后、调用 DeepSeek 分析之前。
+
+## 需修改/新增的文件
+### 1. 修改 `app/services/ai_service.py`
+新增方法：
+- `async def extract_core_question(content: str) -> str`  
+  调用 DeepSeek API，Prompt：  
+  “你是数学题干清洗专家。请从以下文本中提取核心题目内容，去掉题号、废话、闲聊、不必要的说明。只返回清洗后的题目文本，不要解释。内容：{content}”
+
+> 若原始内容已是纯净文本，模型应原样返回。
+
+### 2. 修改 `app/services/problem_service.py`
+在 `upload` 方法中，在阶段 1 通过后，调用 `extract_core_question` 获取 `cleaned_content`，然后再调用原有的 `ai_service.analyze_problem`（该函数应使用清洗后的内容进行分析）。
+
+同时，将清洗后的文本存入 `problems` 表的某个字段？当前表结构没有单独的清洗后字段。建议：
+- 新增数据库字段 `cleaned_content` TEXT（可选，但推荐便于审计）
+- 或暂时只用于分析，不存储。本次先不存储，但需在 `ProblemCreate` schema 中增加可选字段。
+
+### 3. 修改 `app/models/problem.py`
+添加字段 `cleaned_content = Column(Text, nullable=True)`，并生成数据库迁移（提供 ALTER 语句）。
+
+### 4. 修改 `app/schemas/problem.py`
+在 `ProblemResponse` 中可选包含 `cleaned_content`（默认不暴露给前端，仅调试用）。
+
+## 约束
+- 如果清洗后内容为空或过短（长度 < 5 字符），则回退使用原始内容，并记录告警日志。
+- 清洗过程应控制在 3 秒内超时（DeepSeek 调用应设置 timeout）。
+- 保持原有 API 返回的数据结构不变（前端无需感知清洗步骤）。
+
+请输出修改后的 `ai_service.py`（新增方法）、`problem_service.py`（整合逻辑）、`models/problem.py` 的字段定义，以及 SQL 变更脚本。
+
+【阶段三】
+# 任务：实现“教学输出”阶段
+## 目标
+在得到清洗后的题目和分析结果（标题、标签、难度）之后，改为**两阶段生成**：
+1. **第一步：生成结构化教学步骤**  
+   调用 DeepSeek（或 Gemini）输出 JSON 格式的教学步骤，包含：
+   - 核心知识点
+   - 分步解题指导（step_by_step）
+   - 常见错误提醒
+   - 交互式练习建议（如填空、选择、滑动条等）
+2. **第二步：生成交互式 HTML**  
+   基于第一步的结构化 JSON，调用 Gemini 生成最终的单文件 HTML（内嵌 Tailwind，无外部依赖），保留之前的动画演示和交互练习。
+
+## 已有上下文
+- 现有 `application_service.generate()` 直接调用 `ai_service.generate_application()`（内部调用 Gemini）。
+- 现需拆分为两步。
+
+## 需修改/新增的文件
+### 1. 修改 `app/services/ai_service.py`
+- 新增方法：  
+  `async def generate_teaching_steps(problem_content: str, analysis: dict) -> dict`  
+  调用 DeepSeek（或 Gemini），Prompt 要求返回如下 JSON schema：
+  ```json
+  {
+    "knowledge_points": ["列出3-5个知识点"],
+    "steps": [{"title": "步骤1", "description": "详细解释", "interaction_hint": "可选提示"}],
+    "common_mistakes": ["错误1", "错误2"],
+    "practice_suggestion": {"type": "slider|choice|input", "question": "...", "options": []}
+  }

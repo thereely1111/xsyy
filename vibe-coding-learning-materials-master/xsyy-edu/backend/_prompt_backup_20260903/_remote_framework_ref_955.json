@@ -1,0 +1,6687 @@
+[
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "6~10认识与加减",
+  "sub_tag": "10的加减",
+  "keyword": "10的分成、凑十法"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "6~10认识与加减",
+  "sub_tag": "10的认识",
+  "keyword": "1个十、十个一"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "6~10认识与加减",
+  "sub_tag": "6、7的加减",
+  "keyword": "7加减、一图四式"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "6~10认识与加减",
+  "sub_tag": "6、7的认识",
+  "keyword": "基数、序数"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "6~10认识与加减",
+  "sub_tag": "8、9的认识与运算",
+  "keyword": "9加减"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "1~5认识与加减",
+  "sub_tag": "减法意义",
+  "keyword": "减号-、剩下、去掉"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "1~5认识与加减",
+  "sub_tag": "减法计算",
+  "keyword": "5以内减法"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "20以内的进位加法",
+  "sub_tag": "凑十法",
+  "keyword": "9+1=10、9加几、凑十法"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "20以内的进位加法",
+  "sub_tag": "凑十法迁移",
+  "keyword": "6+4=10、7+3=10、8+2=10"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "1~5认识与加减",
+  "sub_tag": "加法意义",
+  "keyword": "加号+、合起来"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "11~20各数认识",
+  "sub_tag": "十加几运算",
+  "keyword": "10加几、十几减几、十几减十"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "20以内的进位加法",
+  "sub_tag": "20以内进位加法应用",
+  "keyword": "检验、数量关系、解决问题"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "准备课",
+  "sub_tag": "数数",
+  "keyword": "按顺序数、一一对应"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "11~20各数认识",
+  "sub_tag": "数的组成",
+  "keyword": "个位、十位、10个一是1个十"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "11~20各数认识",
+  "sub_tag": "数的读写与比较",
+  "keyword": "数的大小比较、写数、读数"
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "1~5认识与加减",
+  "sub_tag": "数的顺序与比较",
+  "keyword": "大于>、小于<、等于="
+ },
+ {
+  "version": "数与式",
+  "grade": "一上",
+  "main_tag": "6~10认识与加减",
+  "sub_tag": "连加连减运算",
+  "keyword": "从左到右、连减、连加"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "一上",
+  "main_tag": "位置",
+  "sub_tag": "位置认识",
+  "keyword": "上下、左右、前后、位置关系、在谁的前面"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "一上",
+  "main_tag": "认识图形",
+  "sub_tag": "图形特征",
+  "keyword": "滚动"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "一上",
+  "main_tag": "认识钟表",
+  "sub_tag": "大约几时",
+  "keyword": "刚过、大约几时、快到"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "一上",
+  "main_tag": "位置",
+  "sub_tag": "左右辨认",
+  "keyword": "自身基准"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "一上",
+  "main_tag": "认识钟表",
+  "sub_tag": "整时认识",
+  "keyword": "分针、整时、时针、钟面"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "一上",
+  "main_tag": "认识钟表",
+  "sub_tag": "时间的读写",
+  "keyword": "几时、时间观念"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "一上",
+  "main_tag": "认识图形",
+  "sub_tag": "图形分类",
+  "keyword": "圆柱、正方体、长方体"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "一上",
+  "main_tag": "认识图形",
+  "sub_tag": "拼组与分类",
+  "keyword": "拼组、面与体、分类"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "100以内加减法",
+  "sub_tag": "不进位加法",
+  "keyword": "不进位加法、相同数位相加"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "100以内加减法",
+  "sub_tag": "不退位减法",
+  "keyword": "不退位减法、相同数位相减"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "100以内数的认识",
+  "sub_tag": "多少估算",
+  "keyword": "多一些、多得多、少一些、少得多"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "20以内的退位减法",
+  "sub_tag": "20以内退位减法应用",
+  "keyword": "求剩余、求总数、画图分析、相差多少、数量关系、解决问题"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "20以内的退位减法",
+  "sub_tag": "想加算减法",
+  "keyword": "十几减9、想加算减"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "100以内数的认识",
+  "sub_tag": "数序",
+  "keyword": "大于、小于、百数表、等于"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "100以内数的认识",
+  "sub_tag": "数数",
+  "keyword": "按顺序数、一一对应"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "100以内数的认识",
+  "sub_tag": "数的组成",
+  "keyword": "个位、十位、10个一是1个十"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "100以内数的认识",
+  "sub_tag": "整十数加一位数",
+  "keyword": "几十几减几、整十加一位数"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "100以内加减法",
+  "sub_tag": "整十数加减",
+  "keyword": "几个十、整十加整十"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "20以内的退位减法",
+  "sub_tag": "破十法",
+  "keyword": "10-9=1、破十法"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "找规律",
+  "sub_tag": "规律应用",
+  "keyword": "推理表述、规律应用"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "100以内加减法",
+  "sub_tag": "进位加法",
+  "keyword": "个位满十进1、进位加法"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "20以内的退位减法",
+  "sub_tag": "退位减法",
+  "keyword": "从十位退1、十几减6、十几减7、十几减8、退位减法、个位不够减"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "认识人民币",
+  "sub_tag": "人民币计算",
+  "keyword": "同单位加减、换算后计算"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "认识人民币",
+  "sub_tag": "人民币认识",
+  "keyword": "面额"
+ },
+ {
+  "version": "数与式",
+  "grade": "一下",
+  "main_tag": "认识人民币",
+  "sub_tag": "单位换算",
+  "keyword": "1元=10角、1角=10分、换算"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "一下",
+  "main_tag": "认识图形",
+  "sub_tag": "图形特征",
+  "keyword": "滚动"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "一下",
+  "main_tag": "认识图形",
+  "sub_tag": "图形辨认",
+  "keyword": "三角形、长方形、平行四边形、正方形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "一下",
+  "main_tag": "认识图形",
+  "sub_tag": "拼组与分解",
+  "keyword": "图形分解、拼组、转化"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "一下",
+  "main_tag": "分类与整理",
+  "sub_tag": "不同标准分类",
+  "keyword": "不同标准、数据整理"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "一下",
+  "main_tag": "分类与整理",
+  "sub_tag": "单一标准分类",
+  "keyword": "一致性、标准、分类"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "一下",
+  "main_tag": "分类与整理",
+  "sub_tag": "统计表认识",
+  "keyword": "最多、最少、统计表"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "表内乘法",
+  "sub_tag": "2、3的口诀",
+  "keyword": "三三得九、二二得四"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "表内乘法",
+  "sub_tag": "4、5的口诀",
+  "keyword": "四五二十"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "表内乘法",
+  "sub_tag": "6的口诀",
+  "keyword": "六六三十六"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "表内乘法",
+  "sub_tag": "7的口诀",
+  "keyword": "七七四十九"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "表内乘法",
+  "sub_tag": "8的口诀",
+  "keyword": "八八六十四"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "表内乘法",
+  "sub_tag": "9的口诀",
+  "keyword": "乘法口诀、九九乘法表、9的乘法、一九得九"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "100以内加减法",
+  "sub_tag": "不进位加法",
+  "keyword": "不进位加法、相同数位相加"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "100以内加减法",
+  "sub_tag": "不退位减法",
+  "keyword": "不退位减法、相同数位相减"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "表内乘法",
+  "sub_tag": "乘加乘减",
+  "keyword": "先算乘法"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "表内乘法",
+  "sub_tag": "乘法应用题",
+  "keyword": "单价×数量=总价"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "100以内加减法",
+  "sub_tag": "加减应用题",
+  "keyword": "少几、求多几"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "表内乘法",
+  "sub_tag": "认识乘法",
+  "keyword": "乘法是加法的简便运算"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "100以内加减法",
+  "sub_tag": "进位加法",
+  "keyword": "个位满十进1、进位加法"
+ },
+ {
+  "version": "数与式",
+  "grade": "二上",
+  "main_tag": "100以内加减法",
+  "sub_tag": "退位减法",
+  "keyword": "从十位退1、十几减6、十几减7、十几减8、退位减法、个位不够减"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "认识时间",
+  "sub_tag": "几时几分",
+  "keyword": "几时几分、钟表、时针、分针、读时间"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "角的初步认识",
+  "sub_tag": "拼角",
+  "keyword": "拼角、三角板、拼一拼、角的大小"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "搭配",
+  "sub_tag": "排列",
+  "keyword": "有序排列"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "认识时间",
+  "sub_tag": "时间推理",
+  "keyword": "经过时间"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "长度单位",
+  "sub_tag": "用厘米量",
+  "keyword": "对准0刻度"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "搭配",
+  "sub_tag": "组合",
+  "keyword": "组合（与顺序无关）"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "角的初步认识",
+  "sub_tag": "角的认识",
+  "keyword": "角的大小、顶点"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "长度单位",
+  "sub_tag": "认识厘米",
+  "keyword": "1厘米(cm)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "认识时间",
+  "sub_tag": "认识时间",
+  "keyword": "1时=60分"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "角的初步认识",
+  "sub_tag": "认识直角",
+  "keyword": "直角、三角板、直角符号、比直角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "长度单位",
+  "sub_tag": "认识米",
+  "keyword": "1米=100厘米"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "长度单位",
+  "sub_tag": "认识线段",
+  "keyword": "两端点、可量、线段：直"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "长度单位",
+  "sub_tag": "认识长度单位",
+  "keyword": "测量、统一单位"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "长度单位",
+  "sub_tag": "选择合适单位",
+  "keyword": "填cm或m"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二上",
+  "main_tag": "角的初步认识",
+  "sub_tag": "锐角与钝角",
+  "keyword": "锐角<直角<钝角"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "表内除法",
+  "sub_tag": "7、8的口诀求商",
+  "keyword": "七八五十六"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "表内除法",
+  "sub_tag": "9的口诀求商",
+  "keyword": "口诀求商、九九表求商、除法口算、想乘法算除法"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "混合运算",
+  "sub_tag": "两步计算应用",
+  "keyword": "分步→综合算式"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "混合运算",
+  "sub_tag": "两级混合运算",
+  "keyword": "先乘除、后加减"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "表内除法",
+  "sub_tag": "乘除应用",
+  "keyword": "总价÷单价=数量"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "有余数的除法",
+  "sub_tag": "余数应用",
+  "keyword": "余数应用、周期问题、余几、除法余数"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "混合运算",
+  "sub_tag": "同级混合运算",
+  "keyword": "从左到右依次计算"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "表内除法",
+  "sub_tag": "平均分",
+  "keyword": "平均分、等分、每份多少、平分、平均分成"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "有余数的除法",
+  "sub_tag": "有余数的除法",
+  "keyword": "有余数、余数、除不尽、余数比除数小"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "表内除法",
+  "sub_tag": "用口诀求商",
+  "keyword": "想乘法口诀求商"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "万以内数的认识",
+  "sub_tag": "认识万",
+  "keyword": "10个一千是一万"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "万以内数的认识",
+  "sub_tag": "认识千",
+  "keyword": "10个一百是一千"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "克和千克",
+  "sub_tag": "认识质量单位",
+  "keyword": "克(g)、千克(kg)"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "万以内数的认识",
+  "sub_tag": "近似数",
+  "keyword": "近似数≈"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "表内除法",
+  "sub_tag": "除法应用",
+  "keyword": "包含除、等分除"
+ },
+ {
+  "version": "数与式",
+  "grade": "二下",
+  "main_tag": "有余数的除法",
+  "sub_tag": "除法竖式",
+  "keyword": "被除数=除数×商+余数"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二下",
+  "main_tag": "图形的运动",
+  "sub_tag": "平移",
+  "keyword": "平移：位置变、形状大小不变"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二下",
+  "main_tag": "图形的运动",
+  "sub_tag": "旋转",
+  "keyword": "旋转：绕点、轴转动"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "二下",
+  "main_tag": "图形的运动",
+  "sub_tag": "轴对称图形",
+  "keyword": "轴对称、对称轴、对称图形、对折重合"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "二下",
+  "main_tag": "数据收集整理",
+  "sub_tag": "数据收集",
+  "keyword": "收集数据"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "二下",
+  "main_tag": "数据收集整理",
+  "sub_tag": "简单统计表",
+  "keyword": "统计表、数据记录、收集数据、整理数据"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "二下",
+  "main_tag": "推理",
+  "sub_tag": "逻辑推理",
+  "keyword": "排除法、列表法"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "万以内加减法",
+  "sub_tag": "三位数减三位数",
+  "keyword": "连续退位减法"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "万以内加减法",
+  "sub_tag": "三位数加三位数",
+  "keyword": "连续进位加法"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "多位数乘一位数",
+  "sub_tag": "不进位乘法",
+  "keyword": "多位数×一位数（不进位）"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "万以内加减法",
+  "sub_tag": "估算",
+  "keyword": "≈（约等号）"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "倍的认识",
+  "sub_tag": "倍的认识",
+  "keyword": "一个数÷另一个数=倍数"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "分数的初步认识",
+  "sub_tag": "分数大小比较",
+  "keyword": "分数比较、同分母比较、分子相同比较、几分之几"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "分数的初步认识",
+  "sub_tag": "同分母分数加减",
+  "keyword": "同分母分数、分数加减、分母不变分子相加减"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "万以内加减法",
+  "sub_tag": "整十整百加减",
+  "keyword": "几百几十±几百几十"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "万以内加减法",
+  "sub_tag": "笔算减法",
+  "keyword": "退位减法：退1当10"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "万以内加减法",
+  "sub_tag": "笔算加法",
+  "keyword": "进位加法：满十进1"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "多位数乘一位数",
+  "sub_tag": "进位乘法",
+  "keyword": "进位乘法：满几十进几"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "万以内加减法",
+  "sub_tag": "验算方法",
+  "keyword": "和-加数=另一加数"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三上",
+  "main_tag": "测量",
+  "sub_tag": "千米的认识",
+  "keyword": "1千米=1000米"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三上",
+  "main_tag": "测量",
+  "sub_tag": "吨的认识",
+  "keyword": "1吨=1000千克"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三上",
+  "main_tag": "图形初步",
+  "sub_tag": "周长的意义与计算",
+  "keyword": "周长=各边长度之和"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三上",
+  "main_tag": "图形初步",
+  "sub_tag": "四边形认识",
+  "keyword": "四边形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三上",
+  "main_tag": "时、分、秒",
+  "sub_tag": "时间单位及进率",
+  "keyword": "1分=60秒"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三上",
+  "main_tag": "时、分、秒",
+  "sub_tag": "时间的计算",
+  "keyword": "经过时间=结束时刻-开始时刻"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三上",
+  "main_tag": "测量",
+  "sub_tag": "毫米、分米的认识",
+  "keyword": "1厘米=10毫米"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三上",
+  "main_tag": "图形初步",
+  "sub_tag": "长方形与正方形",
+  "keyword": "长方形特征"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三上",
+  "main_tag": "集合",
+  "sub_tag": "韦恩图",
+  "keyword": "总数=两部分之和-重叠部分"
+ },
+ {
+  "version": "数与式",
+  "grade": "三下",
+  "main_tag": "两位数乘两位数",
+  "sub_tag": "不进位乘法",
+  "keyword": "多位数×一位数（不进位）"
+ },
+ {
+  "version": "数与式",
+  "grade": "三下",
+  "main_tag": "小数的初步认识",
+  "sub_tag": "小数大小比较",
+  "keyword": "小数比较、大小比较、先比整数部分、数位"
+ },
+ {
+  "version": "数与式",
+  "grade": "三下",
+  "main_tag": "年月日",
+  "sub_tag": "年历知识",
+  "keyword": "2月、大月、小月"
+ },
+ {
+  "version": "数与式",
+  "grade": "三下",
+  "main_tag": "一位数除法",
+  "sub_tag": "整十整百除以一位数",
+  "keyword": "整十÷一位数"
+ },
+ {
+  "version": "数与式",
+  "grade": "三下",
+  "main_tag": "章·单元",
+  "sub_tag": "知识点模块",
+  "keyword": "知识点梳理、单元总结、模块复习"
+ },
+ {
+  "version": "数与式",
+  "grade": "三下",
+  "main_tag": "小数的初步认识",
+  "sub_tag": "简单加减",
+  "keyword": "小数加减：小数点对齐"
+ },
+ {
+  "version": "数与式",
+  "grade": "三下",
+  "main_tag": "小数的初步认识",
+  "sub_tag": "认识小数",
+  "keyword": "零点几：十分之几"
+ },
+ {
+  "version": "数与式",
+  "grade": "三下",
+  "main_tag": "两位数乘两位数",
+  "sub_tag": "进位乘法",
+  "keyword": "进位乘法：满几十进几"
+ },
+ {
+  "version": "数与式",
+  "grade": "三下",
+  "main_tag": "一位数除法",
+  "sub_tag": "首位不够除与有余数",
+  "keyword": "首位不够除看前两位"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三下",
+  "main_tag": "位置与方向",
+  "sub_tag": "八个方向",
+  "keyword": "东南西北、东北、东南、西南、西北、方向"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三下",
+  "main_tag": "面积",
+  "sub_tag": "常用面积单位",
+  "keyword": "1平方分米=100平方厘米、1平方米=100平方分米"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三下",
+  "main_tag": "搭配",
+  "sub_tag": "简单排列组合",
+  "keyword": "搭配（乘法原理）"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三下",
+  "main_tag": "面积",
+  "sub_tag": "长方形与正方形面积",
+  "keyword": "S正=a×a、S长=a×b"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "三下",
+  "main_tag": "面积",
+  "sub_tag": "面积概念",
+  "keyword": "面积、面积单位、面积大小、平方米平方分米"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "三下",
+  "main_tag": "复式统计表",
+  "sub_tag": "复式统计表",
+  "keyword": "复式统计表、统计表、数据整理、两个及以上统计项目"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "三下",
+  "main_tag": "总复习",
+  "sub_tag": "知识整合",
+  "keyword": "综合应用"
+ },
+ {
+  "version": "数与式",
+  "grade": "四上",
+  "main_tag": "三位数乘两位数",
+  "sub_tag": "三位数乘两位数",
+  "keyword": "分两次乘再相加、末位对齐"
+ },
+ {
+  "version": "数与式",
+  "grade": "四上",
+  "main_tag": "除数是两位数的除法",
+  "sub_tag": "商是两位数/商的变化规律",
+  "keyword": "前两位≥除数→商两位、商反变"
+ },
+ {
+  "version": "数与式",
+  "grade": "四上",
+  "main_tag": "除数是两位数的除法",
+  "sub_tag": "整十数除整十/几百几十",
+  "keyword": "估算看整十、表内除法转化"
+ },
+ {
+  "version": "数与式",
+  "grade": "四上",
+  "main_tag": "三位数乘两位数",
+  "sub_tag": "积的变化规律",
+  "keyword": "因数×几→积×几、因数÷几→积÷几"
+ },
+ {
+  "version": "数与式",
+  "grade": "四上",
+  "main_tag": "大数的认识",
+  "sub_tag": "算盘与计算器",
+  "keyword": "算盘、计算器"
+ },
+ {
+  "version": "数与式",
+  "grade": "四上",
+  "main_tag": "除数是两位数的除法",
+  "sub_tag": "除数接近整十数(四舍五入试商)",
+  "keyword": "五入初商小调大、四舍初商大调小"
+ },
+ {
+  "version": "数与式",
+  "grade": "四上",
+  "main_tag": "除数是两位数的除法",
+  "sub_tag": "除数是整十数的笔算",
+  "keyword": "前两位够除→商十位、余数<除数"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四上",
+  "main_tag": "公顷和平方千米",
+  "sub_tag": "单位选择与应用",
+  "keyword": "依实际选单位、公顷↔平方千米"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四上",
+  "main_tag": "平行四边形和梯形",
+  "sub_tag": "平行与垂直的认识",
+  "keyword": "互相垂直⊥、互相平行∥、画垂线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四上",
+  "main_tag": "平行四边形和梯形",
+  "sub_tag": "平行四边形与梯形特征",
+  "keyword": "画高、对边平行且相等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四上",
+  "main_tag": "优化",
+  "sub_tag": "沏茶问题与烙饼问题",
+  "keyword": "同时做省时、烙饼最优、统筹安排"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四上",
+  "main_tag": "优化",
+  "sub_tag": "田忌赛马(对策问题)",
+  "keyword": "以弱对强、后发制人"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四上",
+  "main_tag": "角的度量",
+  "sub_tag": "画角",
+  "keyword": "对中心对0线、画角步骤"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四上",
+  "main_tag": "角的度量",
+  "sub_tag": "线的认识",
+  "keyword": "射线(1)、直线(0)、线段(2端点)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四上",
+  "main_tag": "公顷和平方千米",
+  "sub_tag": "面积单位换算",
+  "keyword": "1公顷=10000、km²=100公顷"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "四上",
+  "main_tag": "平行四边形和梯形",
+  "sub_tag": "四边形分类",
+  "keyword": "平行四边形、梯形、正方形、长方形"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "四上",
+  "main_tag": "条形统计图",
+  "sub_tag": "绘制与分析",
+  "keyword": "单式、直条长短表数量、复式条形图"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四上",
+  "main_tag": "角的度量",
+  "sub_tag": "角的度量与分类",
+  "keyword": "周角=360°、平角=180°、直角=90°、量角器、锐角<90°"
+ },
+ {
+  "version": "数与式",
+  "grade": "四下",
+  "main_tag": "运算定律",
+  "sub_tag": "乘法交换律/结合律/分配律",
+  "keyword": "(a+b)×c=a×c+b×c、(a×b)×c=a×(b×c)、a×b=b×a"
+ },
+ {
+  "version": "数与式",
+  "grade": "四下",
+  "main_tag": "四则运算",
+  "sub_tag": "乘除互逆关系",
+  "keyword": "乘法与除法互逆、0不能作除数"
+ },
+ {
+  "version": "数与式",
+  "grade": "四下",
+  "main_tag": "运算定律",
+  "sub_tag": "减法的性质与除法性质",
+  "keyword": "a÷b÷c=a÷(b×c)、a−b−c=a−(b+c)"
+ },
+ {
+  "version": "数与式",
+  "grade": "四下",
+  "main_tag": "四则运算",
+  "sub_tag": "加减互逆关系",
+  "keyword": "加法与减法互逆、各部分关系公式"
+ },
+ {
+  "version": "数与式",
+  "grade": "四下",
+  "main_tag": "运算定律",
+  "sub_tag": "加法交换律与结合律",
+  "keyword": "加法交换律、加法结合律、运算定律、简便计算"
+ },
+ {
+  "version": "数与式",
+  "grade": "四下",
+  "main_tag": "小数的意义和性质",
+  "sub_tag": "小数点移动规律",
+  "keyword": "右移×10、左移÷10"
+ },
+ {
+  "version": "数与式",
+  "grade": "四下",
+  "main_tag": "小数的意义和性质",
+  "sub_tag": "小数的意义",
+  "keyword": "十分之一=0.1、千分位、百分之一=0.01"
+ },
+ {
+  "version": "数与式",
+  "grade": "四下",
+  "main_tag": "小数的意义和性质",
+  "sub_tag": "求小数近似数",
+  "keyword": "亿作单位、改写成万、四舍五入"
+ },
+ {
+  "version": "数与式",
+  "grade": "四下",
+  "main_tag": "小数的加法和减法",
+  "sub_tag": "混合运算与简便计算",
+  "keyword": "运算定律适用小数、顺序同整数"
+ },
+ {
+  "version": "数与式",
+  "grade": "四下",
+  "main_tag": "小数的加法和减法",
+  "sub_tag": "笔算方法",
+  "keyword": "小数点对齐(相同数位对齐)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四下",
+  "main_tag": "观察物体",
+  "sub_tag": "从不同方向观察",
+  "keyword": "前面、左面视图、还原立体图形、上面"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四下",
+  "main_tag": "鸡兔同笼",
+  "sub_tag": "假设法解决",
+  "keyword": "假设法、列表法、设兔求鸡、设鸡求兔"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四下",
+  "main_tag": "三角形",
+  "sub_tag": "内角和与三边关系",
+  "keyword": "两边差<第三边、两边和>第三边、内角和=180°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "四下",
+  "main_tag": "图形的运动",
+  "sub_tag": "轴对称再认识",
+  "keyword": "补全对称图形、轴对称图形、对称轴、平移"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "四下",
+  "main_tag": "三角形",
+  "sub_tag": "三角形分类",
+  "keyword": "直角、稳定性、等腰、等边三角形、钝角三角形、锐角"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "四下",
+  "main_tag": "平均数与条形统计图",
+  "sub_tag": "求平均数",
+  "keyword": "平均数=总数÷份数"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "四下",
+  "main_tag": "平均数与条形统计图",
+  "sub_tag": "绘制与分析",
+  "keyword": "单式、直条长短表数量、复式条形图"
+ },
+ {
+  "version": "数与式",
+  "grade": "五上",
+  "main_tag": "小数乘法",
+  "sub_tag": "四舍五入",
+  "keyword": "保留一位看百分位"
+ },
+ {
+  "version": "数与式",
+  "grade": "五上",
+  "main_tag": "小数除法",
+  "sub_tag": "四舍五入求商",
+  "keyword": "保留两位看千分位"
+ },
+ {
+  "version": "数与式",
+  "grade": "五上",
+  "main_tag": "小数除法",
+  "sub_tag": "概念与表示",
+  "keyword": "5÷3=1.6…"
+ },
+ {
+  "version": "数与式",
+  "grade": "五上",
+  "main_tag": "小数乘法",
+  "sub_tag": "积与因数的关系",
+  "keyword": "积与因数、因数扩大缩小、积的变化规律"
+ },
+ {
+  "version": "数与式",
+  "grade": "五上",
+  "main_tag": "小数乘法",
+  "sub_tag": "积的小数位数",
+  "keyword": "小数位数=因数小数位之和"
+ },
+ {
+  "version": "数与式",
+  "grade": "五上",
+  "main_tag": "小数除法",
+  "sub_tag": "计算方法",
+  "keyword": "22.4÷4=5.6"
+ },
+ {
+  "version": "数与式",
+  "grade": "五上",
+  "main_tag": "小数除法",
+  "sub_tag": "转化为整数除数",
+  "keyword": "商不变性质"
+ },
+ {
+  "version": "数与式",
+  "grade": "五上",
+  "main_tag": "小数乘法",
+  "sub_tag": "运算定律",
+  "keyword": "a×b×c=a×(b×c)"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "五上",
+  "main_tag": "简易方程",
+  "sub_tag": "两条性质",
+  "keyword": "等式性质、方程性质、等式两边、天平"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "五上",
+  "main_tag": "简易方程",
+  "sub_tag": "列方程解题",
+  "keyword": "列方程解应用题"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "五上",
+  "main_tag": "简易方程",
+  "sub_tag": "字母表示数",
+  "keyword": "a×b=ab"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "五上",
+  "main_tag": "简易方程",
+  "sub_tag": "方程概念",
+  "keyword": "等式+未知数=方程"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "五上",
+  "main_tag": "简易方程",
+  "sub_tag": "解法与应用",
+  "keyword": "x+a=b→x=b−a"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五上",
+  "main_tag": "多边形的面积",
+  "sub_tag": "估算",
+  "keyword": "≈（约等号）"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五上",
+  "main_tag": "位置",
+  "sub_tag": "位置应用",
+  "keyword": "列→横轴、行→纵轴"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五上",
+  "main_tag": "位置",
+  "sub_tag": "列与行",
+  "keyword": "(列、行)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五上",
+  "main_tag": "多边形的面积",
+  "sub_tag": "割补法",
+  "keyword": "分割法、添补法"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五上",
+  "main_tag": "植树",
+  "sub_tag": "最外层与总数",
+  "keyword": "方阵问题"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五上",
+  "main_tag": "植树",
+  "sub_tag": "间隔数关系",
+  "keyword": "棵数=段数+1"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五上",
+  "main_tag": "多边形的面积",
+  "sub_tag": "面积公式",
+  "keyword": "S=ah"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "五上",
+  "main_tag": "可能性",
+  "sub_tag": "可能性大小比较",
+  "keyword": "可能性大小"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "五上",
+  "main_tag": "可能性",
+  "sub_tag": "确定与不确定",
+  "keyword": "一定、可能、不可能"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "分数的意义和性质",
+  "sub_tag": "互化方法",
+  "keyword": "分数↔小数"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "因数与倍数",
+  "sub_tag": "倍数特征",
+  "keyword": "3整除特征、被2"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "分数的意义和性质",
+  "sub_tag": "关系",
+  "keyword": "a÷b=a"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "分数的意义和性质",
+  "sub_tag": "单位“1”与分数单位",
+  "keyword": "单位“1”"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "分数的意义和性质",
+  "sub_tag": "性质与应用",
+  "keyword": "分数基本性质"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "分数的意义和性质",
+  "sub_tag": "比较方法",
+  "keyword": "通分后比较"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "分数的加法和减法",
+  "sub_tag": "计算方法",
+  "keyword": "22.4÷4=5.6"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "分数的加法和减法",
+  "sub_tag": "运算定律",
+  "keyword": "a×b×c=a×(b×c)"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "因数与倍数",
+  "sub_tag": "运算规律",
+  "keyword": "奇偶性规律"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "分数的加法和减法",
+  "sub_tag": "通分计算",
+  "keyword": "先通分再计算"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五下",
+  "main_tag": "长方体和正方体",
+  "sub_tag": "体积公式",
+  "keyword": "V=abh、V=a³"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五下",
+  "main_tag": "长方体和正方体",
+  "sub_tag": "体积意义",
+  "keyword": "体积单位"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五下",
+  "main_tag": "图形的运动",
+  "sub_tag": "作图方法",
+  "keyword": "逆时针90°、顺时针"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五下",
+  "main_tag": "长方体和正方体",
+  "sub_tag": "单位换算",
+  "keyword": "1元=10角、1角=10分、换算"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五下",
+  "main_tag": "图形的运动",
+  "sub_tag": "旋转特征",
+  "keyword": "方向、旋转三要素:点、角度"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五下",
+  "main_tag": "找次品",
+  "sub_tag": "最优策略",
+  "keyword": "尽量均分3份"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五下",
+  "main_tag": "找次品",
+  "sub_tag": "次数与数量关系",
+  "keyword": "三分法规律"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五下",
+  "main_tag": "观察物体",
+  "sub_tag": "空间观念",
+  "keyword": "空间观念、三视图、从正面看、从上面看、立体图形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五下",
+  "main_tag": "长方体和正方体",
+  "sub_tag": "表面积公式",
+  "keyword": "S=(ab+ah+bh)×2"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "五下",
+  "main_tag": "观察物体",
+  "sub_tag": "视图还原",
+  "keyword": "三视图还原"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "五下",
+  "main_tag": "因数与倍数",
+  "sub_tag": "分类",
+  "keyword": "假分数、合数、真分数、质数"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "五下",
+  "main_tag": "折线统计图",
+  "sub_tag": "对比分析",
+  "keyword": "复式折线图"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "五下",
+  "main_tag": "折线统计图",
+  "sub_tag": "特点与绘制",
+  "keyword": "折线图表示变化趋势"
+ },
+ {
+  "version": "数与式",
+  "grade": "六上",
+  "main_tag": "分数乘除",
+  "sub_tag": "分数乘法与除法",
+  "keyword": "分数乘法、分数除法、分数乘除应用、倒数"
+ },
+ {
+  "version": "数与式",
+  "grade": "六上",
+  "main_tag": "分数乘除",
+  "sub_tag": "分数四则混合运算",
+  "keyword": "分数混合运算、运算顺序、简便运算"
+ },
+ {
+  "version": "数与式",
+  "grade": "六上",
+  "main_tag": "比",
+  "sub_tag": "比的意义与基本性质",
+  "keyword": "比值、化简比、按比例分配"
+ },
+ {
+  "version": "数与式",
+  "grade": "六上",
+  "main_tag": "百分数",
+  "sub_tag": "百分数的意义与互化",
+  "keyword": "百分数、百分率、百分数分数小数互化"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "六上",
+  "main_tag": "圆",
+  "sub_tag": "圆的认识与周长面积",
+  "keyword": "圆心、直径、圆周率、周长、半径、面积"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "六上",
+  "main_tag": "圆",
+  "sub_tag": "扇形的认识",
+  "keyword": "扇形、圆心角"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "六上",
+  "main_tag": "扇形统计图",
+  "sub_tag": "扇形统计图与统计图选择",
+  "keyword": "扇形统计图、条形图、折线图、统计图选择"
+ },
+ {
+  "version": "数与式",
+  "grade": "六下",
+  "main_tag": "比例",
+  "sub_tag": "比例尺",
+  "keyword": "比例尺、图上距离、实际距离"
+ },
+ {
+  "version": "数与式",
+  "grade": "六下",
+  "main_tag": "比例",
+  "sub_tag": "比例的意义与基本性质",
+  "keyword": "比例、内项外项、解比例"
+ },
+ {
+  "version": "数与式",
+  "grade": "六下",
+  "main_tag": "百分数",
+  "sub_tag": "百分数应用",
+  "keyword": "折扣、成数、税率、利率、打折"
+ },
+ {
+  "version": "数与式",
+  "grade": "六下",
+  "main_tag": "负数",
+  "sub_tag": "负数的初步认识",
+  "keyword": "正负数表示（温度、海拔、收支）、负数"
+ },
+ {
+  "version": "数与式",
+  "grade": "六下",
+  "main_tag": "比与比例",
+  "sub_tag": "黄金分割",
+  "keyword": "黄金分割、黄金比"
+ },
+ {
+  "version": "函数",
+  "grade": "六下",
+  "main_tag": "比例",
+  "sub_tag": "正比例与反比例",
+  "keyword": "正比例、反比例、正反比例判断"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "六下",
+  "main_tag": "圆柱与圆锥",
+  "sub_tag": "圆柱与圆锥的体积",
+  "keyword": "圆柱体积、等底等高、圆锥体积"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "六下",
+  "main_tag": "圆柱与圆锥",
+  "sub_tag": "圆柱的认识与表面积",
+  "keyword": "侧面展开、表面积、圆柱"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "乘方",
+  "keyword": "aⁿ=a×a×...×a(n个a)、aⁿ=a×a×…×a、a（n个a）、aⁿ=a·a·…·a"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "乘方与科学记数法",
+  "keyword": "(1≤a<10)、a×10ⁿ(1≤a<10)、a×10ⁿ(1≤|a|<10)、n=位数−1、±a×10⁻ⁿ(1≤a<10)、大数、如0.0000012、如384000=3.84×10⁵、小数都用a×10ⁿ、还原：小数点右移n位、aⁿ=a·a·…·a、四舍五入"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "乘方基础",
+  "keyword": "(-1)ⁿ=-1(n奇)、(-1)ⁿ=1(n偶)、(-3)⁴=81、aⁿ：a底数、n指数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "乘方概念",
+  "keyword": "aⁿ=a×a×…×a(n个)"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "乘方的意义",
+  "keyword": "(n个a)、底数、指数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "书写规范",
+  "keyword": "代数式书写、书写规范、省略乘号、格式"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "代数式的值",
+  "keyword": "再计算结果、步骤：先代入具体数值、代入→计算、代入求值"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "倒数",
+  "keyword": "倒数、互为倒数、乘积为1、求倒数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "分数乘法",
+  "keyword": "ab=1⇒互为倒数、同号(+)、奇→负、异号(-)、负因数偶→正、a(b+c)=ab+ac、ab=ba"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "分数乘除法应用",
+  "keyword": "连续求一个数的几分之几用连乘或连除"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "分数混合运算",
+  "keyword": "偶次幂正、先乘除后加减、凑相反数、同号结合、同级运算从左到右进行、如有括号先算括号内的、如：(1.25+3.8)+(−1.25)=3.8、库存、按小→中→大括号顺序、水位、统一加法→省略加号、行程、负数奇次幂负、运算律同样适用于分数、代数和、先乘方→乘除→加减、凑整"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "分数除法",
+  "keyword": "分数除法、除以分数、乘倒数、分数除应用"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "列代数式",
+  "keyword": "代入时注意恢复省略的乘号、代入时注意：省略的乘号要还原、代入求值：先代入、代数式=数+字母+运算、分数加括号、单独一个数或一个字母也是代数式、单独一个数或字母也是代数式、同一个代数式、后计算、字母取不同值时结果可能不同、数+字母+运算、数与字母的运算式、数字与字母相乘省略乘号、数字在前字母在后、负数代入要加括号、代入→计算、代入求值、代数式"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "加减混合",
+  "keyword": "统一为加法、a-b=a+(-b)、代数和"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "加法法则",
+  "keyword": "(+)+(+)=(+)、(+)×(+)=(+)、(-)+(-)=(-)、(-)×(-)=(+)、a÷b=a·1、a−b=a+(−b)、b(b≠0)、c=bd、d=bc、同号、同号→取同号、同号得正、奇负偶正、异号取大号、异号得负、异号法则、a-b=a+(-b)、a÷b=a·(1、a÷b=a×1、同号取同号、同号正、大减小、异号负、绝对值加、绝对值相加"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "加法运算律",
+  "keyword": "(ab)c=a(bc)、a+b=b+a(a+b)+c=a+(b+c)、乘法交换律：a×b、交换律、a(b+c)=ab+ac、ab=ba、分配律、结合律"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "单项式",
+  "keyword": "单项式、系数、次数、单项式定义、含字母的式子"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "单项式与多项式",
+  "keyword": "(a+b)(m+n)=am+an+bm+bn、11的系数是−5、3t²−t−4有三项：3t²、m(a+b+c)=ma+mb+mc、→乘除、不含字母的项叫作常数项、代数式(不含=≠)、单独一个数或一个字母也是单项式、单独一个数或字母也是单项式、单项式的系数：数字因数、单项式：、单项式：系数+次数、因式分解→约分、多项式：项、如：3x²y的系数是3、字母指数相加、常数项、数字×字母、数字×字母的乘积、次数：所有字母指数的和、每个单项式叫作多项式的项、立方和：(a+b)(a²-ab+b²)=a³+b³、系数·同字母幂·独有字母、系数×次数、逐项相乘、逐项除再相加、分配律、多项式=单项式的和、整式=单项式+多项式、次数、系数、系数×系数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "去括号法则",
+  "keyword": "a+(b-c)=a+b-c、a-(b-c)=a-b+c、m(a-b)=ma-mb、去括号变号、有多层括号时从内向外逐层去括号、−(a+b)=−a−b"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "同类项",
+  "keyword": "2a²b²与−3b²a²是同类项、2xy与3xy是同类项、2x³+3x³−(−4x³)=9x³、5x与−3x是同类项、ax+bx=(a+b)x、几个常数项也是同类项、合并同类项：系数相加减、字母及指数不变、字母同、字母同且指数同、字母同指数同、常数项都是同类项、指数同、系数相加、合并同类项、同类项、字母同+指数同"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "同类项与合并同类项",
+  "keyword": "系数加字母不变、同类项"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "多项式",
+  "keyword": "多项式的次数：次数最高项的次数、常数项是不含字母的项、整式=单项式∪多项式、多项式=单项式的和"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "实数",
+  "sub_tag": "实数运算",
+  "keyword": "先取近似→再计算→最后四舍五入、有理数的运算律和运算法则在实数范围内同样适用"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "幂的符号法则",
+  "keyword": "(+2)³=8、(+2)⁴=16、(-a)奇负偶正"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "按比例分配",
+  "keyword": "各部分=总量×该部分所占份数、总份数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "探索规律",
+  "keyword": "列举、列举→观察→猜想→验证、猜想、观察、验证"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "数学活动与素养拓展",
+  "sub_tag": "数学交流",
+  "keyword": "数学表达、数学交流、说理、讨论"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "数轴",
+  "keyword": "三要素：、单位长度、单位长度：一个单位长度、单位长度：一个单位长度表示1、原点、原点表示0、原点：表示0的点、右>左、正方向、正方向通常向右、正方向：通常向右、原点+正方向+单位长度、正>0>负"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "数轴、相反数与绝对值",
+  "keyword": "(a=0)、0的相反数是0、a+b=0、a+b=0⇔a=-b、a与-a互为相反数、a的相反数=-a、a的相反数是-a、|a|=-a、|a|=0、|a|=a、|a|=a(a≥0)、|a|={a、|a|≥0、−0=0、到原点距离相等、定义与有理数一致、相反数、相反数·绝对值、绝对值、绝对值大→数值更小、距离不可能是负数、互为相反数、倒数、原点+正方向+单位长度"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "数轴上的点",
+  "keyword": "正→右、负→左"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "数轴上的点与有理数",
+  "keyword": "数形结合"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "数轴的三要素",
+  "keyword": "三要素"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "数量关系",
+  "keyword": "分析→列式"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "整式",
+  "keyword": "区分整式与分式：整式分母不含字母、单项式、多项式、整式、整式的分母中不能含有字母、整式=单项式+多项式"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "整式加减步骤",
+  "keyword": "→降幂排列、去括号→合并、步骤：去括号、c=(a±b)、去括号→合并同类项、合并同类项"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "整式加减的应用",
+  "keyword": "注意检验结果的合理性"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "整式的加减",
+  "keyword": "(1.5x−1)+(2x+6)=3.5x+5、(3x²+2x−1)+(x²−3x+5)=4x²−x+4、去括号、步骤：去括号→找同类项→合并同类项→按某一字母降幂排列、通分→同分母→加减、a√m±b√m=(a±b)√m、−(a+b)=−a−b、去括号→合并同类项、合并同类项、字母同+指数同"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "有理数减法",
+  "keyword": "海拔差=高-低、温差=高温-低温、a-b=a+(-b)"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "有理数减法法则",
+  "keyword": "a÷b=a×(1、(b≠0)、a-b=a+(-b)、同号正、异号负"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "有理数分类与大小比较",
+  "keyword": "正数最大、负数最小、负数：绝对值大→更小、有理数=整数+分数、正>0>负"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "有理数四则运算",
+  "keyword": "有理数加减、有理数乘除、四则运算、混合运算、符号法则"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "有理数混合运算",
+  "keyword": "①括号②乘方、③乘除④加减、抵消、凑整、分配律"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "有理数的分类",
+  "keyword": "{整数、乘方运算与有理数运算法则相同、分数、分数{正分数、分数}、周角、实=有理∪无理、实数的加、平角、整数、整数{正整数、正有理数、直角、角的分类、负分数}、负整数}、负有理数、运算律同样适用、钝角、锐角、有理数、有理数=整数+分数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "有理数的加法",
+  "keyword": "(+3)+(+5)=+8、(−3)+(−5)=−8、同号：取同号、异号：取大号、自然数包括0、(a+b)+c=a+(b+c)、(b≠0)、a+b=b+a、大减小、绝对值相加"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "有理数的大小比较",
+  "keyword": "叠合法、在数轴上右边的点表示的数大于左边的、在数轴上右边的点表示的数总是大于左边的点表示的数、度量法、数轴上右边的数大、正数>0>负数、负数绝对值大的反而小、正数、负数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "正数与负数",
+  "keyword": "0是分界、正数>0、负数<0、零上5、零上5°C、零下2、零下2°C、0非正非负、正数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "正比例",
+  "keyword": "d→ad=bc、x=k(定值)、图像是过原点的直线"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "比例尺",
+  "keyword": "比例尺、图上距离、实际距离"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "比的意义",
+  "keyword": "a:b=c:d、ad=bc（交叉相乘）"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "用字母表示公式",
+  "keyword": "C表示周长、S=ab、S=a²、S表示面积、乘号省略、字母代任意数、正方形C=4a、长方形C=2(a+b)、a(b+c)=ab+ac、a+b=b+a"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "用字母表示数",
+  "keyword": "一般化表达、从算术到代数的跨越、如：a、字母可以参与运算、字母表示数、用字母表示数、表示一般规律"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "用正负数表示具有相反意义的量",
+  "keyword": "正数+a(a>0)、相反意义、相反意义的量、相反意义配对、负数-a(a>0)、0非正非负"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "百分数",
+  "keyword": "→分数:n、→小数:去掉%左移两位、出勤率、发芽率等、如25%、常用百分率：合格率、成活率、现价=原价×折扣、百分数通常用\"%\"表示、盈利率=(售价-进价)、进价×100%"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "百分数与小数、分数互化",
+  "keyword": "50%=0.5=1"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "相反意义的量",
+  "keyword": "正数表示一个方向、负数表示相反方向"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "数学活动与素养拓展",
+  "sub_tag": "知识点模块",
+  "keyword": "知识点梳理、单元总结、模块复习"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "算术运算核心规则",
+  "keyword": "(a+b)×m=am+bm、乘法分配律、引入负数、相同数位对齐"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "精确与近似",
+  "keyword": "准确数、精确到某位、近似数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "计算器使用",
+  "keyword": "四则运算、计算器辅助、计算器辅助运算、乘方"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "运算律",
+  "keyword": "运算律、交换律、结合律、分配律、简便计算"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "整式的加减",
+  "sub_tag": "运算技巧",
+  "keyword": "运算技巧、简便运算、计算技巧、巧算"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "运算顺序",
+  "keyword": "加减、乘方、乘方→乘除→加减、乘除"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "近似数与有效数字",
+  "keyword": "取近似数的方法：四舍五入法、四舍五入·有效数字、去尾法、四舍五入、进一法"
+ },
+ {
+  "version": "数与式",
+  "grade": "七上",
+  "main_tag": "有理数",
+  "sub_tag": "近似数和有效数字",
+  "keyword": "有效数字、四舍五入"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "一元一次方程应用题",
+  "keyword": "一元一次方程、列方程、应用题、等量关系、设未知数"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "一元一次方程的解法",
+  "keyword": "x=1是方程4x−9=2x−7的解、②含有未知数、一元一次方程：只含一个未知数且次数为1的整式方程、不是方程、代入检验、分母≠0、去分母、去括号、合并、方程的两个要素：①是等式、方程的解、是方程、检验一个数是否为方程的解：将其代入方程两边看是否相等、注意：分式方程与整式方程的区别、相等即解、移项、系数化1、(a≠0)、2x+3=7、ax+b=0、方程、方程=含未知数的等式"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "二元一次方程组",
+  "sub_tag": "代入消元法",
+  "keyword": "代入·消元、代入另一个方程、代入消元：变形→代入→求解→回代、减→回代、加减·消元、加减消元：同系加减→消元、变形→代入、变形→代入→回代、将方程组转化为一元一次方程求解、构造系数→加减消元、步骤：变形→代入→求解→回代、消元：二元→一元、消去一个未知数、相反→加减、相反时使用、相等→减、相等→直接加减、系数相反、系数相反→加、统一系数→相加、转化为一元一次方程、适合系数±1、适用情况：同一未知数的系数成整数倍或相等、适用情况：某个未知数的系数为1或-1时优先使用、代入消元法、加减消元法、用一个表示另一个→代入、系数相等、客车、每辆坐60人、每辆坐20人、多坐280人、代入·消元、代入另一个方程、代入消元：变形→代入→求解→回代、减→回代、加减·消元、加减消元：同系加减→消元、变形→代入、变形→代入→回代、将方程组转化为一元一次方程求解、构造系数→加减消元、步骤：变形→代入→求解→回代、消元：二元→一元、消去一个未知数、相反→加减、相反时使用、相等→减、相等→直接加减、系数相反、系数相反→加、统一系数→相加、转化为一元一次方程、适合系数±1、适用情况：同一未知数的系数成整数倍或相等、适"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "典型应用场景",
+  "keyword": "注意所求解必须符合实际问题的意义"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "几何图形问题",
+  "keyword": "如：长方形面积、正方形分割等"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "分配与配套问题",
+  "keyword": "如3:2分配、设3x和2x"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "和倍差问题",
+  "keyword": "和倍问题、差倍问题、和差问题、几倍多几、各是多少"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "实际问题建模",
+  "keyword": "方程建模、列方程解应用题、实际问题、等量关系"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "常见应用类型",
+  "keyword": "关键是找出题目中的等量关系、方案选择·最值问题、注意单位统一和解的实际意义检验、注意解必须符合实际意义、行程·工程·利润·分配、通常用文字语言中的\"等于\"\"是\"\"相当于\"来识别"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "常见题型",
+  "keyword": "典型应用题"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "应用题解题步骤",
+  "keyword": "→系数化1(负数变号)、1元+1次+整式、s=vt、→移项→合并、去分母→去括号、审→设→列→解→验→答"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "方程",
+  "keyword": "使方程左右两边相等的未知数的值叫方程的解、如：2x+3=7、含未知数的等式"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "方程与等式的性质",
+  "keyword": "a=b→ac=bc、a=b→a±c=b±c、a=b⇒a、a=b⇒ac=bc、a=b⇒a±c=b±c、a=b⇒a±c=b±c⇒ac=bc(c≠0)、a±c=b±c、c(c≠0)、不等式性质：加减不变、不等式的基本性质、乘正不变、乘负变向、则a±c=b±c、利用性质1移项：把某项从一边移到另一边要变号、利用性质2系数化为1：两边同除以未知数的系数、性质2：等式两边乘同一个数、或除以同一个不为0的数、结果仍相等、若a=b、则a±c>b±c、方程=含未知数的等式、若a>b"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "移项",
+  "keyword": "2x=7−3、移项变号、2x+3=7、移项要变号"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "等量关系",
+  "keyword": "(长-2x)(宽-2x)=面积、h=vt-5t²、两种分配总量相等、两类总量+总价两组等量、价格等、原量(1±增长率)²=现量、变形前后体积、周长相等、圆柱V=πr²h、工程、常见等量关系：和差倍分、年龄差不变、行程(s=vt)、长方形C=2(a+b)、设→列→解→验→答"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "行程问题",
+  "keyword": "S总、分段变速列式、则每天完成1、相遇：路程和=总、若m天完成、追及：路程差"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "解方程步骤",
+  "keyword": "→系数化1、去分母方程两边同乘各分母的最小公倍数、去括号用分配律、步骤1:去分母、由内向外逐层去括号、→移项→合并、去分母→去括号、去分母→去括号→移项→合并→系数化1、移项要变号"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "解方程注意事项",
+  "keyword": "最后要检验：将解代入原方程验证是否成立"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "解法思路",
+  "keyword": "解方程思路、解法步骤、移项、合并同类项、系数化1"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "解法步骤",
+  "keyword": "去分母→解整式→验根、去分母时各项都要乘以各分母的最小公倍数、ax+b=0、去分母→去括号→移项→合并→化1"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "销售问题",
+  "keyword": "售价、进价、利润"
+ },
+ {
+  "version": "函数",
+  "grade": "七上",
+  "main_tag": "反比例函数",
+  "sub_tag": "反比例",
+  "keyword": "a:b=c:d、ad=bc、xy=k(定值)、图像是双曲线的一支"
+ },
+ {
+  "version": "函数",
+  "grade": "七上",
+  "main_tag": "一次函数",
+  "sub_tag": "常量与变量",
+  "keyword": "变量、变量·常量、变量→变化、变量变化、变量：在过程中数值发生变化的量、如圆周率π、常量、常量→不变、常量不变、常量可以是具体数也可以是用字母表示的定值、速度v（匀速运动时）、变量（变化）、常量（不变）"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "投影与视图",
+  "sub_tag": "三种视图（主/左/俯）",
+  "keyword": "俯视图数字、俯视图、宽相等、长对正、高平齐"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "中点与和差",
+  "keyword": "AM=MB=AB"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "互余与互补",
+  "keyword": "互余、互补、余角、补角、和为90°、和为180°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "投影与视图",
+  "sub_tag": "从不同方向看",
+  "keyword": "三视图能反映物体的形状和大小、三视图"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "余角、补角与方位角",
+  "keyword": "∠A+∠B=90°→∠A与∠B互余、∠α+∠β=90°、∠α与∠β互余、互余90°、互补180°、北偏东、南偏西、南北为基准、同角、同角或等角的余角相等、同角或等角的补角相等、等角余(补)角相等、互余、互余=90°、互补、互补=180°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "全等三角形",
+  "sub_tag": "全等的概念",
+  "keyword": "三要素:原点、对应角相等（≌）、底数、投射线、投影面、指数、单位长度、对应边相等、正方向"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "几何图形与立体图形",
+  "keyword": "圆锥、实物→抽象、常见图形、平面图形、有些含曲面（如圆柱）、有些立体图形由平面图形围成（如长方体）、棱柱、棱锥、正方体、球等、立体图形、立体图形：各部分不都在同一平面内、立体图形：各部分不都在同一平面内的几何图形、立体图形：长方体、三视图、圆柱、展开图、平面、立体"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "几何图形分类",
+  "keyword": "立体图形、平面图形、几何体分类、柱体锥体球体"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "几何语言的表达",
+  "keyword": "几何语言"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "同旁内角",
+  "keyword": "三线八角、U型"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "图形的放大与缩小",
+  "keyword": "大小改变、缩小后形状不变、放大"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "平移与旋转",
+  "sub_tag": "图形的旋转",
+  "keyword": "翻折、定点叫旋转中心、平移、旋转、转动的角度叫旋转角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "圆",
+  "sub_tag": "圆",
+  "keyword": "到定点距离=定长、半径确定大小、圆心确定位置、定点是圆心、定长是半径、圆=点集、直径=最长弦"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "圆柱与圆锥",
+  "sub_tag": "圆柱的表面积",
+  "keyword": "S表=2πrh+2πr²"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "圆柱与圆锥",
+  "sub_tag": "圆柱的认识",
+  "keyword": "V=Sh=πr²h、侧面展开是一个矩形、宽=高、长=底面周长"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "圆",
+  "sub_tag": "圆的周长",
+  "keyword": "圆的周长、C=πd、C=2πr、周长公式、圆周率"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "圆",
+  "sub_tag": "圆的定义",
+  "keyword": "d=r⇔点在圆上、原点、定点=圆心、定长=半径、平移方向：射线方向、平行四边形+一个直角、平行四边形+邻边等、旋转:、沿定方向移动定距离、绕定点转一定角、角∠、角∠AOB、集合定义·圆心·半径、d<r⇔圆内、d>r⇔圆外、中心+方向+角度、单位长度、正方向"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "圆",
+  "sub_tag": "圆的认识",
+  "keyword": "侧面展开是一个扇形、同圆中半径相等、扇形面积=圆面积×圆心角度数、直径相等、d=2r"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "圆",
+  "sub_tag": "圆的面积",
+  "keyword": "S=πr²、S环=π(R²-r²)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "圆柱与圆锥",
+  "sub_tag": "圆锥的体积",
+  "keyword": "V=⅓Sh=⅓πr²h"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "垂线",
+  "keyword": "两条直线相交成直角时互相垂直、交点叫垂足、其中一条直线叫另一条直线的垂线、垂直、垂线、垂线的性质：过一点有且只有一条直线与已知直线垂直、垂线段最短"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "展开与折叠",
+  "keyword": "11种标准型、2全等底+n长方侧、凹字格、同行隔一个、圆柱侧面↔长方形、圆锥侧面↔扇形、异行隔一列、相对面、禁田字格、展开图"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "平行公理及推论",
+  "keyword": "平行公理、过直线外一点、平行于同一条直线、传递性"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "截一个几何体",
+  "keyword": "截面、截几何体、切面形状、正方体截面、三视图"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "投影与视图",
+  "sub_tag": "截面（平面截几何体）",
+  "keyword": "三角、不可七边形、圆柱：圆、圆锥：圆、椭圆、正方体→最多六边形、球：圆、长方、截面"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "探索与表达规律",
+  "keyword": "→代数表达、列举→找规律、归纳法：特殊→一般"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "方向角",
+  "keyword": "北偏西30°、如：南偏东50°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "平移与旋转",
+  "sub_tag": "旋转",
+  "keyword": "旋转：绕点、轴转动"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "比较与中点",
+  "keyword": "线段中点、中点、比较线段长短、等分"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "比较法则",
+  "keyword": "负数：绝对值大的反而小"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "点到直线的距离",
+  "keyword": "点到直线距离、垂线段、垂线段最短、距离"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "点和线",
+  "keyword": "点、线、线段、射线、直线、点与线的关系"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "点线面体",
+  "keyword": "半圆→球、平面（无限延展无厚度）、曲面、点→线→面→体、点动成线、直角三角形→圆锥、线动成面、长方形→圆柱、面动成体"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "画线段的和、差、倍",
+  "keyword": "画线段的和"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "直线、射线与线段",
+  "keyword": "射线、直线、两点确定一条直线、线段"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "直线的基本性质",
+  "keyword": "两点确定一条直线、直线性质、两点之间线段最短、确定直线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "相交与垂直",
+  "keyword": "垂直=相交成90°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "线段、射线、直线的表示",
+  "keyword": "线段AB、线段a、线段是射线和直线的一部分、两点确定一条直线、经过两点有且只有一条直线（两点确定一条直线）"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "线段和差",
+  "keyword": "c=b-a、m=a+b、线段的差：AD=AB-DB"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "线段比较",
+  "keyword": "线段长短、比较线段、度量线段、叠合法"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "线段的中点",
+  "keyword": "AB=AC+CB、AM=MB、中点、中点M:"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "线段的比较与度量",
+  "keyword": "a:b=a、d⇔ad=bc、也可以进行加减运算、等比性质、线段可以比较大小、线段度量、线段最短、线段比=长度比、对应线段比=k、尺规作图：作一条线段等于已知线段"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "线段长短比较",
+  "keyword": "线段比较、长短比较、度量法、叠合法"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "角",
+  "keyword": "1周角=360°、1平角=180°、1直角=90°、两条射线叫作边、公共端点叫作顶点"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "角比较",
+  "keyword": "与两边张开程度有关、角的大小与边的长短无关"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "角的度量与分类",
+  "keyword": "周角=360°、平角=180°、直角=90°、量角器、锐角<90°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "角的度量与角平分线",
+  "keyword": "两角相等、度分秒是60进制、1°=60′、1′=60″、平分、度分秒换算、顶点+两条射线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "角的概念",
+  "keyword": "扇形=两半径+弧、顶点+两条射线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "角的比较",
+  "keyword": "则∠AOC=∠BOC=∠AOB、度量法：用最角器量出度数比较、若OC平分∠AOB、角的和差倍分运算与数的运算类似、角的大小比较、量角器度量、度分秒换算"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "丰富的数据世界",
+  "keyword": "定性数据(类别)、定量数据(数值)"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "平面图形",
+  "keyword": "多边形、扇形"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数学活动与素养拓展",
+  "sub_tag": "拓展策略：分类讨论",
+  "keyword": "4×4网格正方形数、n阶=∑k²、分类讨论"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "数据收集与分析",
+  "keyword": "抽样调查：从总体中抽取一部分个体进行调查、数据收集→统计图表→分析"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "数据的整理",
+  "keyword": "一手、二手、全面调查：对所有考察对象进行的调查、如身高、定量数据（数值数据）：可以用数值表示、成绩等、扇形统计图：能清楚地表示各部分在总体中的百分比、数据→信息、数据整理后制成统计表或统计图以便直观展示和分析、统计表可以清晰地表示数据"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "普查与抽样",
+  "keyword": "估计总体、抽样→样本、普查→全体"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "条形图/折线图/扇形图",
+  "keyword": "条形图、折线图、扇形图、统计图、画统计图"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "科学使用统计图",
+  "keyword": "标注标题和单位、纵轴起始0、避免误导"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "读图分析",
+  "keyword": "读图→分析→判断→预测"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "调查方式",
+  "keyword": "个体、代表性+广泛性、总体、抽样：样本、普查vs抽查、普查：全部对象、问卷、统计表"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数学活动与素养拓展",
+  "sub_tag": "选择解法原则",
+  "keyword": "复杂方程组可先整理为标准形式(ax+by=c)再求解"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七上",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "频数与频率",
+  "keyword": "所有频率之和等于1、频数·频率=频数、频率在0~1之间、频率：频数与数据总数的比、总数、频率=频数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "三项连比",
+  "keyword": "a:b:c=am:bm:cm"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "公式法",
+  "keyword": "a²-b²=(a+b)(a-b)、a²−b²=(a+b)(a−b)、两个数的平方差等于这两个数的和与差的积、a²±2ab+b²=(a±b)²"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "公式的逆用",
+  "keyword": "公式逆用·简便计算"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "分式",
+  "sub_tag": "分式",
+  "keyword": "A是分子、B是分母、比例基本性质、分母≠0"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "分式",
+  "sub_tag": "分式乘除",
+  "keyword": "B)ⁿ=Aⁿ、a)ⁿ=bⁿ、d=ac"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "分式",
+  "sub_tag": "分式加减",
+  "keyword": "同分母：a"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "分式",
+  "sub_tag": "分式定义",
+  "keyword": "B含字母）、B（B≠0"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "分式",
+  "sub_tag": "分式性质",
+  "keyword": "(B÷C)(C≠0)"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "有理数",
+  "sub_tag": "加减法",
+  "keyword": "相反→加减、系数相等、先通分、同分母"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "十字相乘法",
+  "keyword": "x²+(a+b)x+ab=(x+a)(x+b)、如：x²+6x+9"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式的加减",
+  "sub_tag": "单项式×单项式",
+  "keyword": "同底数幂相乘、同底数幂相除、系数乘系数、系数除系数、幂相减、系数×系数、系数除"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "占比问题",
+  "keyword": "占比=部分量、总量×100%"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式的加减",
+  "sub_tag": "去括号",
+  "keyword": "负号全变、a(b+c)=ab+ac"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "变化率问题",
+  "keyword": "原量×100%、变化率=(现量-原量)"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "同底数幂乘法",
+  "keyword": "a^(m-n)（a≠0、a^m·a^n=a^(m+n)(m、a^m÷a^n=a^(m-n)(a≠0、aᵐ÷aⁿ=aᵐ⁻ⁿ、aᵐ÷aⁿ=aᵐ⁻ⁿ(a≠0)、aⁿ·aᵐ=aⁿ⁺ᵐ、n为正整数、n都是正整数)、（a≠0、（a≠0）、aᵐ·aⁿ=aᵐ⁺ⁿ、a⁰=1、n为正整数）"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "因式分解定义",
+  "keyword": "公因式要提尽、多项式→整式×整式与整式乘法互逆、注意检查是否分解彻底"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式的加减",
+  "sub_tag": "多项式÷单项式",
+  "keyword": "多项式除单项式、逐项相除、除法法则"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "完全平方公式",
+  "keyword": "(a+b)²=a²+2ab+b²、(a+b+c)²=a²+b²+c²+2ab+2ac+2bc、两数和的平方等于这两数的平方和加上这两数积的2倍、如：x²−9、首平方±2倍首尾+尾平方、(a±b)²=a²±2ab+b²、a²±2ab+b²=(a±b)²"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "定义的含义",
+  "keyword": "已证的真命题、明确术语含义的规定、明确概念·推理基础、演绎推理·判断真伪"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "实数",
+  "sub_tag": "实数",
+  "keyword": "实数、实数=有理∪无理、无理数、实数=有理数+无理数、有理数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "有理数",
+  "sub_tag": "实数与数轴",
+  "keyword": "一一对应关系、数轴上右边的点表示的数总比左边的大"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "实数",
+  "sub_tag": "实数分类",
+  "keyword": "实数{有理数、按符号分：正实数、无理数}、负实数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式的加减",
+  "sub_tag": "展开后合并同类项",
+  "keyword": "合并同类项、展开、去括号、化简"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "有理数",
+  "sub_tag": "幂的乘方",
+  "keyword": "(aⁿ)ᵐ=aⁿᵐ、底数不变、指数相乘、(aᵐ)ⁿ=aᵐⁿ、n为正整数）、幂的乘方"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "有理数",
+  "sub_tag": "幂的乘方的推广",
+  "keyword": "幂的乘方、乘方运算性质、推广到整数指数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "幂的运算性质",
+  "keyword": "幂的运算、同底数幂、幂的乘方、积的乘方、零指数负指数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "实数",
+  "sub_tag": "平方根与算术平方根",
+  "keyword": "0的平方根是0、x=±√a、x=±√a(a≥0)、x=√a、x²=a、x²=a(a≥0)、x²=a（x>0）、±√a(a≥0)、±√a（a≥0）、√0=0、则x=±√a(a≥0)、正数±√a·0·负数无、正数有两个平方根、正数有两个平方根互为相反数、算术平方根是非负数、若x²=a、计算器操作、记作√a、读作根号a、负数没有平方根、（√a）²=a(a≥0)、(a≥0)、(√a)²=a、√(a²)=|a|、√a≥0、互为相反数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "循环小數化分数+二分法",
+  "keyword": "化循环小数为分数、错位相减法"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "有理数",
+  "sub_tag": "探究与发现：从数系扩充看有理数",
+  "keyword": "数系扩充"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "推论",
+  "keyword": "由定理推出"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "提公因式法",
+  "keyword": "(b-a)²=(a-b)²、(y-x)=-(x-y)、(y-x)²=(x-y)²、ma+mb=m(a+b)、y-x=-(x-y)、各项同提公因式、提公共因式、检查是否彻底、ma+mb+mc=m(a+b+c)"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式的加减",
+  "sub_tag": "整式乘法",
+  "keyword": "同底幂×、系数×、对于只在一个单项式中出现的字母、系数×系数、连同指数作为积的一个因式"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式的加减",
+  "sub_tag": "整式化简",
+  "keyword": "注意乘法公式的运用可以简化计算"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式的加减",
+  "sub_tag": "整式的乘法",
+  "keyword": "整式乘法、单项式乘单项式、单项式乘多项式、多项式乘多项式"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式的加减",
+  "sub_tag": "整式除法",
+  "keyword": "整式除法、单项式除单项式、多项式除单项式"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "实数",
+  "sub_tag": "无理数与实数",
+  "keyword": "∛3等、如：π、无理数=无限不循环小数、无理数：π、无限不循环小数、有理数：整数和分数（有限小数和无限循环小数）、实数=有理数+无理数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "比的基础概念",
+  "keyword": "a:b(b≠0)、a:b=a、b=a÷b"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式的加减",
+  "sub_tag": "求代数式值的步骤",
+  "keyword": "代数式求值、代入求值、先化简再求值"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "法则的推广",
+  "keyword": "运算法则推广、乘法法则、幂的运算推广"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "有理数",
+  "sub_tag": "混合运算",
+  "keyword": "（括号优先）、乘方→乘除→加减"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "百分数在统计中的应用",
+  "keyword": "估算总体=总数×样本占比、分析数据得出结论并做出决策、整理数据、通过收集数据"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "有理数",
+  "sub_tag": "科学记数法（小数形式）",
+  "keyword": "10^(-n)（1≤|a|<10、n为正整数）"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "有理数",
+  "sub_tag": "积的乘方",
+  "keyword": "(ab)ⁿ=aⁿ·bⁿ、b^n（n为正整数）、(ab)ⁿ=aⁿbⁿ"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "实数",
+  "sub_tag": "立方根",
+  "keyword": "(∛a)³=a、0的立方根是0、x=³√a、x=∛a、x³=a、³√a（a为任意实数）、∛(-a)=-∛a、∛(a³)=a、∛(−a)=−∛a、奇次根号下可以为负、正³√正·0·负³√负、正数有1个正立方根、正数的立方根是正数、记作∛a、负数有1个负立方根、负数的立方根是负数"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "实数",
+  "sub_tag": "立方根应用",
+  "keyword": "V=x³、x=∛V"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "分式",
+  "sub_tag": "约分与最简分式",
+  "keyword": "约公因式→最简分式-a"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "数学活动与素养拓展",
+  "sub_tag": "纳米材料",
+  "keyword": "负指数与分式运算应用"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "综合分解步骤",
+  "keyword": "一提公因式→二套公式→三检查→四分组"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "实数",
+  "sub_tag": "计算器求算术平方根",
+  "keyword": "h=½gt²、v₂=√(2gr)"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "运算注意",
+  "keyword": "符号·不漏项"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "银行利息",
+  "keyword": "利息=本金×利率×存期、总额=本金+利息"
+ },
+ {
+  "version": "数与式",
+  "grade": "七下",
+  "main_tag": "实数",
+  "sub_tag": "零指数幂",
+  "keyword": "1（a≠0）、a^n（a≠0、n为正整数）"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "一元一次不等式的解法与解集",
+  "keyword": "<0↔下方、>0↔上方、ax+b>0(a≠0)、ax<b（a≠0）、≤不大于、≥不小于、一个未知数·次数为1·整式、一元一次不等式组、上方部分、不等号表示关系、不等号：>、不等式→约束→最优、不等式的概念、不等式的解与解集、不等式组、不等式组的解集是各个不等式解集的公共部分、交点、交集、但要注意变向、使不等式成立的未知数的值叫作不等式的解、口诀：同大取大、各解集的公共部分、同一未知数·多个不等式、图象上方部分、大大小小无解、实心(取等)、实心含等、常见不等号：>、所有不等式解集的公共部分叫不等式组的解集、所有解的集合、拆成两个不等式→分别解→取交集、数形结合、文字⇒符号不等式、方程↔交点、最简形式：ax>b或ax<b（a≠0）、标准形式：ax>b、步骤同解方程、步骤类似方程、空心不含等、空心圆点）、解不等式步骤：去分母→去括号→移项→合并同类项→系数化为1、解二次不等式、解集、解集取公共部分、解集可在数轴上表示（实心、解集是各不等式解集的公共部分（交集）、解集表示：数轴上空心(不取等)、配比范围、限速限重、除负数变号、则a±c>b±c、去分母→去括号→移项→合并→系数化1、同小取小、大"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "二元一次方程组",
+  "sub_tag": "三元一次方程组",
+  "keyword": "三元一次方程组、三个未知数、消元转化"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "不等式及其性质",
+  "keyword": "B=A·C、B·C(C≠0)、ad=bc、y)就是函数图象上点的坐标、y=kx+b与x轴关系、Δ<0无交点、Δ=0有一个交点、Δ>0有两个交点、Δ→交点个数、不等式→上下方范围、乘除正数、乘除负数、乘除负数必须变号、交点=分界点、交点=方程组的解、先分别求解、再取交集、图象上方⇒值大、图象法解不等式、在数轴上找公共部分、方向不变、方向改变！、方程→交点横坐标、方程的解(x、移变号：移项要变号、解不等式kx+b>0等价于函数图象在x轴上方部分对应的x范围、解方程求未知项、（与等式最大区别）、交点个数=根的个数、交点横坐标=方程根、去分母→去括号→移项→合并→化1、等式性质"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "二元一次方程组",
+  "sub_tag": "二元一次方程组应用题",
+  "keyword": "两个等量关系→两个方程、使所有方程都成立的解、列两个方程、列方程组、设两个未知数、审题、设元"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "二元一次方程组",
+  "sub_tag": "二元一次方程组的概念",
+  "keyword": "CT扫描应用、ax+b=0(a≠0)、ax+by=c(a、b≠0)、一次、一般形式：ax+b=0、一般形式：ax+b=0(a≠0)、一般形式：ax+by+cz=d、一般形式：ax+by=c、一般形式：ax+by=c(a、三个未知数·三个方程、三未知数、不一定每步都需要、两个二元一次方程联立、两个方程、两个未知数、两个未知数·次数为1、二元一次方程有无数组解、五步法、交点坐标=方程组解、使等式成立的未知数的值、其图像是一条直线、再转化为一元、古算题、叫作方程组的解、同时满足方程组中每个方程的公共解、同时满足方程组中每个方程的公共解叫方程组的解、含两个未知数且次数都是1的整式方程、基本思路：通过消元将三元转化为二元、定义：含两个未知数、得到关于另外两个未知数的二元一次方程组、方程组中各方程的公共解叫这个方程组的解、方程组建模、最高次1、未知数次数都是1、注意不要漏乘不含分母的项、注意检验解是否符合实际意义、注意灵活运用步骤、继续求解即可、解为一组(x、解法：通过消元转化为二元一次方程组、设2元→找2组等量关系、购票、通过消元转化为二元一次方程组再求解、配套、(a≠0)、1元+1次+整式、a"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "二元一次方程组",
+  "sub_tag": "二元一次方程组解法",
+  "keyword": "b₁=b₂⇒无数解、b₁≠b₂⇒无解、k₁=k₂、k₁≠k₂⇒唯一解、代入、代入消元、加减、加减消元、平行无解、用一个表示另一个、相交唯一解、相反、重合无数解、系数相等"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "二元一次方程组",
+  "sub_tag": "代入法",
+  "keyword": "代入消元、代入法、解方程组、用x表示y"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "二元一次方程组",
+  "sub_tag": "关系式法",
+  "keyword": "代入求值、关系式：y=…（含x）"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "去分母",
+  "keyword": "两边同乘分母LCM"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "四类基础解集(设a<b)",
+  "keyword": "同大取大、大大小小找不到、大小中间取、无交集无解、求整数解、连续复合⇒不等式组、同小取小、大小小大中间找"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "圆柱侧面积",
+  "keyword": "侧面展开为长方形、宽=高、长=底面周长"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "圆柱表面积",
+  "keyword": "S表=2πrh+2πr²、S表=πrl+πr²"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "圆锥的侧面积和全面积",
+  "keyword": "S侧=pi*rl、S全=pi*r(l+r)、S圆锥侧=πrl、n=360°×r、S侧=πrl"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "分式方程",
+  "sub_tag": "增根成因",
+  "keyword": "为增根、公分母=0的解、舍去"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "定义与解集",
+  "keyword": "3未知数+1次+整式、两次消元、公共部分⇒解集、公共部分即为解集、多个不等式联立、三元→二元→一元"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "不等式求解应用",
+  "keyword": "反比例+不等式求范围、实心(含)、左<右>、建不等关系→列不等式→求整数解、建不等式组→求公共解→筛选整数解、空心(不含)、设元→列不等式→整数解、s=vt、审题→设元→列方程"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "扇环面积",
+  "keyword": "S=n(πR²-πr²)"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "排队问题",
+  "keyword": "不等式组方案优化"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "数轴表示解集",
+  "keyword": "实心含等号、空心不含等号、空心圆圈(不含)·实心圆点(含)"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "根据实际列方程",
+  "keyword": "设未知数→列等量方程"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "比例应用题",
+  "keyword": "三未知数等量关系、按比分配、正反等比、矩阵消元思想、逐步筛选缩小范围"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "二元一次方程组",
+  "sub_tag": "消元思想",
+  "keyword": "二元→一元·化归思想"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "经济利润问题",
+  "keyword": "利润=售价-进价、售价=标价×折扣、标价=进价×(1+提高率)、审→设→列→解→验→答"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "行程问题",
+  "keyword": "S总、分段变速列式、则每天完成1、相遇：路程和=总、若m天完成、追及：路程差"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "解的不唯一性",
+  "keyword": "无数个解"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "解集",
+  "keyword": "解集、不等式解、取值范围、解不等式、数轴表示"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "七下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "解集的四种情况",
+  "keyword": "同大取大·同小取小·大小取中·矛盾无解"
+ },
+ {
+  "version": "函数",
+  "grade": "七下",
+  "main_tag": "一次函数",
+  "sub_tag": "关系式法",
+  "keyword": "代入求值、关系式：y=…（含x）"
+ },
+ {
+  "version": "函数",
+  "grade": "七下",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "图象",
+  "keyword": "图象→趋势、a<0开口向下、a>0开口向上、a决定开口方向、一条直线"
+ },
+ {
+  "version": "函数",
+  "grade": "七下",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "图象坐标轴含义",
+  "keyword": "横轴=自变量、纵轴=因变量"
+ },
+ {
+  "version": "函数",
+  "grade": "七下",
+  "main_tag": "一次函数",
+  "sub_tag": "图象解读",
+  "keyword": "上升↗增大、下降↘减小、拐点=变化分界、水平→不变"
+ },
+ {
+  "version": "函数",
+  "grade": "七下",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "坐标定位",
+  "keyword": "选原点→定方向→定单位"
+ },
+ {
+  "version": "函数",
+  "grade": "七下",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "平面直角坐标系与坐标",
+  "keyword": "x轴、x轴(横)·y轴(纵)·原点O、x轴(横轴)、y轴(纵轴)、一一对应、交点为原点O、原点、原点O、定单位、定方向、平面xOy、或(-kx、放大、水平的叫x轴（横轴）、水平的数轴叫x轴（横轴）、竖直的叫y轴（纵轴）、竖直的数轴叫y轴（纵轴）、缩小、选原点、y轴、先横后纵、右加左减x、四个象限"
+ },
+ {
+  "version": "函数",
+  "grade": "七下",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "有序数对",
+  "keyword": "有序数对、坐标、横坐标、纵坐标、数对表示位置"
+ },
+ {
+  "version": "函数",
+  "grade": "七下",
+  "main_tag": "一次函数",
+  "sub_tag": "自变量、因变量",
+  "keyword": "自变量→因变量"
+ },
+ {
+  "version": "函数",
+  "grade": "七下",
+  "main_tag": "一次函数",
+  "sub_tag": "表格法",
+  "keyword": "列表观察趋势、表格：对应值一目了然"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "全等三角形",
+  "sub_tag": "AAS",
+  "keyword": "AAS：两角+对边、AAS"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "全等三角形",
+  "sub_tag": "SAS",
+  "keyword": "SAS⇒相似、SAS：两边+夹角、SSA无效、夹角=中间角、AA、AAS、ASA、SAS"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "全等三角形",
+  "sub_tag": "SSS",
+  "keyword": "SSS⇒相似、SSS：三边对应相等、三角形稳定、四边形不稳定"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "三大性质",
+  "keyword": "两直线平行→同位角、内错角相等、同旁内角互补"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "三线",
+  "keyword": "内心(角平分线交点)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "三线八角",
+  "keyword": "F型、F型同位角、U型同旁内角、Z型内错角、两条直线被第三条直线所截形成的角、内错角：两条直线被第三条直线所截、同位角(F型)、同位角（F型）、在两条直线之间且在截线两侧（Z形）、U型、Z型、内错角、同位角、同旁内角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "三角形的定义与分类",
+  "keyword": "90°<钝角<180°、三角形的定义与分类、两条边、周角=360°、平角=180°、按角、按角分：锐角三角形、按边分类、钝角三角形、锐角<90°、锐角·直角·钝角·等腰·等边、直角=90°、直角三角形、顶点"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "举反例",
+  "keyword": "1个反例→假命题、反例·说明假命题"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "互逆命题与互逆定理",
+  "keyword": "互逆命题、互逆定理、原真↛逆真、条件⇄结论互换"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "轴对称",
+  "sub_tag": "作轴对称图形",
+  "keyword": "轴对称作图、对称轴、对称点、作对称图形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "全等三角形",
+  "sub_tag": "全等图形",
+  "keyword": "全等：形状大小完全相同、周长相等、完全重合、对应边等、对应角等、面积"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "全等三角形",
+  "sub_tag": "全等应用",
+  "keyword": "构造全等→测距离"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "内错角",
+  "keyword": "内错角、同位角、同旁内角、三线八角、相等互补"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "几何推理",
+  "keyword": "公理"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "全等三角形",
+  "sub_tag": "判定定理",
+  "keyword": "⇒两直线平行、内错角相等→平行、同旁内角互补→平行、对角等、对角线平分、平行且等、平行线构造转换证明、注意SSA不能判定、5种判定方法、AAS、ASA、HL、SAS、同位角相等、同位角相等→平行、平行、相等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "全等三角形",
+  "sub_tag": "判定方法",
+  "keyword": "HL(仅直角三角形)、SSA不能判定一般三角形全等、三边成比例的两个三角形相似（SSS）、但HL（特殊的SSA）可以判定直角三角形全等、同位角相等→∥、AAS、ASA、SAS"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "同一平面两直线分类",
+  "keyword": "平行(无公共点)、相交(1公共点)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "命题",
+  "keyword": "假命题：错误的命题、判断一件事情的语句叫命题、原命题为真、真命题：正确的命题、逆命题不一定为真、交换条件与结论、如果→那么、条件+结论"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "命题、定理与平移",
+  "keyword": "命题、定理、平移、真命题、假命题"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "命题的定义",
+  "keyword": "判断性语句、条件→结论"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "图形变换的应用",
+  "keyword": "轴对称都保持图形的形状和大小不变、平移、旋转"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "图案设计",
+  "keyword": "2次平行轴对→平移、2次相交轴对→旋转、变换组合设计图案、在几何证明中常用图形变换来构造辅助线或转化问题、平移+旋转+轴对称、平移+旋转+轴对称组合、组合变换设计图案"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "圆",
+  "sub_tag": "圆、弧、扇形、圆心角",
+  "keyword": "半径r、圆心O、弧⌒AB、扇形=弧+2半径、扇形圆心角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "圆",
+  "sub_tag": "圆周率历史",
+  "keyword": "刘徽、密率355、祖冲之、约率22"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "圆柱与圆锥",
+  "sub_tag": "圆柱体积",
+  "keyword": "S底h、底面积×高"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "圆",
+  "sub_tag": "圆的基础概念",
+  "keyword": "1底面+1侧面、2底面+1侧面、π≈3.14、母线l、高=母线h、高h、d=2r"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "圆柱与圆锥",
+  "sub_tag": "圆锥体积",
+  "keyword": "圆锥体积、V=⅓πr²h、圆锥、底面积×高÷3"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "几何图形初步",
+  "sub_tag": "垂直",
+  "keyword": "点到直线距离、过一点有且只有一条垂线、垂线段最短、垂足"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "垂线",
+  "keyword": "两条直线相交成直角时互相垂直、交点叫垂足、其中一条直线叫另一条直线的垂线、垂直、垂线、垂线的性质：过一点有且只有一条直线与已知直线垂直、垂线段最短"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "基本事实（公理）",
+  "keyword": "公认·不需证明"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "实验与归纳",
+  "keyword": "实验→观察→猜想"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "平移与旋转",
+  "sub_tag": "平移",
+  "keyword": "平移：位置变、形状大小不变"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "平移与旋转",
+  "sub_tag": "平移作图与应用",
+  "keyword": "关键点法作图、利用平移可以设计图案、截取平移距离、找关键点→平移→连接、找关键点平移再连线、计算图形面积、证明线段或角的相等关系、过关键点作平移方向平行线、确定关键点、连线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "平移定义与性质",
+  "keyword": "2条对称轴+中心对称、AC=BD、OA=OA'、Rt△斜边中线=½斜边、∠AOA'=旋转角、一个直角的□、对应点连线平行且相等、对角线互相垂直平分且平分一组对角、对角线垂直、对角线相等且互相平分、平移：方向+距离、（P在中垂线上）、4条对称轴、OA=OB=OC=OD、PA=PB、S=½d₁d₂、全等、周长比=k、四角=90°、对应角=、对应边成比例、对角相等、对角线互相平分、对角线相等、对边相等、形状大小不变、性质：四个角都是直角、性质：四条边都相等、正方形=矩形+菱形、面积比=k²"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "平移与旋转",
+  "sub_tag": "平移的性质",
+  "keyword": "对应点连线长度、对边、平移前后图形的形状和大小相同、平移距离、形状大小不变·对应点连线平行且相等、距离比=相似比、邻角互补、且=、对角="
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "平移与旋转",
+  "sub_tag": "平移规律",
+  "keyword": "上下→y±k、右加左减x、左右→x±h、上加下减y"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "平行线的判定与性质",
+  "keyword": "(根号5-1)、2≈0.618、AC²=AB·BC、DB=AE、≈0.618、三角板平移法、判定是因→果、判定：角相等→线平行、夹在平行线间的等底三角形面积相等、平行→比例、平行于三角形一边的直线截其他两边、平行线→对应线段成比例、平行线成比例、平行线间的距离处处相等、平行线间距离处处相等、性质是果→因、性质：线平行→角相等、所得对应线段成比例、所得的对应线段成比例、有且只有一条平行线、约等于、艺术·建筑·自然、过直线外一点、这是证明相似三角形的重要依据（预备定理）、黄金△、黄金比、黄金比(√5-1)、黄金比=(√5-1)、黄金矩形、两直线平行、内错角相等、同位角相等、平行、平行公理：经过直线外一点、有且只有一条直线与这条直线平行、黄金比≈0.618"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "平面镶嵌",
+  "keyword": "正△、正六边形、正方形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "圆",
+  "sub_tag": "弧与圆心角",
+  "keyword": "优弧>180°、劣弧<180°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "圆",
+  "sub_tag": "弧长公式",
+  "keyword": "l=n*pi*r、l=nπR、l=nπr"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "归纳推理",
+  "keyword": "特殊→一般"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "平移与旋转",
+  "sub_tag": "旋转作图",
+  "keyword": "定中心→定角→作对应点、对应点到旋转中心距离相等、按方向作相等角、旋转中心·方向·角度、旋转角相等、用圆规量距离、连接关键点与旋转中心、确定关键点、连线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "平移与旋转",
+  "sub_tag": "旋转的齿轮",
+  "keyword": "周长综合、弧长、比例"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "演绎推理",
+  "keyword": "一般→特殊"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "几何图形初步",
+  "sub_tag": "直线",
+  "keyword": "直线、射线、线段、两点确定一条直线、直线性质"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "相交线",
+  "keyword": "相交线、对顶角、邻补角、两条直线相交"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "真命题与假命题",
+  "keyword": "正确→真·错误→假、反例：举出一个符合题设但不符合结论的例子即可证明一个命题是假命题"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "类比推理",
+  "keyword": "类比→猜想"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "几何图形初步",
+  "sub_tag": "线段相关性质",
+  "keyword": "AB=2AM=2BM、AM=BM=½AB、尺规作图：作射线→截弧、两点之间线段最短、叠合法、度量法"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "几何图形初步",
+  "sub_tag": "角度单位换算",
+  "keyword": "60进制逐级换算、1°=60′、1′=60″"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "几何图形初步",
+  "sub_tag": "角的表示方法",
+  "keyword": "角的表示、∠、顶点、边、角的符号"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "证明",
+  "keyword": "证明的依据：定义、因为…所以…、基本事实、从已知条件出发、依据公理定理、通过逻辑推理说明结论正确"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "证明的步骤",
+  "keyword": "已知→求证→分析→证明"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "运算步骤",
+  "keyword": "系数相乘→同字母幂相乘→独有字母保留"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "邻补角与对顶角",
+  "keyword": "两条直线相交形成的角、对顶角、对顶角：两边互为反向延长线、邻补角互补=180°、邻补角互补（和为180°）、邻补角：有一条公共边、对顶角相等、邻补角互补"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "中国能源生产与消费",
+  "keyword": "扇形图+百分数+变化率"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "概率初步",
+  "sub_tag": "事件分类",
+  "keyword": "0<P<1随机、P=0不可能、P=1必然、不可能P=0、必然P=1、结果数越多→可能性越大、随机、随机0<P<1、不可能、不可能事件、必然、必然事件、随机事件"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "数据的分析",
+  "sub_tag": "众数",
+  "keyword": "众数：出现最多、可多个、出现次数最多"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "全面调查与抽样调查",
+  "keyword": "个体：每一个考察对象、个体：每个考察对象、分层抽样等方法可提高样本的代表性、总体→个体、总体→样本→容量、总体：所要考察的全体对象、总体：考察对象的全体、抽样、抽样调查·样本、抽样调查：省时省力但有误差、普查、普查·全体对象、普查·抽样、样本：抽取的部分个体、样本：抽取的部分对象、每个个体被抽到的机会相等、简单随机抽样、简单随机抽样是最基本的抽样方法、适用于破坏性检验或数量大的情况"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "公式的几何解释",
+  "keyword": "面积法验证公式"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "可能性的大小",
+  "keyword": "数量多→可能性大、频率→概率"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "数据的分析",
+  "sub_tag": "平方差公式",
+  "keyword": "(a+b)(a-b)=a²-b²、(a+b)(a−b)=a²−b²、a²-b²=(a+b)(a-b)、a²−b²=(a+b)(a−b)、两数和与这两数差的积等于这两数的平方差、两项、均平方、如：(2x+3)(2x−3)、异号"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "抽样方法",
+  "keyword": "估计越准确、但工作量也越大、样本容量越大"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "数据整理",
+  "keyword": "分组、列表"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "概率初步",
+  "sub_tag": "概率",
+  "keyword": "P(A)=事件A发生的结果数、所有等可能结果的总数、范围0≤P(A)≤1、记作P(A)、P(A)=m"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "概率初步",
+  "sub_tag": "游戏公平性",
+  "keyword": "P不等⇔不公平、P相等⇔公平、两种情况发生可能性相等→公平、否则不公平"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "统计图表与频数分布直方图",
+  "keyword": "x̄=∑(数值×%)、一般分为5-12组、不同统计图有不同的特点和适用场景、不同统计量各有优缺点、分组·频数·频率、占比=部分、各扇形圆心角=该部分所占百分比×360°、圆心角=360°×占比、圆心角=360°×百分比、平均数·中位数·众数、应结合使用、总数×100%、所有小长方形的面积之和等于1（频率总和）、所有百分比之和为100%、扇形(比例)、扇形→百分比、扇形图·圆心角计算、扇形图→百分比、扇形圆心角、扇形圆心角=360°×该部分所占百分比、扇形圆心角=该部分占比×360°、折线(趋势)、折线→趋势、折线图→变化趋势、条形(具体)、条形→数量、条形图·折线图、条形图→众数、条形图→对比数量、极差→组距→分组→列表→画图、根据数据特点选择合适的统计图、横轴表示分组情况、横轴表示数据分组、横轴表示类别、注意统计结论可能存在的偏差和局限性、直方图、直方图·组距·组数、纵轴表示数量、纵轴表示频数、组数、组距=极差、绘制步骤：计算极差→决定组距和组数→列频数分布表→画直方图、绘制步骤：计算极差→确定组数和组距→分组→统计频数→画直方图、综合运用多种统计图表可以从不同角度更全面地分析数据"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "数学活动与素养拓展",
+  "sub_tag": "计算机绘图",
+  "keyword": "计算机辅助"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "七下",
+  "main_tag": "数据的分析",
+  "sub_tag": "频率与概率",
+  "keyword": "几何概率=面积比、频率->稳定值=概率、频率→概率（大量试验）、频率稳定值=概率、0≤P≤1、频率=m、频率→稳定→概率、频率≈概率"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "乘法公式",
+  "keyword": "(a+b)(a−b)=a²−b²、公式的正用、变形使用、完全平方公式、平方差公式、逆用、(a±b)²=a²±2ab+b²"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "乘除",
+  "keyword": "乘除混合运算、乘除应用、乘除"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "乘除法则",
+  "keyword": "D=AC、√a·√b=√(ab)、√a·√b=√ab、√b=√(a"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "公式法的应用",
+  "keyword": "可先提公因式再用公式法、或连续使用公式法"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "分式",
+  "sub_tag": "分式的概念与基本性质",
+  "keyword": "(B÷M)（M≠0）、(B≠0、(C≠0)、(M≠0)、B=(A·C)、B=A·C、B·C(C≠0)、B≠0且B含字母、B含字母)、a:b=am:bm、a=bm、d)=(a、d)=ac、分式值为0的条件：A=0且B≠0、分式有意义的条件：B≠0、如：x、最简整数比→互质、用于化简比和求比值、（C≠0）、b)（a≥0、c=(a±b)、√a·√b=√(ab)、乘除→分子分母分别运算、先通分、分子=0且分母≠0、分母≠0、同分母"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "分式",
+  "sub_tag": "分式的运算",
+  "keyword": "分子分母分别运算、约分、乘除、先通分、同分母"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "分式",
+  "sub_tag": "分式的除法",
+  "keyword": "分式除法、除以分式、乘倒数、分式运算"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "二次根式",
+  "sub_tag": "分母有理化",
+  "keyword": "分母有理化、有理化、根式化简、乘以有理化因式"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "加减",
+  "keyword": "化最简→合并同类、先通分、同分母"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "有理数",
+  "sub_tag": "加减法则",
+  "keyword": "B=(A±C)、化简→合并"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "分式",
+  "sub_tag": "同分母分式加减",
+  "keyword": "a=(b±c)"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "整式的乘法与因式分解",
+  "sub_tag": "因式分解",
+  "keyword": "(a+b)(a−b)=a²−b²（乘法）、a²−b²=(a+b)(a−b)（分解）、与整式乘法互为逆运算、公式法分解、分解因式、十字相乘、和→积（乘法逆运算）、因式分解、因式分解与整式乘法互为逆运算、多项式→整式乘积、提公因式法、结果必须是积的形式"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "实数",
+  "sub_tag": "实数的运算",
+  "keyword": "运算法则·运算律"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "幂的运算",
+  "keyword": "同底数幂、积的乘方、(ab)ⁿ=aⁿbⁿ、(aᵐ)ⁿ=aᵐⁿ、aᵐ·aⁿ=aᵐ⁺ⁿ、幂的乘方"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "性质与运算",
+  "keyword": "数与式性质、运算、综合运算、代数式运算"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "整式的乘法",
+  "keyword": "整式乘法、单项式乘单项式、单项式乘多项式、多项式乘多项式"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "分式",
+  "sub_tag": "整数指数幂",
+  "keyword": "a⁻ᵖ=1、a⁻ⁿ=1、aⁿ(a≠0)、负整数指数幂：a⁻ⁿ=1、零指数幂：a⁰=1(a≠0)、(a≠0)、a⁰=1"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "分式",
+  "sub_tag": "无限循环小数化分数",
+  "keyword": "0.142857142857...=1、如0.333...=1"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "确定公因式的方法",
+  "keyword": "最大公因数、首项为负时一般先提出负号、ma+mb+mc=m(a+b+c)"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "分式",
+  "sub_tag": "约分与通分",
+  "keyword": "最简分式：分子分母没有公因式"
+ },
+ {
+  "version": "数与式",
+  "grade": "八上",
+  "main_tag": "整式的加减",
+  "sub_tag": "降幂排列与升幂排列",
+  "keyword": "降幂排列、升幂排列、按次数排列、整式排列"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八上",
+  "main_tag": "分式",
+  "sub_tag": "分式方程及其应用",
+  "keyword": "两边同乘最简公分母、分母含未知数、分母含未知数的方程、化为整式方程求解、去分母→解整式方程、去分母→解整式方程→检验、增根、工程·行程·应用题、工程问题、常见题型：行程问题、检验不可省、等式、解分式方程的步骤、解法：去分母→解整式方程→检验、解法：去分母（两边同乘最简公分母）→解整式方程→检验、销售问题、验根、方程"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "勾股定理在实际中的应用",
+  "keyword": "梯子问题·最短路径"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八上",
+  "main_tag": "分式方程",
+  "sub_tag": "增根问题",
+  "keyword": "解分式方程必须验根！代入原方程或最简公分母检验"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "实际方案比较",
+  "keyword": "联立求交点→分段比较方案"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八上",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "对应关系",
+  "keyword": "⇔直线y=kx+b、二元一次方程→直线、ax+by=c"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "k,b符号与图象位置",
+  "keyword": "b符号→象限"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "k、b与象限",
+  "keyword": "b<0：一三四、b<0：二三四、b>0：一二三、b>0：一二四"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "k对图象的影响",
+  "keyword": "k>0上升·k<0下降·|k|陡度、y轴截距b"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "以原点为位似中心的坐标变换",
+  "keyword": "b)关于x轴对称→(a"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "位置确定",
+  "keyword": "如：北偏东30°方向5km处"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "函数图象",
+  "keyword": "列表→描点→平滑连线、列表→描点→连线"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "函数定义",
+  "keyword": "x的值→y唯一确定、自变量x→函数y"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "函数应用的一般步骤",
+  "keyword": "一次函数、交点=方程组解、分段函数应用、方案比较：函数值对比、注意自变量的取值范围要符合实际问题背景、s=vt"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "函数概念",
+  "keyword": "y是x的函数、函数值、定义域、x是自变量、y是因变量、变量（变化）、常量（不变）"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "函数的表示法",
+  "keyword": "三种方法各有优缺点、关系式法：y=f(x)、列表法：直观对应、可根据需要选用、图象法：直观趋势、解析式、解析法、解析法·列表法·图象法、列表、列表法、图像、图象法"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "分段函数",
+  "keyword": "不同区间不同解析式、分段函数"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "图形的平移与坐标变化",
+  "keyword": "上下平移：纵坐标加减（上加下减）、中心对称坐标变换、也可由图形变换推导坐标变化规律、关于y轴对称：(a、右加左减、左减右加x、左右平移·上下平移、横坐标变号、纵坐标不变、轴对称坐标变换、通过坐标变化可以研究图形变换、上加下减、上加下减y、右加左减x、横坐标不变"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "坐标与图形的位置",
+  "keyword": "上加、下减、不同位置的坐标系选择会影响坐标值但不改变图形本身、右移加、坐标平面：x轴、左移减、y轴、四个象限"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "坐标求图形面积",
+  "keyword": "割补法求面积"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "坐标轴对称变换",
+  "keyword": "x轴对称纵变号、y轴对称横变号"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "对称与坐标",
+  "keyword": "轴对称坐标、关于x轴对称、关于y轴对称、对称点坐标"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "待定系数法",
+  "keyword": "c即可、三点→一般式、代入点→解方程组、即得函数表达式、否则不是一次函数、将三点坐标代入得到三元一次方程组、必须满足k≠0的条件、解出a、解方程组求出k和b的值、设→代→解→写、设→代入→列方程组→解、设→代入三点→解方程组"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "描点法画图象",
+  "keyword": "两点确定一条直线、正比例：过(0、列表→描点→连线"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "方位角与距离",
+  "keyword": "距离确定位置、方位角"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "方案选择问题",
+  "keyword": "比较·选择·优化"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "求函数解析式",
+  "keyword": "函数解析式、待定系数法、求表达式、两点求解析式"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "点到坐标轴距离",
+  "keyword": "dᵧ=|x|、dₓ=|y|、到x轴:|y|·到y轴:|x|"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "点的坐标",
+  "keyword": "y)→x轴对称(x、各象限符号：Ⅰ(+、坐标轴上的点不属于任何象限"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "用坐标表示地理位置",
+  "keyword": "y)向上(下)平移b个单位、原则：使尽可能多的点落在坐标轴上、将点(x、平移坐标公式、简化坐标值、纵坐标加(减)b、选择原点和坐标轴的原则：使尽可能多的点落在坐标轴上、横坐标不变"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "确定位置的方法",
+  "keyword": "方位角+距离、有序数对、先横后纵、有序数对(a"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "绘制校园平面地图",
+  "keyword": "坐标系+方位角+比例尺+平移对称"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "自变量与函数值",
+  "keyword": "自变量·函数值·取值范围"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "一次函数",
+  "sub_tag": "自变量取值范围",
+  "keyword": "分母≠0、被开方数≥0"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "象限",
+  "keyword": "I象限(+"
+ },
+ {
+  "version": "函数",
+  "grade": "八上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "象限与坐标特征",
+  "keyword": "x轴y=0、y轴x=0、一(+、三(-、二(-、到x轴=|y|、到y轴=|x|、四(+"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "ASA（角边角）",
+  "keyword": "ASA：两角+夹边"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "HL",
+  "keyword": "HL（仅限直角△）"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "HL定理",
+  "keyword": "HL是直角三角形特有的全等判定方法、HL（直角三角形专属）、HL"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "SSA不能判定全等",
+  "keyword": "SSA、边边角、不能判定全等、反例"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "三条重要线段",
+  "keyword": "内心到三边等距、重心2:1"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "三角形",
+  "sub_tag": "三角形内角和与外角",
+  "keyword": "A+B+C=180°、AB=AC→∠B=∠C、S=√[p(p-a)(p-b)(p-c)]、p=(a+b+c)、∠B=∠C→AB=AC、三线合一（高＝中线＝顶角平分线）、三角均为60°、三角形三条中线的交点、三边相等、不相邻两内角之和、两边等→等腰、内心：三条角平分线交点、内角60°、内角和180°、内角和公式、另一边叫底边、在△ABC中、外角、外角=不相邻两内角和、对应角、对应边、对应顶点、直角三角形的两个锐角互余：∠A+∠B=90°、相似比：对应边的比、相等的两边叫腰、等边：3轴、重心定理：重心到顶点距离=2×重心到对边中点距离、3条对称轴、AB=AC⇒∠B=∠C、∠A+∠B+∠C=180°、∠A+∠B=90°、三线合一、三角=60°、内角和=(n-2)·180°、外角=不相邻两内角之和、外角和=360°、对应线段=、对应角=、对应边=、等边↔等角、等边△→60°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "三角形",
+  "sub_tag": "三角形按边分类与三边关系",
+  "keyword": "不等边、等腰、等腰需验证三边关系、等边"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "三角形",
+  "sub_tag": "三角形的概念与三边关系",
+  "keyword": "<1缩小、BE=EC=½BC、S△=½×C×r、S△ABD=S△ACD、|a−b|<c（三边关系）、∠BAD=∠CAD=½∠BAC、三角形成立条件、中线→重心、位似中心可在图形内部、位似图形的对应边互相平行或在同一直线上、位似比>1放大、内切圆的圆心叫三角形的内心、内心=三角平分线交点、外心·内心、外心：三边中垂线交点、外部或边上、形状相同、形状相同·对应边成比例、形状相同·边成比例、直角与直角边重合、相似图形的大小不一定相等、相似比又叫位似比、角平分线交于一点、这个点叫位似中心、钝角在外部、锐角在内部、高：顶点到对边垂线段、3条线段首尾相接、两边和>第三边、内切圆、内心=角平分线交点、对应边成比例、平分面积、相似比=对应边之比"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "三角形",
+  "sub_tag": "三角形的高、中线与角平分线",
+  "keyword": "三角形高、中线、角平分线、三线、重心"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "三角形",
+  "sub_tag": "中线",
+  "keyword": "中点连线→平分面积"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "互逆命题",
+  "keyword": "原命题成立其逆命题不一定成立、交换条件与结论"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "全等三角形判定",
+  "keyword": "HL（仅限直角、AAS、ASA、SAS"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "全等三角形的概念与性质",
+  "keyword": "中线、如三角形ABC相似于三角形DEF、对应高、相似多边形对应边的比叫做相似比、相似用符号表示、角平分线的比等于相似比、面积比等于相似比的平方、对应角相等、对应边相等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "全等判定",
+  "keyword": "全等判定、SSS、SAS、ASA、AAS、HL"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "全等定义",
+  "keyword": "全等、完全重合、对应顶点、对应边对应角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "全等性质",
+  "keyword": "全等性质、对应边相等、对应角相等、全等变换"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "全等补充拓展",
+  "keyword": "构造全等、证线段、角相等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "全等证明通用思路",
+  "keyword": "ASA→全等、公共边、角→SAS"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "公理与定理",
+  "keyword": "公理→推理起点、定理→推理依据"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "几何证明的步骤",
+  "keyword": "分析法（执果索因）、综合法（由因导果）"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "判定",
+  "keyword": "AA→相似、一组对边平行且相等→□、一组对边平行且相等的四边形是平行四边形、两组对边∥、直角+平行四边形⇒矩形、邻边相等+平行四边形⇒菱形、5种判定、AA、SAS、等角对等边"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "勾股定理",
+  "sub_tag": "勾股定理在几何中的应用",
+  "keyword": "坐标·线段·面积"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "勾股定理",
+  "sub_tag": "勾股数",
+  "keyword": "勾股数:3-4-5"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "反证法",
+  "keyword": "假设→矛盾→成立、假设反面、步骤：反设->归谬->结论"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "命题与证明",
+  "keyword": "命题、证明、题设、结论、真命题假命题"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "命题概念",
+  "keyword": "如果……那么……"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "平移与旋转",
+  "sub_tag": "图形平移性质与作图",
+  "keyword": "对应点连线平行相等、找关键点→平移→连线、形状大小不变"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "基本作图方法",
+  "keyword": "两角夹边(ASA)、两边夹角(SAS)、作三角形：已知三边(SSS)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "基本尺规作图",
+  "keyword": "五步作图法、五种基本作图、作一个角等于已知角、叠合：基准再叠加、圆规、基本作图：作一条线段等于已知线段、尺规作图、截取、无刻度直尺+圆规、直尺+圆规、直尺（无刻度）"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "三角形",
+  "sub_tag": "外角",
+  "keyword": "外角、三角形外角、外角等于不相邻内角和、外角和"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "定义、定理与证明",
+  "keyword": "经推理得出结论的过程、证明：从已知条件出发、因为…所以…"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "定义与命题",
+  "keyword": "假命题（有反例）、可写成\"如果…那么…\"的形式、命题由题设和结论两部分组成、命题：判断一件事情的语句、命题：如果…那么…、由条件和结论两部分组成、真命题（无反例）"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "轴对称",
+  "sub_tag": "最短路径",
+  "keyword": "作对称点、化折为直、将军饮马、作对称点→化折为直"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "轴对称",
+  "sub_tag": "等腰三角形的性质与判定",
+  "keyword": "\"三线合一\"：高=中线=角平分线、(全等性质)、90°（在Rt△ABC中、A=B=C=60°、AAS：两角及其中一角的对边相等→全等、AA·SAS(相似)·SSS(相似)、AA判定、AB+CD=AD+BC、ASA：两角及其夹边相等→全等、CD=½AB（D为斜边中点）、PD=PE⇒OP平分∠AOB、SAS(SSA无效)、SAS判定、SSS判定、∠B=∠C⇒AB=AC、∠C=90°）、∽·对应角等·边成比例、三个内角、三条边、三要素：三个顶点、三角形内角和等于180°、三角形用符号△表示、三边相等·三角相等·60°等腰、三边首尾相连、两内角之和、中位线∥第三边、中线·重心、互余⇒Rt△、作垂线证=r、作垂线证d=r、全等三角形的定义、全等是证明线段相等、内心到三边距离相等、内心是三条角平分线的交点、外角=A+B(不相邻)、外角=不相邻、如△ABC、完全重合·对应边、对应相等、对应线段比=相似比、对应高的比等于相似比、有一个角是60°的等腰三角形是等边三角形、用于判断能否构成三角形、等腰三角形的判定、等腰三角形的定义、等腰三角形的性质、等角→等腰、等边三角形、等边三角形的三个角都等于60°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "轴对称",
+  "sub_tag": "线段垂直平分线",
+  "keyword": "(性质定理)、CA=CB、PA=PB（P在AB的垂直平分线上）、两端画弧→交点连线、中垂线：垂直+平分、五种判定方法、公理→证明、内错角相等⇒平行、切线垂直过切点半径、切线长相等、判定1：两组对边分别平行→平行四边形（定义）、判定2：两组对边分别相等→平行四边形、判定定理、同位角相等⇒平行、同旁内角互补⇒平行、周长=k、垂直于同一直线的两直线平行、垂直同一直线⇒平行、垂直平分线、垂直平分线上、垂直平分线上的点等距两端、垂直平分线的定义、垂直平分线的性质与判定、外端⊥半径→切线、已知平行→推出角的关系、已知角的关系→判定平行、常用于证明点在垂直平分线上或求轨迹、平行→同位角相等、平行→角关系、平行→角相等、平行于同一直线的两直线平行、平行线的判定、平行线的定义与公理、性质定理、性质：线段垂直平分线上的点到线段两端点的距离相等、点到直线的距离：垂线段的长度、经过两点有且只有一条直线（公理）、经过直线外一点有且只有一条直线与这条直线平行（平行公理）、过半径外端⊥半径、过端点垂直半径=>切线、还有：平行于同一直线的两直线平行、面积=k²、5种判定、5种判定方法、两直线平行、互补、内错角、内错角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "全等三角形",
+  "sub_tag": "角平分线的性质",
+  "keyword": "OC平分∠AOB⇒∠AOC=∠COB、PD=PE、PD=PE（P在∠AOB的平分线上、∠AOB=∠AOC+∠COB、∠AOC=∠BOC、三条中线、三条角平分线各交于一点、三条高、两个角可以像数一样加减、判定：到角两边距离相等的点在角的平分线上、到线段两端点距离相等的点在线段的垂直平分线上、到角两边距离相等的点在角的平分线上、在角平分线上、常用于证明角相等或求点的轨迹、平分→两角相等、平分线上点→两边距离相等、性质+判定：到两边距离相等、角平分线、角平分线·内心、角平分线→距离等、角平分线上、角平分线为对称轴、角平分线是点的集合（轨迹）、角的和差计算与线段的和差类似、PA=PB、三条交于内心、垂直平分线→距离等、等距、距离相等、距离等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "证明格式",
+  "keyword": "反证法、已知→求证→证明"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "轴对称",
+  "sub_tag": "轴对称与轴对称图形",
+  "keyword": "一个图形（轴对称）、两个图形关于一条直线翻折后完全重合、两个图形（成轴对称）、位似中心·连线共点、作关键点关于对称轴的对称点、作垂线截等距、全等·对应点连线被对称轴垂直平分、圆都是轴对称图形、垂直平分、垂直平分法作图、对应点连线被对称轴垂直平分、对应线段相等、对折→完全重合、对折重合、对称变换、对称点的作法：过点作对称轴的垂线并延长、对称点连线⊥对称轴、对称轴⊥平分对应点连线、对称轴垂直平分、对称轴：折叠重合直线、成轴对称：2个图形、截取等长线段、找对称点→连接、找对称点→顺次连接、折叠后重合、折纸剪纸、等腰三角形·圆·正方形等、转化：不规则→对称全等、轴对称图形：1个图形、这条直线叫作对称轴、这条直线叫对称轴、重合的点是对应点（对称点）、对应点连线、对应线段=、对应角=、对应角相等、对称轴、正方形、相等、线段、连线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "逆定理",
+  "keyword": "a²+b²=c²→直角△、已知三边→判直角、a²+b²=c²⇒∠C=90°、交换条件与结论"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "三角形",
+  "sub_tag": "高",
+  "keyword": "顶点→垂足"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八上",
+  "main_tag": "数据的分析",
+  "sub_tag": "四分位数",
+  "keyword": "Q2(中位)、Q2中位数、Q₂(中位)、Q₃→箱线图、四分位距IQR=Q3-Q1、用于衡量数据的离散程度"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八上",
+  "main_tag": "数据的分析",
+  "sub_tag": "方差",
+  "keyword": "方差、谁更稳定、波动大小、离散程度、s²=Σ(xᵢ-x̄)²、越小越稳定、s²"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "二次根式",
+  "sub_tag": "两大核心性质",
+  "keyword": "二次根式性质、√a²、根号下非负、根式化简"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "数与代数·综合基础",
+  "sub_tag": "两点间距离公式",
+  "keyword": "AB=√[(x₂-x₁)²+(y₂-y₁)²]"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "二次根式",
+  "sub_tag": "二次根式的概念与性质",
+  "keyword": "(√a)²=a（a≥0）、0（非负性）、2)=√2、B含字母、a（a≥0）、√(x+a)⇒x+a≥0、√8=2√2与√2同类、√a(a≥0)、√a²=|a|、√a÷√b=√(a、√a表示a的算术平方根、√a（a≥0）、①不含完全平方因式、不含分母、不含开得尽方的因数、不等号、二次根式加减：先化简为最简二次根式、代数式中不含等号、先化简、先化简再合并同类二次根式、再合并、再合并同类二次根式、化简二次根式时要化为最简二次根式、只有同类二次根式才能合并、合并时系数相加减、同类√·系数相加减、如：3x、如：3x+2y、当a<0时√(a²)=-a、当a≥0时√(a²)=a、无分母·无开得尽方、最简二次根式、最简：不含分母+不含完全平方、根式部分保持不变、运算顺序·综合、(a≥0)、(√a)²=a、a√m±b√m=(a±b)√m、b)（a≥0、√(a²)=|a|、√a·√b=√(ab)、√a·√b=√ab、√a≥0、√b=√(a、代数式"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "二次根式",
+  "sub_tag": "二次根式的运算",
+  "keyword": "化最简、合并同类、√a·√b=√(ab)"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "分式",
+  "sub_tag": "分式的值为0的条件",
+  "keyword": "值为0：A=0且B≠0、有意义：B≠0、分子=0且分母≠0"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "整式的加减",
+  "sub_tag": "化简求值",
+  "keyword": "√(a²)=|a|→先判正负"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "分式",
+  "sub_tag": "最简公分母",
+  "keyword": "各分母最高次幂积"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "分式",
+  "sub_tag": "最简分式",
+  "keyword": "(-y)=x、无公因式、约分→最简分式"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "有理数",
+  "sub_tag": "混合运算与乘法公式",
+  "keyword": "(√a+√b)(√a-√b)=a-b、(√a±√b)²=a±2√(ab)+b、先乘方→乘除→加减、分母有理化"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "分式",
+  "sub_tag": "约分",
+  "keyword": "约去公因式、约去公因式→最简分式"
+ },
+ {
+  "version": "数与式",
+  "grade": "八下",
+  "main_tag": "分式",
+  "sub_tag": "通分",
+  "keyword": "异分母→同分母、找最简公分母"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "三条核心性质",
+  "keyword": "c<0⇒ac<bc（变号）"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "三种情况",
+  "keyword": "<0无根、>0两不等、Δ=b²-4ac"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "不等式与不等式组",
+  "sub_tag": "两种解法对比",
+  "keyword": "代入：系数±1、加减：系数易配整"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "乘除",
+  "keyword": "乘除混合运算、乘除应用、乘除"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元二次方程",
+  "sub_tag": "公式法",
+  "keyword": "a²-b²=(a+b)(a-b)、a²−b²=(a+b)(a−b)、两个数的平方差等于这两个数的和与差的积、a²±2ab+b²=(a±b)²"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "分式型应用题",
+  "keyword": "双重检验、（增根+正数）"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "列方程实际模型",
+  "keyword": "A(1+x)ⁿ=B、效率、时间=总量、时间=路程、逆水v=v静-v水、速度、顺水v=v静+v水、设→列→解→验→答"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元二次方程",
+  "sub_tag": "因式分解法",
+  "keyword": "AB=0、AB=0→A=0或B=0、AB=0⇒A=0或B=0、A·B=0→A=0或B=0、A=0或B=0"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "二元一次方程组",
+  "sub_tag": "图象法解方程组",
+  "keyword": "若两直线平行则无解、若重合则有无穷多解"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "基础古数学题型",
+  "keyword": "两组总量等量、盈不足、鸡兔同笼"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "分式方程",
+  "sub_tag": "增根",
+  "keyword": "分母=0、增根（舍去）、检验增根"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "增长率与面积",
+  "keyword": "A(1±x)ⁿ=B"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元二次方程",
+  "sub_tag": "定义与一般形式",
+  "keyword": "1元+2次+整式、二分法近似求根、ax²+bx+c=0(a≠0)"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "对称式变形",
+  "keyword": "x₁²+x₂²=(x₁+x₂)²-2x₁x₂、x₂=(x₁+x₂)"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "常见应用模型",
+  "keyword": "P=扇形圆心角、P=时段长、P=面积比、P相等⇒公平、周期长、抽卡、摸球、骰子"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "数字、握手、单循环",
+  "keyword": "互赠x(x-1)、单循环x(x-1)"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "方案最优问题",
+  "keyword": "联立求交点→分段最优"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "二元一次方程组",
+  "sub_tag": "方程组与两直线交点",
+  "keyword": "方程组解=交点坐标、联立⇒交点(x"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "火车/几何长度模型",
+  "keyword": "车长+隧道长=vt、隧道长-车长=路程"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元二次方程",
+  "sub_tag": "直接开平方法",
+  "keyword": "(x+m)²=n→x=-m±√n、x=-m±√n、x=±√p、⇒x=-m±√n、(x+a)²=b、(x+m)²=n"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "经济利润产量",
+  "keyword": "利润=收入-支出、现量=原量×(1±增长率)"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "联系",
+  "keyword": "方程与不等式联系、综合应用、解集与解"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "解法",
+  "keyword": "步骤：移→配→开→解"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元二次方程",
+  "sub_tag": "配方法",
+  "keyword": "2)²=(x+p、2a)²→配方→开方→求解、→完全平方→开方、化1→移项→加(p、步骤：移常数项→两边加(b、移项→除以a→配方→开方、配方→开平方、(x+m)²=n、加(½b)²配方"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "配比浓度类",
+  "keyword": "总量+有效成分双等量、纯量=总量×占比"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "八下",
+  "main_tag": "一元二次方程",
+  "sub_tag": "韦达定理",
+  "keyword": "x₁·x₂=c、x₁+x₂=-b、x₁+x₂=−b、x₁x₂=c"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "一次函数",
+  "sub_tag": "k>0时的性质",
+  "keyword": "k<0:二四象限·y随x增而增、k>0:一三象限·y随x增而减"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "反比例函数",
+  "sub_tag": "k的几何意义",
+  "keyword": "S△=|k|、S三角形=|k|、S矩形=|k|、|k|=面积"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "一次函数",
+  "sub_tag": "一次函数与方程/不等式及实际应用",
+  "keyword": "上方部分、交点、仰俯角、利润、坡度i=tanα、建模、建模→求解、收费、构造直角△、求解、确定k→写解析式、行程、分段函数、坡度、方位角、顶点→最值"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "一次函数",
+  "sub_tag": "一次函数的图象与性质",
+  "keyword": "(k≠0)、a<0时有最大值、a>0时有最小值、b=y轴截距→(0、b=截距、b决定与y轴交点位置、b是截距、b是直线与y轴交点的纵坐标（截距）、k<0时y随x增大而减小（从左上到右下）、k>0→一三、k>0时y随x增大而减小、k>0时y随x增大而增大（从左下到右上）、k决定增减性、x轴交点(-b、y=ax^2+bx+c(a!=0)、y=kx(k≠0)叫正比例函数、y=kx+b(k≠0)、y=kx叫作正比例函数、y=kx是正比例函数（特殊的一次函数）、y轴交点(0、一般形式：y=ax²+bx+c（a≠0）、与x轴→(-b、二次项系数a、列表·描点·连线、即直线与y轴交点的纵坐标、图象：一条直线、在每个象限内、增减性·最值、增减性由a和位置决定、实际→二次函数、实际问题→函数模型、实际需考虑意义、建模->求最值、开口方向由a决定、当b=0时、截距b→(0、斜率k决定走向、是特殊的一次函数、最值=(4ac-b²)、最值在顶点处取得、正比例：y=kx、直线、设y=a(x-h)²+k、顶点·对称轴x=-b、顶点坐标：(-b、顶点式法：已知顶点坐标和另一点、a<0开口向下、a>0开口向上、a决定"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "一次函数",
+  "sub_tag": "三种表示法",
+  "keyword": "图象、解析、列表"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "函数",
+  "keyword": "函数、变量、自变量、因变量、函数值、函数关系"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "一次函数",
+  "sub_tag": "函数的概念与表示",
+  "keyword": "唯一y"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "图像性质",
+  "keyword": "b)和(-b、过(0、顶点·对称轴·最值、k<0二四、k>0一三、|k|越大越陡、双曲线"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "定位方法",
+  "keyword": "坐标定位、位置确定、用坐标表示位置"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "一次函数",
+  "sub_tag": "实际问题的函数建模",
+  "keyword": "分段计费等、利润问题、常见类型：行程问题、方案选择、最值模型·利润·面积、最值模型·面积·利润"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "对称性",
+  "keyword": "0)·轴对称y=±x、y=-x、中心对称(0、对称中心原点、对称轴y=x"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "建系原则",
+  "keyword": "选适当原点"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "一次函数",
+  "sub_tag": "待定系数法求解析式",
+  "keyword": "b→写函数式、k=xy、y)→解k、三种设式法求解析式、交点式y=a(x-x₁)(x-x₂)、设y=kx+b→代入两组(x、设→代→求k→写、顶点+一点→顶点式、一般式、交点式、顶点式"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "一次函数",
+  "sub_tag": "正比例函数",
+  "keyword": "正比例函数、y=kx、正比例关系、k≠0、过原点"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "一次函数",
+  "sub_tag": "求表达式",
+  "keyword": "求函数表达式、待定系数法、解析式"
+ },
+ {
+  "version": "函数",
+  "grade": "八下",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "表示方法",
+  "keyword": "列表法、解析式法、图象法、函数表示方法"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平行四边形",
+  "sub_tag": "三角形中位线",
+  "keyword": "DE=BC、MN=½(a+b)、三角形中位线平行于第三边、三角形中位线平行于第三边且等于第三边的一半、三角形中的主要线段、且等于第三边的一半、中位线∥第三边=½第三边、中位线∥第三边且=½、重心分中线2:1、DE=½BC、中点连线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平行四边形",
+  "sub_tag": "中位线定理应用",
+  "keyword": "三角形中位线、过三角形一边中点且平行于另一边的直线必平分第三边、DE=½BC"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "全等三角形",
+  "sub_tag": "判定与性质区分",
+  "keyword": "互逆、判定：角→线、性质：线→角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "全等三角形",
+  "sub_tag": "判定路径",
+  "keyword": "矩形+邻边相等⇒正方形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "勾股定理",
+  "sub_tag": "勾股定理及其逆定理",
+  "keyword": "a²+b²=c²⇒Rt△、a²+b²=c²⇒直角△、a²+b²=c²（c为斜边）、a²+b²=c²（c是斜边）、b=√(c²-a²)、c²（c为斜边）、∠C=90°、勾股数：正整数解、已知两边求第三边、常用勾股数组：(3、拼图法·面积法·赵爽弦图、数轴上的无理数、最大边平方=另两边和⇒直角、满足a²+b²=c²、直角、立体图形表面两点间的最短距离展开为平面后用勾股定理计算、面积割补法、a=√(c²-b²)、a²+b²=c²、a²+b²=c²⇒∠C=90°、c=√(a²+b²)、直角三角形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "反例",
+  "keyword": "条件成立+结论不成立"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平行四边形",
+  "sub_tag": "四边形关系",
+  "keyword": "□→矩形、中点四边形=平行四边形、菱形→正方形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "圆",
+  "sub_tag": "圆内接四边形",
+  "keyword": "∠A+∠C=180°、判定：对角互补的四边形是圆内接四边形、四边形内角和等于360°、圆内接四边形的对角互补（和为180度）、外角=内对角、外角和等于360°、对角互补"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "基本计算",
+  "keyword": "h=ab、c=√(a²+b²)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "三角形",
+  "sub_tag": "多边形基础概念",
+  "keyword": "n边形(n≥3)、总对角线n(n-3)、中心+方向+角度、全等、总对角线=n(n-3)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "定义与有意义条件",
+  "keyword": "√a(a≥0)、分母≠0"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "定理与规范证明格式",
+  "keyword": "余角、定理=已证真命题、已知→求证→证明(依据)、等量代换、补角、对顶角相等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "定理内容",
+  "keyword": "定理、定理证明、真命题、公理"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平行四边形",
+  "sub_tag": "密铺条件",
+  "keyword": "顶点内角和=360°⇒可镶嵌"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "圆",
+  "sub_tag": "尺规作无理数",
+  "keyword": "构造直角△得无理数"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平行四边形",
+  "sub_tag": "平行四边形的性质与判定",
+  "keyword": "▱·对边平行、不稳定性、任一条件均可判定为平行四边形、位似比=距离比、四直角·对角线等、四边等·对角线⊥·平分对角、对边∥且=、对边平行等·对角等·对角线互分、性质：对边平行且相等、相似比k、矩形+菱形所有性质、角等·边成比例·周长比=k、记作▱ABCD、读作平行四边形ABCD、5种判定、对角=、对角相等、对角线⊥、对角线互相平分、对角线相等、对边平行且相等、对边相等、矩形=□+直角、菱形=□+邻边等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "相交线与平行线",
+  "sub_tag": "平行线性质（线平行→角关系）",
+  "keyword": "平行⇒内错角相等、平行⇒同位角相等、平行⇒同旁内角互补、平行同一直线⇒平行"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平行四边形",
+  "sub_tag": "梯形概念",
+  "keyword": "梯形：一组对边平行"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "直观不可靠",
+  "keyword": "演绎证明唯一可靠、直观不可靠、需证明"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平行四边形",
+  "sub_tag": "矩形",
+  "keyword": "四个直角、四直角、对角线相等、性质：四个角都是直角、矩形=□+一个直角、矩形=□+直角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平行四边形",
+  "sub_tag": "矩形、菱形与正方形",
+  "keyword": "4个等腰Rt△全等、4条对称轴+中心对称、中点四边形随原四边形变、四个角都是直角、四角为直角、四边=、四边等+四角直角、对角线=⊥平分内角、对角线⊥且等的□、对角线相等且互相垂直平分、对角线相等且互相垂直平分的四边形是正方形、对角线相等且垂直平分、既是特殊的矩形又是特殊的菱形：四边相等、正方形=矩形∩菱形、正方形既是矩形又是菱形、直角的菱形、矩形+菱形→正方形、矩形+邻边相等、矩形∩菱形、菱形+直角、邻边相等的矩形、邻边等+直角、邻边等矩形·直角菱形、4条对称轴、四角=90°、性质：四条边都相等、正方形=矩形+菱形、矩形=□+一个直角、菱形=□+邻边等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "全等三角形",
+  "sub_tag": "矩形判定",
+  "keyword": "一个直角的□→矩形、三角90°→矩形、四边相等→菱形、对角线互相垂直的平行四边形是菱形、对角线垂直的□→菱形、对角线相等的□→矩形、对角线相等的平行四边形是矩形、筝形：对角线垂直平分、邻边相等的□→菱形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平移与旋转",
+  "sub_tag": "综合变换",
+  "keyword": "先对称再平移、先平移再对称、结果可能不同"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平行四边形",
+  "sub_tag": "菱形",
+  "keyword": "四边相等、四边等、对角线互相垂直且平分对角、对角线互相垂直平分、对角线垂直平分、S=½d₁d₂、对角线⊥、性质：四条边都相等、菱形=□+邻边等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八下",
+  "main_tag": "平行四边形",
+  "sub_tag": "菱形面积",
+  "keyword": "菱形面积、对角线乘积的一半、面积公式"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "三个统计量的比较",
+  "keyword": "应根据实际情况选择合适的统计量来描述数据的集中趋势"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "中位数与众数",
+  "keyword": "n为偶数取中间两个的平均值、n为奇数取中间一个、中位数、中位数：位置平均数、中间数、也可能没有）、众数、众数：出现次数最多的数据（可能不止一个、偶数取平均、奇数取中、必须先排序、排序·中间位置、统计量·性价比、出现次数最多、平均数"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "概率初步",
+  "sub_tag": "事件发生的可能性",
+  "keyword": "可能性·定性判断"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "体重指数",
+  "keyword": "BMI=体重、身高²"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "概率初步",
+  "sub_tag": "古典概型与列举",
+  "keyword": "有限+等可能、树状图法、P(A)=m、列表法"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "定量数据的进一步分类",
+  "keyword": "温度）、连续型数据：可以在某个区间内取任意值（如长度、重量"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "平均数与加权平均数",
+  "keyword": "x̄=(x₁+...+xₙ)、x̄=(x₁+…+xₙ)、x̄=(∑x)、x̄=Σxᵢ、x̄=∑(xw)、人数、加权·权w、加权平均=Σxᵢwᵢ、加权平均数：x̄=(w₁x₁+w₂x₂+…+wₙxₙ)、反映一组数据的平均水平、易受极端值影响、权重：比例"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "总体与样本",
+  "keyword": "总体·个体·样本·样本容量、用样本的平均数估计总体的平均数、用样本的方差估计总体的方差"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "数据分析报告",
+  "keyword": "关注数据的集中趋势和波动程度、用样本估计总体"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "数据的分析综合应用",
+  "keyword": "数据收集→整理→描述→分析→得出结论、统计·概率·决策"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "方差的性质与应用",
+  "keyword": "常用方差比较两组数据的稳定性：方差小的更稳定"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "标准差",
+  "keyword": "单位与原始数据相同、标准差、标准差=√方差、标准差：s=√s²、s=√s²、离差平方和"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "概率初步",
+  "sub_tag": "概率的定义",
+  "keyword": "0<=P(A)<=1、公平性·决策、概率·判断、0≤P≤1、P(A)=m、s²=Σ(xᵢ-x̄)²"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "概率初步",
+  "sub_tag": "确定事件",
+  "keyword": "必然事件·不可能事件"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "离差平方和",
+  "keyword": "离差平方和、方差、偏差、离散程度"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "离散程度",
+  "keyword": "s²=∑(xᵢ-x̄)²、反映数据的离散程度（波动大小）、s=√s²"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "概率初步",
+  "sub_tag": "等可能条件下的概率",
+  "keyword": "等可能·条数、总数"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "简单随机抽样",
+  "keyword": "等可能抽样"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "箱线图",
+  "keyword": "五数→箱线图、五数概括→箱线图、可用于识别异常值（超出Q1-1.5IQR或Q3+1.5IQR的点）和多组数据的分布比较"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "统计基础",
+  "keyword": "普查vs抽样"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "计算器算方差",
+  "keyword": "计算器辅助"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "随机现象的变化趋势",
+  "keyword": "试验次数越多、频率→概率（大数定律）、频率越接近真实概率"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "集中趋势",
+  "keyword": "x̄=(∑xᵢ)、中位数→中间位置、众数→出现最多"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "八下",
+  "main_tag": "数据的分析",
+  "sub_tag": "频率的稳定性",
+  "keyword": "频率稳定性、试验次数、概率、大量重复试验"
+ },
+ {
+  "version": "数与式",
+  "grade": "九上",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "十字分解（拓展）",
+  "keyword": "十字相乘、十字相乘法、因式分解、二次三项式"
+ },
+ {
+  "version": "数与式",
+  "grade": "九上",
+  "main_tag": "整式乘法与因式分解",
+  "sub_tag": "因式分解法",
+  "keyword": "AB=0、AB=0→A=0或B=0、AB=0⇒A=0或B=0、A·B=0→A=0或B=0、A=0或B=0"
+ },
+ {
+  "version": "数与式",
+  "grade": "九上",
+  "main_tag": "比和比例·百分数",
+  "sub_tag": "简便计算应用",
+  "keyword": "99³-99=99(99²-1)、提公因式简化计算"
+ },
+ {
+  "version": "数与式",
+  "grade": "九上",
+  "main_tag": "分式",
+  "sub_tag": "通分与最简公分母",
+  "keyword": "各因式最高次幂、最简公分母："
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元二次方程",
+  "sub_tag": "一元二次方程应用题",
+  "keyword": "一元二次方程应用题、列方程、增长率、面积问题"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元二次方程",
+  "sub_tag": "一元二次方程的概念",
+  "keyword": "ax^2+bx+c=0、ax²+bx+c=0、a二次项系数、b一次项系数、c常数项、Δ<0时无交点、Δ=0时有一个交点、Δ>0时有两个交点、→解→验→答、一元二次、一次项、一般形式：ax²+bx+c=0（a≠0）、七步法、不低于等、不超过、二次项、传播、关键是找到两个等量关系、关键：找出问题中的等量关系、关键：找到等量关系、单位要统一、增根要舍去、增长率、审·设·列·解·验·答、审→设→找→列、审→设→找→列→解→验→答、审设找列解验答、审题→建模→求解、审题→设元→列方程组、审题→设未知数→列方程→求解→检验、常数项、找关键词：至少、最多、步骤：审题→设两个未知数→找两个等量关系→列方程组→求解→检验→答、注意检验：解必须符合实际意义、注意：解必须符合实际意义、用未知数表示等量关系、设未知数包括直接设法和间接设法、面积、(a≠0)、ax²+bx+c=0(a≠0)、交点个数=根的个数、交点横坐标=方程根、利润、审题→设元→列方程→解→答"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元二次方程",
+  "sub_tag": "一元二次方程的解法",
+  "keyword": "A·B=0、公式法、因式分解法、直接开平方法、配方法、(x+a)²=b、A=0或B=0、x=(−b±√Δ)、加(½b)²配方"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "互余角与同角恒等式",
+  "keyword": "sinA=cos(90°-A)、sin²A+cos²A=1"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "分式方程解法步骤",
+  "keyword": "→检验、去分母→解整式"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "实际问题方程应用",
+  "keyword": "实际问题、列方程、设未知数、等量关系、方程应用"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "实际测量问题",
+  "keyword": "测量·航海·方向角、测量·高度·距离"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元二次方程",
+  "sub_tag": "根与系数的关系",
+  "keyword": "韦达定理、x₁+x₂=-b、x₁+x₂=−b、x₁x₂=c"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元二次方程",
+  "sub_tag": "根的判别式",
+  "keyword": "<0无交点、>0两交点、Δ<0无实数根、Δ<0无实根、Δ<0无根、Δ=0一根、Δ=0两个相等实根、Δ=0两相等、Δ=0两相等实根、Δ=b²−4ac、Δ>0两不等、Δ>0两不等实根、Δ>0两个不等实根、Δ>0两根、Δ与交点数、Δ=b²-4ac"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "用函数观点看方程的根",
+  "keyword": "图象与x轴交点=方程根"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元一次方程",
+  "sub_tag": "重要恒等式",
+  "keyword": "sin²α+cos²α=1"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "一元二次方程",
+  "sub_tag": "首项为负的处理",
+  "keyword": "首项为负、二次项系数、整理方程、移项变号"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "a对抛物线开口的影响",
+  "keyword": "a>0↑·a<0↓·|a|陡"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "y=ax²图像与性质",
+  "keyword": "|a|越大→越窄、抛物线、顶点(0"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "y=ax²基础型",
+  "keyword": "0)·对称轴y轴、|a|越大越窄、对称轴x=-h、对称轴x=0、左加右减x、抛物线·顶点(0、顶点(-h、顶点式·顶点(h、上加下减y、顶点(0"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "一般式→顶点式",
+  "keyword": "Δ=b²-4ac、对称轴x=-b、顶点(-b"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "三种设法",
+  "keyword": "一般式：三点、交点式：两交点、顶点式：知顶点"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "二次函数与一元二次方程",
+  "keyword": "交点个数=根的个数"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "二次函数定义",
+  "keyword": "1元+2次+整式、y=ax²+bx+c(a≠0)"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "二次函数最值问题",
+  "keyword": "建立模型→求最值、最值、顶点"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "二次函数的图象、性质与平移",
+  "keyword": "右减左加x、a决定开口方向、上加下减y"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "二次函数的概念",
+  "keyword": "(a≠0)、x叫自变量、y=ax²+bx+c、y叫因变量、一对一对应、函数建模→求解、列表法：用表格列出自变量与函数的对应值、画图象的步骤：列表→描点→连线、那么称y是x的函数、x→唯一y、y=kx、y=kx+b、一般式、交点式、列表→描点→连线、顶点式"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "交点与面积",
+  "keyword": "→割补法求面积、联立求交点"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "数学活动与素养拓展",
+  "sub_tag": "出入相补与几何画板",
+  "keyword": "几何画板动态观察、出入相补、黄金分割应用"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "一次函数",
+  "sub_tag": "函数再认识",
+  "keyword": "关系式、因变量、自变量、表格、图像"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "利润最值",
+  "keyword": "利润P"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "变换与坐标",
+  "keyword": "坐标变换、平移后坐标、对称坐标、坐标变化规律"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "一次函数",
+  "sub_tag": "图象画法",
+  "keyword": "不与坐标轴相交、列表→描点→平滑曲线"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "坐标中心对称",
+  "keyword": "中心对称、关于原点对称、对称点坐标、互为相反数"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "坐标系中关于原点对称的点",
+  "keyword": "关于原点对称、对称点坐标、横纵坐标相反"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "增减性与平移",
+  "keyword": "对称轴两侧增减相反、左加右减、上加下减"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "增减性与象限分布",
+  "keyword": "(同一象限内)、k<0→二、k<0↗（同象限）、k<0下降、k>0→一、k>0上升、减小、增减性·对称轴分界、增大、k<0二四、k>0一三"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "反比例函数",
+  "sub_tag": "实际反比例模型",
+  "keyword": "路程固定xy=s、面积固定xy=S"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "一次函数",
+  "sub_tag": "实际模型",
+  "keyword": "S=x(20-x)=-x²+20x"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "成本收入利润公式",
+  "keyword": "P=R-C=(单价-成本)×销量"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "抛物线与x轴交点",
+  "keyword": "Δ<0无交点、Δ=0一交点、Δ>0两交点、交点⇒方程根"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "最大利润问题",
+  "keyword": "利润最值"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "反比例函数",
+  "sub_tag": "正反比例交点与市场均衡",
+  "keyword": "Qd=Qs联立、交点关于原点对称"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "求最值",
+  "keyword": "最大值、最小值、顶点坐标、二次函数最值、开口方向"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "一次函数",
+  "sub_tag": "特殊角(30°,45°,60°)的三角函数值",
+  "keyword": "30°45°60°值需熟记、30°·45°·60°三角函数值、sin30°=1、sin45°=√2、sin60°=√3、sinA=cos(90°-A)、仰角、俯角、平方关系·互余关系、建模->计算->作答、特殊角值表、特殊角值要背诵、角度值、计算器·反求角、计算器按键顺序：sin、记忆·推导、坡度、方位角"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "计算器",
+  "keyword": "反求角度、度分秒换算、求值、计算器辅助"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "通用解法",
+  "keyword": "一边一角→全解、已知两边"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "面积与抛体最值",
+  "keyword": "g=10m、h=v₀t-½gt²"
+ },
+ {
+  "version": "函数",
+  "grade": "九上",
+  "main_tag": "二次函数",
+  "sub_tag": "顶点与对称轴",
+  "keyword": "y=a(x-h)²+k、顶点(h、顶点纵=(4ac-b²)、x=-b、二次函数、顶点坐标、x^2-4x+3、求顶点、y=a(x-h)²+k、顶点(h、顶点纵=(4ac-b²)、x=-b、二次函数、顶点坐标、x^2-4x+3、求顶点、y=a(x-h)²+k、顶点(h、顶点纵=(4ac-b²)、x=-b、二次函数、顶点坐标、x^2-4x+3、求顶点、y=a(x-h)²+k、顶点(h、顶点纵=(4ac-b²)、x=-b、二次函数、顶点坐标、x^2-4x+3、求顶点、y=a(x-h)²+k、顶点(h、顶点纵=(4ac-b²)、x=-b、二次函数、顶点坐标、x^2-4x+3、求顶点、y=a(x-h)²+k、顶点(h、顶点纵=(4ac-b²)、x=-b、y=a(x-h)²+k、顶点(h、顶点纵=(4ac-b²)、x=-b、二次函数、顶点坐标、x^2-4x+3、求顶点、y=a(x-h)²+k、顶点(h、顶点纵=(4ac-b²)、x=-b、二次函数、顶点坐标、x^2-4x+3、求顶点、y=a(x-h)²+k、顶点(h、顶点纵=(4ac-b²)、x=-b、二次函数、顶点坐标、x^2-4x+3、求顶点、y"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "三角形",
+  "sub_tag": "n边形内角和",
+  "keyword": "正内角=(n-2)·180°、内角和=(n-2)·180°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "全等三角形",
+  "sub_tag": "三大判定",
+  "keyword": "Rt用斜边+直角边、注意SSA不成立、AA、SAS"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "旋转",
+  "sub_tag": "中心对称与中心对称图形",
+  "keyword": "▱·矩形·菱形·圆、中心对称:、全等·对应点连线过中心且被平分、全等·连线过中心且被平分、全等·连线过中心平分、利用中心对称可证明线段相等、圆是中心对称图形、对称中心是对角线的交点、平行四边形·圆·正多边形、平行四边形是中心对称图形、找关键点·作对称点、旋转180°→重合、旋转180°与自身重合、旋转180°能与自身重合的图形是中心对称图形、旋转180°自身重合、旋转180°重合、旋转180度重合、点对称、矩形、自身旋转180°重合、轴对称、连线→延长→等距→连线、连线过中心且平分、中心对称、平行四边形、角相等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "仰角和俯角",
+  "keyword": "仰角·俯角·构造Rt△、俯角、仰角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "相似",
+  "sub_tag": "位似",
+  "keyword": "该点叫位似中心"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "位似定义与性质",
+  "keyword": "位似比k、位似中心"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "全等三角形",
+  "sub_tag": "位置判定",
+  "keyword": "全等判定、对应位置、对应边对应角、判定方法"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "余弦",
+  "keyword": "余弦、cos、邻边比斜边、余弦值"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "内切圆与外接圆",
+  "keyword": "内切圆、外接圆、内心、外心、到各边距离"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "内心与性质",
+  "keyword": "S=½·C·r、对应线段、r=(a+b-c)、且=、内心=角平分线交点、对应点连线、对应角="
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "切线的判定与性质",
+  "keyword": "切线、切点、切线垂直于半径、切线判定、切线长"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "切线长定理",
+  "keyword": "AB+CD=BC+AD、PO平分∠APB、切线长相等·平分夹角、PA=PB、r=(a+b-c)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "平移与旋转",
+  "sub_tag": "变换综合判定",
+  "keyword": "判定变换类型求线段"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "圆周角定理",
+  "keyword": "2圆心角、90°→直径、∠ACB=½∠AOB、三角形三个内角的和等于180°、同弧⇒等角、同弧上所有圆周角都相等、圆内接四边形对角互补、圆周角=1、圆周角=½圆心角、圆周角定理：同弧或等弧所对的圆周角等于它所对圆心角的一半、直径<->直角、直径→90°、直径⇔90°、直径所对的圆周角是直角、角圆周角、角圆心角（同弧所对）、∠A+∠B+∠C=180°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "圆心角、弧、弦的关系",
+  "keyword": "1度的圆心角所对的弧叫1度的弧、BC=DE、n度的圆心角对n度的弧、⇔等弦⇔等弦心距、圆周角=圆心角、圆心角=弧=弦、圆心角=弧的度数、圆心角↔弧↔弦、圆心角的度数等于它所对弧的度数、外角=两内角和、外角>不相邻内角、平行△一边⇒成比例、弦·弧·圆心角、弦心距=圆心到弦垂线段、弦等⇒弦心距等、等圆心角⇔等弧、∠A+∠B+∠C=180°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "圆的对称性",
+  "keyword": "中心对称（圆心）、交点=对称中心、垂径定理：垂直于弦的直径平分这条弦及其所对的两条弧、轴对称+中心对称、轴对称（无数条）、中心对称、直径⊥弦→平分"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "圆的概念与性质",
+  "keyword": "1°=60′=3600″、角也可以看成是一条射线绕端点旋转所形成的图形、角的表示：∠AOB、顶点+两射线、1°=60′、圆=点集、直径=最长弦、顶点+两条射线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "坡度和坡角",
+  "keyword": "l=tan(alpha)、l·tanα=i、坡度i=h"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "垂径定理",
+  "keyword": "CD⊥AB⇒AE=EB、CD⊥AB⇒AM=BM、⇒垂直+平分弧、②垂直于弦、垂直弦的直径平分弦和弧、平分弦(非直径)、并且平分弦所对的弧、应用：求弦长、弓形高、弦的垂直平分线经过圆心、弧AC=弧BC、弧AD=弧BD、推论：平分弦（不是直径）的直径垂直于弦、条件：①直径、直径⊥弦、直径⊥弦→平分弦和弧、结论：平分弦+平分两条弧、R²=d²+(l、半径、平分、直径⊥弦→平分"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "定义与图象",
+  "keyword": "x(k≠0)、xy=k"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "定义与引理",
+  "keyword": "k=对应边比"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "命题·证明与推理",
+  "sub_tag": "定义与辨析",
+  "keyword": "y=ax²+bx+c(a≠0)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "实物测量",
+  "keyword": "反射角=入射角、影长=定值、物高"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "对应性质",
+  "keyword": "（相似比平方）、面积比=k²"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "三角形",
+  "sub_tag": "对角线性质",
+  "keyword": "对角线、多边形对角线、对角线条数、n边形对角线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "平移与旋转",
+  "sub_tag": "平移变换",
+  "keyword": "右减左加x、上加下减y"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "三角形",
+  "sub_tag": "底部不可到达：两次仰角测高",
+  "keyword": "两次仰角→方程组→高"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "三角形",
+  "sub_tag": "底部可到达：单仰角测高",
+  "keyword": "tanα=高、高=距×tanα"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "弧长与扇形面积",
+  "keyword": "S=½lr、l=nπr"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "三角形",
+  "sub_tag": "斜三角形解法",
+  "keyword": "作高→两个Rt△"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "平移与旋转",
+  "sub_tag": "旋转性质",
+  "keyword": "线段=、角=、连线夹角=旋转角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "旋转",
+  "sub_tag": "旋转的概念与性质",
+  "keyword": "只改变图形的位置、大小不变）、平移前后对应点连线平行且相等、形状大小不变·等距·等角、旋转中心、旋转前后全等、旋转前后图形的形状和大小相同、旋转前后的两个图形全等（形状、旋转角、三要素、平移不改变图形的形状和大小、距离相等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "勾股定理",
+  "sub_tag": "最短路径问题",
+  "keyword": "最短路径、最短距离、将军饮马、最小值"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "正切",
+  "keyword": "tan30°=√3、tan60°=√3、tan45°=1、tanA=a"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "正切tan",
+  "keyword": "坡度=tanα、邻边、tanA=对边"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "正多边形与圆",
+  "keyword": "S=(n-2)×180°、n等分圆⇒正n边形、n边形的内角和=(n-2)×180°、n边形：(n-3)对角线、n边形：有n条边的多边形、中心角=360、内角、内角和=(n-2)×180°、分成(n-2)个三角形、外接圆、外角和、多边形、多边形的外角和等于360°、对应边的比叫作相似比、对角线、对角线总数=n(n-3)、正n边形、正n边形的每个内角、正n边形的每个内角=(n-2)*180、正n边形的每个内角=(n-2)×180°、正六边形S=3√3、正外角=360°、正多边形、正多边形·外接圆·内切圆、正多边形单个内角、正多边形单个外角=360°、正多边形：边等角等、每个中心角、每个中心角=360、角等、边成比例、中心、中心角=360°、内切圆、外角和=360°、对应角等、对应边成比例、顶点"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "正弦",
+  "keyword": "正弦、sin、对边比斜边、正弦值"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "正弦/余弦/正切",
+  "keyword": "sin30°=1、sin60°=√3、sin45°=√2"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "正弦sin、余弦cos",
+  "keyword": "cosA=邻、sinA=cos(90°-A)、sinA=对"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "比例性质",
+  "keyword": "b²=ac(比例中项)、合比、等比、ad=bc"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "比例线段",
+  "keyword": "d↔ad=bc、d满足a:b=c:d、比例线段：四条线段a、ad=bc"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "测量方法",
+  "keyword": "比例测高"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "点、直线与圆的位置关系",
+  "keyword": "d<r→2个交点、d<r相交、d=r→1个交点（切点）、d=r⇔圆上、d=r相切、d>r→0个交点、d>r→相离、d>r相离、d与r比较:、d与r比较确定位置、切线的性质：圆的切线垂直于过切点的半径、平行：没有公共点、相交、相交d<r、相交·相切·相离、相交：有且只有一个公共点、相切、相切d=r、相离、相离d>r、d<r⇔圆内、d>r⇔圆外、d与r比较"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "特殊角",
+  "keyword": "特殊角值要背诵"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "直径所对圆周角",
+  "keyword": "直径↔直角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "三角形",
+  "sub_tag": "相似三角形应用",
+  "keyword": "利用对应边成比例列方程求解、常用方法：构造相似三角形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "全等三角形",
+  "sub_tag": "相似判定注意",
+  "keyword": "与全等三角形判定类似、但不需要边相等只需成比例"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "三角形",
+  "sub_tag": "相似多边形性质",
+  "keyword": "各对应角相等、相似多边形对应对角线的比等于相似比"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "相似",
+  "sub_tag": "相似定义",
+  "keyword": "位似⊆相似、位似：连线共点、距离比=位似比、对应角等、对应边成比例"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "相似",
+  "sub_tag": "相似比",
+  "keyword": "相似比、相似三角形、对应边成比例、相似性质"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "圆",
+  "sub_tag": "确定圆",
+  "keyword": "三点确定圆、三角形的外接圆：经过三角形三个顶点的圆、不共线三点→一圆、圆心叫外心、外心、经过三角形各顶点的圆叫三角形的外接圆"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "解Rt△",
+  "keyword": "一边一角→三角、两边→勾股、已知两边或一边一角→解Rt△"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "三角形",
+  "sub_tag": "解直角三角形",
+  "keyword": "互余·勾股·三角函数、勾股+三角函数、知二求三、cosA=b、tanA=a、∠A+∠B=90°、三角函数关系式、勾股定理、已知→求未知、边角关系：sinA=a"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "三者对比",
+  "keyword": "平均↔中位↔众数对比"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "概率初步",
+  "sub_tag": "几何概率",
+  "keyword": "P=区域面积、总面积"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "概率初步",
+  "sub_tag": "列举法求概率",
+  "keyword": "列表法·树状图法、树状图、P(A)=m、列表法"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "概率初步",
+  "sub_tag": "列表法",
+  "keyword": "列表法（两步专用）、表格·两步试验、表格列出所有情况、适合步骤较多的试验"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "散点折线图",
+  "keyword": "点集中→众数"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "数据的分析",
+  "sub_tag": "方差的意义",
+  "keyword": "方差大→波动大"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "智慧数拓展",
+  "keyword": "4k+2不是智慧数、智慧数：奇数+4的倍数"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "数据的分析",
+  "sub_tag": "极差",
+  "keyword": "极差=最大值-最小值"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "概率初步",
+  "sub_tag": "树状图法",
+  "keyword": "树状图·多步试验、树状图分步枚举"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "数据的分析",
+  "sub_tag": "样本估计",
+  "keyword": "样本→总体、样本→总体·预测"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "概率初步",
+  "sub_tag": "概率的基本性质",
+  "keyword": "P(不可能)=0、P(必然)=1"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "概率初步",
+  "sub_tag": "用频率估计概率",
+  "keyword": "大量试验->统计频率->估计概率、当试验次数足够多时、非等可能→频率估概率、频率→概率（大数次）、频率稳定于概率、频率=m、频率→概率、频率≈概率"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "统计应用",
+  "keyword": "统计在日常生活和科学研究中的广泛应用"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "统计推断",
+  "keyword": "用样本方差估计总体方差"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九上",
+  "main_tag": "概率初步",
+  "sub_tag": "随机事件",
+  "keyword": "0≤P(A)≤1、不可能事件：一定不会发生的事件、不可能事件：一定不发生、必然事件：一定发生、随机事件·不确定性、P(A)=m、不可能事件、必然事件、随机事件"
+ },
+ {
+  "version": "数与式",
+  "grade": "九下",
+  "main_tag": "整式的加减",
+  "sub_tag": "基础化简性质",
+  "keyword": "b)=√a、√(ab)=√a·√b、√(a²)=|a|"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九下",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "关系",
+  "keyword": "a÷b=a"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "几何图形的面积",
+  "keyword": "几何→面积、最值"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "圆锥侧面积与数学史",
+  "keyword": "圆锥侧面积、侧面积公式、母线、数学史"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九下",
+  "main_tag": "一元一次方程",
+  "sub_tag": "圆锥面积",
+  "keyword": "l²=r²+h²、S侧=πrl、S全=πrl+πr²、n=360r"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九下",
+  "main_tag": "一元二次方程",
+  "sub_tag": "求根公式",
+  "keyword": "求根公式、公式法、判别式、Δ、解一元二次方程"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九下",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "海伦-秦九韶公式",
+  "keyword": "S=√[p(p-a)(p-b)(p-c)]、p=(a+b+c)"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九下",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "解题思路",
+  "keyword": "审题→建模→求解→答"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "一次函数",
+  "sub_tag": "函数回顾",
+  "keyword": "函数的三种表示法：解析法、列表法、图象法"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "反比例函数",
+  "sub_tag": "反比例函数的图象、性质与应用",
+  "keyword": "(k≠0、k的几何意义、x(k!=0)、xy=k·y=kx⁻¹、xy=k型实际问题、x≠0)、y=kx·过原点、|k|越大、一三、写解析式、双曲线·两支、实际问题→反比例模型、物理·工程·经济、直线越靠近y轴（越陡）、确定k、等价形式：y=kx^(-1)或xy=k、等价形式：y=kx⁻¹或xy=k、结合图像比较函数值大小、联立解析式求交点坐标、k<0减、k>0增、xy=k、y=kx、y=kx(k≠0)、双曲线、增减性由k的正负决定"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "反比例函数",
+  "sub_tag": "反比例函数的概念",
+  "keyword": "反比例函数、y=k、x、k≠0、双曲线、xy=k"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "图像特征",
+  "keyword": "关于原点对称、双曲线"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "坐标系旋转坐标规律",
+  "keyword": "旋转坐标、坐标变换规律、绕原点旋转"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "平面直角坐标系",
+  "sub_tag": "坐标轴平行线段距离",
+  "keyword": "平行x轴:、平行y轴:"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "数学活动与素养拓展",
+  "sub_tag": "折纸与数学",
+  "keyword": "四边形、轴对称、坐标变换"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "概念与图象",
+  "keyword": "函数图象、函数概念、图象特征、自变量因变量"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "数学活动与素养拓展",
+  "sub_tag": "神奇的密码",
+  "keyword": "函数映射编码解码"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "精确度",
+  "keyword": "度分秒·精确度"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "函数·综合与应用",
+  "sub_tag": "运动轨迹问题",
+  "keyword": "轨迹建模"
+ },
+ {
+  "version": "函数",
+  "grade": "九下",
+  "main_tag": "一次函数",
+  "sub_tag": "选择方案",
+  "keyword": "函数模型→方案比较、方案比较与最优选择"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "全等三角形",
+  "sub_tag": "AA判定",
+  "keyword": "AA⇒相似"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆",
+  "sub_tag": "三点定圆与外心",
+  "keyword": "三点定唯一圆、外心=三边中垂线交点、直角△中点、钝角△外、锐角△内"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "三视图与几何体还原",
+  "keyword": "俯视图：从上面看到的图形、投影规律：长对正、正面→主视图、算体积、绘制三视图↔还原立体、还原、三视图、宽相等、长对正、高平齐"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆",
+  "sub_tag": "中心角与边心距",
+  "keyword": "中心角、边心距、正多边形、内切圆半径"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "主视图",
+  "keyword": "主视图、正面看:"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "互余关系",
+  "keyword": "互余、sinA=cosB、余角三角函数、互余的两角"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "相似",
+  "sub_tag": "位似变换",
+  "keyword": "位似、位似比、位似中心、位似图形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "相似",
+  "sub_tag": "位似的作图",
+  "keyword": "位似作图"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "俯视图",
+  "keyword": "上面看:、俯视图"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆",
+  "sub_tag": "切线",
+  "keyword": "这一点和圆心的连线平分两条切线的夹角、PA=PB、切线⊥半径、切线⊥过切点半径"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "全等三角形",
+  "sub_tag": "判定1（两角）",
+  "keyword": "两角、角角边、AAS、ASA、全等判定"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "全等三角形",
+  "sub_tag": "判定2（边角边）",
+  "keyword": "SAS(相似)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "全等三角形",
+  "sub_tag": "判定3（三边）",
+  "keyword": "SSS(相似)"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "制作立体模型",
+  "keyword": "由视图还原立体"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "相似",
+  "sub_tag": "周长与面积的比",
+  "keyword": "周长比=k·面积比=k²"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆柱与圆锥",
+  "sub_tag": "圆锥展开图",
+  "keyword": "弧长是圆锥的底面周长2πr、扇形的半径是圆锥的母线l"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆",
+  "sub_tag": "垂径计算模型（勾股）",
+  "keyword": "垂径定理、弦心距、勾股定理、垂直平分弦"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "几何图形初步",
+  "sub_tag": "射门角模型",
+  "keyword": "切点处射门角最大、圆外<圆上<圆内"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "展开图",
+  "keyword": "S侧=底面周长×高、另一边是棱柱的高、同一个几何体可能有不同的展开方式、宽是圆柱的高h、宽是直棱柱的高、展开↔折叠、正方体有11种不同的表面展开图、矩形的一边是棱柱的底面周长、矩形的长是圆柱的底面周长2πr、矩形的长是直棱柱的底面周长"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "左视图",
+  "keyword": "左视图、左面看:"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "几何图形初步",
+  "sub_tag": "已知一边一角求解",
+  "keyword": "已知一边一角、解三角形、求边求角、正弦余弦"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "常见几何体展开图",
+  "keyword": "一个扇形、一个矩形、圆柱：两个圆、圆锥：一个圆"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "相似",
+  "sub_tag": "平行于底边的直线",
+  "keyword": "平行→相似"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "相似",
+  "sub_tag": "平行截出相似",
+  "keyword": "平行截相似"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "平行投影与中心投影",
+  "keyword": "中心投影→近大远小、光源的位置不同、如太阳光下的影子就是平行投影、平行光→影长成比例、平行光线->平行投影、平行投影→影子平行、投影的形状和大小也不同、点光源->中心投影、点光源→近大远小、等高物体影长∝、中心、平行"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "平面任意两点距离",
+  "keyword": "AB=√[(x₂-x₁)²+(y₂-y₁)²]"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆",
+  "sub_tag": "弧的度数",
+  "keyword": "弧度数=圆心角度数"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆",
+  "sub_tag": "影子与镜面反射",
+  "keyword": "影长·反射、标杆法构造相似、镜面反射⇒相似"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆",
+  "sub_tag": "影子模型",
+  "keyword": "影子、相似、比例、测高、光线"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "投影",
+  "keyword": "中心投影(灯光)、中心投影：由同一点发出的光线形成的投影、投影线⊥投影面、中心、平行"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "方向角",
+  "keyword": "北偏西30°、如：南偏东50°"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "勾股定理",
+  "sub_tag": "最短距离问题",
+  "keyword": "最短距离、最小值、最短路线、距离"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "正切的应用",
+  "keyword": "比值·坡度"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆",
+  "sub_tag": "正弦的定义",
+  "keyword": "cosA=邻边、sinA=对边、斜边=a、斜边=b、邻边=a、cosA=b、sinA=a、tanA=a、tanA=对边"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "测量问题",
+  "keyword": "测高·测距"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "三角形",
+  "sub_tag": "测高",
+  "keyword": "构造直角△→求解"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆",
+  "sub_tag": "点与圆",
+  "keyword": "d>r→圆外"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "轴对称",
+  "sub_tag": "点的轴对称规律",
+  "keyword": "x轴→(x、y轴→(-x、原点→(-x"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "由视图到立体",
+  "keyword": "综合三视图确定几何体的形状和大小"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "相似",
+  "sub_tag": "相似三角形的判定与性质",
+  "keyword": "9条证明起点公理、①②两点+线段、③④⑤平行+垂线、⑥⑦⑧⑨全等、三种判定、两点确定一直线、两点确定直线·线段最短·平行判定、判定方法、弹墨线、相似三角形的对应角相等、矩形的判定方法、菱形的判定方法、钉木条、AA、SAS、两点之间线段最短、两点确定一条直线、周长比=k、对应边成比例、平行公理、相似比=对应边之比、面积比=k²"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "相似",
+  "sub_tag": "相似的实际应用",
+  "keyword": "SAS构造全等测距、列比例、勾股→求边长、折叠、最短路径、构造Rt△→勾股计算、构造直角△、构造相似、构造相似→列比例、梯子、特殊化→一般化、航海、转化：不可测→可测、仰俯角、坡度"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "平行四边形",
+  "sub_tag": "矩形（长方形）",
+  "keyword": "四个角=90°、OA=OB=OC=OD、对角线相等"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "圆",
+  "sub_tag": "确定圆的条件与外心",
+  "keyword": "三点定圆、外心=中垂线交点"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "解直角三角形",
+  "keyword": "互余·勾股·三角函数、勾股+三角函数、知二求三、cosA=b、tanA=a、∠A+∠B=90°、三角函数关系式、勾股定理、已知→求未知、边角关系：sinA=a"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "还原与计数",
+  "keyword": "三视图→还原立体图形"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "还原几何体",
+  "keyword": "三视图→还原→算体积、其余各面都是平行四边形、棱柱：有两个面平行"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "锐角三角函数",
+  "keyword": "cos45°=√2、∠A的对边、斜边、sin45°=√2、sinA=cos(90°−A)、tan45°=1、互余"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "锐角三角函数",
+  "sub_tag": "锐角三角函数的实际应用",
+  "keyword": "方位角、仰俯角、仰角、坡度"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "相似",
+  "sub_tag": "黄金比",
+  "keyword": "黄金比、黄金分割、0.618、黄金矩形"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "概率初步",
+  "sub_tag": "事件",
+  "keyword": "必然事件、随机事件、不可能事件、事件分类"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "借助调查做决策",
+  "keyword": "数据→决策"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "概率初步",
+  "sub_tag": "投针实验与遗传概率",
+  "keyword": "投针实验→估算π、遗传概率→基因组合"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "概率初步",
+  "sub_tag": "抽签的公平性",
+  "keyword": "等可能·公平"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "概率初步",
+  "sub_tag": "放回vs不放回",
+  "keyword": "不放回：总数-1、放回：总数不变"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "数据的收集与比较",
+  "keyword": "比较·决策"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "概率初步",
+  "sub_tag": "树状图（多步通用）",
+  "keyword": "树状图、列表法、列举法、概率计算、两步试验"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "核心概念",
+  "keyword": "中心=外心、中心角=360°"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "概率初步",
+  "sub_tag": "概率与决策",
+  "keyword": "期望·保险费"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "概率初步",
+  "sub_tag": "概率应用",
+  "keyword": "概率→决策"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "概率初步",
+  "sub_tag": "概率计算",
+  "keyword": "概率加法：P(A∪B)=P(A)+P(B)-P(A∩B)"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "概率初步",
+  "sub_tag": "模拟试验",
+  "keyword": "模拟·估计"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "概率初步",
+  "sub_tag": "等可能试验与列举法",
+  "keyword": "古典概型：有限+等可能、P(A)=m"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "数据收集整理与描述",
+  "sub_tag": "统计调查的一般步骤",
+  "keyword": "问卷·收集·整理·描述·分析"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "解法原理与常用分解",
+  "keyword": "A·B=0⇒A=0或B=0、平方差、提公因式"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "统计与概率·综合与实践",
+  "sub_tag": "计算模型",
+  "keyword": "S=(3√3、正n边形→等腰△→Rt△、正六边：边长=R"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "数据的分析",
+  "sub_tag": "趋势分析",
+  "keyword": "趋势·预测"
+ },
+ {
+  "version": "统计与概率",
+  "grade": "九下",
+  "main_tag": "数据的分析",
+  "sub_tag": "频率",
+  "keyword": "频率、频数、频率分布、频数分布表"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "几何图形初步",
+  "sub_tag": "球的认识与基本元素",
+  "keyword": "球、球的认识、球体、球心、半径、半圆的圆心为球心、半圆的半径为球的半径、球的基本元素、认识立体图形中的球、四种立体图形之一"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九下",
+  "main_tag": "投影与视图",
+  "sub_tag": "球的三视图",
+  "keyword": "球的三视图、球的主视图、球的俯视图、球的左视图、球的视图是圆、常见几何体的三视图：立方体圆柱圆锥球、由三视图判断球、柱、锥、球、组合体、还原立体图形中的球"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七上",
+  "main_tag": "投影与视图",
+  "sub_tag": "七上",
+  "keyword": "球截面、球的截面、平面截球、球被平面截、球截面是圆、截面只能是圆、球：圆"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "七下",
+  "main_tag": "球的体积",
+  "sub_tag": "球的体积",
+  "keyword": "球的体积、球体积公式、球体积V=4、3πr³、V=4、3πr³、已知球体积求半径、球体体积"
+ },
+ {
+  "version": "数与式",
+  "grade": "三上",
+  "main_tag": "除数是一位数的除法",
+  "sub_tag": "除法应用",
+  "keyword": "包含除、等分除"
+ },
+ {
+  "version": "数与式",
+  "grade": "四上",
+  "main_tag": "小数乘法",
+  "sub_tag": "小数乘法",
+  "keyword": "小数乘整数、小数乘法、小数×整数"
+ },
+ {
+  "version": "数与式",
+  "grade": "五下",
+  "main_tag": "分数乘除",
+  "sub_tag": "分数除法应用",
+  "keyword": "分数除法、除以整数、平均分成几段、每段长、几分之几"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "动点问题",
+  "keyword": "动点、以每秒、运动时间、运动过程中、设运动时间为t、速度、设运动时间为"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "存在性问题",
+  "keyword": "是否存在、若存在、使得△、使得、成立、存在点P"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "几何最值问题",
+  "keyword": "最短、最小值、最大面积、PA+PB、将军饮马、取水站、建在何处"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "分类讨论问题",
+  "keyword": "分类讨论、分两种情况、没有指明、未说明、两种情况"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "图形与几何·综合与实践",
+  "sub_tag": "几何综合证明",
+  "keyword": "求证、连接BD、连接CE、构造、综合运用、证明"
+ },
+ {
+  "version": "方程与不等式",
+  "grade": "九上",
+  "main_tag": "方程与不等式·综合应用",
+  "sub_tag": "方案设计问题",
+  "keyword": "方案、购买、不超过、总费用、共有几种、最省、费用"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "八上",
+  "main_tag": "轴对称",
+  "sub_tag": "等边三角形的性质与判定",
+  "keyword": "等边三角形、三边相等、三角均为60°、内部一点、旋转60°、旋转变换构造"
+ },
+ {
+  "version": "图形与几何",
+  "grade": "九上",
+  "main_tag": "三角形",
+  "sub_tag": "等腰三角形综合应用",
+  "keyword": "等腰三角形、中点、α中顶点、新定义、顶角、线段EF的中点、APE、BPF"
+ },
+ {
+  "version": "数与式",
+  "grade": "六下",
+  "main_tag": "负数",
+  "sub_tag": "相反数的求法",
+  "keyword": "相反数、求这个数"
+ }
+]

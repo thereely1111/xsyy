@@ -1,0 +1,12 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "八上",
+    "main_tag": "三角形",
+    "sub_tags": [
+      "三角形的概念与三边关系"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-17T08:42:03.998539Z"
+}

@@ -1,0 +1,24 @@
+{
+  "question": "一列火车以每秒15米的速度通过蹲在路旁的一只小狗，从车头遇见小狗到车尾离开小狗共需要60秒,这列火车长多少米?",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "D:\\nick\\大模型应用工程师\\XSYY\\storage\\b8480974-d727-4321-997a-a326ae28206a\\ScreenShot_2026-01-11_155052_585.png",
+  "task_id": "b8480974-d727-4321-997a-a326ae28206a",
+  "generated_at": "2026-01-11T15:53:44.655341Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "火车过点应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "是典型的行程问题，需构建模型求解。",
+    "main_tag": "模型意识",
+    "sub_tags": [
+      "量感",
+      "符号意识"
+    ]
+  },
+  "tags_updated_at": "2026-01-11T15:53:44.655341Z",
+  "preview_image": "Preview.webp"
+}

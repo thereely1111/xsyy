@@ -1,0 +1,375 @@
+@charset "UTF-8";
+
+/* 登录弹框样式 */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.show {
+    display: flex !important;
+}
+
+.modal {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    max-width: 450px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.modal-header h2 {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    color: var(--ink-black);
+    margin-bottom: 8px;
+}
+
+.modal-header p {
+    color: var(--ink-grey);
+    font-size: 14px;
+}
+
+/* 一级Tab页样式 - 登录/注册 */
+.modal-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 30px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.modal-tab {
+    flex: 1;
+    padding: 14px 20px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--ink-grey);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-tab.active {
+    background: white;
+    color: var(--primary-red);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.modal-tab:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.modal-tab-content {
+    display: none;
+}
+
+.modal-tab-content.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--ink-black);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-red);
+}
+
+/* 注册表单下拉框（所在年级）：与输入框风格统一并美化 */
+.form-group select {
+    width: 100%;
+    padding: 12px 40px 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--ink-black);
+    background-color: #fff;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* 自定义下拉箭头，颜色取 ink-grey，贴合整体克制风格 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235A6A76' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px 16px;
+    cursor: pointer;
+}
+
+.form-group select:hover {
+    border-color: var(--ink-grey);
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 3px rgba(184, 59, 67, 0.15);
+}
+
+/* 未选择的占位项在展开列表中显示为灰色提示 */
+.form-group select option[value=""] {
+    color: var(--ink-grey);
+}
+
+.form-group select option {
+    color: var(--ink-black);
+    background: #fff;
+}
+
+.modal-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-red);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+.modal-btn:hover {
+    background: #A02F36;
+}
+
+.modal-btn:disabled {
+    background: #a0b1c0;
+    cursor: not-allowed;
+}
+
+.modal-link {
+    text-align: center;
+    margin-top: 20px;
+    color: var(--ink-grey);
+    font-size: 14px;
+}
+
+.modal-link a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-link a:hover {
+    text-decoration: underline;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: var(--ink-grey);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    background: #f5f5f5;
+    color: var(--ink-black);
+}
+
+.error-message {
+    color: var(--primary-red);
+    font-size: 13px;
+    margin-top: 8px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+.success-message {
+    color: var(--jade-green);
+    font-size: 13px;
+    margin-top: 8px;
+    display: none;
+}
+
+.success-message.show {
+    display: block;
+}
+
+.agreement-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink-grey);
+    line-height: 1.5;
+    margin-top: 4px;
+}
+
+.agreement-row input {
+    margin-top: 3px;
+    accent-color: var(--primary-red);
+}
+
+.agreement-link {
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: var(--primary-blue);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font: inherit;
+}
+
+.agreement-link:hover {
+    color: var(--primary-red);
+}
+
+/* 二级Tab页样式 - 用户名密码/手机验证码 */
+.register-method-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.register-method-tab {
+    flex: 1;
+    padding: 10px 15px;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: var(--ink-grey);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.register-method-tab.active {
+    color: var(--primary-red);
+    font-weight: 600;
+}
+
+.register-method-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--primary-red);
+    border-radius: 2px;
+}
+
+.register-method-tab:hover:not(.active) {
+    color: var(--ink-black);
+}
+
+.register-method-content {
+    display: none;
+}
+
+.register-method-content.active {
+    display: block;
+}
+
+
+
+/* 响应式 */
+@media (max-width: 480px) {
+    .modal {
+        padding: 10px 15px;
+    }
+
+    .modal-header h2 {
+        font-size: 24px;
+    }
+
+    .form-group input {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    .modal-btn {
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .agreement-row {
+        font-size: 11px;
+    }
+
+    #loginModal .form-group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #loginModal .form-group label {
+        min-width: 65px;
+    }
+
+    .last-form-group {
+        margin-bottom: 0;
+    }
+    .modal-tabs,.modal-header {
+        margin-bottom: 15px;
+    }
+}
+
+.disabled-tab-style {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

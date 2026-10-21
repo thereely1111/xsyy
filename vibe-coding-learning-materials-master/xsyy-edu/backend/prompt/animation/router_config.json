@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "description": "动画生成分层提示词库路由配置（方案 2026-09-03 §4.2/§4.3）。",
+  "prompt_dir": "animation",
+  "base": {
+    "file": "00_base_scene_rules.txt",
+    "role": "通用纪律层（所有生成必带，含方法纪律占位）"
+  },
+  "layers": {
+    "stage": {
+      "label": "学段风格层",
+      "primary_school": {
+        "dir": "stage_primary",
+        "style_file": "10_style_primary.txt",
+        "case_file": "20_cases_primary.md"
+      },
+      "junior_high": {
+        "dir": "stage_junior",
+        "style_file": "10_style_junior.txt",
+        "case_file": "20_cases_junior.md"
+      }
+    },
+    "scene_pattern": {
+      "label": "题型画法模板层（scene_pattern，2026-09-05 新增：按 question_type 命中注入，未命中跳过）",
+      "dir": "scene_patterns",
+        "files": {
+          "tunnel_pass": "50_pattern_tunnel_pass.md",
+          "function_curve": "50_pattern_function_curve.md"
+        }
+    },
+    "domain": {
+      "label": "知识域表达层",
+      "numbers": {
+        "dir": "domain_numbers",
+        "style_file": "30_domain_numbers.txt",
+        "case_file": "40_cases_numbers.md"
+      },
+      "equation": {
+        "dir": "domain_equation",
+        "style_file": "30_domain_equation.txt",
+        "case_file": "40_cases_equation.md"
+      },
+      "function": {
+        "dir": "domain_function",
+        "style_file": "30_domain_function.txt",
+        "case_file": "40_cases_function.md"
+      },
+      "geometry": {
+        "dir": "domain_geometry",
+        "style_file": "30_domain_geometry.txt",
+        "case_file": "40_cases_geometry.md"
+      },
+      "statistics": {
+        "dir": "domain_statistics",
+        "style_file": "30_domain_statistics.txt",
+        "case_file": "40_cases_statistics.md"
+      },
+      "calculation": {
+        "dir": "domain_numbers",
+        "style_file": "30_domain_numbers.txt",
+        "case_file": "40_cases_numbers.md"
+      }
+    }
+  },
+  "solution_rules": "01_solution_rules.txt",
+  "teaching_plan_rules": "02_teaching_plan.txt",
+  "assembly": {
+    "note": "System = base + stage.style + domain.style + (scene_pattern 按题型命中) + 01_solution；案例层按 question_type 命中才注入。",
+    "order": ["base", "stage", "domain", "scene_pattern", "solution"]
+  },
+  "fallback": {
+    "note": "无画像 / 文件缺失时回退 legacy 单文件提示词（teaching_dynamic_system_prompt.txt）",
+    "enabled": true
+  }
+}

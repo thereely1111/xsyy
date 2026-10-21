@@ -1,0 +1,30 @@
+{
+  "preview_image": "Preview.webp",
+  "question": "甲、乙两人分别从 A、B 两地同时出发，相向而行。第一次相遇时，相遇点距离 A 地 800米。两人相遇后继续前进，分别到达 B、A 两地后立即掉头返回，第二次相遇时，相遇点距离 B 地 300米。请问：A、B 两地之间的路程是多少米？",
+  "prompt": "甲、乙两人分别从 A、B 两地同时出发，相向而行。第一次相遇时，相遇点距离 A 地 800米。两人相遇后继续前进，分别到达 B、A 两地后立即掉头返回，第二次相遇时，相遇点距离 B 地 300米。请问：A、B 两地之间的路程是多少米？",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "4b790534-403e-4e4d-929d-4debbc259d0a",
+  "generated_at": "2026-08-25T03:50:38.440950Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "相遇与追及问题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "命中行程双向运动结构"
+  },
+  "tags_updated_at": "2026-08-25T03:50:38.440950Z",
+  "knowledge_tags": {
+    "version": "数与式",
+    "grade": "六上",
+    "main_tag": "行程问题",
+    "sub_tags": [
+      "相遇与追及问题"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T08:49:44.308275Z",
+  "knowledge_tags_confirmed": true
+}

@@ -1,0 +1,35 @@
+{
+  "question": "一个长方形的长是10厘米，宽是6厘米，求这个长方形的面积。",
+  "prompt": "一个长方形的长是10厘米，宽是6厘米，求这个长方形的面积。",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "",
+  "task_id": "c0a9b9d9-3b7d-4029-bd42-700032450cf5",
+  "preview_image": "Preview.webp",
+  "generated_at": "2026-08-07T10:25:02.601328Z",
+  "teaching_html_file": "teaching_data.json",
+  "is_math_problem": true,
+  "title": "长方形面积",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "平面图形面积计算",
+    "main_tag": "几何直观",
+    "sub_tags": [
+      "量感",
+      "推理意识"
+    ]
+  },
+  "tags_updated_at": "2026-08-07T10:25:02.601343Z",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "三下",
+    "main_tag": "面积",
+    "sub_tags": [
+      "长方形与正方形面积"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T09:11:45.986735Z",
+  "knowledge_tags_confirmed": true
+}

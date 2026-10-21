@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>象数演易 (XSYY) - AI驱动的数学教学应用生成平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'xsyy-blue': '#1a365d',
+                        'xsyy-dark': '#0f172a',
+                        'xsyy-cream': '#faf5f0',
+                        'xsyy-gold': '#d4a574',
+                        'xsyy-light': '#e8e0d5',
+                        'ink': '#2c2c2c'
+                    },
+                    fontFamily: {
+                        'serif': ['Noto Serif SC', 'serif'],
+                        'sans': ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles/tailwind.css">
+    <style>
+        body { font-family: 'Noto Serif SC', serif; }
+        .ink-shadow { text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-in { animation: slideIn 0.6s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+    </style>
+</head>
+<body class="min-h-screen paper-texture">
+    <nav class="bg-xsyy-blue text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-2xl font-bold ink-shadow tracking-wider">象数演易</a>
+                    <span class="text-xsyy-gold text-sm hidden sm:inline">XSYY</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="/" class="hover:text-xsyy-gold transition">首页</a>
+                    <a href="/pages/upload.html" class="hover:text-xsyy-gold transition">创建应用</a>
+                    <a href="/pages/profile.html" class="hover:text-xsyy-gold transition">个人中心</a>
+                    <a href="/pages/admin.html" id="adminLink" class="hover:text-xsyy-gold transition hidden">管理后台</a>
+                </div>
+                <div class="flex items-center space-x-3" id="authButtons">
+                <button onclick="showLoginModal()" class="btn-secondary btn-sm text-white border-white">登录</button>
+                <button onclick="showRegisterModal()" class="px-4 py-2 bg-gradient-to-r from-[#f5b042] to-[#f28e2b] text-[#2d2a24] rounded-[20px] font-bold hover:shadow-lg transition-all">注册</button>
+            </div>
+            <div class="hidden items-center space-x-3" id="userMenu">
+                <span id="usernameDisplay" class="text-xsyy-gold"></span>
+                <button onclick="logout()" class="btn-secondary btn-sm text-white border-white">退出</button>
+            </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="bg-gradient-to-br from-xsyy-blue to-xsyy-dark text-white py-20 md:py-32">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 ink-shadow fade-in">AI驱动的数学教学应用</h1>
+            <p class="text-xl md:text-2xl text-xsyy-gold mb-8 fade-in" style="animation-delay: 0.2s">
+                输入题目，即刻生成交互式教学应用
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in" style="animation-delay: 0.4s">
+                <a href="/pages/upload.html" class="px-8 py-4 bg-gradient-to-r from-[#f5b042] to-[#f28e2b] text-[#2d2a24] rounded-[20px] text-lg font-bold hover:shadow-lg transition-all shadow-md">
+                    立即开始
+                </a>
+                <a href="#features" class="px-8 py-4 bg-white/10 backdrop-blur rounded-[20px] text-lg font-bold hover:bg-white/20 transition border border-white/30">
+                    了解更多
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-16 md:py-24">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-xsyy-blue mb-16 ink-shadow">核心功能</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-2xl p-8 card-shadow hover-lift">
+                    <div class="text-5xl mb-6 text-center">📝</div>
+                    <h3 class="text-xl font-bold text-xsyy-blue mb-4 text-center">智能题目分析</h3>
+                    <p class="text-gray-600 text-center">支持文本和图片输入，AI自动识别题目结构、知识点和难度等级</p>
+                </div>
+                <div class="bg-white rounded-2xl p-8 card-shadow hover-lift">
+                    <div class="text-5xl mb-6 text-center">🎨</div>
+                    <h3 class="text-xl font-bold text-xsyy-blue mb-4 text-center">交互式教学应用</h3>
+                    <p class="text-gray-600 text-center">生成自包含HTML，包含动画演示、分步讲解和交互练习</p>
+                </div>
+                <div class="bg-white rounded-2xl p-8 card-shadow hover-lift">
+                    <div class="text-5xl mb-6 text-center">🔍</div>
+                    <h3 class="text-xl font-bold text-xsyy-blue mb-4 text-center">智能推荐</h3>
+                    <p class="text-gray-600 text-center">基于语义相似度算法，为您推荐相关学习内容</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-xsyy-light/30">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center text-xsyy-blue mb-12 ink-shadow">热门应用</h2>
+            <div id="popularApps" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-xl p-6 card-shadow hover-lift">
+                    <div class="animate-pulse">
+                        <div class="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                        <div class="h-3 bg-gray-100 rounded w-1/2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 md:py-24">
+        <div class="container mx-auto px-4">
+            <div class="bg-xsyy-blue rounded-3xl p-8 md:p-16 text-center text-white">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 ink-shadow">准备好开始了吗？</h2>
+                <p class="text-xl mb-8 text-xsyy-gold">上传您的数学题目，让AI为您打造专属教学应用</p>
+                <a href="/pages/upload.html" class="inline-block px-10 py-4 bg-xsyy-gold rounded-xl text-lg font-bold hover:bg-opacity-90 transition">
+                    开始创建
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-xsyy-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-xsyy-gold">象数演易</h3>
+                    <p class="text-gray-400">AI驱动的数学教学应用生成平台</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">产品</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/pages/upload.html" class="hover:text-xsyy-gold transition">创建应用</a></li>
+                        <li><a href="/" class="hover:text-xsyy-gold transition">浏览应用</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">关于</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-xsyy-gold transition">使用文档</a></li>
+                        <li><a href="#" class="hover:text-xsyy-gold transition">API参考</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">联系</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>support@xs yy.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-500">
+                <p>&copy; 2026 象数演易 (XSYY). 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="loginModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 slide-in">
+            <h2 class="text-2xl font-bold text-xsyy-blue mb-6 text-center">登录</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">用户名</label>
+                    <input type="text" name="username" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-xsyy-blue focus:ring-2 focus:ring-xsyy-blue/20 outline-none transition">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2">密码</label>
+                    <input type="password" name="password" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-xsyy-blue focus:ring-2 focus:ring-xsyy-blue/20 outline-none transition">
+                </div>
+                <button type="submit" class="w-full py-3 bg-xsyy-blue text-white rounded-lg font-bold hover:bg-opacity-90 transition">
+                    登录
+                </button>
+            </form>
+            <button onclick="hideLoginModal()" class="mt-4 w-full py-2 text-gray-500 hover:text-gray-700 transition">
+                取消
+            </button>
+        </div>
+    </div>
+
+    <div id="registerModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 w-full max-w-md mx-4 slide-in">
+            <h2 class="text-2xl font-bold text-xsyy-blue mb-6 text-center">注册</h2>
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">用户名</label>
+                    <input type="text" name="username" required minlength="3" maxlength="50" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-xsyy-blue focus:ring-2 focus:ring-xsyy-blue/20 outline-none transition">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">邮箱</label>
+                    <input type="email" name="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-xsyy-blue focus:ring-2 focus:ring-xsyy-blue/20 outline-none transition">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">密码</label>
+                    <input type="password" name="password" required minlength="8" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-xsyy-blue focus:ring-2 focus:ring-xsyy-blue/20 outline-none transition">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2">角色</label>
+                    <select name="role" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-xsyy-blue focus:ring-2 focus:ring-xsyy-blue/20 outline-none transition">
+                        <option value="student">学生</option>
+                        <option value="teacher">教师</option>
+                        <option value="creator">内容创作者</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full py-3 bg-xsyy-gold text-white rounded-lg font-bold hover:bg-opacity-90 transition">
+                    注册
+                </button>
+            </form>
+            <button onclick="hideRegisterModal()" class="mt-4 w-full py-2 text-gray-500 hover:text-gray-700 transition">
+                取消
+            </button>
+        </div>
+    </div>
+
+    <div id="messageToast" class="fixed bottom-8 right-8 px-6 py-4 rounded-xl shadow-lg transform translate-y-full opacity-0 transition-all duration-300 z-50">
+    </div>
+
+    <script src="/src/utils/api.js"></script>
+    <script src="/src/utils/auth.js"></script>
+    <script src="/src/utils/ui.js"></script>
+    <script src="/src/utils/feedback.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuth();
+            loadPopularApps();
+        });
+
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('loginModal').classList.add('flex');
+        }
+
+        function hideLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('loginModal').classList.remove('flex');
+        }
+
+        function showRegisterModal() {
+            document.getElementById('registerModal').classList.remove('hidden');
+            document.getElementById('registerModal').classList.add('flex');
+        }
+
+        function hideRegisterModal() {
+            document.getElementById('registerModal').classList.add('hidden');
+            document.getElementById('registerModal').classList.remove('flex');
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const form = event.target;
+            const data = {
+                username: form.username.value,
+                password: form.password.value
+            };
+
+            try {
+                const response = await api.login(data);
+                if (response.data.access_token) {
+                    localStorage.setItem('access_token', response.data.access_token);
+                    localStorage.setItem('refresh_token', response.data.refresh_token);
+                    localStorage.setItem('username', data.username);
+                    updateAuthUI();
+                    hideLoginModal();
+                    showToast('登录成功', 'success');
+                }
+            } catch (error) {
+                showToast(error.message || '登录失败', 'error');
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const form = event.target;
+            const data = {
+                username: form.username.value,
+                email: form.email.value,
+                password: form.password.value,
+                role: form.role.value
+            };
+
+            try {
+                await api.register(data);
+                hideRegisterModal();
+                showToast('注册成功，请登录', 'success');
+                showLoginModal();
+            } catch (error) {
+                showToast(error.message || '注册失败', 'error');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('refresh_token');
+            localStorage.removeItem('username');
+            updateAuthUI();
+            showToast('已退出登录', 'info');
+        }
+
+        function updateAuthUI() {
+            const token = localStorage.getItem('access_token');
+            const authButtons = document.getElementById('authButtons');
+            const userMenu = document.getElementById('userMenu');
+            const usernameDisplay = document.getElementById('usernameDisplay');
+            const adminLink = document.getElementById('adminLink');
+
+            if (token) {
+                authButtons.classList.add('hidden');
+                authButtons.classList.remove('flex');
+                userMenu.classList.remove('hidden');
+                userMenu.classList.add('flex');
+                usernameDisplay.textContent = localStorage.getItem('username') || '';
+
+                checkAdminRole();
+            } else {
+                authButtons.classList.remove('hidden');
+                authButtons.classList.add('flex');
+                userMenu.classList.add('hidden');
+                userMenu.classList.remove('flex');
+                adminLink.classList.add('hidden');
+            }
+        }
+
+        async function checkAdminRole() {
+            try {
+                const user = await api.getCurrentUser();
+                if (user.data.role === 'admin') {
+                    document.getElementById('adminLink').classList.remove('hidden');
+                }
+            } catch (e) {
+                console.log('Not admin');
+            }
+        }
+
+        async function loadPopularApps() {
+            const container = document.getElementById('popularApps');
+            try {
+                const response = await api.getPopular();
+                if (response.data && response.data.items && response.data.items.length > 0) {
+                    container.innerHTML = response.data.items.map(app => `
+                        <a href="/pages/detail.html?id=${app.id}" class="bg-white rounded-xl p-6 card-shadow hover-lift block">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="px-3 py-1 bg-xsyy-gold/10 text-xsyy-gold rounded-full text-sm">${app.primary_tag}</span>
+                                <span class="text-gray-400 text-sm">${app.view_count || 0} 次浏览</span>
+                            </div>
+                            <h3 class="font-bold text-xsyy-blue mb-2">${app.title}</h3>
+                            <p class="text-gray-500 text-sm">${app.difficulty === 'easy' ? '简单' : app.difficulty === 'medium' ? '中等' : app.difficulty === 'hard' ? '困难' : '竞赛级'}</p>
+                        </a>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="text-center text-gray-500 col-span-4">暂无热门应用</p>';
+                }
+            } catch (error) {
+                container.innerHTML = '<p class="text-center text-gray-500 col-span-4">加载失败</p>';
+            }
+        }
+    </script>
+</body>
+</html>

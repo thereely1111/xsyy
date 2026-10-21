@@ -1,0 +1,14 @@
+{
+  "preview_image": "Preview.webp",
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "九上",
+    "main_tag": "三角形",
+    "sub_tags": [
+      "等腰三角形综合应用"
+    ]
+  },
+  "second_tag": null,
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-09-01T07:11:25.375103Z"
+}

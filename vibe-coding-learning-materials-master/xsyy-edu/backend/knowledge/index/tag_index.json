@@ -1,0 +1,895 @@
+{
+  "generated_at": "2026-09-18T16:06:55",
+  "dimensions": [
+    "domain",
+    "grade",
+    "chapter",
+    "section"
+  ],
+  "source": "E:\\象数演易\\1\\xsyy\\vibe-coding-learning-materials-master\\xsyy-edu\\backend\\prompt\\knowledge_tag_framework.json",
+  "n_docs": 126,
+  "docs": [
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "分数乘法 / 分数除法",
+      "section": "分数乘法与除法",
+      "keyword": "分数乘法、分数除法、倒数、分数乘除应用"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "分数乘法 / 分数除法",
+      "section": "分数四则混合运算",
+      "keyword": "分数混合运算、运算顺序、简便运算"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "比",
+      "section": "比的意义与基本性质",
+      "keyword": "比、比值、化简比、按比例分配"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "百分数（一）",
+      "section": "百分数的意义与互化",
+      "keyword": "百分数、百分率、百分数分数小数互化"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "数的运算基础",
+      "section": "基础整数加减法",
+      "keyword": "被减数、减数、差、加数、和、还剩、花了、一共、加减法各部分名称"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "数的运算基础",
+      "section": "基础整数乘除法",
+      "keyword": "被除数、除数、商、乘积、因数、倍数、个位的0去掉"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "数的运算基础",
+      "section": "数的组成与位值",
+      "keyword": "组成三位数、组成两位数、个位、十位、百位、数字各一次、和最大、和最小、差最大、差最小"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "数的运算基础",
+      "section": "整数分配与最值",
+      "keyword": "每人至少、每天至少、最多、最少、分得最多、分得最少、乘积最大、乘积最小、非零自然数、分给"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "数的运算基础",
+      "section": "逻辑推理",
+      "keyword": "真假话、小偷、好人、从犯、职业、推理、排除、可疑的人"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "数的运算基础",
+      "section": "整数周期与分配",
+      "keyword": "每天至少、每天最多、每周、每次至少、最少需要几天、最多需要几天、分配、播放几集"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "数的运算基础",
+      "section": "余数与同余问题",
+      "keyword": "余数、同余、分别除以、除后余数、余数分别是、最小自然数、被除数、除数、商"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六上",
+      "chapter": "行程问题",
+      "section": "相遇与追及问题",
+      "keyword": "相向而行、同向而行、相遇、追及、追上、第一次相遇、第二次相遇、掉头、折返、往返、速度、路程、时间"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六下",
+      "chapter": "负数",
+      "section": "负数的初步认识",
+      "keyword": "负数、正负数表示（温度/海拔/收支）"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六下",
+      "chapter": "百分数（二）",
+      "section": "百分数应用",
+      "keyword": "折扣、成数、税率、利率、打折"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六下",
+      "chapter": "比例",
+      "section": "比例的意义与基本性质",
+      "keyword": "比例、内项外项、解比例"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六下",
+      "chapter": "比例",
+      "section": "比例尺",
+      "keyword": "比例尺、图上距离、实际距离"
+    },
+    {
+      "domain": "数与式",
+      "grade": "六下",
+      "chapter": "比与比例（拓展）",
+      "section": "黄金分割",
+      "keyword": "黄金分割、黄金比"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七上",
+      "chapter": "有理数",
+      "section": "正数与负数",
+      "keyword": "正数、>、0"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七上",
+      "chapter": "有理数",
+      "section": "有理数分类与大小比较",
+      "keyword": "有理数=整数+分数、正数最大、负数最小"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七上",
+      "chapter": "有理数",
+      "section": "数轴、相反数与绝对值",
+      "keyword": "原点+正方向+单位长度、a、与、−a、|a|、≥、0"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七上",
+      "chapter": "有理数",
+      "section": "有理数四则运算",
+      "keyword": "同号取同号、绝对值加、a−b、=、a+(−b)、同号正、异号负、a÷b=a·(1、b)"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七上",
+      "chapter": "有理数",
+      "section": "乘方与科学记数法",
+      "keyword": "aⁿ=a·a·…·a、a×10ⁿ、(1≤a<10)"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七上",
+      "chapter": "有理数",
+      "section": "近似数与有效数字",
+      "keyword": "四舍五入"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七上",
+      "chapter": "整式的加减",
+      "section": "单项式与多项式",
+      "keyword": "数字×字母的乘积、多项式=单项式的和"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七上",
+      "chapter": "整式的加减",
+      "section": "整式的加减",
+      "keyword": "字母同+指数同、+(a+b)=a+b、去括号、合并同类项"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七上",
+      "chapter": "整式的加减",
+      "section": "探索规律",
+      "keyword": "列举、观察、猜想、验证"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七下",
+      "chapter": "实数",
+      "section": "平方根与算术平方根",
+      "keyword": "√a、≥、0、±√a"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七下",
+      "chapter": "实数",
+      "section": "立方根",
+      "keyword": "∛a"
+    },
+    {
+      "domain": "数与式",
+      "grade": "七下",
+      "chapter": "实数",
+      "section": "无理数与实数",
+      "keyword": "无理数=无限不循环小数、实数=有理数+无理数"
+    },
+    {
+      "domain": "数与式",
+      "grade": "八上",
+      "chapter": "整式的乘法与因式分解",
+      "section": "幂的运算",
+      "keyword": "同底数幂、幂的乘方、积的乘方、aᵐ·aⁿ=aᵐ⁺ⁿ、(aᵐ)ⁿ=aᵐⁿ、(ab)ⁿ=aⁿbⁿ"
+    },
+    {
+      "domain": "数与式",
+      "grade": "八上",
+      "chapter": "整式的乘法与因式分解",
+      "section": "整式的乘法",
+      "keyword": "系数×系数"
+    },
+    {
+      "domain": "数与式",
+      "grade": "八上",
+      "chapter": "整式的乘法与因式分解",
+      "section": "乘法公式",
+      "keyword": "平方差公式、完全平方公式、(a+b)(a−b)=a²−b²、(a±b)²=a²±2ab+b²"
+    },
+    {
+      "domain": "数与式",
+      "grade": "八上",
+      "chapter": "整式的乘法与因式分解",
+      "section": "因式分解",
+      "keyword": "因式分解、分解因式、提公因式法、公式法分解、十字相乘"
+    },
+    {
+      "domain": "数与式",
+      "grade": "八上",
+      "chapter": "分式",
+      "section": "分式的概念与基本性质",
+      "keyword": "分母≠0、A、B=A·C、B·C、(C≠0)"
+    },
+    {
+      "domain": "数与式",
+      "grade": "八上",
+      "chapter": "分式",
+      "section": "分式的运算",
+      "keyword": "约分、乘除、分子分母分别运算、同分母、先通分"
+    },
+    {
+      "domain": "数与式",
+      "grade": "八上",
+      "chapter": "分式",
+      "section": "整数指数幂",
+      "keyword": "a⁰=1、a⁻ⁿ=1、aⁿ"
+    },
+    {
+      "domain": "数与式",
+      "grade": "八下",
+      "chapter": "二次根式",
+      "section": "二次根式的概念与性质",
+      "keyword": "a≥0、且、√a≥0、(√a)²=a、√a²=|a|"
+    },
+    {
+      "domain": "数与式",
+      "grade": "八下",
+      "chapter": "二次根式",
+      "section": "二次根式的运算",
+      "keyword": "√a·√b=√(ab)、化最简、合并同类"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七上",
+      "chapter": "一元一次方程",
+      "section": "方程与等式的性质",
+      "keyword": "方程=含未知数的等式、a=b、a±c=b±c"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七上",
+      "chapter": "一元一次方程",
+      "section": "一元一次方程的解法",
+      "keyword": "去分母、去括号、移项、合并、系数化1"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七上",
+      "chapter": "一元一次方程",
+      "section": "一元一次方程应用题",
+      "keyword": "审题、设元、列方程、解、答"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七上",
+      "chapter": "一元一次方程",
+      "section": "相遇与追及问题",
+      "keyword": "相向而行、同向而行、相遇、追及、追上、第一次相遇、第二次相遇、掉头、折返、往返、速度、路程、时间"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七上",
+      "chapter": "一元一次方程",
+      "section": "列车过桥过隧道问题",
+      "keyword": "列车、火车、隧道、遂道、过桥、通过、错车而过、车长、每秒"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七下",
+      "chapter": "二元一次方程组",
+      "section": "二元一次方程组的概念",
+      "keyword": "两个方程、两个未知数"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七下",
+      "chapter": "二元一次方程组",
+      "section": "二元一次方程组解法",
+      "keyword": "代入消元、加减消元、用一个表示另一个、代入、系数相等、相反、加减"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七下",
+      "chapter": "二元一次方程组",
+      "section": "三元一次方程组",
+      "keyword": "逐步消元"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七下",
+      "chapter": "二元一次方程组",
+      "section": "二元一次方程组应用题",
+      "keyword": "审题、设元、列方程组"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七下",
+      "chapter": "不等式与不等式组",
+      "section": "不等式及其性质",
+      "keyword": ">、<、≥、≤、≠、a>b、a±c>b±c"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "七下",
+      "chapter": "不等式与不等式组",
+      "section": "一元一次不等式的解法与解集",
+      "keyword": "不等式组、解集、除负数变号、交集"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "八上",
+      "chapter": "分式",
+      "section": "分式方程及其应用",
+      "keyword": "增根、验根、检验不可省"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "九上",
+      "chapter": "一元二次方程",
+      "section": "一元二次方程的概念",
+      "keyword": "ax²+bx+c=0、(a≠0)"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "九上",
+      "chapter": "一元二次方程",
+      "section": "一元二次方程的解法",
+      "keyword": "直接开平方法、配方法、公式法、因式分解法、(x+a)²=b、加(½b)²配方、x=(−b±√Δ)、2a、A·B=0、A=0或B=0"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "九上",
+      "chapter": "一元二次方程",
+      "section": "根的判别式",
+      "keyword": "Δ=b²−4ac"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "九上",
+      "chapter": "一元二次方程",
+      "section": "根与系数的关系",
+      "keyword": "韦达定理、x₁+x₂=−b、a、x₁x₂=c"
+    },
+    {
+      "domain": "方程与不等式",
+      "grade": "九上",
+      "chapter": "一元二次方程",
+      "section": "一元二次方程应用题",
+      "keyword": "审题、设元、列方程"
+    },
+    {
+      "domain": "函数",
+      "grade": "六下",
+      "chapter": "比例",
+      "section": "正比例与反比例",
+      "keyword": "正比例、反比例、正反比例判断"
+    },
+    {
+      "domain": "函数",
+      "grade": "七下",
+      "chapter": "平面直角坐标系",
+      "section": "平面直角坐标系与坐标",
+      "keyword": "先横后纵、x轴、y轴、原点、选原点、定方向、定单位、右加左减x"
+    },
+    {
+      "domain": "函数",
+      "grade": "八下",
+      "chapter": "一次函数",
+      "section": "函数的概念与表示",
+      "keyword": "x、唯一y"
+    },
+    {
+      "domain": "函数",
+      "grade": "八下",
+      "chapter": "一次函数",
+      "section": "正比例函数",
+      "keyword": "y=kx、k>0增、k<0减"
+    },
+    {
+      "domain": "函数",
+      "grade": "八下",
+      "chapter": "一次函数",
+      "section": "一次函数的图象与性质",
+      "keyword": "y=kx+b、b=截距"
+    },
+    {
+      "domain": "函数",
+      "grade": "八下",
+      "chapter": "一次函数",
+      "section": "待定系数法求解析式",
+      "keyword": "设、代、解、写"
+    },
+    {
+      "domain": "函数",
+      "grade": "八下",
+      "chapter": "一次函数",
+      "section": "一次函数与方程/不等式及实际应用",
+      "keyword": "交点、上方部分、建模、求解"
+    },
+    {
+      "domain": "函数",
+      "grade": "九上",
+      "chapter": "二次函数",
+      "section": "二次函数的概念",
+      "keyword": "一般式、顶点式、交点式"
+    },
+    {
+      "domain": "函数",
+      "grade": "九上",
+      "chapter": "二次函数",
+      "section": "二次函数的图象、性质与平移",
+      "keyword": "a决定开口方向、右减左加x、上加下减y"
+    },
+    {
+      "domain": "函数",
+      "grade": "九上",
+      "chapter": "二次函数",
+      "section": "二次函数与一元二次方程",
+      "keyword": "交点个数=根的个数"
+    },
+    {
+      "domain": "函数",
+      "grade": "九上",
+      "chapter": "二次函数",
+      "section": "二次函数最值问题",
+      "keyword": "顶点、最值"
+    },
+    {
+      "domain": "函数",
+      "grade": "九下",
+      "chapter": "反比例函数",
+      "section": "反比例函数的概念",
+      "keyword": "y=k、x、xy=k"
+    },
+    {
+      "domain": "函数",
+      "grade": "九下",
+      "chapter": "反比例函数",
+      "section": "反比例函数的图象、性质与应用",
+      "keyword": "k的几何意义、k>0、一三、减、确定k、写解析式"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "六上",
+      "chapter": "圆",
+      "section": "圆的认识与周长面积",
+      "keyword": "圆心、半径、直径、圆周率、周长、面积"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "六上",
+      "chapter": "圆",
+      "section": "扇形的认识",
+      "keyword": "扇形、弧、圆心角"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "六上",
+      "chapter": "平面图形",
+      "section": "长方形周长与面积",
+      "keyword": "长方形、矩形、长、宽、周长、面积、厘米、平方厘米"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "六下",
+      "chapter": "圆柱与圆锥",
+      "section": "圆柱的认识与表面积",
+      "keyword": "圆柱、侧面展开、表面积"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "六下",
+      "chapter": "圆柱与圆锥",
+      "section": "圆柱与圆锥的体积",
+      "keyword": "圆柱体积、圆锥体积、等底等高"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "六下",
+      "chapter": "比例",
+      "section": "图形的放大与缩小",
+      "keyword": "放大、缩小、比例应用"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "七上",
+      "chapter": "几何图形初步",
+      "section": "几何图形与立体图形",
+      "keyword": "立体、平面"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "七上",
+      "chapter": "几何图形初步",
+      "section": "直线、射线与线段",
+      "keyword": "两点确定一条直线"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "七上",
+      "chapter": "几何图形初步",
+      "section": "角的度量与角平分线",
+      "keyword": "顶点+两条射线、平分、两角相等"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "七上",
+      "chapter": "几何图形初步",
+      "section": "余角、补角与方位角",
+      "keyword": "互余=90°、互补=180°、南北为基准"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "七下",
+      "chapter": "相交线与平行线",
+      "section": "邻补角与对顶角",
+      "keyword": "邻补角互补=180°、对顶角相等"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "七下",
+      "chapter": "相交线与平行线",
+      "section": "三线八角",
+      "keyword": "同位角、内错角、同旁内角、F型、Z型、U型"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "七下",
+      "chapter": "相交线与平行线",
+      "section": "平行线的判定与性质",
+      "keyword": "同位角相等、平行"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "七下",
+      "chapter": "相交线与平行线",
+      "section": "命题、定理与平移",
+      "keyword": "条件+结论、对应线段∥且="
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "七下",
+      "chapter": "相交线与平行线",
+      "section": "垂线",
+      "keyword": "垂线段最短"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "三角形",
+      "section": "三角形的概念与三边关系",
+      "keyword": "3条线段首尾相接"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "三角形",
+      "section": "三角形的高、中线与角平分线",
+      "keyword": "顶点、垂足、中点连线、平分面积、三条交于内心"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "三角形",
+      "section": "三角形内角和与外角",
+      "keyword": "∠A+∠B+∠C=180°、外角=不相邻两内角之和"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "全等三角形",
+      "section": "全等三角形的概念与性质",
+      "keyword": "ABC≌、DEF"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "全等三角形",
+      "section": "全等三角形判定",
+      "keyword": "SSS、SAS、ASA、AAS、HL（仅限直角、）"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "全等三角形",
+      "section": "基本尺规作图",
+      "keyword": "无刻度直尺+圆规"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "全等三角形",
+      "section": "角平分线的性质",
+      "keyword": "角平分线、距离等"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "轴对称",
+      "section": "轴对称与轴对称图形",
+      "keyword": "对称点连线⊥对称轴、(x、y)、−y)、(−x"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "轴对称",
+      "section": "线段垂直平分线",
+      "keyword": "垂直平分线、距离等"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "轴对称",
+      "section": "最短路径",
+      "keyword": "将军饮马、作对称点、化折为直"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八上",
+      "chapter": "轴对称",
+      "section": "等腰三角形的性质与判定",
+      "keyword": "等边三角形、等边↔等角、等边、60°"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八下",
+      "chapter": "勾股定理",
+      "section": "勾股定理及其逆定理",
+      "keyword": "a²+b²=c²、直角"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八下",
+      "chapter": "平行四边形",
+      "section": "平行四边形的性质与判定",
+      "keyword": "对边∥且=、对角=、对角线互相平分、5种判定"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八下",
+      "chapter": "平行四边形",
+      "section": "三角形中位线",
+      "keyword": "中位线∥第三边且=½"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "八下",
+      "chapter": "平行四边形",
+      "section": "矩形、菱形与正方形",
+      "keyword": "矩形=□+一个直角、菱形=□+邻边等、正方形=矩形∩菱形"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "旋转",
+      "section": "旋转的概念与性质",
+      "keyword": "三要素、距离相等"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "旋转",
+      "section": "中心对称与中心对称图形",
+      "keyword": "(x、y)、(−x、−y)、旋转180°重合"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "圆",
+      "section": "圆的概念与性质",
+      "keyword": "圆=点集、直径=最长弦"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "圆",
+      "section": "垂径定理",
+      "keyword": "直径⊥弦、平分"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "圆",
+      "section": "圆心角、弧、弦的关系",
+      "keyword": "圆心角=弧=弦"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "圆",
+      "section": "圆周角定理",
+      "keyword": "圆周角=½圆心角"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "圆",
+      "section": "弧长与扇形面积",
+      "keyword": "l=nπr、180、S=½lr"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "圆",
+      "section": "点、直线与圆的位置关系",
+      "keyword": "d与r比较"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "圆",
+      "section": "切线的判定与性质",
+      "keyword": "d=r、切线⊥半径"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "圆",
+      "section": "内切圆与外接圆",
+      "keyword": "内心=角平分线交点"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九上",
+      "chapter": "圆",
+      "section": "正多边形与圆",
+      "keyword": "中心角=360°、n"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九下",
+      "chapter": "相似",
+      "section": "相似三角形的判定与性质",
+      "keyword": "相似比=对应边之比、AA、SAS、SSS、周长比=k、面积比=k²"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九下",
+      "chapter": "相似",
+      "section": "位似变换",
+      "keyword": "(x、y)、(kx、ky)"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九下",
+      "chapter": "相似",
+      "section": "相似的实际应用",
+      "keyword": "构造相似、列比例"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九下",
+      "chapter": "锐角三角函数",
+      "section": "锐角三角函数",
+      "keyword": "互余、sin、cos、tan、sinA=cos(90°−A)"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九下",
+      "chapter": "锐角三角函数",
+      "section": "解直角三角形",
+      "keyword": "∠A+∠B=90°、勾股定理"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九下",
+      "chapter": "锐角三角函数",
+      "section": "锐角三角函数的实际应用",
+      "keyword": "仰角、仰俯角、坡度、方位角"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九下",
+      "chapter": "投影与视图",
+      "section": "平行投影与中心投影",
+      "keyword": "中心、平行"
+    },
+    {
+      "domain": "图形与几何",
+      "grade": "九下",
+      "chapter": "投影与视图",
+      "section": "三视图与几何体还原",
+      "keyword": "长对正、高平齐、宽相等、三视图、还原、算体积"
+    },
+    {
+      "domain": "统计与概率",
+      "grade": "六上",
+      "chapter": "扇形统计图",
+      "section": "扇形统计图与统计图选择",
+      "keyword": "扇形统计图、条形图、折线图、统计图选择"
+    },
+    {
+      "domain": "统计与概率",
+      "grade": "七下",
+      "chapter": "数据的收集、整理与描述",
+      "section": "全面调查与抽样调查",
+      "keyword": "普查、抽样"
+    },
+    {
+      "domain": "统计与概率",
+      "grade": "七下",
+      "chapter": "数据的收集、整理与描述",
+      "section": "统计图表与频数分布直方图",
+      "keyword": "条形、折线、扇形、频数、频率"
+    },
+    {
+      "domain": "统计与概率",
+      "grade": "八下",
+      "chapter": "数据的分析",
+      "section": "平均数与加权平均数",
+      "keyword": "x̄=Σxᵢ、n、加权平均=Σxᵢwᵢ、Σwᵢ"
+    },
+    {
+      "domain": "统计与概率",
+      "grade": "八下",
+      "chapter": "数据的分析",
+      "section": "中位数与众数",
+      "keyword": "必须先排序、出现次数最多"
+    },
+    {
+      "domain": "统计与概率",
+      "grade": "八下",
+      "chapter": "数据的分析",
+      "section": "方差",
+      "keyword": "s²=(1、n)Σ(xᵢ−x̄)²"
+    },
+    {
+      "domain": "统计与概率",
+      "grade": "九上",
+      "chapter": "概率初步",
+      "section": "随机事件",
+      "keyword": "0≤P(A)≤1"
+    },
+    {
+      "domain": "统计与概率",
+      "grade": "九上",
+      "chapter": "概率初步",
+      "section": "列举法求概率",
+      "keyword": "列表法、树状图、P(A)=m、n"
+    },
+    {
+      "domain": "统计与概率",
+      "grade": "九上",
+      "chapter": "概率初步",
+      "section": "用频率估计概率",
+      "keyword": "频率≈概率"
+    }
+  ]
+}

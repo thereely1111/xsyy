@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "stage": "junior_high",
+  "domain": "统计与概率",
+  "display_class": "statistics",
+  "grade": "九上",
+  "tags": {
+    "main_tag": "概率初步",
+    "sub_tags": [
+      "列举法求概率"
+    ],
+    "second_tag": null
+  },
+  "question_type": "概率",
+  "figure_info": {
+    "has_figure": false,
+    "figures": []
+  },
+  "visual_requirements": {
+    "style_key": "junior_statistics",
+    "steps_min": 5,
+    "steps_max": 7,
+    "motion_policy": "answer_first",
+    "must_show": [
+      "数据忠于题干"
+    ]
+  },
+  "method_lock": null,
+  "is_math_problem": true,
+  "confidence": 0.95,
+  "engine": "agent",
+  "is_composite": false,
+  "parts": [],
+  "domains": []
+}

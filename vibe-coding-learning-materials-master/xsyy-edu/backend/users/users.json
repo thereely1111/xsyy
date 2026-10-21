@@ -1,0 +1,22 @@
+{
+  "admin": {
+    "user_id": "134d094a-f97a-4b83-bc93-e0b001822b75",
+    "username": "admin",
+    "email": "august_zad@qq.com",
+    "password_hash": "d82494f05d6917ba02f7aaa29689ccb444bb73f20380876cb05d1f37537b7892",
+    "created_at": "2025-11-29T23:00:45.434265",
+    "reset_token": null,
+    "reset_token_expiry": null,
+    "grade": "8",
+    "signature": "离离原上草"
+  },
+  "user_2193": {
+    "user_id": "ae193ead-a86e-4b8d-8513-f9a5f9b16e87",
+    "username": "user_2193",
+    "phone": "18988992193",
+    "password_hash": null,
+    "created_at": "2025-11-29T23:19:42.224542",
+    "reset_token": null,
+    "reset_token_expiry": null
+  }
+}

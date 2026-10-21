@@ -1,0 +1,21 @@
+{
+  "question": "40 个梨分给 3 个班，分给一班 20 个，其余平均分给二班和三班，二班分到 ( ) 个",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/6ef52117-e65a-4667-bc3e-4876e78a7844/pasted-image-1772248753544.png",
+  "task_id": "6ef52117-e65a-4667-bc3e-4876e78a7844",
+  "generated_at": "2026-02-28T11:21:03.724878Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "平均分应用题",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "生活情境下的多步计算",
+    "main_tag": "模型意识",
+    "sub_tags": []
+  },
+  "tags_updated_at": "2026-02-28T11:21:03.724893Z",
+  "preview_image": "Preview.webp"
+}

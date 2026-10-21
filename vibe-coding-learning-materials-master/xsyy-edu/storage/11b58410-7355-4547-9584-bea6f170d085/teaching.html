@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>行程问题-追及应用 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">行程问题-追及应用</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('根据追及关系求两地之间的路程')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <defs>\n<linearGradient id="redGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c94a3f"/><stop offset="100%" stop-color="#a52a2a"/></linearGradient>\n<linearGradient id="inkGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3a3a3a"/><stop offset="100%" stop-color="#666666"/></linearGradient>\n<filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="2" dy="3" stdDeviation="2.5" flood-color="#3a3a3a" flood-opacity="0.25"/></filter>\n<filter id="cinnabarGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>\n<marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#c23a30"/></marker>\n</defs>\n<style>\n.transition-all { transition-property: all; }\n.duration-700 { transition-duration: 700ms; }\n.duration-1000 { transition-duration: 1000ms; }\n.ease-out { transition-timing-function: cubic-bezier(0.33, 1, 0.68, 1); }\n.ease-in { transition-timing-function: cubic-bezier(0.32, 0, 0.67, 0); }\n.opacity-0 { opacity: 0; }\n.opacity-100 { opacity: 1; }\n.scale-90 { transform: scale(0.9); }\n.scale-95 { transform: scale(0.95); }\n.scale-100 { transform: scale(1); }\n.scale-110 { transform: scale(1.1); }\n.translate-y-4 { transform: translateY(16px); }\n.-translate-y-4 { transform: translateY(-16px); }\n.translate-y-0 { transform: translateY(0); }\n.translate-x-4 { transform: translateX(16px); }\n.-translate-x-4 { transform: translateX(-16px); }\n.translate-x-0 { transform: translateX(0); }\n.svg-elem { transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); }\n.text-ink { fill: #3a3a3a; }\n.text-red { fill: #c23a30; }\n.bg-rice { fill: #faf6ed; }\n.stroke-ink { stroke: #5c5c5c; }\n.stroke-red { stroke: #c23a30; }\n.dashed-line { fill: none; stroke: #c23a30; stroke-width: 2; stroke-dasharray: 8 6; stroke-linecap: round; opacity: 0.85; animation: dashFlow 1.2s linear infinite; }\n@keyframes dashFlow { to { stroke-dashoffset: -28; } }\n@keyframes cloudFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }\n@keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }\n@keyframes shimmer { 0% { opacity: 0.45; } 50% { opacity: 1; } 100% { opacity: 0.45; } }\n.float { animation: cloudFloat 3.5s ease-in-out infinite; }\n.breathe { animation: heartbeat 2.2s ease-in-out infinite; }\n.shimmer { animation: shimmer 2s ease-in-out infinite; }\n.label-box { font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif; font-size: 14px; fill: #3a3a3a; }\n.big-label { font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif; font-size: 18px; font-weight: 700; fill: #c23a30; }\n.emoji { font-size: 38px; text-anchor: middle; dominant-baseline: middle; }\n</style>\n<g x-show="sceneStep >= 0" class="svg-elem transition-all duration-700">\n<line x1="100" y1="460" x2="700" y2="460" stroke="url(#inkGrad)" stroke-width="4" stroke-linecap="round" filter="url(#softShadow)"/>\n<path d="M100 500 L100 510 L700 510 L700 500" fill="none" stroke="#5c5c5c" stroke-width="2"/>\n<text x="400" y="535" text-anchor="middle" class="label-box" x-show="sceneStep <= 5">路程 S = ？ 米</text>\n<text x="400" y="535" text-anchor="middle" class="big-label" x-show="sceneStep >= 6">1200 米</text>\n<g transform="translate(100,460)">\n<rect x="-22" y="-48" width="44" height="48" fill="#faf6ed" stroke="#5c5c5c" stroke-width="2" rx="2" filter="url(#softShadow)"/>\n<path d="M-26 -48 L0 -66 L26 -48 Z" fill="url(#redGrad)" stroke="#a52a2a" stroke-width="1.5"/>\n<rect x="-6" y="-30" width="12" height="30" fill="#3a3a3a" rx="1"/>\n<text x="0" y="18" text-anchor="middle" class="label-box">学校</text>\n</g>\n<g transform="translate(700,460)">\n<rect x="-28" y="-50" width="56" height="50" fill="#faf6ed" stroke="#5c5c5c" stroke-width="2" rx="2" filter="url(#softShadow)"/>\n<rect x="-20" y="-42" width="40" height="28" fill="#3a3a3a" stroke="#3a3a3a" stroke-width="1"/>\n<path d="M-28 -50 Q-14 -62 0 -50 Q14 -62 28 -50" fill="url(#redGrad)" stroke="#a52a2a" stroke-width="1.5"/>\n<text x="0" y="18" text-anchor="middle" class="label-box">影院</text>\n</g>\n<path d="M140 450 Q400 435 660 450" fill="none" stroke="#c23a30" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.5"/>\n</g>\n<g transform="translate(100,420)">\n<g x-show="sceneStep === 0" class="svg-elem" x-transition:enter="transition-all duration-700 ease-out" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition-all duration-500 ease-in" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">\n<circle cx="0" cy="0" r="28" fill="#faf6ed" stroke="#c23a30" stroke-width="2" class="breathe" filter="url(#cinnabarGlow)"/>\n<text x="0" y="2" class="emoji">🚶</text>\n<text x="0" y="44" text-anchor="middle" class="label-box text-red">小伟 60米/分</text>\n</g>\n</g>\n<g transform="translate(250,420)">\n<g x-show="sceneStep >= 1 &amp;&amp; sceneStep <= 5" class="svg-elem" x-transition:enter="transition-all duration-700 ease-out" x-transition:enter-start="opacity-0 -translate-x-4 scale-90" x-transition:enter-end="opacity-100 translate-x-0 scale-100" x-transition:leave="transition-all duration-500 ease-in" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">\n<circle cx="0" cy="0" r="28" fill="#faf6ed" stroke="#c23a30" stroke-width="2" class="breathe" filter="url(#cinnabarGlow)"/>\n<text x="0" y="2" class="emoji">🚶</text>\n<line x1="0" y1="28" x2="0" y2="40" stroke="#5c5c5c" stroke-width="1.5" stroke-dasharray="3 3"/>\n<text x="0" y="72" text-anchor="middle" class="label-box">小伟</text>\n<text x="0" y="88" text-anchor="middle" class="label-box text-red">已走 5分钟</text>\n</g>\n</g>\n<g x-show="sceneStep >= 1" class="svg-elem transition-all duration-700">\n<line x1="100" y1="405" x2="250" y2="405" stroke="#c23a30" stroke-width="1.5" marker-end="url(#arrowRed)"/>\n<text x="175" y="395" text-anchor="middle" class="big-label">300米</text>\n</g>\n<g transform="translate(100,375)">\n<g x-show="sceneStep >= 2 &amp;&amp; sceneStep <= 5" class="svg-elem" x-transition:enter="transition-all duration-1000 ease-out" x-transition:enter-start="opacity-0 scale-90 translate-y-4" x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition-all duration-500 ease-in" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">\n<circle cx="0" cy="0" r="26" fill="#faf6ed" stroke="#c23a30" stroke-width="2" class="breathe" filter="url(#cinnabarGlow)"/>\n<text x="0" y="2" class="emoji">🏃</text>\n<text x="0" y="46" text-anchor="middle" class="label-box text-red">小明 80米/分</text>\n<text x="0" y="62" text-anchor="middle" class="label-box">晚出发5分钟</text>\n</g>\n</g>\n<path d="M250 390 C300 350 360 260 420 210" fill="none" class="dashed-line svg-elem" x-show="sceneStep >= 3 &amp;&amp; sceneStep <= 5"/>\n<foreignObject x="420" y="70" width="340" height="180" x-show="sceneStep >= 4" class="svg-elem" x-transition:enter="transition-all duration-1000 ease-out" x-transition:enter-start="opacity-0 translate-y-4 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-transition:leave="transition-all duration-700 ease-in" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 translate-y-4 scale-95">\n<div xmlns="http://www.w3.org/1999/xhtml" style="font-family:'Noto Sans SC','Microsoft YaHei',sans-serif; background:#faf6ed; border-left:4px solid #c23a30; border-radius:8px; padding:12px 16px; box-shadow:2px 4px 10px rgba(58,58,58,0.15); color:#3a3a3a;">\n<div x-show="sceneStep === 4" style="font-size:16px; line-height:1.6;">\n设小明用时 <span style="color:#c23a30; font-weight:bold;">t</span> 分钟<br/>\n小伟用时 <span style="color:#c23a30; font-weight:bold;">(t+5)</span> 分钟<br/>\n路程相等：<span style="color:#c23a30; font-weight:bold;">60(t+5) = 80t</span>\n</div>\n<div x-show="sceneStep === 5" style="font-size:16px; line-height:1.6;">\n60t + 300 = 80t<br/>\n20t = 300<br/>\nt = <span style="color:#c23a30; font-weight:bold;">15</span> 分钟\n</div>\n<div x-show="sceneStep >= 6" style="font-size:16px; line-height:1.6;">\n路程 S = 80 × 15<br/>\n= <span style="color:#c23a30; font-weight:bold;">1200</span> 米\n</div>\n</div>\n</foreignObject>\n<path d="M560 180 C600 240 640 340 680 380" fill="none" class="dashed-line svg-elem" x-show="sceneStep >= 6"/>\n<g transform="translate(700,420)">\n<g x-show="sceneStep >= 6" class="svg-elem" x-transition:enter="transition-all duration-1000 ease-out" x-transition:enter-start="opacity-0 translate-x-4 scale-90" x-transition:enter-end="opacity-100 translate-x-0 scale-100">\n<circle cx="0" cy="0" r="28" fill="#faf6ed" stroke="#c23a30" stroke-width="2" class="breathe" filter="url(#cinnabarGlow)"/>\n<text x="0" y="2" class="emoji">🚶</text>\n<text x="0" y="46" text-anchor="middle" class="label-box">小伟</text>\n</g>\n</g>\n<g transform="translate(700,375)">\n<g x-show="sceneStep >= 6" class="svg-elem" x-transition:enter="transition-all duration-1000 ease-out" x-transition:enter-start="opacity-0 translate-x-4 scale-90" x-transition:enter-end="opacity-100 translate-x-0 scale-100">\n<circle cx="0" cy="0" r="26" fill="#faf6ed" stroke="#c23a30" stroke-width="2" class="breathe" filter="url(#cinnabarGlow)"/>\n<text x="0" y="2" class="emoji">🏃</text>\n<text x="0" y="46" text-anchor="middle" class="label-box">小明</text>\n</g>\n</g>\n<g x-show="sceneStep >= 6" class="svg-elem transition-all duration-700">\n<circle cx="700" cy="330" r="18" fill="#c23a30" class="shimmer"/>\n<text x="700" y="335" text-anchor="middle" fill="#faf6ed" font-size="20" dominant-baseline="middle">✓</text>\n<text x="700" y="360" text-anchor="middle" class="label-box text-red">同时到达</text>\n</g>\n<foreignObject x="230" y="80" width="360" height="130" x-show="sceneStep === 7" class="svg-elem" x-transition:enter="transition-all duration-1000 ease-out" x-transition:enter-start="opacity-0 -translate-y-4 scale-95" x-transition:enter-end="opacity-100 translate-y-0 scale-100">\n<div xmlns="http://www.w3.org/1999/xhtml" style="font-family:'Noto Sans SC','Microsoft YaHei',sans-serif; background:#faf6ed; border:2px solid #c23a30; border-radius:10px; padding:14px 18px; box-shadow:2px 4px 12px rgba(58,58,58,0.15); color:#3a3a3a;">\n<div style="font-size:16px; line-height:1.7;">\n小伟：1200 ÷ 60 = 20 分钟 = 15 + 5 ✓<br/>\n小明：1200 ÷ 80 = 15 分钟 ✓<br/>\n晚出发 5 分钟且同时到达，<span style="color:#c23a30; font-weight:bold;">答案正确</span>\n</div>\n</div>\n</foreignObject>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+    {
+        "title": "情境引入",
+        "description": "小伟和小明都要从学校去电影院，小伟先出发，小明晚5分钟才从学校出发，最后两人同时到达影院。",
+        "bubbleText": "两人同时到达，学校到影院的路程是多少米？",
+        "bubblePos": {
+            "x": 400,
+            "y": 100
+        }
+    },
+    {
+        "title": "小伟先行",
+        "description": "小伟的速度是每分钟60米，先走5分钟后，他已经走出了一段距离。",
+        "bubbleText": "小伟5分钟走了 60×5 = 300 米",
+        "bubblePos": {
+            "x": 175,
+            "y": 380
+        }
+    },
+    {
+        "title": "小明出发",
+        "description": "5分钟后小明从学校出发，速度是每分钟80米，比小伟快，此时小伟已在前方300米处。",
+        "bubbleText": "小明速度更快，开始追赶小伟",
+        "bubblePos": {
+            "x": 150,
+            "y": 330
+        }
+    },
+    {
+        "title": "追及时间关系",
+        "description": "因为两人同时到达影院，所以他们从学校到影院所走的路程相同，只是所用时间不同。",
+        "bubbleText": "同时到达意味着路程相等",
+        "bubblePos": {
+            "x": 500,
+            "y": 120
+        }
+    },
+    {
+        "title": "建立方程",
+        "description": "设小明走了t分钟，则小伟走了(t+5)分钟。根据路程相等可列出方程。",
+        "bubbleText": "设小明用时 t 分钟，列方程 60(t+5)=80t",
+        "bubblePos": {
+            "x": 520,
+            "y": 160
+        }
+    },
+    {
+        "title": "解方程",
+        "description": "展开方程、移项合并后得到 20t = 300，解得小明走了15分钟。",
+        "bubbleText": "解得 t = 15 分钟",
+        "bubblePos": {
+            "x": 520,
+            "y": 160
+        }
+    },
+    {
+        "title": "求出全程",
+        "description": "用小明的速度乘以其所用时间，即可得到学校到电影院的距离。",
+        "bubbleText": "S = 80×15 = 1200 米",
+        "bubblePos": {
+            "x": 650,
+            "y": 300
+        }
+    },
+    {
+        "title": "验证答案",
+        "description": "小伟走1200米需要20分钟，等于15+5；小明走1200米需要15分钟。晚出发5分钟且同时到达，符合题意。",
+        "bubbleText": "验证正确，答案为 1200 米",
+        "bubblePos": {
+            "x": 400,
+            "y": 100
+        }
+    }
+],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理 - 管理后台</title>
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+    </script>
+    <style>
+        .type-tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .type-tag.subscription { background: #fff7e8; color: #c47f17; border: 1px solid #f0d9b0; }
+        .type-tag.recharge { background: #e8f4ff; color: #1677ff; border: 1px solid #b8dcff; }
+        .type-tag.withdraw { background: #f3f0ff; color: #7b4dff; border: 1px solid #d9ccff; }
+        .note-cell {
+            max-width: 320px;
+            min-width: 200px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .note-tag-block {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: #f7f8fa;
+            border: 1px solid #eceff3;
+            max-width: 100%;
+            word-break: break-all;
+            font-size: 12px;
+            color: #555;
+            line-height: 1.5;
+        }
+        /* 操作按钮强制横向排列 */
+        .table-action-buttons {
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
+        .table-container table td,
+        .table-container table th {
+            vertical-align: top;
+            word-break: break-word;
+        }
+        .amount-cell { white-space: nowrap; }
+        /* 9 列较多：表格设最小宽度，窄屏时容器横向滚动，列不再被压缩 */
+        .table-container table {
+            min-width: 1240px;
+        }
+    </style>
+    <link rel="stylesheet" href="css/theme-override.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>管理后台</h2>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html">仪表盘</a></li>
+                    <li><a href="teachings.html">教学内容</a></li>
+                    <li><a href="users.html">用户管理</a></li>
+                    <li><a href="tags.html">标签管理</a></li>
+                    <li><a href="recharge_requests.html" class="active">订单管理</a></li>
+                    <li><a href="feedbacks.html">用户反馈</a></li>
+                    <li><a href="settings.html">系统配置</a></li>
+                    <li><a href="logs.html">网站日志</a></li>
+                    <li><a href="invite-quota.html">邀请与额度</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h1>订单管理</h1>
+                <div class="user-info">
+                    <span>管理员：<span id="userInfo">-</span></span>
+                    <a href="../index.html?v=3" class="btn-home">返回首页</a>
+                    <button class="btn-logout" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+                    <div style="display:flex; gap: 10px; align-items:center; flex-wrap:wrap;">
+                        <select id="filterType" style="padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px; min-width:140px;">
+                            <option value="">全部类型</option>
+                            <option value="recharge">充值</option>
+                            <option value="subscription">订阅</option>
+                            <option value="withdraw">提现</option>
+                        </select>
+                        <select id="filterStatus" style="padding:8px 12px; border:1px solid #d9d9d9; border-radius:6px; min-width:140px;">
+                            <option value="">全部状态</option>
+                            <option value="pending">待处理</option>
+                            <option value="approved">已通过</option>
+                            <option value="rejected">已拒绝</option>
+                        </select>
+                        <button class="btn-primary" onclick="loadRequests()">刷新</button>
+                    </div>
+                    <div style="font-size:14px; color:var(--ink-grey);">统一管理用户的充值、订阅开通与返利提现。</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div id="requestsList" class="loading">加载中...</div>
+            </div>
+
+            <div class="pagination" id="pagination"></div>
+        </main>
+    </div>
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-nav.js') + '"><\/script>');
+    </script>
+    <script>
+        let currentPage = 1;
+        const pageSize = 20;
+
+        initAdminAuth();
+
+        // 备注渲染：清理内部标记后，按逗号拆成多个"标签块"，避免长文本覆盖列
+        function renderOrderNote(item) {
+            const raw = item.note || '';
+            if (!raw) return '<span class="keyword-empty">-</span>';
+            const cleaned = raw
+                .replace(/\[plan:[^\]]*\]/g, '')
+                .replace(/\[commission:\d+\]/g, '')
+                .replace(/\[cash:\d+\]/g, '')
+                .replace(/^[，,、\s]+/, '')
+                .trim();
+            if (!cleaned) return '<span class="keyword-empty">-</span>';
+            const parts = cleaned.split(/[，,、]/).map(s => s.trim()).filter(Boolean);
+            if (parts.length === 0) return '<span class="keyword-empty">-</span>';
+            return parts.map(p => `<span class="note-tag-block" title="${escapeHtml(p)}">${escapeHtml(p)}</span>`).join('');
+        }
+
+        // 金额展示：订阅显示套餐价（元），充值显示次数，提现显示金额（分转元）
+        function formatOrderAmount(item) {
+            if (item.type === 'subscription') {
+                return item.plan_price != null ? `¥${Number(item.plan_price).toFixed(2)}` : '套餐';
+            }
+            if (item.type === 'withdraw') {
+                return `¥${fenToYuan(item.amount)}`;
+            }
+            return `${item.amount} 次`;
+        }
+
+        const typeTagMap = {
+            subscription: { cls: 'subscription', label: '订阅' },
+            recharge: { cls: 'recharge', label: '充值' },
+            withdraw: { cls: 'withdraw', label: '提现' }
+        };
+
+        // 完整时间格式：YYYY-MM-DD HH:mm（含年份，列宽已加宽、不换行，避免重叠）
+        function formatDateTime(iso) {
+            if (!iso) return '-';
+            const d = new Date(iso);
+            if (isNaN(d.getTime())) return '-';
+            const pad = n => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
+        async function loadRequests(page = 1) {
+            currentPage = page;
+            const status = document.getElementById('filterStatus').value;
+            const orderType = document.getElementById('filterType').value;
+            const list = document.getElementById('requestsList');
+            list.innerHTML = '<div class="loading">加载中...</div>';
+
+            try {
+                const result = await getOrders({
+                    page,
+                    page_size: pageSize,
+                    status: status || undefined,
+                    order_type: orderType || undefined
+                });
+
+                if (!result.data || result.data.length === 0) {
+                    list.innerHTML = '<div class="empty-state"><p>暂无订单记录</p></div>';
+                    return;
+                }
+
+                let html = `
+                    <div class="table-container">
+                        <table>
+                            <colgroup>
+                                <col style="width:60px;">
+                                <col style="width:110px;">
+                                <col style="width:130px;">
+                                <col style="width:90px;">
+                                <col style="width:70px;">
+                                <col style="width:320px;">
+                                <col style="width:160px;">
+                                <col style="width:160px;">
+                                <col style="width:120px;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>类型</th>
+                                    <th>用户</th>
+                                    <th>联系方式</th>
+                                    <th>金额</th>
+                                    <th>状态</th>
+                                    <th>备注</th>
+                                    <th>下单时间</th>
+                                    <th>处理时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+
+                result.data.forEach(item => {
+                    const statusText = item.status === 'approved' ? '已通过' : item.status === 'rejected' ? '已拒绝' : '待处理';
+                    const statusColor = item.status === 'approved' ? '#52c41a' : item.status === 'rejected' ? '#d4380d' : '#096dd9';
+                    const createdAt = formatDateTime(item.created_at);
+                    const processedAt = formatDateTime(item.processed_at);
+                    const contact = item.phone || item.email || '-';
+                    const typeTag = typeTagMap[item.type] || { cls: 'recharge', label: item.type_name || '订单' };
+                    const actionButtons = item.status === 'pending' ? `
+                        <div class="table-action-buttons" style="white-space:nowrap;">
+                            <button class="btn btn-inline btn-approve" style="font-size:12px;" onclick="handleOrderAction('${item.request_id}', '${item.type}', 'approve')">通过</button>
+                            <button class="btn btn-inline btn-danger" style="font-size:12px;" onclick="handleOrderAction('${item.request_id}', '${item.type}', 'reject')">拒绝</button>
+                        </div>
+                    ` : '-';
+                    html += `
+                        <tr>
+                            <td><span class="type-tag ${typeTag.cls}">${typeTag.label}</span></td>
+                            <td>${escapeHtml(item.username || item.user_id)}</td>
+                            <td>${escapeHtml(contact)}</td>
+                            <td class="amount-cell">${formatOrderAmount(item)}</td>
+                            <td class="status-cell" style="color:${statusColor}; font-weight:600; white-space:nowrap;">${statusText}</td>
+                            <td class="note-cell">${renderOrderNote(item)}</td>
+                            <td style="white-space:nowrap;">${createdAt}</td>
+                            <td style="white-space:nowrap;">${processedAt}</td>
+                            <td>${actionButtons}</td>
+                        </tr>
+                    `;
+                });
+
+                html += `</tbody></table></div>`;
+                list.innerHTML = html;
+                renderPagination(result.total_pages, result.page);
+            } catch (error) {
+                console.error('加载订单失败:', error);
+                list.innerHTML = `<div class="error-message show">加载失败: ${error.message}</div>`;
+            }
+        }
+
+        async function handleOrderAction(requestId, orderType, action) {
+            const actionLabel = action === 'approve' ? '通过' : '拒绝';
+            const adminNote = prompt(`请输入${actionLabel}此订单的备注说明（可选）：`);
+
+            // 用户取消 prompt，不执行操作
+            if (adminNote === null) return;
+
+            // 拒绝时若未填写备注，二次确认
+            if (action === 'reject' && !adminNote.trim()) {
+                if (!confirm('您确定要拒绝此订单而不添加任何备注说明吗？')) {
+                    return;
+                }
+            }
+
+            try {
+                if (orderType === 'withdraw') {
+                    await processCommissionWithdrawal(requestId, action, adminNote.trim() || '管理员手动审核');
+                } else {
+                    await processRechargeOrder(requestId, action, adminNote.trim() || '管理员手动审核');
+                }
+                showToast('操作成功', 'success');
+                loadRequests(currentPage);
+            } catch (error) {
+                showToast('操作失败：' + error.message, 'error');
+            }
+        }
+
+        function renderPagination(totalPages, current) {
+            const pagination = document.getElementById('pagination');
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            html += `<button onclick="loadRequests(${current - 1})" ${current === 1 ? 'disabled' : ''}>上一页</button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= current - 2 && i <= current + 2)) {
+                    html += `<button onclick="loadRequests(${i})" class="${i === current ? 'active' : ''}">${i}</button>`;
+                } else if (i === current - 3 || i === current + 3) {
+                    html += `<span>...</span>`;
+                }
+            }
+            html += `<button onclick="loadRequests(${current + 1})" ${current === totalPages ? 'disabled' : ''}>下一页</button>`;
+            pagination.innerHTML = html;
+        }
+
+        document.getElementById('filterStatus').addEventListener('change', () => loadRequests(1));
+        document.getElementById('filterType').addEventListener('change', () => loadRequests(1));
+        loadRequests();
+    </script>
+</body>
+</html>

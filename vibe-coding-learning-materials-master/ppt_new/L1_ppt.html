@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Coding · L1 成果展示 & 概念介绍</title>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@11/swiper-bundle.min.css" />
+    <!-- 霓虹风格字体 -->
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700,900&display=swap">
+    <style>
+        :root {
+            --bg-primary: #0a0f1c;
+            --bg-secondary: #111827;
+            --accent-cyan: #00ffcc;
+            --accent-magenta: #ff00aa;
+            --accent-blue: #00ccff;
+            --accent-glow: rgba(0, 255, 204, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --font-display: 'Clash Display', sans-serif;
+            --font-body: 'Satoshi', sans-serif;
+            --title-size: clamp(2.5rem, 5vw, 3.2rem);
+            --heading-size: clamp(1.8rem, 3.5vw, 2.4rem);
+            --subheading-size: clamp(1.4rem, 2.5vw, 1.8rem);
+            --body-size: clamp(1.125rem, 1.8vw, 1.35rem);
+            --small-size: clamp(0.95rem, 1.3vw, 1.05rem);
+            --slide-padding: clamp(1.2rem, 2.5vw, 2rem);
+            --content-gap: clamp(1rem, 1.8vw, 1.8rem);
+            --element-gap: clamp(1.2rem, 2vw, 2.2rem);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow: hidden;
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+            font-size: var(--body-size);
+            font-weight: 400;
+        }
+
+        /* 粒子背景 */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .swiper {
+            width: 100vw;
+            max-width: 1920px;
+            aspect-ratio: 16/9;
+            height: auto;
+            max-height: calc(100vw * 9 / 16);
+            position: relative;
+            z-index: 1;
+            margin: 0 auto;
+        }
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--slide-padding);
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 16/9;
+        }
+
+        /* 卡片 */
+        .ppt-card {
+            width: min(1300px, 94vw);
+            max-height: 88vh;
+            background: rgba(17, 24, 39, 0.94);
+            backdrop-filter: blur(18px);
+            border: 1.5px solid rgba(0, 255, 204, 0.15);
+            border-radius: 32px;
+            padding: var(--slide-padding);
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px 0 rgba(0,255,204,0.12), 0 4px 20px 0 rgba(0,0,0,0.5);
+            overflow-y: auto;
+            gap: var(--content-gap);
+        }
+        .ppt-card::-webkit-scrollbar { width: 6px; }
+        .ppt-card::-webkit-scrollbar-track { background: rgba(0,255,204,0.05); border-radius: 8px; }
+        .ppt-card::-webkit-scrollbar-thumb { background: var(--accent-cyan); border-radius: 8px; }
+
+        .ppt-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            opacity: 0.4;
+        }
+
+        /* 标题系统 */
+        .h3-subtitle {
+            font-family: var(--font-display);
+            font-size: 14px !important;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-cyan);
+            padding: 0.2rem 0.8rem;
+            border: 1.5px solid var(--accent-cyan);
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 0 12px var(--accent-glow);
+            background: rgba(0,255,204,0.07);
+            line-height: 1.2;
+        }
+        .h1-title, .slide-title-large {
+            font-family: var(--font-display);
+            font-size: var(--title-size);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 60px var(--accent-glow);
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+        }
+        .h2-title, .slide-title {
+            font-family: var(--font-display);
+            font-size: var(--heading-size);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 0.5em;
+            text-align: center;
+        }
+        /* 正文 */
+        .slide-content {
+            font-family: var(--font-body);
+            font-size: var(--body-size);
+            font-weight: 400;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .slide-content-small {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .slide-content-strong {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* 补齐工具类 */
+        .bg-slate-800 { background-color: #1e293b; }
+        .bg-slate-900 { background-color: #0f172a; }
+        .bg-cyan-900 { background-color: #164e63; }
+        .bg-cyan-800 { background-color: #155e75; }
+        .text-cyan-200 { color: #a5f3fc; }
+        .text-cyan-300 { color: #67e8f9; }
+        .text-yellow-300 { color: #fde047; }
+        .text-slate-300 { color: #cbd5e1; }
+        .text-slate-400 { color: #94a3b8; }
+        .text-slate-500 { color: #64748b; }
+        .border-cyan-800 { border-color: #155e75; }
+
+        .flex { display: flex; }
+        .flex-row { display: flex; flex-direction: row; gap: var(--element-gap); }
+        .flex-col { display: flex; flex-direction: column; }
+        .items-center { align-items: center; }
+        .items-start { align-items: flex-start; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 0.75rem; }
+        .gap-4 { gap: 1.5rem; }
+        .gap-6 { gap: 2.5rem; }
+        .gap-12 { gap: 4rem; }
+        .grid { display: grid; }
+        .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+        .md\:grid-cols-2 { grid-template-columns: repeat(2, 1fr); } 
+        .space-y-2 > * + * { margin-top: 0.75rem; }
+        .mt-2 { margin-top: 0.75rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+        .mt-6 { margin-top: 2rem; }
+        .mt-8 { margin-top: 3rem; }
+        .mt-10 { margin-top: 4rem; }
+        .mb-2 { margin-bottom: 0.75rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
+        .mb-5 { margin-bottom: 2rem; }
+        .mb-6 { margin-bottom: 2.5rem; }
+        .mb-8 { margin-bottom: 3rem; }
+        .p-3 { padding: 1rem; }
+        .p-6 { padding: 2rem; }
+        .px-3 { padding-left: 1rem; padding-right: 1rem; }
+        .py-1 { padding-top: 0.4rem; padding-bottom: 0.4rem; }
+        .rounded { border-radius: 12px; }
+        .rounded-lg { border-radius: 18px; }
+        .rounded-xl { border-radius: 28px; }
+        .rounded-full { border-radius: 999px; }
+        .border { border-width: 1px; border-style: solid; }
+        .border-2 { border-width: 2px; }
+        .border-slate-700 { border-color: #334155; }
+        .w-full { width: 100%; }
+        .max-w-3xl { max-width: 900px; }
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .italic { font-style: italic; }
+        .tracking-wider { letter-spacing: 0.05em; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .card-equal { flex: 1 1 0; min-width: 0; }
+
+        /* 高亮框 */
+        .highlight-box {
+            background: rgba(0,255,204,0.08);
+            border: 2.5px solid var(--accent-cyan);
+            border-radius: 18px;
+            padding: 1.8rem 2.8rem;
+            margin: 1.5rem 0;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 0 30px var(--accent-glow);
+            font-size: var(--body-size);
+        }
+
+        /* 特性网格 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: var(--element-gap);
+            width: 100%;
+        }
+        .feature-card {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1.8px solid rgba(0, 255, 204, 0.12);
+            border-radius: 22px;
+            padding: 2rem 1.8rem;
+            transition: all 0.3s var(--ease-out-expo);
+            box-shadow: 0 4px 20px rgba(0,255,204,0.05);
+        }
+        .feature-card:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 35px var(--accent-glow);
+            transform: translateY(-6px) scale(1.02);
+        }
+        .feature-number {
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 20px var(--accent-glow);
+            margin-bottom: 0.8rem;
+        }
+        .feature-title {
+            font-size: var(--heading-size);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .feature-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+        }
+
+        /* 表格 */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: var(--small-size);
+        }
+        .data-table th {
+            font-weight: 700;
+            color: var(--accent-cyan);
+            background: rgba(0,255,204,0.1);
+            border-bottom: 2px solid rgba(0,255,204,0.25);
+            padding: 1rem 1.2rem;
+        }
+        .data-table td {
+            padding: 1rem 1.2rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .data-table tr:hover td { background: rgba(0,255,204,0.04); color: #fff; }
+
+        /* 代码块 */
+        .code-block-wrapper {
+            background: rgba(10, 15, 28, 0.98);
+            border: 1px solid rgba(0,255,204,0.2);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .code-block-header {
+            background: rgba(0,255,204,0.12);
+            padding: 0.7rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .code-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .code-dot.red { background: #ff5f56; }
+        .code-dot.yellow { background: #ffbd2e; }
+        .code-dot.green { background: #27c93f; }
+        .code-block {
+            padding: 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: var(--small-size);
+            color: #e2e8f0;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .tool-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+        .tool-item {
+            background: rgba(0,255,204,0.08);
+            border: 1px solid rgba(0,255,204,0.25);
+            border-radius: 40px;
+            padding: 0.6rem 1.5rem;
+            font-size: var(--small-size);
+            color: var(--accent-cyan);
+        }
+
+        /* 页码 */
+        .page-number {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            color: var(--accent-cyan);
+            font-size: 14pt;
+            font-family: var(--font-display);
+            text-shadow: 0 0 10px var(--accent-glow);
+            background: rgba(0,0,0,0.3);
+            padding: 4px 16px;
+            border-radius: 40px;
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--accent-cyan);
+            letter-spacing: 1px;
+        }
+
+        .hidden { display:none; }
+        .badge { display:inline-block; background:#164e63; color:#a5f3fc; border-radius:20px; padding:0.2rem 1rem; font-size:0.9rem; }
+        .icon-large { font-size: 1.8rem; margin-right: 0.3rem; vertical-align: middle; }
+
+        /* 响应式 */
+        @media (max-width: 900px) {
+            .ppt-card { padding: 1.5rem; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .flex-row { flex-direction: column; }
+            .md\:grid-cols-2 { grid-template-columns: 1fr; }
+            .page-number { bottom: 10px; right: 10px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            <!-- SLIDE 1 封面 -->
+            <div class="swiper-slide">
+                <div class="ppt-card text-center" style="justify-content:center; background:transparent; border:none; box-shadow:none;">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">Lesson 01</div>
+                    <div class="slide-title-large">Vibe Coding</div>
+                    <div class="h2-title">全栈产品开发实战</div>
+                    <div class="slide-content text-slate-300 font-light mb-6" style="font-size:1.8rem;">成果展示与概念介绍</div>
+                    <div class="flex-row" style="gap:1.8rem; justify-content:center; margin-top:2rem; flex-wrap:wrap;">
+                        <div style="text-align:center;">
+                            <div class="text-cyan slide-title" style="font-size:1.8rem;">01</div>
+                            <div class="slide-content-small" style="font-size:1.5rem;">象数演易成果展示</div>
+                        </div>
+                        <div class="w-px h-12" style="background:#334155;"></div>
+                        <div style="text-align:center;">
+                            <div class="text-cyan slide-title" style="font-size:1.8rem;">02</div>
+                            <div class="slide-content-small" style="font-size:1.5rem;">Vibe-Coding概念与优势</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 2 抛出“痛点” -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 01 / User pain points</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">“痛点”从哪来？</div>
+                    <div class="flex-col mt-2" style="gap:0.65rem; max-width:980px; margin-left:auto; margin-right:auto; margin-top:0.1em;">
+                        <div class="feature-card" style="padding:0.85rem 1.05rem;">
+                            <div class="slide-content-strong" style="font-size: 1.1rem;">1. 观察人群</div>
+                            <div class="slide-content-small" style="font-size: 0.9rem;">假设我是街边小摊，发现路过人群以通勤打工人为主。</div>
+                        </div>
+                        <div class="feature-card" style="padding:0.85rem 1.05rem; border-color:rgba(0,255,204,0.22);">
+                            <div class="slide-content-strong" style="font-size: 1.1rem;">2. 锁定场景</div>
+                            <div class="slide-content-small" style="font-size: 0.9rem;">围绕饭点需求切入，主打炒饭、炒面等热门菜品。</div>
+                        </div>
+                        <div class="feature-card" style="padding:0.85rem 1.05rem; border-color:rgba(0,255,204,0.28);">
+                            <div class="slide-content-strong" style="font-size: 1.1rem;">3. 准备供给</div>
+                            <div class="slide-content-small" style="font-size: 0.9rem;">提前备好面、肉、菜等核心食材，保障稳定出餐。</div>
+                        </div>
+                        <div class="feature-card" style="padding:0.85rem 1.05rem; border-color:rgba(0,255,204,0.34);">
+                            <div class="slide-content-strong" style="font-size: 1.1rem;">4. 优化产品</div>
+                            <div class="slide-content-small" style="font-size: 0.9rem;">避免儿童餐式小份量，做到份量足、口味多、价格合理。</div>
+                        </div>
+                        <div class="feature-card" style="padding:0.85rem 1.05rem; border-color:rgba(0,255,204,0.40);">
+                            <div class="slide-content-strong" style="font-size: 1.1rem;">5. 拓展品类</div>
+                            <div class="slide-content-small" style="font-size: 0.9rem;">主食之外补充售卖糖水/饮料，提高客单与复购。</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3 教育行业的“痛点” -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 01 / User pain points</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">教育行业的“痛点”</div>
+                    <div class="flex-col mt-4" style="gap:0.9rem; max-width:1050px; margin-left:auto; margin-right:auto; margin-top:0.5em;">
+                        <div class="feature-card" style="padding:1rem 1.2rem;"><div class="slide-content-small">热点启发: “龙虾” (OpenClaw) 等智能体证明 AI 已能承接学习与工作任务。</div></div>
+                        <div class="feature-card" style="padding:1rem 1.2rem; border-color:rgba(0,255,204,0.2);"><div class="slide-content-small">现实差距: 多数同学仍停留在“只会向 AI 提问”，缺少高效使用方法。</div></div>
+                        <div class="feature-card" style="padding:1rem 1.2rem; border-color:rgba(0,255,204,0.26);"><div class="slide-content-small">教学难点: 数学题目抽象，学生课堂理解困难，亟需可视化逻辑表达。</div></div>
+                        <div class="feature-card" style="padding:1rem 1.2rem; border-color:rgba(0,255,204,0.32);"><div class="slide-content-small">团队行动: 3 人团队用 2 周时间独立开发 AI 辅助数学动画生成平台。</div></div>
+                        <div class="feature-card" style="padding:1rem 1.2rem; border-color:rgba(0,255,204,0.4);"><div class="slide-content-small">核心价值: 将抽象问题转化为动画讲解，提升理解效率并训练抽象思维。</div></div>
+                    </div>
+                    <div class="mt-3 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 4 用户画像与产品需求 -->
+             <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 01 / Personas & requirements</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">用户画像与产品需求</div>
+                    <div class="flex-row mt-4" style="align-items:stretch; gap:1.3rem; margin-top:0.5em;">
+                        <div class="card-equal feature-card" style="padding:1.3rem;">
+                            <div class="slide-content-strong text-cyan mb-2">🧑‍💻 用户画像</div>
+                            <ul class="slide-content-small" style="list-style:none; line-height:1.8;">
+                                <li>• 需求用户: 师范生、教师、教培从业者、家长</li>
+                                <li>• 核心服务对象: 小学与初中学生</li>
+                                <li>• 场景关键词: 备课、课堂讲解、课后辅导、家庭陪学</li>
+                                <li>• 价值关键词: 可视化、易理解、高效率、可复用</li>
+                            </ul>
+                        </div>
+                        <div class="card-equal feature-card" style="padding:1.3rem;">
+                            <div class="slide-content-strong text-cyan mb-2">🎯 产品需求</div>
+                            <ul class="slide-content-small" style="list-style:none; line-height:1.75;">
+                                <li>• Pipeline: 题目输入 → 生成动画/解题步骤</li>
+                                <li>• UI/UX 设计: 简洁美观的新中式风格</li>
+                                <li>• 界面布局: 输入框位置显眼，动画画布70%，解题步骤30%</li>
+                                <li>• 平台功能: 登录注册、图片上传/摄像头拍摄、回看/下一步、Loading动画、数据库存储、相似题目推荐、评论收藏点赞等</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5 象数演易平台展示 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 01 / platform display</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">象数演易 - AI 驱动的数学教学应用生成平台</div>
+                    <div class="flex-row" style="gap:0.9rem; justify-content:center; align-items:center;">
+                        <div class="flex-col items-center" style="flex:0 0 auto;">
+                            <img src="../ppt_new/Demo/象数演易首页.png" alt="平台截图" style="width:75%; max-width:450px; border-radius:18px; border:1px solid rgba(0,255,204,0.3); box-shadow:0 10px 28px rgba(0,255,204,0.12);">
+                        </div>
+                        <div class="flex-col" style="flex:0 0 auto; max-width:520px;">
+                            <div style="display:inline-block; width:fit-content; max-width:100%; border:1px solid rgba(0,255,204,0.28); border-radius:14px; overflow:hidden; background:rgba(0,255,204,0.04);">
+                                <div class="slide-content" style="padding:0.9rem 1rem; font-size: 1.1rem; border-bottom:1px solid rgba(0,255,204,0.2);">
+                                    上传数学题目，AI 自动分析、分类、<br>生成标题，并创建包含动画演示、分<br>步讲解的交互式 HTML 教学应用。
+                                </div>
+                                <div class="slide-content" style="padding:0.8rem 1rem; font-size: 1.1rem; border-bottom:1px solid rgba(0,255,204,0.2);">
+                                    平台访问链接：
+                                    <a href="https://www.xsyy.top" target="_blank" style="margin-left:0.35rem; color:var(--accent-cyan); text-decoration:underline; font-weight:700;">www.xsyy.top</a>
+                                </div>
+                                <div style="padding:0.8rem 1rem;">
+                                    <div class="slide-content-small" style="padding-bottom:0.45rem; border-bottom:1px solid rgba(0,255,204,0.16);">开发团队：3人<br>全栈工程师 / 技术负责人：张奥多<br>前端工程师 / 交互设计师：石鋆沄<br>AI 工程师 / 数据与测试工程师：翁小琦</div>
+                                    <div class="slide-content-small" style="padding:0.45rem 0; border-bottom:1px solid rgba(0,255,204,0.16);">开发技术：Vibe Coding</div>
+                                    <div class="slide-content-small" style="padding-top:0.45rem;">开发时间：2周</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 6 象数演易优势 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 01 / localization advantage</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">为什么它能快速落地？</div>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="flex-row items-center" style="gap:0.5rem;">
+                                <span class="feature-number" style="font-size:1.8rem; margin-bottom:0;">🚀</span>
+                                <div class="feature-title" style="margin-bottom:0;font-size:22px;">技术栈成熟</div>
+                            </div>
+                            <div class="feature-desc">采用 FastAPI 异步框架与 MySQL，搭配 SQLAlchemy ORM，开发高效，性能稳定</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="flex-row items-center" style="gap:0.5rem;">
+                                <span class="feature-number" style="font-size:1.8rem; margin-bottom:0;">⚡</span>
+                                <div class="feature-title" style="margin-bottom:0;font-size:22px;">多模型协同</div>
+                            </div>
+                            <div class="feature-desc">多 LLM 链式调用，DeepSeek 分析题目 → Gemini 生成 HTML → LangChain 实现链式处理</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="flex-row items-center" style="gap:0.5rem;">
+                                <span class="feature-number" style="font-size:1.8rem; margin-bottom:0;">🎯</span>
+                                <div class="feature-title" style="margin-bottom:0;font-size:22px;">核心功能完整</div>
+                            </div>
+                            <div class="feature-desc">AI 分析生成 + 异步任务处理 + 本地数据库存储 + ChromaDB 向量搜索语义推荐，功能覆盖全面</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 7 首页复刻与迭代方向 -->
+             <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 01 / Replication & Iteration</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">首页复刻与迭代方向</div>
+                    <div class="overflow-x-auto mt-4" style="margin-top:0.5em;">
+                        <table class="data-table min-w-[800px]">
+                            <thead><tr><th style="text-align:center;">类别</th><th style="text-align:center;">修改方向</th><th style="text-align:center;">预期效果</th><th>参考提示词</th></tr></thead>
+                            <tbody>
+                                <tr><td style="text-align:center;"><span class="badge" style="background:#6b21a8;">视觉风格</span></td><td style="text-align:center;">质感纹理</td><td style="text-align:center;">暖宣纸质感与噪点纹理</td><td><div class="code-block-compact flex items-center gap-2"><button class="copy-icon-btn" onclick="copyCode(this,'将网页背景改为暖宣纸底色加细微噪点，古朴质感。')">📋</button><span class="slide-content-small">将网页背景改为暖宣纸底色加细微噪点，古朴质感。</span></div></td></tr>
+                                <tr><td style="text-align:center;"><span class="badge" style="background:#6b21a8;">视觉风格</span></td><td style="text-align:center;">风格字体</td><td style="text-align:center;">匾额式题跋与书法字体</td><td><div class="code-block-compact flex items-center gap-2"><button class="copy-icon-btn" onclick="copyCode(this,'顶部 UI 模拟传统书画匾额，标题使用系统衬线体，添加微阴影。')">📋</button><span class="slide-content-small">顶部 UI 模拟传统书画匾额，标题使用系统衬线体，添加微阴影。</span></div></td></tr>
+                                <tr><td style="text-align:center;"><span class="badge" style="background:#166534;">功能增强</span></td><td style="text-align:center;">动画演示</td><td style="text-align:center;">显示运动轨迹与虚线轮廓</td><td><div class="code-block-compact flex items-center gap-2"><button class="copy-icon-btn" onclick="copyCode(this,'左侧画布中图形移动时显示虚线路径，结束后保留淡色原位置轮廓。')">📋</button><span class="slide-content-small">左侧画布中图形移动时显示虚线路径，结束后保留淡色原位置轮廓。</span></div></td></tr>
+                                <tr><td style="text-align:center;"><span class="badge" style="background:#166534;">功能增强</span></td><td style="text-align:center;">讲解气泡</td><td style="text-align:center;">浮动讲解气泡折叠/展开</td><td><div class="code-block-compact flex items-center gap-2"><button class="copy-icon-btn" onclick="copyCode(this,'右侧讲解气泡可收为胶囊，减少遮挡，展开时完整显示公式与步骤说明。')">📋</button><span class="slide-content-small">右侧讲解气泡可收为胶囊，减少遮挡，展开时完整显示公式与步骤说明。</span></div></td></tr>
+                                <tr><td style="text-align:center;"><span class="badge" style="background:#1e3a8a;">交互优化</span></td><td style="text-align:center;">沉浸模式</td><td style="text-align:center;">全屏沉浸模式切换</td><td><div class="code-block-compact flex items-center gap-2"><button class="copy-icon-btn" onclick="copyCode(this,'点击全屏按钮，画布铺满且隐藏右侧卷轴，控制栏悬浮底部中央。')">📋</button><span class="slide-content-small">点击全屏按钮，画布铺满且隐藏右侧卷轴，控制栏悬浮底部中央。</span></div></td></tr>
+                                <tr><td style="text-align:center;"><span class="badge" style="background:#1e3a8a;">交互优化</span></td><td style="text-align:center;">卷轴联动</td><td style="text-align:center;">右侧卷轴联动高亮</td><td><div class="code-block-compact flex items-center gap-2"><button class="copy-icon-btn" onclick="copyCode(this,'左侧画布步骤切换时，右侧对应条目高亮并显示朱砂色批注线。')">📋</button><span class="slide-content-small">左侧画布步骤切换时，右侧对应条目高亮并显示朱砂色批注线。</span></div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 8 主流大模型API获取 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 01 / Model API</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">主流大模型 API 获取入口</div>
+                    <div class="mt-6" style="display:flex; justify-content:center; margin-top:0.5em;">
+                        <div class="feature-card" style="max-width:760px; width:100%; text-align:center;">
+                            <div class="slide-content" style="line-height:2; display:inline-block; text-align:left;">
+                                <div>DeepSeek API：<a href="https://platform.deepseek.com/" target="_blank" style="color:var(--accent-cyan);">https://platform.deepseek.com/</a></div>
+                                <div>Gemini API：<a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--accent-cyan);">https://aistudio.google.com/app/apikey</a></div>
+                                <div>OpenAI API：<a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--accent-cyan);">https://platform.openai.com/api-keys</a></div>
+                                <div>Qwen API：<a href="https://dashscope.console.aliyun.com/apiKey" target="_blank" style="color:var(--accent-cyan);">https://dashscope.console.aliyun.com/apiKey</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 9 AI 编程核心优势 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 01 / AI coding advantages</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">AI 编程的核心优势</div>
+                    <div class="bg-slate-800 rounded-xl border border-cyan-800 mt-6" style="display:inline-block; width:auto; margin-left:auto; margin-right:auto; padding: 1.8rem 2.5rem; margin-top:0.5em;">
+                        <div class="flex flex-col items-start" style="text-align:left;">
+                            <div class="flex items-center gap-4 mb-4" style="line-height: 1.2;"><span class="icon-large" style="line-height: 1;">💡</span><span class="badge" style="line-height: 1.2;">代码生成</span> <span class="text-slate-300" style="line-height: 1.2;">几分钟输出完整源码</span></div>
+                            <div class="flex items-center gap-4 mb-4" style="line-height: 1.2;"><span class="icon-large" style="line-height: 1;">⚡</span><span class="badge" style="line-height: 1.2;">实时渲染</span> <span class="text-slate-300" style="line-height: 1.2;">所见即所得</span></div>
+                            <div class="flex items-center gap-4 mb-4" style="line-height: 1.2;"><span class="icon-large" style="line-height: 1;">🔄</span><span class="badge" style="line-height: 1.2;">逻辑迭代</span> <span class="text-slate-300" style="line-height: 1.2;">对话修正 UI 与功能</span></div>
+                            <div class="flex items-center gap-4" style="line-height: 1.2;"><span class="icon-large" style="line-height: 1;">🚀</span><span class="badge" style="line-height: 1.2;">降低门槛</span> <span class="text-slate-300" style="line-height: 1.2;">非专业开发者快速构建原型</span></div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 10 课程系列介绍 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 02 / COURSE</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">Vibe Coding 全栈产品开发系列课程</div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 0.8rem;">
+                        <div class="feature-card" style="padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid rgba(0,255,204,0.2); padding-bottom: 0.3rem;">
+                                <span style="font-size: 1.8rem; color: var(--accent-cyan);">1️⃣</span>
+                                <span style="font-size: 1.4rem; font-weight: 700; color: white;">极速上手</span>
+                            </div>
+                            <div style="font-size: 1.3rem; margin-bottom: 0.2rem;">Vibe-Coding 概念介绍 · 10分钟复刻建立信心</div>
+                        </div>
+
+                        <div class="feature-card" style="padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid rgba(0,255,204,0.2); padding-bottom: 0.3rem;">
+                                <span style="font-size: 1.8rem; color: var(--accent-cyan);">2️⃣</span>
+                                <span style="font-size: 1.4rem; font-weight: 700; color: white;">智能建造</span>
+                            </div>
+                            <div style="font-size: 1.3rem; margin-bottom: 0.2rem;">环境配置 + 骨架 → 实际平台 + 功能布局优化</div>
+                        </div>
+
+                        <div class="feature-card" style="padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid rgba(0,255,204,0.2); padding-bottom: 0.3rem;">
+                                <span style="font-size: 1.8rem; color: var(--accent-cyan);">3️⃣</span>
+                                <span style="font-size: 1.4rem; font-weight: 700; color: white;">细节打磨</span>
+                            </div>
+                            <div style="font-size: 1.3rem; margin-bottom: 0.2rem;">API 密钥注入 · OpenCloudOS 系统部署 · 智能 Debug</div>
+                        </div>
+
+                        <div class="feature-card" style="padding: 1.2rem 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid rgba(0,255,204,0.2); padding-bottom: 0.3rem;">
+                                <span style="font-size: 1.8rem; color: var(--accent-cyan);">4️⃣</span>
+                                <span style="font-size: 1.4rem; font-weight: 700; color: white;">交付通关</span>
+                            </div>
+                            <div style="font-size: 1.3rem; margin-bottom: 0.2rem;">云端部署 · 域名申请 · 快速复现</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 0.8rem; padding: 0.5rem 1.5rem; font-size: 1.1rem; width:auto; margin-left:auto; margin-right:auto; background: rgba(17, 24, 39, 0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 18px; box-shadow: none; color: #e2e8f0; text-align: center;">🚀 四节课 = 从0到1掌握 Vibe Coding 全栈开发，拥抱生产力变革</div>
+                    <div class="mt-2 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 11 什么是 Vibe Coding -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 02 / Concept</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">什么是 Vibe Coding？</div>
+                    <div class="mb-5" style="display: flex; justify-content: center; width: 100%;">
+                        <div class="slide-content" style="background: linear-gradient(90deg,#0ea5e9 0,#0f766e 100%); border-radius:1em; padding:1.2em 2em 1.2em 1.2em; color:#fff; box-shadow:0 0 18px var(--accent-glow);text-align: left; max-width: 90%;">
+                            <strong class="text-cyan"><p>Vibe Coding (氛围编程)</strong> 是一种由 AI 驱动的软件开发范式。<br>它将开发者的重心从<strong>编写精确语法</strong>转向<strong>传递设计意图</strong>。<br>正如 Andrej Karpathy 所言：“你只需保持'氛围感'，剩下的交给 AI。”</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 12 Vibe Coding 的优势 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 02 / Advantages</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">Vibe Coding 的优势</div>
+                    <div class="border border-slate-700 rounded-lg overflow-hidden mt-4">
+                        <table class="data-table w-full" style="text-align:center;">
+                            <thead><tr><th style="text-align:center; padding: 0.6rem 0.8rem;">维度</th><th style="text-align:center; padding: 0.6rem 0.8rem;">传统编码</th><th style="text-align:center; padding: 0.6rem 0.8rem;">Vibe Coding</th></tr></thead>
+                            <tbody>
+                                <tr><td style="text-align:center; padding: 0.4rem 0.8rem;">沟通媒介</td><td style="text-align:center; padding: 0.4rem 0.8rem;">C++, Java, Python等编程语言</td><td style="text-align:center; padding: 0.4rem 0.8rem;">自然语言、屏幕截图、手绘草图，表达需求、意图</td></tr>
+                                <tr><td style="text-align:center; padding: 0.4rem 0.8rem;">关注点</td><td style="text-align:center; padding: 0.4rem 0.8rem;">语法、算法、内存、底层Debug</td><td style="text-align:center; padding: 0.4rem 0.8rem;">关注产品逻辑和用户体验</td></tr>
+                                <tr><td style="text-align:center; padding: 0.4rem 0.8rem;">工作角色</td><td style="text-align:center; padding: 0.4rem 0.8rem;">搬代码的“砖家”</td><td style="text-align:center; padding: 0.4rem 0.8rem;">指导AI工作的“导演”</td></tr>
+                                <tr><td style="text-align:center; padding: 0.4rem 0.8rem;">容错性</td><td style="text-align:center; padding: 0.4rem 0.8rem;">一个符号错误就会报错</td><td style="text-align:center; padding: 0.4rem 0.8rem;">AI自动检查纠错代码bug</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="flex-row gap-4 mt-6">
+                        <div class="card-equal" style="background:rgba(14,165,233,0.12); border:2px solid #0ea5e9; border-radius:1.5rem; padding: 1rem 1.2rem; display: flex; flex-direction: column; align-items: center;">
+                            <div class="font-bold text-cyan" style="margin-bottom: 0.3rem;">意图引导</div>
+                            <div class="slide-content-small" style="text-align: center;">告诉AI“我想要什么”</div>
+                        </div>
+                        <div class="card-equal" style="background:rgba(16,185,129,0.12); border:2px solid #10b981; border-radius:1.5rem; padding: 1rem 1.2rem; display: flex; flex-direction: column; align-items: center;">
+                            <div class="font-bold text-cyan" style="margin-bottom: 0.3rem;">快速反馈</div>
+                            <div class="slide-content-small" style="text-align: center;">对话即代码，运行即验证</div>
+                        </div>
+                        <div class="card-equal" style="background:rgba(139,92,246,0.12); border:2px solid #8b5cf6; border-radius:1.5rem; padding: 1rem 1.2rem; display: flex; flex-direction: column; align-items: center;">
+                            <div class="font-bold text-cyan" style="margin-bottom: 0.3rem;">黑盒思维</div>
+                            <div class="slide-content-small" style="text-align: center;">信任AI，专注产品氛围</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 13 常用工具 & 大模型 -->
+            <div class="swiper-slide">
+                <div class="ppt-card" style="gap:0.8rem;">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 02 / Tools</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">行业全面拥抱 Vibe-Coding</div>
+                    <div class="neon-card" style="padding:1rem 1rem 0.8rem 1rem;">
+                        <div class="flex-row" style="gap:1rem; align-items:stretch;">
+                            <div class="card-equal" style="background:rgba(0,255,204,0.04); border:1px solid rgba(0,255,204,0.2); border-radius:14px; padding:1rem;">
+                                <div class="slide-content-strong text-cyan text-center mb-2">1️⃣ 常用工具</div>
+                                <div class="tool-list" style="margin-top:0.3rem; gap:0.6rem;">
+                                    <span class="tool-item">Trae IDE</span>
+                                    <span class="tool-item">Cursor</span>
+                                    <span class="tool-item">Claude Code</span>
+                                    <span class="tool-item">Windsurf</span>
+                                    <span class="tool-item">Replit</span>
+                                    <span class="tool-item">Bolt.new</span>
+                                    <span class="tool-item">Lovable.dev</span>
+                                    <span class="tool-item">VS Code + GitHub Copilot</span>
+                                    <span class="tool-item">……</span>
+                                </div>
+                            </div>
+                            <div class="card-equal" style="background:rgba(0,255,204,0.04); border:1px solid rgba(0,255,204,0.2); border-radius:14px; padding:1rem;">
+                                <div class="slide-content-strong text-cyan text-center mb-2">2️⃣ 大模型</div>
+                                <div class="tool-list" style="margin-top:0.3rem; gap:0.6rem;">
+                                    <span class="tool-item">DeepSeek</span>
+                                    <span class="tool-item">OpenAI</span>
+                                    <span class="tool-item">Gemini</span>
+                                    <span class="tool-item">Spark</span>
+                                    <span class="tool-item">Qwen</span>
+                                    <span class="tool-item">Hunyuan</span>
+                                    <span class="tool-item">Doubao</span>
+                                    <span class="tool-item">Kimi</span>
+                                    <span class="tool-item">GLM</span>
+                                    <span class="tool-item">MiniMax</span>
+                                    <span class="tool-item">……</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 14 结构化提示词模板 -->
+            <div class="swiper-slide">
+                <div class="ppt-card">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto;">PART 02 / Prompting</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">结构化提示词模板</div>
+                    <div class="bg-slate-800 rounded-xl border border-cyan-800 mt-6" style="display:inline-block; width:auto; margin-left:auto; margin-right:auto; padding: 1.8rem 2.5rem; margin-top:0.5em;">
+                        <div class="flex flex-col items-start" style="text-align:left;">
+                            <div class="flex items-center gap-4 mb-4" style="line-height: 1.2;"><span class="icon-large" style="line-height: 1;">🧑‍💻</span><span class="badge" style="line-height: 1.2;">Role</span> <span class="text-slate-300" style="line-height: 1.2;">你是资深全栈工程师，擅长 [技术栈]</span></div>
+                            <div class="flex items-center gap-4 mb-4" style="line-height: 1.2;"><span class="icon-large" style="line-height: 1;">🎯</span><span class="badge" style="line-height: 1.2;">Objective</span> <span class="text-slate-300" style="line-height: 1.2;">开发一个具备 [功能A, B] 的应用</span></div>
+                            <div class="flex items-center gap-4 mb-4" style="line-height: 1.2;"><span class="icon-large" style="line-height: 1;">🌏</span><span class="badge" style="line-height: 1.2;">Context</span> <span class="text-slate-300" style="line-height: 1.2;">目标用户是 [群体]，满足 [特定场景]</span></div>
+                            <div class="flex items-center gap-4" style="line-height: 1.2;"><span class="icon-large" style="line-height: 1;">⛓️</span><span class="badge" style="line-height: 1.2;">Constraint</span> <span class="text-slate-300" style="line-height: 1.2;">使用 Tailwind，模块化</span></div>
+                        </div>
+                    </div>
+                    <div style="margin-bottom:0.5rem; padding:0.4rem 1.5rem; display:inline-block; width:auto; margin-left:auto; margin-right:auto; background: rgba(17, 24, 39, 0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 18px; color: #e2e8f0;">💡 补充提示词：请基于以上角色、目标、背景和约束，生成一份详细的产品需求文档（PRD）</div>
+                    <div class="mt-4 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 15 L1阶段性任务 -->
+            <div class="swiper-slide">
+                <div class="ppt-card bg-slate-900 text-white border-none">
+                    <div class="h3-subtitle" style="margin-left:auto; margin-right:auto; color:var(--accent-cyan);">Assignment</div>
+                    <div class="h2-title" style="margin-left:auto; margin-right:auto;">L1 阶段性任务</div>
+                    <div style="display:flex; justify-content:center; margin-top:0.9em; margin-top:0.5em;">
+                        <div class="flex-col" style="margin-left:auto; margin-right:auto; background:rgba(59,130,246,0.13);border:2px solid #3b82f6;border-radius:1.2em;padding:2.2em 1.5em;max-width:780px; width:auto;">
+                            <div class="slide-content-strong" style="color:#3b82f6;margin-bottom:0.7em; font-size: 1.5rem;">📘 制作文档</div>
+                            <div class="slide-content-small text-slate-300" style="text-align:left; font-size: 1.2rem;">1. 寻找身边的一个“痛点”，简要介绍需求与目标<br>2. 遵循“角色-目标-背景-约束”结构写提示词，让 AI 输出产品需求文档(PRD)<br>3. 完善 PRD 内容，自定义产品功能、布局，设计 UI/UX 风格<br>4. 写一份“生成‘具备任意 AI 功能平台’的 PRD”的提示词，展示 AI 输出的 PRD<br>5. 总结遇到的问题与解决方法<br>6. 文档建议用 Markdown 格式，结构清晰</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center slide-content-small text-slate-500">泰迪智能科技 · 上进双创工作室 · 知识分享</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 16 结束页 -->
+            <div class="swiper-slide">
+                <div class="ppt-card justify-center text-center" style="background:transparent; border:none; box-shadow:none;">
+                    <div class="slide-title-large">Thanks</div>
+                    <p class="slide-content mt-4">泰迪智能科技 · 上进双创工作室 · 知识分享</p>
+                    <div class="mt-6"><span class="hashtag-glow" style="background:linear-gradient(90deg,var(--accent-cyan),var(--accent-magenta)); padding:0.6rem 2rem; border-radius:3rem;"># VibeCoding</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页码显示 -->
+    <div class="page-number" id="pageCounter">1 / 16</div>
+    
+    <!-- 工具 -->
+    <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // 粒子系统、swiper、copyCode
+        class ParticleSystem {
+            constructor() {
+                this.canvas = document.getElementById('particle-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.resize();
+                this.init();
+                this.animate();
+                window.addEventListener('resize', () => this.resize());
+            }
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+            init() {
+                const particleCount = Math.min(50, Math.floor(window.innerWidth / 30));
+                for (let i = 0; i < particleCount; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 2 + 1,
+                        opacity: Math.random() * 0.5 + 0.2
+                    });
+                }
+            }
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.particles.forEach(p => {
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(0, 255, 204, ${p.opacity})`;
+                    this.ctx.fill();
+                });
+                this.particles.forEach((p1, i) => {
+                    this.particles.slice(i + 1).forEach(p2 => {
+                        const dx = p1.x - p2.x, dy = p1.y - p2.y, dist = Math.sqrt(dx*dx + dy*dy);
+                        if (dist < 150) {
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(p1.x, p1.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.strokeStyle = `rgba(0, 255, 204, ${0.1 * (1 - dist/150)})`;
+                            this.ctx.stroke();
+                        }
+                    });
+                });
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        const swiper = new Swiper(".mySwiper", {
+            direction: "vertical",
+            keyboard: { enabled: true },
+            allowTouchMove: false,
+            on: {
+                slideChange: function () {
+                    document.getElementById('pageCounter').innerText = (this.realIndex + 1) + ' / ' + this.slides.length;
+                },
+                init: function () {
+                    document.getElementById('pageCounter').innerText = (this.realIndex + 1) + ' / ' + this.slides.length;
+                }
+            }
+        });
+
+        async function copyCode(btn, code) {
+            try { await navigator.clipboard.writeText(code); btn.innerHTML = '✓'; setTimeout(() => btn.innerHTML = '📋', 1500); } catch { alert('复制失败'); }
+        }
+    </script>
+</body>
+</html>

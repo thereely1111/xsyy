@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户反馈 - 管理后台</title>
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+    </script>
+    <link rel="stylesheet" href="css/theme-override.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>管理后台</h2>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html">仪表盘</a></li>
+                    <li><a href="teachings.html">教学内容</a></li>
+                    <li><a href="users.html">用户管理</a></li>
+                    <li><a href="tags.html">标签管理</a></li>
+                    <li><a href="recharge_requests.html">订单管理</a></li>
+                    <li><a href="feedbacks.html" class="active">用户反馈</a></li>
+                    <li><a href="settings.html">系统配置</a></li>
+                    <li><a href="logs.html">网站日志</a></li>
+                    <li><a href="invite-quota.html">邀请与额度</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h1>用户反馈</h1>
+                <div class="user-info">
+                    <span>管理员：<span id="userInfo">-</span></span>
+                    <a href="../index.html?v=3" class="btn-home">返回首页</a>
+                    <button class="btn-logout" onclick="logout()">退出登录</button>
+                </div>
+            </div>
+
+            <div class="stats-grid" id="feedbackStats">
+                <div class="loading">加载中...</div>
+            </div>
+
+            <div class="card">
+                <div class="feedback-toolbar">
+                    <div class="search-bar feedback-search-bar">
+                        <input id="feedbackSearch" type="text" placeholder="搜索用户名、内容、页面地址">
+                        <button id="feedbackSearchBtn" type="button">搜索</button>
+                    </div>
+                    <div class="feedback-toolbar-actions">
+                        <select id="feedbackStatusFilter" class="feedback-filter">
+                            <option value="all">全部状态</option>
+                            <option value="new">新反馈</option>
+                            <option value="in_progress">处理中</option>
+                            <option value="resolved">已解决</option>
+                            <option value="ignored">已忽略</option>
+                        </select>
+                        <button id="feedbackRefreshBtn" class="btn btn-primary" type="button">刷新</button>
+                    </div>
+                </div>
+                <div id="feedbackSummary" class="feedback-summary"></div>
+                <div id="feedbackContainer" class="loading">加载中...</div>
+            </div>
+        </main>
+    </div>
+
+    <div id="feedbackDetailModal" class="admin-modal" aria-hidden="true">
+        <div class="admin-modal-card">
+            <div class="admin-modal-header">
+                <h3 id="feedbackDetailTitle">反馈详情</h3>
+                <button type="button" class="admin-modal-close" data-close-feedback-modal>×</button>
+            </div>
+            <div id="feedbackDetailBody" class="admin-modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-nav.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-feedbacks.js') + '"><\/script>');
+    </script>
+    <script>
+        initAdminAuth();
+    </script>
+</body>
+</html>

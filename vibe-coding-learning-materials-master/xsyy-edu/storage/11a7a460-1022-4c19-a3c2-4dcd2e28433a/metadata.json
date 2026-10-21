@@ -1,0 +1,24 @@
+{
+  "question": "有一张正方形的纸，边长10厘米。现在我们要从四个顶点中选择三个点，把纸剪成不重叠的等腰直角三角形和正方形。有多少种切割方法？",
+  "prompt": "",
+  "plan": {
+    "steps": []
+  },
+  "input_file": "/root/xsyy/storage/11a7a460-1022-4c19-a3c2-4dcd2e28433a/pasted-image-1772591578404.png",
+  "task_id": "11a7a460-1022-4c19-a3c2-4dcd2e28433a",
+  "generated_at": "2026-03-04T10:34:36.548916Z",
+  "teaching_html_file": "teaching.html",
+  "is_math_problem": true,
+  "title": "正方形分割方法",
+  "has_pic": false,
+  "tags": {
+    "reasoning": "涉及寻找图形切割所有可能",
+    "main_tag": "推理意识",
+    "sub_tags": [
+      "几何直观",
+      "模型意识"
+    ]
+  },
+  "tags_updated_at": "2026-03-04T10:34:36.548929Z",
+  "preview_image": "Preview.webp"
+}

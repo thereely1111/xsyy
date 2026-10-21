@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "stage": "junior_high",
+  "domain": "图形与几何",
+  "display_class": "geometry",
+  "grade": "七上",
+  "tags": {
+    "main_tag": "投影与视图",
+    "sub_tags": [
+      "从不同方向看"
+    ],
+    "second_tag": null
+  },
+  "question_type": "图形面积",
+  "figure_info": {
+    "has_figure": false,
+    "figures": []
+  },
+  "visual_requirements": {
+    "style_key": "junior_geometry",
+    "steps_min": 5,
+    "steps_max": 8,
+    "motion_policy": "answer_first",
+    "must_show": [
+      "几何标注规范",
+      "辅助线分层"
+    ]
+  },
+  "method_lock": null,
+  "is_math_problem": true,
+  "confidence": 0.0,
+  "engine": "legacy",
+  "is_composite": true,
+  "parts": [
+    {
+      "label": "（2）",
+      "text": "2、高 3，从正面、左面、上面各看一次，画出三视图并求主视图的面积",
+      "domain": "图形与几何",
+      "display_class": "geometry",
+      "question_type": "图形面积"
+    }
+  ],
+  "domains": [
+    "geometry"
+  ]
+}

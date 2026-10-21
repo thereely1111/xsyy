@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 象数演易</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'xsyy-blue': '#1a365d',
+                        'xsyy-cream': '#f7f3e9',
+                        'xsyy-gold': '#d4a574'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/styles/tailwind.css">
+</head>
+<body class="min-h-screen bg-xsyy-cream">
+    <nav class="bg-xsyy-blue text-white py-4">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <a href="/" class="text-2xl font-bold">象数演易 - 管理后台</a>
+            <div class="flex items-center gap-3">
+                <span id="adminUsername" class="text-xsyy-gold">-</span>
+                <a href="/" class="btn-secondary btn-sm text-white border-white">返回首页</a>
+                <button onclick="logout()" class="btn-secondary btn-sm text-white border-white">退出</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl p-6 shadow-lg border-l-4 border-xsyy-blue">
+                <p class="text-gray-500 text-sm">总用户数</p>
+                <p id="statUsers" class="text-3xl font-bold text-xsyy-blue">-</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-lg border-l-4 border-xsyy-gold">
+                <p class="text-gray-500 text-sm">总应用数</p>
+                <p id="statApps" class="text-3xl font-bold text-xsyy-gold">-</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-lg border-l-4 border-green-500">
+                <p class="text-gray-500 text-sm">总题目数</p>
+                <p id="statProblems" class="text-3xl font-bold text-green-600">-</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-lg border-l-4 border-purple-500">
+                <p class="text-gray-500 text-sm">今日活跃</p>
+                <p id="statActive" class="text-3xl font-bold text-purple-600">-</p>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-lg font-bold text-xsyy-blue mb-4">热门标签</h3>
+                <div id="popularTags" class="space-y-2">
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-lg lg:col-span-2">
+                <h3 class="text-lg font-bold text-xsyy-blue mb-4">本周应用趋势</h3>
+                <div id="trendChart" class="h-40 flex items-end justify-around gap-2">
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg mb-8">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-xsyy-blue">待审核应用</h2>
+            </div>
+            <div id="pendingList" class="p-6">
+                <div class="text-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-xsyy-blue mx-auto mb-4"></div>
+                    <p class="text-gray-500">加载中...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-lg">
+            <div class="p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-xsyy-blue">用户管理</h2>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left text-gray-500 text-sm">
+                                <th class="pb-4">ID</th>
+                                <th class="pb-4">用户名</th>
+                                <th class="pb-4">邮箱</th>
+                                <th class="pb-4">角色</th>
+                                <th class="pb-4">状态</th>
+                                <th class="pb-4">注册时间</th>
+                                <th class="pb-4">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/src/utils/api.js"></script>
+    <script src="/src/utils/auth.js"></script>
+    <script src="/src/utils/ui.js"></script>
+    <script src="/src/utils/feedback.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!auth.isAuthenticated()) {
+                showToast('请先登录', 'warning');
+                setTimeout(() => window.location.href = '/', 1500);
+                return;
+            }
+
+            auth.getCurrentUser().then(user => {
+                if (user.role !== 'admin' && user.role !== 'creator') {
+                    showToast('无权限访问', 'error');
+                    setTimeout(() => window.location.href = '/', 1500);
+                    return;
+                }
+
+                document.getElementById('adminUsername').textContent = user.username;
+                loadDashboard();
+                loadPendingApplications();
+                loadUsers();
+            }).catch(() => {
+                window.location.href = '/';
+            });
+        });
+
+        async function loadDashboard() {
+            try {
+                const response = await api.admin.dashboard();
+                const data = response.data;
+
+                document.getElementById('statUsers').textContent = data.total_users || 0;
+                document.getElementById('statApps').textContent = data.total_applications || 0;
+                document.getElementById('statProblems').textContent = data.total_problems || 0;
+                document.getElementById('statActive').textContent = data.active_users_today || 0;
+
+                const tagsContainer = document.getElementById('popularTags');
+                tagsContainer.innerHTML = (data.popular_tags || []).map(tag => `
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-700">${tag.name}</span>
+                        <span class="text-xsyy-gold font-bold">${tag.count}</span>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Failed to load dashboard:', error);
+            }
+        }
+
+        async function loadPendingApplications() {
+            const container = document.getElementById('pendingList');
+
+            try {
+                const response = await api.admin.pendingApplications();
+                const apps = response.data.items || [];
+
+                if (apps.length === 0) {
+                    container.innerHTML = '<p class="text-center text-gray-500 py-8">暂无待审核应用</p>';
+                    return;
+                }
+
+                container.innerHTML = apps.map(app => `
+                    <div class="border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-xsyy-blue">${app.title}</h4>
+                            <p class="text-gray-500 text-sm">作者ID: ${app.author_id} · ${app.primary_tag}</p>
+                            <p class="text-gray-400 text-xs">${formatDateTime(app.created_at)}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="auditApp(${app.id}, true)" class="btn-primary btn-sm">通过</button>
+                            <button onclick="auditApp(${app.id}, false)" class="btn-danger btn-sm">拒绝</button>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                container.innerHTML = '<p class="text-center text-red-500 py-8">加载失败</p>';
+            }
+        }
+
+        async function auditApp(id, approved) {
+            try {
+                await api.admin.auditApplication(id, approved);
+                showToast(approved ? '已通过审核' : '已拒绝', 'success');
+                loadPendingApplications();
+            } catch (error) {
+                showToast('操作失败', 'error');
+            }
+        }
+
+        async function loadUsers() {
+            const tbody = document.getElementById('usersTable');
+
+            try {
+                const response = await api.admin.users();
+                const users = response.data.items || [];
+
+                tbody.innerHTML = users.map(user => `
+                    <tr class="border-t border-gray-100">
+                        <td class="py-4">${user.id}</td>
+                        <td class="py-4">${user.username}</td>
+                        <td class="py-4">${user.email}</td>
+                        <td class="py-4">
+                            <select onchange="changeRole(${user.id}, this.value)" class="px-2 py-1 rounded border">
+                                <option value="student" ${user.role === 'student' ? 'selected' : ''}>学生</option>
+                                <option value="teacher" ${user.role === 'teacher' ? 'selected' : ''}>教师</option>
+                                <option value="creator" ${user.role === 'creator' ? 'selected' : ''}>创作者</option>
+                                <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>管理员</option>
+                            </select>
+                        </td>
+                        <td class="py-4">
+                            <button onclick="toggleStatus(${user.id}, ${!user.is_active})" class="px-3 py-1 rounded-full text-sm ${user.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                                ${user.is_active ? '正常' : '禁用'}
+                            </button>
+                        </td>
+                        <td class="py-4">${formatDate(user.created_at)}</td>
+                        <td class="py-4">
+                            <button class="text-red-500 hover:text-red-700">删除</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-red-500">加载失败</td></tr>';
+            }
+        }
+
+        async function changeRole(userId, role) {
+            try {
+                await api.admin.updateUserRole(userId, role);
+                showToast('角色已更新', 'success');
+            } catch (error) {
+                showToast('操作失败', 'error');
+                loadUsers();
+            }
+        }
+
+        async function toggleStatus(userId, isActive) {
+            try {
+                await api.admin.toggleUserStatus(userId, isActive);
+                showToast('状态已更新', 'success');
+                loadUsers();
+            } catch (error) {
+                showToast('操作失败', 'error');
+            }
+        }
+
+        function logout() {
+            auth.logout();
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数列求和简便计算 - 互动教学</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+        :root {
+            --paper: #fdfbf7;
+            --ink-1: #1f2937;
+            --ink-2: #44403c;
+            --vermillion: #8a1c1c;
+            --vermillion-soft: #fee2e2;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background-color: var(--paper);
+            background-image:
+                radial-gradient(1200px 500px at 15% -5%, rgba(120, 113, 108, 0.08), transparent 60%),
+                radial-gradient(900px 420px at 90% 110%, rgba(127, 29, 29, 0.06), transparent 60%);
+        }
+
+        .font-serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        @keyframes inkFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .ink-fade-in {
+            animation: inkFadeIn 520ms ease-out both;
+        }
+
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .bubble-backdrop {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(28, 25, 23, 0.09);
+        }
+
+        .teacher-bubble-text {
+            font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 500;
+            text-rendering: geometricPrecision;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transform: translateZ(0);
+        }
+
+        .katex { font-size: 1.06em; }
+        .katex-display { margin: 0.35em 0; }
+
+        .fs-ai-btn {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col text-stone-800"
+      x-data="appData()"
+      x-init="initApp()">
+
+    <div class="bg-noise"></div>
+
+    <header class="relative z-20 flex-none py-3 px-5 md:px-6 bg-stone-100/50 border-y border-stone-300 flex items-center justify-between shadow-sm ink-fade-in">
+        <div class="flex items-center gap-3 shrink-0">
+            <h1 class="text-2xl md:text-3xl font-serif font-bold text-stone-900 tracking-wider">数列求和简便计算</h1>
+        </div>
+        <div class="hidden md:flex flex-1 justify-end pl-4">
+            <div class="max-w-[68%] text-right text-stone-600 text-sm md:text-base leading-relaxed">
+                <span class="inline-block px-2 py-0.5 rounded bg-red-50 text-red-900 text-xs tracking-wide mr-2 align-middle">题意概括</span>
+                <span class="align-middle" x-html="renderMath('将算式每四项分为一组再求和')"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 relative z-10 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
+
+        <div class="relative w-full md:w-[70%] h-[45vh] md:h-full flex-none transition-all duration-500 ease-in-out flex flex-col p-2 md:p-4">
+
+            <div class="relative w-full h-full bg-white/50 border border-stone-200 rounded-2xl shadow-[inset_0_2px_6px_rgba(0,0,0,0.02)] overflow-hidden flex items-center justify-center ink-fade-in">
+
+                <svg id="stageSvg" viewBox="0 0 800 600" class="w-full h-full" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#a8a29e" />
+                        </marker>
+                    </defs>
+
+                    <g>
+                        <g id="dynamicSceneRoot" :transform="`translate(${sceneOffsetX} ${sceneOffsetY})`">
+                            <!-- DYNAMIC_SCENE_START -->
+                            <defs><filter id='dropShadow' x='-20%' y='-20%' width='140%' height='140%'><feGaussianBlur in='SourceAlpha' stdDeviation='3' result='blur'/><feOffset in='blur' dx='2' dy='3' result='offsetBlur'/><feComponentTransfer in='offsetBlur' result='shadowAlpha'><feFuncA type='linear' slope='0.35'/></feComponentTransfer><feMerge><feMergeNode in='shadowAlpha'/><feMergeNode in='SourceGraphic'/></feMerge></filter><filter id='glowRed' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='4' result='coloredBlur'/><feMerge><feMergeNode in='coloredBlur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><linearGradient id='paperGrad' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='0%' stop-color='#faf8f2'/><stop offset='100%' stop-color='#efe9d6'/></linearGradient><linearGradient id='redGrad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='#c94c4c'/><stop offset='100%' stop-color='#9e2a2b'/></linearGradient><marker id='arrowRed' markerWidth='10' markerHeight='10' refX='8' refY='3' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L0,6 L9,3 z' fill='#9e2a2b'/></marker></defs><style>.svg-elem{transition:all 0.7s cubic-bezier(0.4,0,0.2,1);}.num-tile{font-family:'Noto Serif SC','Songti SC',serif;font-weight:600;}.op{font-family:'Noto Serif SC',serif;font-weight:700;}.group-block{animation:shimmer 3s ease-in-out infinite;}.group-block:nth-child(odd){animation-delay:0.2s;}.dashed-line{fill:none;stroke:#9e2a2b;stroke-width:2.5;stroke-dasharray:10 8;stroke-linecap:round;animation:flow 1.6s linear infinite;}.bracket{fill:none;stroke:#9e2a2b;stroke-width:2;}.panda{animation:float 2.8s ease-in-out infinite;filter:url(#dropShadow);}@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}@keyframes heartbeat{0%,100%{transform:scale(1);}25%{transform:scale(1.06);}50%{transform:scale(1);}75%{transform:scale(1.04);}}@keyframes shimmer{0%,100%{opacity:1;}50%{opacity:0.78;}}@keyframes flow{0%{stroke-dashoffset:36;}100%{stroke-dashoffset:0;}}</style><g id='expr-strip' x-show='sceneStep >= 0'><rect class='svg-elem num-tile' x='22' y='40' width='44' height='44' rx='8' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='44' y='70' text-anchor='middle' font-size='18' fill='#4a4a4a'>200</text><text class='svg-elem op' x='88' y='70' font-size='20' fill='#9e2a2b'>+</text><rect class='svg-elem num-tile' x='110' y='40' width='44' height='44' rx='8' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='132' y='70' text-anchor='middle' font-size='18' fill='#4a4a4a'>199</text><text class='svg-elem op' x='176' y='70' font-size='20' fill='#4a4a4a'>−</text><rect class='svg-elem num-tile' x='198' y='40' width='44' height='44' rx='8' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='220' y='70' text-anchor='middle' font-size='18' fill='#4a4a4a'>198</text><text class='svg-elem op' x='264' y='70' font-size='20' fill='#4a4a4a'>−</text><rect class='svg-elem num-tile' x='286' y='40' width='44' height='44' rx='8' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='308' y='70' text-anchor='middle' font-size='18' fill='#4a4a4a'>197</text><text class='svg-elem op' x='352' y='70' font-size='20' fill='#9e2a2b'>+</text><rect class='svg-elem num-tile' x='374' y='40' width='44' height='44' rx='8' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='396' y='70' text-anchor='middle' font-size='18' fill='#4a4a4a'>⋯</text><text class='svg-elem op' x='440' y='70' font-size='20' fill='#9e2a2b'>+</text><rect class='svg-elem num-tile' x='462' y='40' width='44' height='44' rx='8' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='484' y='70' text-anchor='middle' font-size='18' fill='#4a4a4a'>4</text><text class='svg-elem op' x='528' y='70' font-size='20' fill='#9e2a2b'>+</text><rect class='svg-elem num-tile' x='550' y='40' width='44' height='44' rx='8' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='572' y='70' text-anchor='middle' font-size='18' fill='#4a4a4a'>3</text><text class='svg-elem op' x='616' y='70' font-size='20' fill='#4a4a4a'>−</text><rect class='svg-elem num-tile' x='638' y='40' width='44' height='44' rx='8' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='660' y='70' text-anchor='middle' font-size='18' fill='#4a4a4a'>2</text><text class='svg-elem op' x='704' y='70' font-size='20' fill='#4a4a4a'>−</text><rect class='svg-elem num-tile' x='726' y='40' width='44' height='44' rx='8' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='748' y='70' text-anchor='middle' font-size='18' fill='#4a4a4a'>1</text></g><g x-show='sceneStep >= 1' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 -translate-y-2' x-transition:enter-end='opacity-100 translate-y-0' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0 -translate-y-2'><rect class='svg-elem' x='136' y='8' width='80' height='28' rx='14' fill='url(#redGrad)' filter='url(#dropShadow)' opacity='0.9'/><text class='svg-elem' x='176' y='28' text-anchor='middle' font-size='16' fill='#faf8f2' font-family='serif'>++−−</text><rect class='svg-elem' x='576' y='8' width='80' height='28' rx='14' fill='url(#redGrad)' filter='url(#dropShadow)' opacity='0.9'/><text class='svg-elem' x='616' y='28' text-anchor='middle' font-size='16' fill='#faf8f2' font-family='serif'>++−−</text></g><g x-show='sceneStep >= 2' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 scale-90' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0 scale-90'><rect class='svg-elem' x='18' y='36' width='316' height='52' rx='10' fill='url(#redGrad)' opacity='0.12' stroke='#9e2a2b' stroke-width='1'/><rect class='svg-elem' x='458' y='36' width='316' height='52' rx='10' fill='url(#redGrad)' opacity='0.12' stroke='#9e2a2b' stroke-width='1'/><path class='svg-elem bracket' d='M 18 95 Q 18 115 38 115 L 314 115 Q 334 115 334 95'/><path class='svg-elem bracket' d='M 458 95 Q 458 115 478 115 L 754 115 Q 774 115 774 95'/><text class='svg-elem' x='176' y='132' text-anchor='middle' font-size='14' fill='#4a4a4a' font-family='serif'>第一组</text><text class='svg-elem' x='616' y='132' text-anchor='middle' font-size='14' fill='#4a4a4a' font-family='serif'>最后一组</text></g><path class='dashed-line svg-elem' x-show='sceneStep >= 2' d='M 176 95 C 176 130 120 130 120 150' filter='url(#dropShadow)' marker-end='url(#arrowRed)'/><g x-show='sceneStep === 3' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 -translate-y-4 scale-90' x-transition:enter-end='opacity-100 translate-y-0 scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-90'><rect class='svg-elem' x='55' y='145' width='360' height='240' rx='12' fill='#faf8f2' stroke='#d4d4d4' filter='url(#dropShadow)'/><text class='svg-elem' x='235' y='170' text-anchor='middle' font-size='16' fill='#4a4a4a' font-family='serif' font-weight='bold'>拆解第一组</text><rect class='svg-elem num-tile' x='80' y='185' width='70' height='70' rx='10' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='115' y='228' text-anchor='middle' font-size='24' fill='#4a4a4a'>200</text><text class='svg-elem op' x='160' y='225' font-size='24' fill='#9e2a2b'>+</text><rect class='svg-elem num-tile' x='170' y='185' width='70' height='70' rx='10' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='205' y='228' text-anchor='middle' font-size='24' fill='#4a4a4a'>199</text><text class='svg-elem op' x='250' y='225' font-size='24' fill='#4a4a4a'>−</text><rect class='svg-elem num-tile' x='260' y='185' width='70' height='70' rx='10' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='295' y='228' text-anchor='middle' font-size='24' fill='#4a4a4a'>198</text><text class='svg-elem op' x='340' y='225' font-size='24' fill='#4a4a4a'>−</text><rect class='svg-elem num-tile' x='350' y='185' width='70' height='70' rx='10' fill='url(#paperGrad)' stroke='#7a7a7a' filter='url(#dropShadow)'/><text class='svg-elem' x='385' y='228' text-anchor='middle' font-size='24' fill='#4a4a4a'>197</text><path class='svg-elem' d='M 115 260 Q 205 305 295 260' fill='none' stroke='#9e2a2b' stroke-width='2' stroke-dasharray='4 3' marker-end='url(#arrowRed)'/><text class='svg-elem' x='205' y='320' text-anchor='middle' font-size='14' fill='#9e2a2b' font-family='serif'>相差 2</text><path class='svg-elem' d='M 205 260 Q 295 305 385 260' fill='none' stroke='#9e2a2b' stroke-width='2' stroke-dasharray='4 3' marker-end='url(#arrowRed)'/><text class='svg-elem' x='295' y='320' text-anchor='middle' font-size='14' fill='#9e2a2b' font-family='serif'>相差 2</text><foreignObject class='svg-elem' x='80' y='335' width='310' height='50'><div xmlns='http://www.w3.org/1999/xhtml' style='display:flex;justify-content:center;align-items:center;height:100%;font-family:serif;font-size:18px;color:#4a4a4a;background:#f7f3e8;border-radius:8px;padding:0 12px;box-shadow:inset 0 0 6px rgba(0,0,0,0.05);'>200 − 198 = 2，199 − 197 = 2，2 + 2 = 4</div></foreignObject></g><g x-show='sceneStep >= 4' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 translate-x-4 scale-95' x-transition:enter-end='opacity-100 translate-x-0 scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0 translate-x-4 scale-95'><rect class='svg-elem' x='460' y='150' width='300' height='150' rx='12' fill='#faf8f2' stroke='#d4d4d4' filter='url(#dropShadow)'/><foreignObject class='svg-elem' x='470' y='160' width='280' height='130'><div xmlns='http://www.w3.org/1999/xhtml' style='display:flex;flex-direction:column;justify-content:center;align-items:center;height:100%;font-family:serif;color:#4a4a4a;'><div style='font-size:17px;margin-bottom:8px;'>任意连续四项</div><div style='font-size:19px;background:#f7f3e8;padding:8px 14px;border-radius:8px;border-left:4px solid #9e2a2b;'>n + (n−1) − (n−2) − (n−3) = 4</div></div></foreignObject></g><g x-show='sceneStep >= 5' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 scale-90' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0 scale-90'><text class='svg-elem' x='400' y='350' text-anchor='middle' font-size='16' fill='#4a4a4a' font-family='serif' font-weight='bold'>按四项一组，把 200 项排成 50 组</text><g id='group-grid'><rect class='svg-elem group-block' x='175' y='360' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='193' y='384' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='221' y='360' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='239' y='384' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='267' y='360' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='285' y='384' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='313' y='360' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='331' y='384' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='359' y='360' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='377' y='384' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='405' y='360' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='423' y='384' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='451' y='360' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='469' y='384' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='497' y='360' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='515' y='384' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='543' y='360' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='561' y='384' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='589' y='360' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='607' y='384' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='175' y='406' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='193' y='430' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='221' y='406' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='239' y='430' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='267' y='406' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='285' y='430' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='313' y='406' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='331' y='430' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='359' y='406' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='377' y='430' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='405' y='406' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='423' y='430' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='451' y='406' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='469' y='430' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='497' y='406' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='515' y='430' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='543' y='406' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='561' y='430' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='589' y='406' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='607' y='430' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='175' y='452' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='193' y='476' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='221' y='452' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='239' y='476' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='267' y='452' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='285' y='476' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='313' y='452' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='331' y='476' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='359' y='452' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='377' y='476' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='405' y='452' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='423' y='476' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='451' y='452' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='469' y='476' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='497' y='452' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='515' y='476' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='543' y='452' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='561' y='476' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='589' y='452' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='607' y='476' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='175' y='498' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='193' y='522' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='221' y='498' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='239' y='522' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='267' y='498' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='285' y='522' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='313' y='498' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='331' y='522' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='359' y='498' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='377' y='522' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='405' y='498' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='423' y='522' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='451' y='498' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='469' y='522' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='497' y='498' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='515' y='522' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='543' y='498' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='561' y='522' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='589' y='498' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='607' y='522' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='175' y='544' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='193' y='568' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='221' y='544' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='239' y='568' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='267' y='544' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='285' y='568' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='313' y='544' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='331' y='568' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='359' y='544' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='377' y='568' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='405' y='544' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='423' y='568' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='451' y='544' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='469' y='568' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='497' y='544' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='515' y='568' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='543' y='544' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='561' y='568' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text><rect class='svg-elem group-block' x='589' y='544' width='36' height='36' rx='6' fill='url(#paperGrad)' stroke='#9e2a2b' filter='url(#dropShadow)'/><text class='svg-elem' x='607' y='568' text-anchor='middle' font-size='16' fill='#9e2a2b'>4</text></g></g><g x-show='sceneStep >= 6' x-transition:enter='transition-all duration-700 ease-out' x-transition:enter-start='opacity-0 translate-y-2' x-transition:enter-end='opacity-100 translate-y-0' x-transition:leave='transition-all duration-500 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0 translate-y-2'><text class='svg-elem' x='400' y='595' text-anchor='middle' font-size='16' fill='#9e2a2b' font-family='serif' font-weight='bold'>每组都得 4，一共 50 组</text></g><path class='dashed-line svg-elem' x-show='sceneStep >= 6' d='M 625 470 C 640 470 640 445 660 445' filter='url(#dropShadow)' marker-end='url(#arrowRed)'/><g x-show='sceneStep >= 7' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 scale-50' x-transition:enter-end='opacity-100 scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100 scale-100' x-transition:leave-end='opacity-0 scale-50'><foreignObject class='svg-elem' x='660' y='400' width='120' height='90'><div xmlns='http://www.w3.org/1999/xhtml' style='display:flex;justify-content:center;align-items:center;height:100%;font-family:serif;font-size:48px;color:#faf8f2;background:linear-gradient(135deg,#c94c4c,#9e2a2b);border-radius:12px;box-shadow:0 6px 16px rgba(0,0,0,0.25);animation:heartbeat 1.4s ease-in-out infinite;'>200</div></foreignObject></g><g x-show='sceneStep >= 8' x-transition:enter='transition-all duration-1000 ease-out' x-transition:enter-start='opacity-0 translate-y-4 scale-95' x-transition:enter-end='opacity-100 translate-y-0 scale-100' x-transition:leave='transition-all duration-700 ease-in' x-transition:leave-start='opacity-100' x-transition:leave-end='opacity-0 translate-y-4 scale-95'><foreignObject class='svg-elem' x='560' y='510' width='210' height='70'><div xmlns='http://www.w3.org/1999/xhtml' style='display:flex;justify-content:center;align-items:center;height:100%;font-family:serif;font-size:18px;color:#4a4a4a;background:#f7f3e8;border:2px solid #9e2a2b;border-radius:10px;padding:0 12px;'>50 组 × 4 = 200，验证成立 ✓</div></foreignObject></g><text class='svg-elem panda' x='40' y='565' font-size='44'>🐼</text>
+                            <!-- DYNAMIC_SCENE_END -->
+                        </g>
+                    </g>
+
+                    <foreignObject :x="bubbleX"
+                                   :y="bubbleY"
+                                   width="300" height="200"
+                                   class="overflow-visible pointer-events-none">
+                        <div class="pointer-events-auto flex flex-col items-start transition-all duration-300 origin-top-left"
+                             :class="isBubbleExpanded ? 'w-[280px]' : 'w-auto'">
+                            <div class="bubble-backdrop bg-white/60 border border-stone-300 rounded-xl overflow-hidden shadow-lg transition-all duration-300">
+                                <div @mousedown.prevent="startBubbleDrag($event)"
+                                     @touchstart.prevent="startBubbleDrag($event)"
+                                     class="flex justify-between items-center px-3 py-2 bg-stone-100/80 cursor-move border-b border-stone-200/50 hover:bg-stone-200/50 transition-colors select-none"
+                                     style="touch-action: none;">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-red-800"></span>
+                                        <span class="text-xs font-bold text-stone-600 font-serif">老师说</span>
+                                    </div>
+                                    <button @click.stop="isBubbleExpanded = !isBubbleExpanded"
+                                            class="text-stone-400 hover:text-stone-700 text-lg leading-none font-light">
+                                        <span x-text="isBubbleExpanded ? '−' : '+'"></span>
+                                    </button>
+                                </div>
+
+                                <div x-show="isBubbleExpanded"
+                                     x-transition:enter="transition ease-out duration-200"
+                                     x-transition:enter-start="opacity-0 max-h-0"
+                                     x-transition:enter-end="opacity-100 max-h-40"
+                                     x-transition:leave="transition ease-in duration-150"
+                                     x-transition:leave-start="opacity-100 max-h-40"
+                                     x-transition:leave-end="opacity-0 max-h-0"
+                                     class="p-3 text-sm text-stone-700 leading-relaxed teacher-bubble-text">
+                                     <div x-html="renderMath(steps[currentStep].bubbleText)"></div>
+                                </div>
+                            </div>
+
+                            <div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-stone-300 ml-4 opacity-80"
+                                 x-show="isBubbleExpanded"></div>
+                        </div>
+                    </foreignObject>
+                </svg>
+            </div>
+
+            <div class="flex justify-center items-center pt-3 pb-1 relative z-30">
+                <div class="bg-white/90 backdrop-blur shadow-lg border border-stone-200 rounded-full px-6 py-2 flex gap-4 pointer-events-auto">
+                    <button @click="prevStep"
+                            :disabled="currentStep === 0"
+                            class="px-4 py-1.5 rounded-full border border-stone-300 text-stone-600 hover:bg-stone-50 hover:border-stone-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all text-sm font-medium">
+                        &lt; 回看
+                    </button>
+                    <button type="button"
+                            @click="askAiAssistant"
+                            :class="isFullscreen ? 'fs-ai-btn' : ''"
+                            class="md:hidden px-3 py-1.5 rounded-full bg-red-800 text-white text-sm font-bold shadow-md hover:bg-red-700 active:scale-95 transition-all flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                        AI助教
+                    </button>
+                    <button @click="nextStep"
+                            :disabled="currentStep === steps.length - 1"
+                            class="px-6 py-1.5 rounded-full bg-red-800 text-white shadow-md hover:bg-red-700 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all text-sm font-bold tracking-wide">
+                        下一步 &gt;
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative w-full md:w-[30%] md:flex-none min-h-0 flex flex-col bg-[#fdfbf7] border-l border-stone-200 shadow-[-4px_0_12px_rgba(0,0,0,0.02)] z-40 transition-transform duration-500 translate-x-0">
+
+            <div class="p-4 border-b border-stone-200 bg-stone-50/50">
+                <h2 class="font-serif text-xl font-bold text-stone-800">完整解法</h2>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar scroll-smooth" id="stepsList">
+                <template x-for="(step, index) in steps" :key="index">
+                    <div :id="'step-' + index"
+                         class="p-3 rounded-lg border-l-4 transition-all duration-300 cursor-pointer"
+                         :class="currentStep === index ? 'bg-red-50 border-red-800 shadow-sm' : 'border-transparent text-stone-400 hover:text-stone-600'"
+                         @click="setStep(index)">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs font-bold uppercase tracking-wider opacity-60" x-text="'STEP ' + (index + 1)"></span>
+                            <span x-show="currentStep === index" class="text-red-800 text-xs animate-pulse">● 当前讲解</span>
+                        </div>
+                        <h3 class="font-bold text-sm mb-1"
+                            :class="currentStep === index ? 'text-stone-900' : 'text-stone-500'"
+                            x-text="step.title"></h3>
+                        <div class="text-xs leading-relaxed"
+                             :class="currentStep === index ? 'text-stone-800' : 'text-stone-400'"
+                             x-html="renderMath(step.description)"></div>
+                    </div>
+                </template>
+                <div class="h-20"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function appData() {
+            return {
+                currentStep: 0,
+                get sceneStep() {
+                    return this.currentStep + 1;
+                },
+                sceneOffsetX: 0,
+                sceneOffsetY: 0,
+                bubbleX: 210,
+                bubbleY: 110,
+                isDraggingBubble: false,
+                dragOffsetX: 0,
+                dragOffsetY: 0,
+                _bubbleDragMoveHandler: null,
+                _bubbleDragEndHandler: null,
+                isBubbleExpanded: true,
+                isFullscreen: false,
+                steps: [
+    {
+        "title": "观察数列",
+        "description": "题目给出从 200 递减到 1 的一长串数，并伴随加减号交替出现，先整体观察它的排列方式。",
+        "bubbleText": "先看整体，找找规律",
+        "bubblePos": {
+            "x": 620,
+            "y": 80
+        }
+    },
+    {
+        "title": "发现符号周期",
+        "description": "从左往右读，符号按“加、加、减、减”每四项循环一次，这是解题的关键突破口。",
+        "bubbleText": "++−− 的周期在重复",
+        "bubblePos": {
+            "x": 620,
+            "y": 80
+        }
+    },
+    {
+        "title": "尝试分组",
+        "description": "既然每四个数符号规律相同，就可以把相邻的四项用括号分成一组，看看每组是否有规律。",
+        "bubbleText": "四项一组试试看",
+        "bubblePos": {
+            "x": 620,
+            "y": 120
+        }
+    },
+    {
+        "title": "拆解第一组",
+        "description": "第一组 200+199−198−197 中，把两个正数分别减去后面的两个负数，得到两对差，每组都是 4。",
+        "bubbleText": "200−198=2，199−197=2",
+        "bubblePos": {
+            "x": 300,
+            "y": 320
+        }
+    },
+    {
+        "title": "归纳组内规律",
+        "description": "对于任意连续四项 n+(n−1)−(n−2)−(n−3)，化简后恒等于 4，所以每组结果都相同。",
+        "bubbleText": "每组结果都是 4",
+        "bubblePos": {
+            "x": 620,
+            "y": 220
+        }
+    },
+    {
+        "title": "列出全部小组",
+        "description": "从 200 到 1 共有 200 个数，按四项一组，可以排成 50 个小组。",
+        "bubbleText": "200÷4=50 组",
+        "bubblePos": {
+            "x": 400,
+            "y": 340
+        }
+    },
+    {
+        "title": "统计组数",
+        "description": "再次确认：200 项里包含 50 个四项组，每组都贡献一个 4。",
+        "bubbleText": "50 组，每组 4",
+        "bubblePos": {
+            "x": 400,
+            "y": 340
+        }
+    },
+    {
+        "title": "求和",
+        "description": "用每组的结果 4 乘以总组数 50，得到整个算式的和为 200。",
+        "bubbleText": "4×50=200",
+        "bubblePos": {
+            "x": 720,
+            "y": 440
+        }
+    },
+    {
+        "title": "验证答案",
+        "description": "最后一组 4+3−2−1 也等于 4，首尾规律一致，说明答案 200 是正确的。",
+        "bubbleText": "首尾一致，答案 200 ✓",
+        "bubblePos": {
+            "x": 720,
+            "y": 540
+        }
+    }
+],
+                initApp() {
+                    this._fsPollTimer = setInterval(() => {
+                        try {
+                            const host = window.parent || window;
+                            const container = host.document.getElementById('mainTeachingContainer');
+                            this.isFullscreen = !!(container && container.classList.contains('fullscreen'));
+                        } catch (e) {
+                            this.isFullscreen = false;
+                        }
+                    }, 400);
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                },
+                askAiAssistant() {
+                    try {
+                        const host = window.parent || window;
+                        if (host && typeof host.handleAiAssistClick === 'function') {
+                            host.handleAiAssistClick();
+                            return;
+                        }
+                    } catch (e) {
+                        // 跨域或父页面不可用时走兜底提示
+                    }
+                    alert('AI助教功能请在完整页面中使用');
+                },
+                getCurrentStepBubblePos() {
+                    const defaultPos = { x: 210, y: 110 };
+                    const step = this.steps?.[this.currentStep];
+                    if (!step || !step.bubblePos) {
+                        return defaultPos;
+                    }
+                    const x = Number(step.bubblePos.x);
+                    const y = Number(step.bubblePos.y);
+                    return {
+                        x: Number.isFinite(x) ? x : defaultPos.x,
+                        y: Number.isFinite(y) ? y : defaultPos.y,
+                    };
+                },
+                resetBubblePosition() {
+                    const pos = this.getCurrentStepBubblePos();
+                    this.bubbleX = pos.x + this.sceneOffsetX;
+                    this.bubbleY = pos.y + this.sceneOffsetY;
+                },
+                pointerToSvg(clientX, clientY) {
+                    const svg = document.getElementById('stageSvg');
+                    if (!svg) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+                    const rect = svg.getBoundingClientRect();
+                    if (!rect.width || !rect.height) {
+                        return { x: this.bubbleX, y: this.bubbleY };
+                    }
+
+                    const viewBox = svg.viewBox && svg.viewBox.baseVal
+                        ? svg.viewBox.baseVal
+                        : { x: 0, y: 0, width: 800, height: 600 };
+
+                    const scaleX = viewBox.width / rect.width;
+                    const scaleY = viewBox.height / rect.height;
+
+                    return {
+                        x: (clientX - rect.left) * scaleX + viewBox.x,
+                        y: (clientY - rect.top) * scaleY + viewBox.y,
+                    };
+                },
+                getEventPoint(event) {
+                    if (event.touches && event.touches.length > 0) {
+                        return this.pointerToSvg(event.touches[0].clientX, event.touches[0].clientY);
+                    }
+                    if (event.changedTouches && event.changedTouches.length > 0) {
+                        return this.pointerToSvg(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
+                    }
+                    return this.pointerToSvg(event.clientX, event.clientY);
+                },
+                startBubbleDrag(event) {
+                    const point = this.getEventPoint(event);
+                    this.isDraggingBubble = true;
+                    this.dragOffsetX = point.x - this.bubbleX;
+                    this.dragOffsetY = point.y - this.bubbleY;
+
+                    this._bubbleDragMoveHandler = (e) => this.onBubbleDragMove(e);
+                    this._bubbleDragEndHandler = () => this.endBubbleDrag();
+
+                    window.addEventListener('mousemove', this._bubbleDragMoveHandler);
+                    window.addEventListener('mouseup', this._bubbleDragEndHandler);
+                    window.addEventListener('touchmove', this._bubbleDragMoveHandler, { passive: false });
+                    window.addEventListener('touchend', this._bubbleDragEndHandler);
+                },
+                onBubbleDragMove(event) {
+                    if (!this.isDraggingBubble) {
+                        return;
+                    }
+                    if (event.cancelable) {
+                        event.preventDefault();
+                    }
+
+                    const point = this.getEventPoint(event);
+                    const nextX = point.x - this.dragOffsetX;
+                    const nextY = point.y - this.dragOffsetY;
+
+                    this.bubbleX = Math.max(0, Math.min(500, nextX));
+                    this.bubbleY = Math.max(0, Math.min(400, nextY));
+                },
+                endBubbleDrag() {
+                    this.isDraggingBubble = false;
+                    if (this._bubbleDragMoveHandler) {
+                        window.removeEventListener('mousemove', this._bubbleDragMoveHandler);
+                        window.removeEventListener('touchmove', this._bubbleDragMoveHandler);
+                    }
+                    if (this._bubbleDragEndHandler) {
+                        window.removeEventListener('mouseup', this._bubbleDragEndHandler);
+                        window.removeEventListener('touchend', this._bubbleDragEndHandler);
+                    }
+                    this._bubbleDragMoveHandler = null;
+                    this._bubbleDragEndHandler = null;
+                },
+                centerDynamicScene() {
+                    const sceneEl = document.getElementById('dynamicSceneRoot');
+                    if (!sceneEl || typeof sceneEl.getBBox !== 'function') {
+                        return;
+                    }
+
+                    // 完整画布居中（800x600 视口）
+                    const boxX = 0;
+                    const boxY = 0;
+                    const boxW = 800;
+                    const boxH = 600;
+
+                    try {
+                        const bbox = sceneEl.getBBox();
+                        if (!bbox || bbox.width <= 0 || bbox.height <= 0) {
+                            this.sceneOffsetX = 0;
+                            this.sceneOffsetY = 0;
+                            return;
+                        }
+
+                        const targetCx = boxX + boxW / 2;
+                        const targetCy = boxY + boxH / 2;
+                        const sceneCx = bbox.x + bbox.width / 2;
+                        const sceneCy = bbox.y + bbox.height / 2;
+
+                        this.sceneOffsetX = Math.round((targetCx - sceneCx) * 10) / 10;
+                        this.sceneOffsetY = Math.round((targetCy - sceneCy) * 10) / 10;
+                    } catch (e) {
+                        this.sceneOffsetX = 0;
+                        this.sceneOffsetY = 0;
+                    }
+
+                    if (!this.isDraggingBubble) {
+                        this.resetBubblePosition();
+                    }
+                },
+                renderMath(text) {
+                    const raw = (text ?? '').toString();
+                    if (!raw.trim()) {
+                        return '';
+                    }
+
+                    const renderExpr = (expr, displayMode = false) => {
+                        try {
+                            return katex.renderToString(expr, {
+                                throwOnError: false,
+                                strict: 'ignore',
+                                displayMode,
+                            });
+                        } catch (e) {
+                            return expr;
+                        }
+                    };
+
+                    const hasDelimitedMath = /(\$\$[\s\S]+?\$\$)|(\$[^$\n]+\$)|(\\\([\s\S]+?\\\))|(\\\[[\s\S]+?\\\])/.test(raw);
+                    if (hasDelimitedMath) {
+                        let output = raw;
+                        output = output.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\[([\s\S]+?)\\\]/g, (_, expr) => renderExpr(expr, true));
+                        output = output.replace(/\\\(([\s\S]+?)\\\)/g, (_, expr) => renderExpr(expr, false));
+                        output = output.replace(/\$([^$\n]+)\$/g, (_, expr) => renderExpr(expr, false));
+                        return output.replace(/\n/g, '<br>');
+                    }
+
+                    const looksLikeFormula = /\\(frac|sqrt|times|div|cdot|left|right|angle|pi|theta|sin|cos|tan|sum|int|alpha|beta|gamma)/.test(raw)
+                        || /^[\s0-9a-zA-Z+\-*/=^_(){}\[\]\\.,:<>|%]+$/.test(raw);
+
+                    if (looksLikeFormula) {
+                        return renderExpr(raw, false);
+                    }
+
+                    return raw.replace(/\n/g, '<br>');
+                },
+                nextStep() {
+                    if (this.currentStep < this.steps.length - 1) {
+                        this.currentStep++;
+                        this.handleStepChange();
+                    }
+                },
+                prevStep() {
+                    if (this.currentStep > 0) {
+                        this.currentStep--;
+                        this.handleStepChange();
+                    }
+                },
+                setStep(index) {
+                    this.currentStep = index;
+                    this.handleStepChange();
+                },
+                handleStepChange() {
+                    this.isBubbleExpanded = true;
+                    this.endBubbleDrag();
+                    this.$nextTick(() => {
+                        this.centerDynamicScene();
+                        this.resetBubblePosition();
+                    });
+                    this.$nextTick(() => {
+                        const el = document.getElementById('step-' + this.currentStep);
+                        const container = document.getElementById('stepsList');
+                        if (el && container) {
+                            if (container.scrollHeight > container.clientHeight + 1) {
+                                const elRect = el.getBoundingClientRect();
+                                const containerRect = container.getBoundingClientRect();
+                                const targetScroll = container.scrollTop + (elRect.top - containerRect.top) - (container.clientHeight / 2) + (elRect.height / 2);
+                                container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+                            } else {
+                                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标签智能体审核 - 管理后台</title>
+    <script>
+        window.APP_VERSION = window.APP_VERSION || new Date().getTime();
+        window.addVersionToUrl = window.addVersionToUrl || function (url) {
+            const version = window.APP_VERSION;
+            return url.includes('?') ? url + '&v=' + version : url + '?v=' + version;
+        };
+        document.write('<link rel="stylesheet" href="' + window.addVersionToUrl('css/admin.css') + '">');
+    </script>
+    <style>
+        /* 审核 Tab 切换 */
+        .review-tabs { display: flex; gap: 10px; margin-bottom: 16px; border-bottom: 2px solid #eef1f5; padding-bottom: 10px; flex-wrap: wrap; }
+        .review-tab { padding: 8px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;
+                      color: #555; background: #f2f4f7; border: 1px solid #e2e6ec; user-select: none; }
+        .review-tab.active { background: #4f6ef7; color: #fff; border-color: #4f6ef7; }
+
+        /* 操作类型徽标 */
+        .op-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; }
+        .op-add { background: #2f9e6f; }
+        .op-modify { background: #f59e0b; }
+        .op-delete { background: #e11d48; }
+        .op-merge { background: #7c5cff; }
+
+        /* 状态徽标 */
+        .st-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+        .st-pending { background: #fef3c7; color: #92400e; }
+        .st-approved { background: #d1fae5; color: #065f46; }
+        .st-approved_modified { background: #cffafe; color: #155e75; }
+        .st-merged { background: #ede9fe; color: #5b21b6; }
+        .st-rejected { background: #fee2e2; color: #991b1b; }
+
+        /* 差异展示 */
+        .diff-block { font-size: 12px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+        .diff-before { color: #b91c1c; text-decoration: line-through; }
+        .diff-after { color: #15803d; font-weight: 600; }
+        .kv { color: #666; font-size: 12px; }
+
+        .review-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+        .review-toolbar select, .review-toolbar input { padding: 6px 10px; border: 1px solid #d9d9d9; border-radius: 6px; }
+        .batch-bar { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; padding: 8px 12px; background: #f7f8fa; border-radius: 8px; flex-wrap: wrap; }
+        .question-cell { max-width: 380px; font-size: 13px; color: #333; line-height: 1.6; word-break: break-all; }
+        .tag-chain { font-size: 12px; color: #555; line-height: 1.7; }
+        .tag-chain b { color: #222; }
+        .meta { color: #888; font-size: 12px; margin-top: 4px; }
+        .review-table th, .review-table td { vertical-align: top; }
+        .toolbar-note { color: #888; font-size: 12px; }
+
+        /* 表格在窄屏横向滚动，避免列挤压重叠 */
+        .table-container { overflow-x: auto; }
+        .review-table { min-width: 560px; }
+
+        /* ── 详情弹窗（两个审核界面共用，响应式不重叠）── */
+        #detailModal .modal-content {
+            max-width: 680px;
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+            width: 92%;
+        }
+        #detailModal .modal-body { overflow-y: auto; padding: 20px 24px; }
+        #detailModal .modal-footer {
+            padding: 14px 24px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--border-color);
+        }
+        .detail-grid { display: grid; grid-template-columns: 104px 1fr; gap: 10px 14px; font-size: 13px; align-items: start; }
+        .detail-grid .k { color: #888; padding-top: 1px; }
+        .detail-grid .v { color: #222; word-break: break-word; overflow-wrap: anywhere; }
+        .detail-reason-wrap { margin-top: 12px; }
+        .detail-history { margin-top: 14px; border-top: 1px solid #eee; padding-top: 10px; }
+        .detail-history-item { font-size: 12px; color: #555; padding: 6px 0; border-bottom: 1px dashed #f0f0f0; }
+        .detail-history-item:last-child { border-bottom: none; }
+        #detailReason { resize: vertical; font-family: inherit; }
+
+        @media (max-width: 600px) {
+            #detailModal .modal-content { width: 96%; max-height: 92vh; }
+            #detailModal .modal-header { padding: 14px 16px 10px; }
+            #detailModal .modal-body { padding: 14px 16px; }
+            #detailModal .modal-footer { padding: 12px 16px; }
+            .detail-grid { grid-template-columns: 88px 1fr; gap: 8px 10px; }
+            #detailModal .modal-footer .btn { flex: 1 1 auto; }
+        }
+    </style>
+    <link rel="stylesheet" href="css/theme-override.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>管理后台</h2>
+            </div>
+            <nav>
+                <ul class="sidebar-nav">
+                    <li><a href="dashboard.html">仪表盘</a></li>
+                    <li><a href="teachings.html">教学内容</a></li>
+                    <li><a href="users.html">用户管理</a></li>
+                    <li><a href="tags.html">标签管理</a></li>
+                    <li><a href="tag_review.html" class="active">标签智能体审核</a></li>
+                    <li><a href="recharge_requests.html">订单管理</a></li>
+                    <li><a href="feedbacks.html">用户反馈</a></li>
+                    <li><a href="settings.html">系统配置</a></li>
+                    <li><a href="logs.html">网站日志</a></li>
+                    <li><a href="invite-quota.html">邀请与额度</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-content" style="padding:24px;">
+            <div class="content-header">
+                <h2 style="margin:0;">标签智能体审核</h2>
+                <p style="color:#888; font-size:13px; margin:6px 0 0;">
+                    智能体对标签库的全部操作（新增/修改/删除/合并）与题目级标签建议，均在此由管理员统一审核确认后生效。
+                    点击「查看详情」可在弹窗中查看完整内容并执行审核；已审核记录可重新打开修改原结论。
+                </p>
+            </div>
+
+            <!-- 顶部：服务连接提示 -->
+            <div id="platformHint" style="display:none; padding:10px 14px; border-radius:8px; background:#fff7ed; color:#9a3412; font-size:13px; margin-bottom:14px;"></div>
+
+            <!-- 阶段五：概览统计 -->
+            <div id="statsBar" class="card" style="padding:14px 18px; margin-bottom:14px; display:none;">
+                <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center;">
+                    <div style="flex:1; min-width:120px;"><div class="kv">今日识别</div><div style="font-size:22px; font-weight:700;" id="stToday">-</div></div>
+                    <div style="flex:1; min-width:120px;"><div class="kv">累计识别</div><div style="font-size:22px; font-weight:700;" id="stTotal">-</div></div>
+                    <div style="flex:1; min-width:120px;"><div class="kv">平均置信度</div><div style="font-size:22px; font-weight:700;" id="stConf">-</div></div>
+                    <div style="flex:1; min-width:120px;"><div class="kv">库级待审提案</div><div style="font-size:22px; font-weight:700;" id="stPending">-</div></div>
+                    <div style="flex:1; min-width:120px;"><div class="kv">审核通过率</div><div style="font-size:22px; font-weight:700;" id="stApprove">-</div></div>
+                    <div style="flex:1; min-width:120px;"><div class="kv">题目待审</div><div style="font-size:22px; font-weight:700;" id="stQPending">-</div></div>
+                    <div style="flex:1; min-width:120px;"><div class="kv">近7天学习样本</div><div style="font-size:22px; font-weight:700;" id="stLearn">-</div></div>
+                </div>
+            </div>
+
+            <!-- Tab 切换 -->
+            <div class="review-tabs">
+                <div class="review-tab active" data-tab="library" onclick="switchTab('library')">📚 库级预修改审核（增/改/删/合并）</div>
+                <div class="review-tab" data-tab="question" onclick="switchTab('question')">📝 题目标签审核</div>
+                <div class="review-tab" data-tab="learning" onclick="switchTab('learning')">🧠 智能体学习样本（闭环记录）</div>
+                <div class="review-tab" data-tab="enhance" onclick="switchTab('enhance')">💡 标签增强建议</div>
+                <div class="review-tab" data-tab="reuse" onclick="switchTab('reuse')">🔁 复用建议</div>
+                <div class="review-tab" data-tab="pattern" onclick="switchTab('pattern')">🎨 题型提示词</div>
+            </div>
+
+            <!-- ═══════════ Tab1：库级预修改审核 ═══════════ -->
+            <div id="tab-library" class="card" style="padding:18px;">
+                <div class="review-toolbar">
+                    <label style="font-weight:bold;">操作类型
+                        <select id="libOp" onchange="loadLibrary(1)">
+                            <option value="">全部</option>
+                            <option value="add">新增</option>
+                            <option value="modify">修改</option>
+                            <option value="delete">删除</option>
+                            <option value="merge">合并</option>
+                        </select>
+                    </label>
+                    <label style="font-weight:bold;">状态
+                        <select id="libStatus" onchange="loadLibrary(1)">
+                            <option value="pending">待审核</option>
+                            <option value="approved">已通过</option>
+                            <option value="approved_modified">已修改通过</option>
+                            <option value="merged">已合并</option>
+                            <option value="rejected">已驳回</option>
+                            <option value="">全部</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary btn-sm" onclick="loadLibrary(1)">查询</button>
+                    <span style="flex:1;"></span>
+                    <button class="btn btn-warning btn-sm" onclick="scanDuplicates()">🔍 全库去重扫描</button>
+                </div>
+
+                <div class="batch-bar">
+                    <input type="checkbox" id="libCheckAll" onchange="toggleAll('lib')" title="全选本页">
+                    <span style="font-size:13px; color:#444;">已选 <b id="libSelCount">0</b> 条</span>
+                    <button class="btn btn-success btn-sm" onclick="batchReview('lib', 'approve')">✅ 批量通过</button>
+                    <button class="btn btn-danger btn-sm" onclick="batchReview('lib', 'reject')">⛔ 批量驳回</button>
+                    <span class="toolbar-note">删除提案批量通过需逐条二次确认；合并提案请逐条指定保留方。</span>
+                </div>
+
+                <div class="table-container">
+                    <table class="review-table" style="width:100%; border-collapse:collapse; font-size:13px;">
+                        <thead>
+                            <tr style="background:#fafafa;">
+                                <th style="width:32px;"></th>
+                                <th style="width:70px;">操作</th>
+                                <th style="min-width:200px;">目标标签</th>
+                                <th style="width:150px;">状态</th>
+                                <th style="width:120px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="libBody"></tbody>
+                    </table>
+                    <div id="libEmpty" class="empty-state" style="display:none; padding:30px; text-align:center; color:#999;">暂无提案</div>
+                </div>
+                <div class="pagination" id="libPagination"></div>
+            </div>
+
+            <!-- ═══════════ Tab2：题目标签审核 ═══════════ -->
+            <div id="tab-question" class="card" style="padding:18px; display:none;">
+                <div class="review-toolbar">
+                    <label style="font-weight:bold;">状态
+                        <select id="qStatus" onchange="loadQuestion(1)">
+                            <option value="pending">待审核</option>
+                            <option value="approved">已通过</option>
+                            <option value="approved_modified">已修改通过</option>
+                            <option value="rejected">已驳回</option>
+                            <option value="">全部</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary btn-sm" onclick="loadQuestion(1)">查询</button>
+                </div>
+
+                <div class="batch-bar">
+                    <input type="checkbox" id="qCheckAll" onchange="toggleAll('q')" title="全选本页">
+                    <span style="font-size:13px; color:#444;">已选 <b id="qSelCount">0</b> 条</span>
+                    <button class="btn btn-success btn-sm" onclick="batchReview('q', 'approve')">✅ 批量通过</button>
+                    <button class="btn btn-danger btn-sm" onclick="batchReview('q', 'reject')">⛔ 批量驳回</button>
+                    <span class="toolbar-note">通过后题目标签写入需宿主应用配合（阶段三接入后自动触发动画生成）。</span>
+                </div>
+
+                <div class="table-container">
+                    <table class="review-table" style="width:100%; border-collapse:collapse; font-size:13px;">
+                        <thead>
+                            <tr style="background:#fafafa;">
+                                <th style="width:32px;"></th>
+                                <th style="min-width:260px;">题目</th>
+                                <th style="min-width:200px;">建议标签</th>
+                                <th style="width:90px;">置信度</th>
+                                <th style="width:150px;">状态</th>
+                                <th style="width:120px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="qBody"></tbody>
+                    </table>
+                    <div id="qEmpty" class="empty-state" style="display:none; padding:30px; text-align:center; color:#999;">暂无待审核题目标签</div>
+                </div>
+                <div class="pagination" id="qPagination"></div>
+            </div>
+
+            <!-- ═══════════ Tab3：智能体学习样本（闭环记录） ═══════════ -->
+            <div id="tab-learning" class="card" style="padding:18px; display:none;">
+                <p style="color:#888; font-size:13px; margin:0 0 12px; line-height:1.6;">
+                    智能体的「学习闭环」记录：每次识别、关键词提取、管理员审核结论与<strong>修改前后差异</strong>都会沉淀为样本，
+                    供后续判断是否需要新建标签、命名是否精炼、关键词是否可复用。下方为最近样本（只读）。
+                </p>
+                <div class="review-toolbar">
+                    <label style="font-weight:bold;">行为类型
+                        <select id="learnType" onchange="loadLearning(1)">
+                            <option value="">全部</option>
+                            <option value="create_pending">新建标签提案</option>
+                            <option value="extract_keyword">提取关键词</option>
+                            <option value="review_approve">审核通过</option>
+                            <option value="review_modified">修改后通过</option>
+                            <option value="review_merge">审核合并</option>
+                            <option value="review_reject">审核驳回</option>
+                            <option value="question_review_approve">题目标签通过</option>
+                            <option value="question_review_reject">题目标签驳回</option>
+                            <option value="propose_modify">修改提案</option>
+                            <option value="admin_correction">人工修正（改标签）</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary btn-sm" onclick="loadLearning(1)">查询</button>
+                    <span style="flex:1;"></span>
+                    <button class="btn btn-sm" id="learnDeleteBtn" disabled
+                        onclick="confirmDeleteLearn()">🗑 删除所选（<b id="learnSelCount">0</b>）</button>
+                    <span class="toolbar-note">共 <b id="learnTotal">0</b> 条样本</span>
+                </div>
+                <div class="table-container">
+                    <table class="review-table learn-table" style="width:100%; border-collapse:collapse; font-size:13px;">
+                        <thead>
+                            <tr style="background:#fafafa;">
+                                <th style="width:42px; text-align:center;">
+                                    <input type="checkbox" id="learnSelectAll"
+                                        onchange="toggleLearnSelectAll(this)" title="全选/取消本页" />
+                                </th>
+                                <th style="width:150px;">时间</th>
+                                <th style="width:110px;">行为</th>
+                                <th style="min-width:170px;">知识域/年级/章</th>
+                                <th style="min-width:130px;">标签</th>
+                                <th style="min-width:200px;">智能体输出（摘要）</th>
+                                <th style="min-width:200px;">管理员结果 / 差异</th>
+                                <th class="learn-op" style="width:160px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="learnBody"></tbody>
+                    </table>
+                    <div id="learnEmpty" class="empty-state" style="display:none; padding:30px; text-align:center; color:#999;">暂无学习样本</div>
+                </div>
+                <div class="pagination" id="learnPagination"></div>
+            </div>
+        </div>
+
+            <!-- ═══════════ Tab4：标签增强建议（P1.5） ═══════════ -->
+            <div id="tab-enhance" class="card" style="padding:18px; display:none;">
+                <p style="color:#888; font-size:13px; margin:0 0 12px; line-height:1.6;">
+                    管理员在「教学内容-编辑内容」改标签保存后，系统自动为变更到的新标签提炼
+                    <strong>可泛化的强关键词</strong>并干跑回验（命中同类题才算可泛化）。在此由管理员审核：
+                    通过即并入该标签词库，驳回则丢弃。全程人工把关、不通过不入库。
+                </p>
+                <div class="review-toolbar">
+                    <label style="font-weight:bold;">状态
+                        <select id="enhStatus" onchange="loadEnhance(1)">
+                            <option value="pending">待审核</option>
+                            <option value="approved">已通过</option>
+                            <option value="rejected">已驳回</option>
+                            <option value="">全部</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary btn-sm" onclick="loadEnhance(1)">查询</button>
+                </div>
+                <div class="table-container">
+                    <table class="review-table" style="width:100%; border-collapse:collapse; font-size:13px;">
+                        <thead>
+                            <tr style="background:#fafafa;">
+                                <th style="min-width:240px;">来源题（新旧标签对照）</th>
+                                <th style="min-width:160px;">新标签 B</th>
+                                <th style="width:90px;">候选数</th>
+                                <th style="width:120px;">状态</th>
+                                <th style="width:120px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="enhBody"></tbody>
+                    </table>
+                    <div id="enhEmpty" class="empty-state" style="display:none; padding:30px; text-align:center; color:#999;">暂无标签增强建议</div>
+                </div>
+                <div class="pagination" id="enhPagination"></div>
+            </div>
+
+    </div>
+
+    <!-- 详情弹窗（两个界面共用） -->
+            <div id="tab-reuse" class="card" style="padding:18px; display:none;">
+                <p style="color:#888; font-size:13px; margin:0 0 12px; line-height:1.6;">
+                    新题生成动画前，系统自动做「同法异数」判定（向量召回 → 标签硬过滤 → 同构判定）。
+                    命中的相似题（模板）在此由管理员确认：通过即用模板骨架 + 数据槽映射
+                    <strong>渲染复用产物</strong>覆盖本题（写 reuse_info 溯源），驳回则丢弃。全程人工把关。
+                </p>
+                <div class="review-toolbar">
+                    <label style="font-weight:bold;">状态
+                        <select id="reuseStatus" onchange="loadReuse(1)">
+                            <option value="pending">待审核</option>
+                            <option value="approved">已通过</option>
+                            <option value="rejected">已驳回</option>
+                            <option value="">全部</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary btn-sm" onclick="loadReuse(1)">查询</button>
+                </div>
+                <div class="table-container">
+                    <table class="review-table" style="width:100%; border-collapse:collapse; font-size:13px;">
+                        <thead>
+                            <tr style="background:#fafafa;">
+                                <th style="min-width:220px;">新题（题干 + 标题）</th>
+                                <th style="min-width:180px;">模板题对照</th>
+                                <th style="min-width:160px;">命中理由 / 数据槽</th>
+                                <th style="width:90px;">置信度</th>
+                                <th style="width:120px;">状态</th>
+                                <th style="width:120px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reuseBody"></tbody>
+                    </table>
+                    <div id="reuseEmpty" class="empty-state" style="display:none; padding:30px; text-align:center; color:#999;">暂无复用建议</div>
+                </div>
+                <div class="pagination" id="reusePagination"></div>
+            </div>
+
+            <div id="tab-pattern" class="card" style="padding:18px; display:none;">
+                <p style="color:#888; font-size:13px; margin:0 0 12px; line-height:1.6;">
+                    同一「解法指纹」被成功复用达到阈值（默认 5 次）后，系统自动把该题型
+                    <strong>最佳动画产物沉淀为「特殊题型提示词」草稿</strong>（数据用占位符，禁抄原题数字）。
+                    在此由管理员审核：通过即写入 <code>prompt/animation/scene_patterns/</code> 正式生效，驳回则丢弃。
+                </p>
+                <div class="review-toolbar">
+                    <label style="font-weight:bold;">状态
+                        <select id="patternStatus" onchange="loadPattern(1)">
+                            <option value="pending">待审核</option>
+                            <option value="approved">已通过</option>
+                            <option value="rejected">已驳回</option>
+                            <option value="">全部</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary btn-sm" onclick="loadPattern(1)">查询</button>
+                </div>
+                <div class="table-container">
+                    <table class="review-table" style="width:100%; border-collapse:collapse; font-size:13px;">
+                        <thead>
+                            <tr style="background:#fafafa;">
+                                <th style="min-width:220px;">解法指纹（题型桶）</th>
+                                <th style="min-width:160px;">触发词提示</th>
+                                <th style="width:120px;">状态</th>
+                                <th style="width:120px;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patternBody"></tbody>
+                    </table>
+                    <div id="patternEmpty" class="empty-state" style="display:none; padding:30px; text-align:center; color:#999;">暂无题型提示词草稿</div>
+                </div>
+                <div class="pagination" id="patternPagination"></div>
+            </div>
+    <div id="detailModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closeModal('detailModal')"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="detailTitle">审核详情</h3>
+                <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="detailBody"></div>
+            <div class="modal-footer" id="detailActions"></div>
+        </div>
+    </div>
+
+    <!-- 删除二次确认弹窗 -->
+    <div id="confirmModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closeModal('confirmModal')"></div>
+        <div class="modal-content" style="max-width:460px;">
+            <div class="modal-header"><h3>⚠️ 确认删除标签</h3><button class="modal-close" onclick="closeModal('confirmModal')">&times;</button></div>
+            <div class="modal-body">
+                <p style="font-size:14px; color:#333;" id="confirmText"></p>
+                <p style="font-size:13px; color:#b91c1c; background:#fef2f2; padding:10px; border-radius:8px;">
+                    删除将从正式标签库中<strong>永久移除</strong>该记录（硬删除），且会提示引用该标签的题目重新识别。此操作不可撤销，请确认。
+                </p>
+            </div>
+            <div class="modal-footer" style="padding:14px; display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-sm" onclick="closeModal('confirmModal')">取消</button>
+                <button class="btn btn-danger btn-sm" id="confirmOkBtn" onclick="confirmDelete()">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改后通过弹窗 -->
+    <div id="modifyModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closeModal('modifyModal')"></div>
+        <div class="modal-content" style="max-width:560px; max-height:88vh; overflow-y:auto;">
+            <div class="modal-header"><h3>修改后通过</h3><button class="modal-close" onclick="closeModal('modifyModal')">&times;</button></div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>知识域</label>
+                    <input id="mDomain" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px;">
+                </div>
+                <div class="form-group">
+                    <label>年级</label>
+                    <input id="mGrade" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px;">
+                </div>
+                <div class="form-group">
+                    <label>章/单元</label>
+                    <input id="mChapter" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px;">
+                </div>
+                <div class="form-group">
+                    <label>知识点标签</label>
+                    <input id="mTag" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px;">
+                </div>
+                <div class="form-group">
+                    <label>关键词（顿号分隔）</label>
+                    <textarea id="mKeywords" rows="2" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>管理员备注</label>
+                    <input id="mNote" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px;">
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:14px; display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-sm" onclick="closeModal('modifyModal')">取消</button>
+                <button class="btn btn-primary btn-sm" onclick="submitModified()">提交</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 合并弹窗 -->
+    <div id="mergeModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closeModal('mergeModal')"></div>
+        <div class="modal-content" style="max-width:480px;">
+            <div class="modal-header"><h3>合并到已有标签</h3><button class="modal-close" onclick="closeModal('mergeModal')">&times;</button></div>
+            <div class="modal-body">
+                <p style="font-size:13px; color:#555;" id="mergeDesc"></p>
+                <div class="form-group" style="margin-top:12px;">
+                    <label>目标正式标签（保留方）</label>
+                    <input id="mergeTarget" list="mergeTagList" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px;">
+                    <datalist id="mergeTagList"></datalist>
+                </div>
+                <div class="form-group">
+                    <label>管理员备注</label>
+                    <input id="mergeNote" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px;">
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:14px; display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-sm" onclick="closeModal('mergeModal')">取消</button>
+                <button class="btn btn-primary btn-sm" onclick="submitMerge()">确认合并</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 去重扫描结果弹窗 -->
+    <div id="scanModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closeModal('scanModal')"></div>
+        <div class="modal-content" style="max-width:780px; max-height:88vh; overflow-y:auto;">
+            <div class="modal-header"><h3>全库去重扫描结果</h3><button class="modal-close" onclick="closeModal('scanModal')">&times;</button></div>
+            <div class="modal-body">
+                <p style="font-size:13px; color:#666; margin-top:0;">以下为智能体检测到的重复标签提案（<strong>仅提案，未改动标签库</strong>）。如需合并入库，请在「库级预修改审核」中手动创建合并提案（阶段二后续补一键转提案）。</p>
+                <div id="scanResult" style="margin-top:8px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 学习样本详情弹窗（只读） -->
+    <div id="learnModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closeModal('learnModal')"></div>
+        <div class="modal-content" style="max-width:720px; max-height:88vh; overflow-y:auto;">
+            <div class="modal-header"><h3>学习样本详情</h3><button class="modal-close" onclick="closeModal('learnModal')">&times;</button></div>
+            <div class="modal-body" id="learnBody_detail"></div>
+            <div class="modal-footer" style="padding:12px 24px; display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-sm" onclick="closeModal('learnModal')">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="learnDeleteModal" class="modal" style="display:none;">
+        <div class="modal-overlay" onclick="closeModal('learnDeleteModal')"></div>
+        <div class="modal-content" style="max-width:440px;">
+            <div class="modal-header"><h3>确认删除学习样本</h3><button class="modal-close" onclick="closeModal('learnDeleteModal')">&times;</button></div>
+            <div class="modal-body" style="padding:18px 24px; font-size:14px; line-height:1.6;">
+                <p style="margin:0 0 8px;">即将<b style="color:#e53935;">硬删除</b> <b id="learnDeleteCount">0</b> 条学习样本记录。</p>
+                <p style="margin:0; color:#999; font-size:13px;">删除后不可恢复，仅影响智能体学习样本库，不影响题目与标签本身。</p>
+            </div>
+            <div class="modal-footer" style="padding:12px 24px; display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-sm" onclick="closeModal('learnDeleteModal')">取消</button>
+                <button class="btn btn-danger btn-sm" id="learnDeleteOkBtn" onclick="deleteLearnConfirmed()">确认删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.write('<script src="' + window.addVersionToUrl('js/admin-utils.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-api.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-auth.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('js/admin-nav.js') + '"><\/script>');
+        document.write('<script src="' + window.addVersionToUrl('../js/math-symbol-panel.js') + '"><\/script>');
+    </script>
+    <script>
+        // ══════════ 状态常量 ══════════
+        const OP_LABEL = { add: ['新增', 'op-add'], modify: ['修改', 'op-modify'], delete: ['删除', 'op-delete'], merge: ['合并', 'op-merge'] };
+        const ST_LABEL = {
+            pending: ['待审核', 'st-pending'], approved: ['已通过', 'st-approved'],
+            approved_modified: ['已修改通过', 'st-approved_modified'],
+            merged: ['已合并', 'st-merged'], rejected: ['已驳回', 'st-rejected']
+        };
+        const ACT_LABEL = {
+            inject_official: '识别命中', propose_modify: '补关键词提案', create_pending_tag: '新标签提案',
+            create_pending_chain: '新标签链路提案', add_keywords: '补关键词', non_math: '非数学题',
+            low_confidence: '低置信', failed: '识别失败'
+        };
+
+        let libPage = 1, qPage = 1;
+        const PAGE_SIZE = 20;
+        const sel = { lib: new Set(), q: new Set() };
+        let currentTab = 'library';
+        let deleteTarget = null;   // 待删除提案 {id, label}
+        let modifyTarget = null;   // 待修改提案 {id, isQuestion}
+        let mergeTarget = null;    // 待合并提案 {id, label, isQuestion}
+        let libItems = [];         // 当前页库级提案（供详情弹窗读取）
+        let qItems = [];           // 当前页题目标签提案
+        let detailCtx = null;      // 当前打开的详情 {kind, data}
+
+        initAdminAuth();
+
+        // ══════════ Tab 切换 ══════════
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.review-tab').forEach(el => el.classList.toggle('active', el.dataset.tab === tab));
+            document.getElementById('tab-library').style.display = tab === 'library' ? '' : 'none';
+            document.getElementById('tab-question').style.display = tab === 'question' ? '' : 'none';
+            document.getElementById('tab-learning').style.display = tab === 'learning' ? '' : 'none';
+            document.getElementById('tab-enhance').style.display = tab === 'enhance' ? '' : 'none';
+            document.getElementById('tab-reuse').style.display = tab === 'reuse' ? '' : 'none';
+            document.getElementById('tab-pattern').style.display = tab === 'pattern' ? '' : 'none';
+            if (tab === 'library') loadLibrary(1);
+            else if (tab === 'question') loadQuestion(1);
+            else if (tab === 'enhance') loadEnhance(1);
+            else if (tab === 'reuse') loadReuse(1);
+            else if (tab === 'pattern') loadPattern(1);
+            else loadLearning(1);
+        }
+
+        function esc(s) {
+            if (s === null || s === undefined) return '';
+            return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+        function fmtDate(s) {
+            if (!s) return '-';
+            const d = new Date(s.indexOf('Z') < 0 && !/\+0\d:00$/.test(s) ? s + 'Z' : s);
+            return isNaN(d.getTime()) ? '-' : d.toLocaleString('zh-CN', { hour12: false });
+        }
+        function openModal(id) { document.getElementById(id).style.display = ''; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function toast(msg, isErr) {
+            const el = document.getElementById('platformHint');
+            el.style.display = '';
+            el.style.background = isErr ? '#fef2f2' : '#f0fdf4';
+            el.style.color = isErr ? '#b91c1c' : '#15803d';
+            el.textContent = msg;
+            setTimeout(() => { el.style.display = 'none'; }, 6000);
+        }
+        function btn(cls, label, onclick) {
+            return `<button class="btn ${cls} btn-sm" onclick="${onclick}">${label}</button>`;
+        }
+        function detailRow(k, v) {
+            return `<div class="k">${k}</div><div class="v">${v}</div>`;
+        }
+
+        // ══════════ 详情弹窗 ══════════
+        function openDetail(kind, id) {
+            const d = (kind === 'lib' ? libItems : qItems).find(x => x.id === id);
+            if (!d) return;
+            detailCtx = { kind, data: d };
+            document.getElementById('detailTitle').textContent = kind === 'lib' ? '库级预修改审核详情' : '题目标签审核详情';
+            document.getElementById('detailBody').innerHTML = kind === 'lib' ? libDetailBody(d) : qDetailBody(d);
+            document.getElementById('detailActions').innerHTML = detailActionArea(kind, d);
+            document.getElementById('detailReason').value = '';
+            document.getElementById('detailReasonWrap').style.display = 'none';
+            document.getElementById('detailPrimary').style.display = 'flex';
+            openModal('detailModal');
+        }
+
+        function libDetailBody(d) {
+            const op = OP_LABEL[d.operation] || [d.operation || 'add', 'op-add'];
+            const st = ST_LABEL[d.status] || [d.status, 'st-pending'];
+            const target = d.target || {};
+            const loc = [target.domain || d.domain, target.grade || d.grade, target.chapter || d.chapter, target.tag || d.tag_name]
+                .filter(Boolean).join(' / ') || '-';
+            const before = d.before_snapshot, after = d.after_snapshot;
+            let diff;
+            if (d.operation === 'add') diff = `<span class="diff-after">新增：${esc(d.tag_name)}</span>`;
+            else if (d.operation === 'delete') diff = `<span class="diff-before">删除：${esc(loc)}</span>`;
+            else if (d.operation === 'merge') diff = `合并：<b>${esc((after && (after.primary_tag || after.merged_to_tag)) || d.merged_to_tag || '?')}</b> ← ${esc(target.tag || d.tag_name)}`;
+            else {
+                const bf = before ? (typeof before === 'object' ? JSON.stringify(before, null, 2) : before) : '-';
+                const af = after ? (typeof after === 'object' ? JSON.stringify(after, null, 2) : after) : '-';
+                diff = `<div class="diff-block"><span class="diff-before">${esc(bf)}</span><br>→ <span class="diff-after">${esc(af)}</span></div>`;
+            }
+            const conf = d.confidence ? (d.confidence * 100).toFixed(0) + '%' : '-';
+            let h = `<div class="detail-grid">`;
+            h += detailRow('操作类型', `<span class="op-badge ${op[1]}">${op[0]}</span>`);
+            h += detailRow('目标标签', `<b>${esc(loc)}</b>`);
+            h += detailRow('关键词', esc((d.keywords || []).join('、') || '-'));
+            h += detailRow('变更 (before→after)', diff);
+            h += detailRow('智能体理由', esc(d.agent_reason || d.evidence || '-'));
+            h += detailRow('置信度', conf);
+            h += detailRow('依据', esc(d.evidence || '-'));
+            h += detailRow('来源题目', `<div class="question-cell" style="max-width:none;">${window.renderMathText ? window.renderMathText(d.source_question_text || '-') : esc(d.source_question_text || '-')}</div>`);
+            h += detailRow('创建时间', fmtDate(d.created_at));
+            h += detailRow('当前状态', `<span class="st-badge ${st[1]}">${st[0]}</span>`);
+            if (d.reject_reason) h += detailRow('驳回原因', `<span style="color:#b91c1c;">${esc(d.reject_reason)}</span>`);
+            h += detailRow('审核人', esc(d.reviewed_by || '-'));
+            h += detailRow('审核时间', fmtDate(d.reviewed_at));
+            h += `</div>`;
+            h += reviewHistoryHtml(d.review_history);
+            return h;
+        }
+
+        function qDetailBody(d) {
+            const st = ST_LABEL[d.status] || [d.status, 'st-pending'];
+            const chain = [d.domain, d.grade, d.chapter, (d.sub_tags || []).join('、')].filter(Boolean).join(' / ') || '-';
+            const conf = d.confidence ? (d.confidence * 100).toFixed(0) + '%' : '-';
+            const act = ACT_LABEL[d.source_action] || d.source_action || '-';
+            let h = `<div class="detail-grid">`;
+            h += detailRow('题目', `<div class="question-cell" style="max-width:none;">${window.renderMathText ? window.renderMathText(d.question_text || '-') : esc(d.question_text || '-')}</div>`);
+            h += detailRow('建议标签', `<b>${esc(chain)}</b>`);
+            h += detailRow('置信度', conf);
+            h += detailRow('识别来源', `<span style="background:#4f6ef7;color:#fff;padding:2px 10px;border-radius:10px;font-size:12px;">${esc(act)}</span>`);
+            h += detailRow('创建时间', fmtDate(d.created_at));
+            h += detailRow('当前状态', `<span class="st-badge ${st[1]}">${st[0]}</span>`);
+            if (d.reject_reason) h += detailRow('驳回原因', `<span style="color:#b91c1c;">${esc(d.reject_reason)}</span>`);
+            h += detailRow('审核人', esc(d.reviewed_by || '-'));
+            h += detailRow('审核时间', fmtDate(d.reviewed_at));
+            h += `</div>`;
+            h += reviewHistoryHtml(d.review_history);
+            return h;
+        }
+
+        function reviewHistoryHtml(list) {
+            if (!list || !list.length) return '';
+            const labels = { pending: '待审核', approved: '已通过', approved_modified: '已修改通过', merged: '已合并', rejected: '已驳回' };
+            let h = `<div class="detail-history"><div class="kv" style="margin-bottom:6px;">审核变更记录</div>`;
+            list.slice().reverse().forEach(e => {
+                const from = labels[e.from] || e.from, to = labels[e.to] || e.to;
+                const fromCls = ST_LABEL[e.from] ? ST_LABEL[e.from][1] : 'st-pending';
+                const toCls = ST_LABEL[e.to] ? ST_LABEL[e.to][1] : 'st-pending';
+                h += `<div class="detail-history-item">${fmtDate(e.at)} · <b>${esc(e.by || '-')}</b> 将状态由 `
+                    + `<span class="st-badge ${fromCls}">${from}</span> 改为 <span class="st-badge ${toCls}">${to}</span>`
+                    + (e.reason ? ` · 原因：${esc(e.reason)}` : '') + `</div>`;
+            });
+            h += `</div>`;
+            return h;
+        }
+
+        function detailActionArea(kind, d) {
+            const id = d.id;
+            let primary = '';
+            if (d.status === 'pending') {
+                if (kind === 'lib') {
+                    if (d.operation === 'delete') primary += btn('btn-danger', '删除确认', `closeModal('detailModal'); askDelete('${id}')`);
+                    else if (d.operation === 'merge') primary += btn('btn-primary', '合并', `closeModal('detailModal'); openMerge('${id}')`);
+                    else primary += btn('btn-success', '通过', `detailSubmit('lib','approve')`);
+                    primary += btn('btn-warning', '修改后通过', `closeModal('detailModal'); openModify('${id}', false)`);
+                } else {
+                    primary += btn('btn-success', '通过', `detailSubmit('q','approve')`);
+                    primary += btn('btn-warning', '修改后通过', `closeModal('detailModal'); openModify('${id}', true)`);
+                }
+                primary += btn('btn-danger', '驳回', `showDetailReason()`);
+            } else {
+                const cur = ST_LABEL[d.status] ? ST_LABEL[d.status][0] : d.status;
+                const cls = ST_LABEL[d.status] ? ST_LABEL[d.status][1] : '';
+                const confirmed = (kind === 'lib' && d.operation === 'delete');
+                primary += `<span class="meta" style="margin-right:auto; align-self:center;">当前结果：<span class="st-badge ${cls}">${cur}</span></span>`;
+                primary += btn('btn-success', '改为通过', `detailSubmit('${kind}','approve',{confirmed:${confirmed}})`);
+                primary += btn('btn-danger', '改为驳回', `showDetailReason()`);
+            }
+            return `<div id="detailPrimary" style="display:flex; gap:8px; flex-wrap:wrap; width:100%; justify-content:flex-end;">${primary}</div>`
+                + `<div id="detailReasonWrap" style="display:none; width:100%;">`
+                + `<label style="font-size:13px; font-weight:bold; color:#b91c1c;">驳回原因（必填，便于智能体学习为什么被驳回）</label>`
+                + `<textarea id="detailReason" rows="3" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px; margin-top:6px; box-sizing:border-box;"></textarea>`
+                + `<div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;">`
+                + `<button class="btn btn-sm" onclick="hideDetailReason()">取消</button>`
+                + `<button class="btn btn-danger btn-sm" onclick="detailConfirmReject()">确认驳回</button>`
+                + `</div></div>`;
+        }
+
+        function showDetailReason() {
+            document.getElementById('detailPrimary').style.display = 'none';
+            document.getElementById('detailReasonWrap').style.display = 'block';
+            document.getElementById('detailReason').focus();
+        }
+        function hideDetailReason() {
+            document.getElementById('detailReasonWrap').style.display = 'none';
+            document.getElementById('detailPrimary').style.display = 'flex';
+        }
+
+        async function detailSubmit(kind, action, extra) {
+            extra = extra || {};
+            const d = detailCtx && detailCtx.data;
+            if (!d) return;
+            const id = d.id;
+            const url = kind === 'lib'
+                ? `/tag-agent/pending/${id}/review`
+                : `/tag-agent/question-proposals/${id}/review`;
+            const body = {
+                action,
+                admin_note: extra.note || '',
+                reject_reason: extra.reason || '',
+                confirmed: !!extra.confirmed
+            };
+            try {
+                const r = await apiRequest(url, { method: 'POST', body: JSON.stringify(body) });
+                toast(`操作成功（${r.status}）`);
+                closeModal('detailModal');
+                if (kind === 'lib') loadLibrary(libPage); else loadQuestion(qPage);
+            } catch (e) {
+                toast('操作失败：' + e.message, true);
+            }
+        }
+
+        function detailConfirmReject() {
+            const reason = (document.getElementById('detailReason').value || '').trim();
+            if (!reason) { toast('请填写驳回原因', true); return; }
+            const kind = detailCtx ? detailCtx.kind : 'lib';
+            detailSubmit(kind, 'reject', { reason });
+        }
+
+        // ══════════ Tab1：库级预修改审核 ══════════
+        async function loadLibrary(page = 1) {
+            libPage = page;
+            const op = document.getElementById('libOp').value;
+            const st = document.getElementById('libStatus').value;
+            const params = new URLSearchParams({ page, size: PAGE_SIZE });
+            if (op) params.set('operation', op);
+            if (st) params.set('status', st);
+            let data;
+            try {
+                data = await apiRequest(`/tag-agent/pending?${params.toString()}`);
+            } catch (e) {
+                toast('加载失败：' + e.message, true);
+                return;
+            }
+            const items = data.items || [];
+            sel.lib.clear();
+            renderLibRows(items);
+            renderPagination('libPagination', data.total || 0, libPage, loadLibrary);
+            document.getElementById('libEmpty').style.display = items.length ? 'none' : '';
+            updateSelCount('lib');
+        }
+
+        function renderLibRows(items) {
+            libItems = items;
+            const body = document.getElementById('libBody');
+            body.innerHTML = items.map(p => {
+                const op = OP_LABEL[p.operation] || [p.operation || 'add', 'op-add'];
+                const st = ST_LABEL[p.status] || [p.status, 'st-pending'];
+                const target = p.target || {};
+                const loc = [target.domain || p.domain, target.grade || p.grade, target.chapter || p.chapter, target.tag || p.tag_name]
+                    .filter(Boolean).join(' / ') || '-';
+                return `<tr>
+                    <td><input type="checkbox" value="${esc(p.id)}" onchange="onSel('lib', this)"></td>
+                    <td><span class="op-badge ${op[1]}">${op[0]}</span></td>
+                    <td><div class="tag-chain"><b>${esc(loc)}</b></div><div class="meta">keywords: ${esc((p.keywords || []).join('、') || '-')}</div></td>
+                    <td><span class="st-badge ${st[1]}">${st[0]}</span></td>
+                    <td><button class="btn btn-primary btn-sm" onclick="openDetail('lib','${esc(p.id)}')">查看详情</button></td>
+                </tr>`;
+            }).join('');
+        }
+
+        // 删除二次确认
+        function askDelete(id) {
+            deleteTarget = id;
+            document.getElementById('confirmText').textContent = '确定要删除该标签提案对应的正式标签记录吗？';
+            openModal('confirmModal');
+        }
+        async function confirmDelete() {
+            if (!deleteTarget) return;
+            closeModal('confirmModal');
+            try {
+                const r = await apiRequest(`/tag-agent/pending/${deleteTarget}/review`, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'approve', confirmed: true, admin_note: '管理员二次确认删除' })
+                });
+                toast(`删除已执行（${r.status}）`);
+                deleteTarget = null;
+                loadLibrary(libPage);
+            } catch (e) {
+                toast('删除失败：' + e.message, true);
+            }
+        }
+
+        // 修改后通过
+        function openModify(id, isQuestion) {
+            modifyTarget = { id, isQuestion };
+            ['mDomain', 'mGrade', 'mChapter', 'mTag', 'mKeywords', 'mNote'].forEach(i => document.getElementById(i).value = '');
+            openModal('modifyModal');
+        }
+        async function submitModified() {
+            if (!modifyTarget) return;
+            closeModal('modifyModal');
+            const body = {
+                action: 'approve_modified',
+                admin_note: document.getElementById('mNote').value,
+                domain: document.getElementById('mDomain').value,
+                grade: document.getElementById('mGrade').value,
+                chapter: document.getElementById('mChapter').value,
+                tag_name: document.getElementById('mTag').value,
+                keywords: document.getElementById('mKeywords').value.split(/[、,，]/).map(s => s.trim()).filter(Boolean)
+            };
+            const url = modifyTarget.isQuestion
+                ? `/tag-agent/question-proposals/${modifyTarget.id}/review`
+                : `/tag-agent/pending/${modifyTarget.id}/review`;
+            try {
+                await apiRequest(url, { method: 'POST', body: JSON.stringify(body) });
+                toast('修改后通过成功');
+                modifyTarget = null;
+                currentTab === 'library' ? loadLibrary(libPage) : loadQuestion(qPage);
+            } catch (e) {
+                toast('操作失败：' + e.message, true);
+            }
+        }
+
+        // 合并
+        function openMerge(id) {
+            mergeTarget = { id };
+            document.getElementById('mergeTarget').value = '';
+            document.getElementById('mergeNote').value = '';
+            document.getElementById('mergeDesc').textContent = '将该提案的标签合并到目标正式标签（保留方）。';
+            openModal('mergeModal');
+        }
+        async function submitMerge() {
+            if (!mergeTarget) return;
+            closeModal('mergeModal');
+            const mergedToTag = document.getElementById('mergeTarget').value.trim();
+            if (!mergedToTag) { toast('请填写目标标签', true); return; }
+            try {
+                await apiRequest(`/tag-agent/pending/${mergeTarget.id}/review`, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'approve', merged_to_tag: mergedToTag, admin_note: document.getElementById('mergeNote').value })
+                });
+                toast('合并成功');
+                mergeTarget = null;
+                loadLibrary(libPage);
+            } catch (e) {
+                toast('合并失败：' + e.message, true);
+            }
+        }
+
+        // ══════════ 批量操作（库级 + 题目级共用） ══════════
+        function toggleAll(kind) {
+            const checked = document.getElementById(kind === 'lib' ? 'libCheckAll' : 'qCheckAll').checked;
+            document.querySelectorAll(`#${kind === 'lib' ? 'libBody' : 'qBody'} input[type=checkbox]`).forEach(cb => {
+                cb.checked = checked;
+                if (checked) sel[kind].add(cb.value); else sel[kind].delete(cb.value);
+            });
+            updateSelCount(kind);
+        }
+        function onSel(kind, cb) {
+            if (cb.checked) sel[kind].add(cb.value); else sel[kind].delete(cb.value);
+            updateSelCount(kind);
+        }
+        function updateSelCount(kind) {
+            document.getElementById(kind === 'lib' ? 'libSelCount' : 'qSelCount').textContent = sel[kind].size;
+        }
+        async function batchReview(kind, action) {
+            const ids = Array.from(sel[kind]);
+            if (!ids.length) { toast('请先勾选要操作的提案', true); return; }
+            const url = kind === 'lib' ? '/tag-agent/pending/batch-review' : null;
+            if (!url) { toast('题目级批量接口未开放（阶段三接入后启用）', true); return; }
+            try {
+                const r = await apiRequest(url, {
+                    method: 'POST',
+                    body: JSON.stringify({ pending_ids: ids, action, admin_note: `批量${action}` })
+                });
+                toast(`批量完成：成功 ${r.ok_count}，失败 ${r.fail_count}`);
+                sel[kind].clear();
+                loadLibrary(libPage);
+            } catch (e) {
+                toast('批量操作失败：' + e.message, true);
+            }
+        }
+
+        // ══════════ 去重扫描 ══════════
+        async function scanDuplicates() {
+            toast('正在扫描全库重复标签，请稍候…');
+            try {
+                const r = await apiRequest('/tag-agent/duplicates/scan', { method: 'POST', body: JSON.stringify({}) });
+                const items = r.items || [];
+                const persistBtn = items.length
+                    ? `<div style="margin-bottom:10px;"><button class="btn btn-primary btn-sm" onclick="persistDuplicates()">📥 全部转为合并提案（进入审核队列）</button></div>`
+                    : '';
+                document.getElementById('scanResult').innerHTML = persistBtn + (items.length
+                    ? `<table style="width:100%; border-collapse:collapse; font-size:13px;">
+                        <tr style="background:#fafafa;"><th style="padding:6px; border:1px solid #eee;">保留方</th><th style="padding:6px; border:1px solid #eee;">重复标签</th><th style="padding:6px; border:1px solid #eee;">相似度</th><th style="padding:6px; border:1px solid #eee;">依据</th></tr>
+                        ${items.map(d => `<tr><td style="padding:6px; border:1px solid #eee;"><b>${esc(d.primary_tag)}</b></td><td style="padding:6px; border:1px solid #eee;">${esc(d.duplicate_tag)}</td><td style="padding:6px; border:1px solid #eee;">${(d.similarity * 100).toFixed(0)}%</td><td style="padding:6px; border:1px solid #eee;">${esc(d.evidence)}</td></tr>`).join('')}
+                    </table>`
+                    : '<p style="color:#15803d;">🎉 未发现明显重复标签</p>');
+                openModal('scanModal');
+            } catch (e) {
+                toast('扫描失败：' + e.message, true);
+            }
+        }
+
+        async function persistDuplicates() {
+            if (!confirm('将把本次扫描发现的重复标签全部转为「合并提案」进入审核队列，由管理员逐条确认后执行。确定继续？')) return;
+            try {
+                const r = await apiRequest('/tag-agent/duplicates/persist', { method: 'POST', body: JSON.stringify({}) });
+                toast(`已转 ${r.created} 条合并提案（扫描 ${r.scanned} 对，重复跳过）`);
+                closeModal('scanModal');
+                loadLibrary(1);
+            } catch (e) {
+                toast('转提案失败：' + e.message, true);
+            }
+        }
+
+        // ══════════ Tab2：题目标签审核 ══════════
+        async function loadQuestion(page = 1) {
+            qPage = page;
+            const st = document.getElementById('qStatus').value;
+            const params = new URLSearchParams({ page, size: PAGE_SIZE });
+            if (st) params.set('status', st);
+            let data;
+            try {
+                data = await apiRequest(`/tag-agent/question-proposals?${params.toString()}`);
+            } catch (e) {
+                toast('加载失败：' + e.message, true);
+                return;
+            }
+            const items = data.items || [];
+            sel.q.clear();
+            qItems = items;
+            const body = document.getElementById('qBody');
+            body.innerHTML = items.map(p => {
+                const stb = ST_LABEL[p.status] || [p.status, 'st-pending'];
+                const chain = [p.domain, p.grade, p.chapter, (p.sub_tags || []).join('、')].filter(Boolean).join(' / ') || '-';
+                return `<tr>
+                    <td><input type="checkbox" value="${esc(p.id)}" onchange="onSel('q', this)"></td>
+                    <td><div class="question-cell">${esc(p.question_text || '-')}</div><div class="meta">${fmtDate(p.created_at)}</div></td>
+                    <td><div class="tag-chain"><b>${esc(chain)}</b></div></td>
+                    <td>${p.confidence ? (p.confidence * 100).toFixed(0) + '%' : '-'}</td>
+                    <td><span class="st-badge ${stb[1]}">${stb[0]}</span></td>
+                    <td><button class="btn btn-primary btn-sm" onclick="openDetail('q','${esc(p.id)}')">查看详情</button></td>
+                </tr>`;
+            }).join('');
+            document.getElementById('qEmpty').style.display = items.length ? 'none' : '';
+            renderPagination('qPagination', data.total || 0, qPage, loadQuestion);
+            updateSelCount('q');
+        }
+
+        // ══════════ 分页 ══════════
+        function renderPagination(elId, total, page, loader) {
+            const el = document.getElementById(elId);
+            const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+            if (pages <= 1) { el.innerHTML = ''; return; }
+            let html = `<button class="btn btn-sm" ${page <= 1 ? 'disabled' : ''} onclick="${elId === 'libPagination' ? 'loadLibrary' : 'loadQuestion'}(${page - 1})">‹</button>`;
+            for (let i = 1; i <= pages; i++) {
+                if (pages > 9 && i > 2 && i < pages - 1 && Math.abs(i - page) > 1) {
+                    if (i === 3 || i === pages - 2) html += '<span style="padding:4px 8px;">…</span>';
+                    continue;
+                }
+                html += `<button class="btn btn-sm ${i === page ? 'btn-primary' : ''}" onclick="${elId === 'libPagination' ? 'loadLibrary' : 'loadQuestion'}(${i})">${i}</button>`;
+            }
+            html += `<button class="btn btn-sm" ${page >= pages ? 'disabled' : ''} onclick="${elId === 'libPagination' ? 'loadLibrary' : 'loadQuestion'}(${page + 1})">›</button>`;
+            el.innerHTML = html;
+        }
+
+        // ══════════ 智能体学习样本（闭环记录）══════════
+        let learnRows = [];   // 当前筛选后的全量样本（接口最大 200 条，一次拉取后客户端筛选/分页）
+        let learnPage = 1;
+        let learnSelected = new Set();  // 勾选中的学习记录 id（删除用）
+
+        function learnTypeLabel(t) {
+            const m = {
+                admin_correction: '人工修正（改标签）',
+                create_pending: '新建提案', create_pending_chain: '新建提案链',
+                extract_keyword: '提取关键词', propose_modify: '修改提案',
+                review_approve: '审核通过', review_modified: '修改后通过',
+                review_merge: '审核合并', review_reject: '审核驳回',
+                question_review_approve: '题目标签通过', question_review_modified: '题目标签修改后通过',
+                question_review_reject: '题目标签驳回',
+            };
+            return m[t] || t || '-';
+        }
+
+        async function loadLearning(page = 1) {
+            learnPage = page;
+            const type = document.getElementById('learnType').value;
+            let all;
+            try {
+                const d = await apiRequest('/tag-agent/learning-records?page=1&size=200');
+                all = d.items || [];
+            } catch (e) {
+                toast('学习样本加载失败：' + e.message, true);
+                return;
+            }
+            // 客户端筛选：支持前缀（如 create_pending 同时命中 create_pending_chain）
+            if (type) {
+                all = all.filter(r => r.action_type === type || String(r.action_type || '').startsWith(type + '_'));
+            }
+            learnRows = all;
+            renderLearn();
+        }
+
+        function renderLearn() {
+            const rows = learnRows || [];
+            const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+            if (learnPage > pages) learnPage = pages;
+            const slice = rows.slice((learnPage - 1) * PAGE_SIZE, learnPage * PAGE_SIZE);
+            document.getElementById('learnTotal').textContent = rows.length;
+            document.getElementById('learnEmpty').style.display = rows.length ? 'none' : '';
+            const body = document.getElementById('learnBody');
+            body.innerHTML = slice.map(r => {
+                const loc = [r.domain, r.grade, r.chapter].filter(Boolean).join(' / ') || '-';
+                const checked = learnSelected.has(r.id) ? 'checked' : '';
+                return `<tr>
+                    <td style="text-align:center;"><input type="checkbox" class="learn-chk" data-id="${esc(r.id)}" ${checked} onchange="onLearnRowCheck(this)" /></td>
+                    <td style="white-space:nowrap;">${fmtDate(r.created_at)}</td>
+                    <td>${esc(learnTypeLabel(r.action_type))}</td>
+                    <td>${esc(loc)}</td>
+                    <td><b>${esc(r.tag_name || '-')}</b></td>
+                    <td style="color:#666;">${esc(learnAgentBrief(r))}</td>
+                    <td style="color:#666;">${esc(learnAdminBrief(r))}</td>
+                    <td class="learn-op" style="white-space:normal;">
+                        <button class="btn btn-primary btn-sm" onclick="showLearnDetail('${esc(r.id)}')">查看</button>
+                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteLearn('${esc(r.id)}')">删除</button>
+                    </td>
+                </tr>`;
+            }).join('');
+            const pg = document.getElementById('learnPagination');
+            if (pages <= 1) { pg.innerHTML = ''; return; }
+            let html = `<button class="btn btn-sm" ${learnPage <= 1 ? 'disabled' : ''} onclick="loadLearning(${learnPage - 1})">‹</button>`;
+            for (let i = 1; i <= pages; i++) {
+                if (pages > 9 && i > 2 && i < pages - 1 && Math.abs(i - learnPage) > 1) {
+                    if (i === 3 || i === pages - 2) html += '<span style="padding:4px 8px;">…</span>';
+                    continue;
+                }
+                html += `<button class="btn btn-sm ${i === learnPage ? 'btn-primary' : ''}" onclick="loadLearning(${i})">${i}</button>`;
+            }
+            html += `<button class="btn btn-sm" ${learnPage >= pages ? 'disabled' : ''} onclick="loadLearning(${learnPage + 1})">›</button>`;
+            pg.innerHTML = html;
+        }
+
+        function learnAgentBrief(r) {
+            const a = r.agent_data || {};
+            if (r.action_type === 'admin_correction') {
+                const af = a.after && a.after.primary;
+                if (af) {
+                    const subs = (af.sub_tags || []).join('、');
+                    return '改后：' + [af.grade, af.main_tag].filter(Boolean).join('/') + (subs ? ' › ' + subs : '');
+                }
+                return '';
+            }
+            if (r.action_type === 'review_merge') return '合并至 ' + ((a.target || {}).tag || '');
+            if (a.confidence != null) return '置信度 ' + Math.round(a.confidence * 100) + '%';
+            return a.reason || a.operation || a.source || '';
+        }
+
+        function learnAdminBrief(r) {
+            const d = r.admin_data || {};
+            if (r.action_type === 'admin_correction') {
+                const nt = (d.new_tags && (d.new_tags.primary || d.new_tags.second)) || {};
+                const parts = [];
+                if (nt.new_main) parts.push(nt.new_main + (String(nt.new_main).indexOf('新章') >= 0 ? '' : '（新章）'));
+                for (const s of (nt.new_subs || [])) if (s) parts.push(s);
+                return parts.length ? '新标签：' + parts.join('、') : '已记录人工修正';
+            }
+            if (d.action === 'approve_modified') return '修改后通过';
+            if (d.action === 'approve') return '通过';
+            if (d.action === 'reject') return '驳回' + (d.note ? '：' + d.note : '');
+            return d.note || '';
+        }
+
+        function showLearnDetail(id) {
+            const r = (learnRows || []).find(x => x.id === id);
+            if (!r) { toast('样本不存在', true); return; }
+            const loc = [r.domain, r.grade, r.chapter].filter(Boolean).join(' / ') || '-';
+            const box = v => (v == null ? '<span style="color:#999;">—</span>'
+                : '<pre style="background:#f6f6f6;border:1px solid #eee;border-radius:6px;padding:8px;margin:2px 0;font-size:12px;white-space:pre-wrap;word-break:break-all;">'
+                + esc(typeof v === 'string' ? v : JSON.stringify(v, null, 2)) + '</pre>');
+            document.getElementById('learnBody_detail').innerHTML =
+                '<table style="width:100%;border-collapse:collapse;font-size:13px;">'
+                + '<tr><th style="text-align:left;vertical-align:top;padding:4px 8px;width:120px;color:#666;font-weight:normal;">时间</th><td style="padding:4px 8px;">' + fmtDate(r.created_at) + '</td></tr>'
+                + '<tr><th style="text-align:left;vertical-align:top;padding:4px 8px;color:#666;font-weight:normal;">行为类型</th><td style="padding:4px 8px;">' + esc(learnTypeLabel(r.action_type)) + '（' + esc(r.action_type) + '）</td></tr>'
+                + '<tr><th style="text-align:left;vertical-align:top;padding:4px 8px;color:#666;font-weight:normal;">题目 task_id</th><td style="padding:4px 8px;">' + esc(r.question_id || '-') + '</td></tr>'
+                + '<tr><th style="text-align:left;vertical-align:top;padding:4px 8px;color:#666;font-weight:normal;">知识域/年级/章</th><td style="padding:4px 8px;">' + esc(loc) + '</td></tr>'
+                + '<tr><th style="text-align:left;vertical-align:top;padding:4px 8px;color:#666;font-weight:normal;">标签</th><td style="padding:4px 8px;">' + esc(r.tag_name || '-') + '</td></tr>'
+                + '<tr><th style="text-align:left;vertical-align:top;padding:4px 8px;color:#666;font-weight:normal;">说明</th><td style="padding:4px 8px;">' + esc(r.note || '-') + '</td></tr>'
+                + '<tr><th style="text-align:left;vertical-align:top;padding:4px 8px;color:#666;font-weight:normal;">智能体输出 agent_data</th><td style="padding:4px 8px;">' + box(r.agent_data) + '</td></tr>'
+                + '<tr><th style="text-align:left;vertical-align:top;padding:4px 8px;color:#666;font-weight:normal;">管理员结果 admin_data</th><td style="padding:4px 8px;">' + box(r.admin_data) + '</td></tr>'
+                + '</table>';
+            openModal('learnModal');
+        }
+
+        // ── 学习样本：选择 & 删除（硬删除，落库） ──
+        let learnPendingDeleteIds = [];  // 待确认删除的 id 列表
+
+        function onLearnRowCheck(box) {
+            const id = box.getAttribute('data-id');
+            if (box.checked) learnSelected.add(id);
+            else learnSelected.delete(id);
+            updateLearnSelUI();
+        }
+
+        function toggleLearnSelectAll(master) {
+            document.querySelectorAll('#learnBody .learn-chk').forEach(b => {
+                b.checked = master.checked;
+                const id = b.getAttribute('data-id');
+                if (master.checked) learnSelected.add(id);
+                else learnSelected.delete(id);
+            });
+            updateLearnSelUI();
+        }
+
+        function updateLearnSelUI() {
+            const n = learnSelected.size;
+            const cnt = document.getElementById('learnSelCount');
+            if (cnt) cnt.textContent = n;
+            const btn = document.getElementById('learnDeleteBtn');
+            if (btn) btn.disabled = n === 0;
+            const boxes = Array.from(document.querySelectorAll('#learnBody .learn-chk'));
+            const master = document.getElementById('learnSelectAll');
+            if (master) master.checked = boxes.length > 0 && boxes.every(b => b.checked);
+        }
+
+        function confirmDeleteLearn(singleId) {
+            const ids = singleId ? [singleId] : Array.from(learnSelected);
+            if (!ids.length) { toast('请先勾选要删除的学习样本', true); return; }
+            learnPendingDeleteIds = ids;
+            document.getElementById('learnDeleteCount').textContent = ids.length;
+            openModal('learnDeleteModal');
+        }
+
+        async function deleteLearnConfirmed() {
+            const ids = learnPendingDeleteIds;
+            if (!ids || !ids.length) { closeModal('learnDeleteModal'); return; }
+            const okBtn = document.getElementById('learnDeleteOkBtn');
+            if (okBtn) { okBtn.disabled = true; okBtn.textContent = '删除中…'; }
+            try {
+                const d = await apiRequest('/tag-agent/learning-records', {
+                    method: 'DELETE',
+                    body: JSON.stringify({ ids }),
+                });
+                const deleted = (d && d.deleted) || ids.length;
+                toast('已删除 ' + deleted + ' 条学习样本');
+                learnSelected.clear();
+                closeModal('learnDeleteModal');
+                loadLearning(learnPage);
+            } catch (e) {
+                toast('删除失败：' + e.message, true);
+            } finally {
+                if (okBtn) { okBtn.disabled = false; okBtn.textContent = '确认删除'; }
+                updateLearnSelUI();
+            }
+        }
+
+        // ══════════ 阶段五：概览统计 ══════════
+        async function loadStats() {
+            try {
+                const s = await apiRequest('/tag-agent/stats');
+                const r = s.recognition || {}, p = s.pending_queue || {}, q = s.question_queue || {};
+                document.getElementById('stToday').textContent = r.today ?? '-';
+                document.getElementById('stTotal').textContent = r.total ?? '-';
+                document.getElementById('stConf').textContent = r.avg_confidence != null ? (r.avg_confidence * 100).toFixed(1) + '%' : '-';
+                document.getElementById('stPending').textContent = p.pending ?? '-';
+                document.getElementById('stApprove').textContent = p.approve_rate != null ? (p.approve_rate * 100).toFixed(1) + '%' : '-';
+                document.getElementById('stQPending').textContent = q.pending ?? '-';
+                document.getElementById('stLearn').textContent = s.learning_7d ?? '-';
+                document.getElementById('statsBar').style.display = '';
+            } catch (e) {
+                document.getElementById('statsBar').style.display = 'none';
+            }
+        }
+
+        // ══════════ Tab4：标签增强建议（P1.5）══════════
+        let enhItems = [];
+        let enhPage = 1;
+        const ENH_PAGE_SIZE = 20;
+
+        async function loadEnhance(page = 1) {
+            enhPage = page;
+            const st = document.getElementById('enhStatus').value;
+            const params = new URLSearchParams({ page, size: ENH_PAGE_SIZE });
+            if (st) params.set('status', st);
+            let data;
+            try {
+                data = await apiRequest(`/tag-agent/label-suggestions?${params.toString()}`);
+            } catch (e) {
+                toast('加载失败：' + e.message, true);
+                return;
+            }
+            const items = data.items || [];
+            enhItems = items;
+            const body = document.getElementById('enhBody');
+            body.innerHTML = items.map(s => {
+                const stb = ST_LABEL[s.status] || [s.status, 'st-pending'];
+                const oldT = (s.old_tags || []).join('、') || '-';
+                const cands = (s.candidates || []);
+                const narrow = cands.filter(c => c.too_narrow).length;
+                return `<tr>
+                    <td><div class="question-cell"><b>旧：</b>${esc(oldT)}</div>
+                        <div class="question-cell" style="margin-top:4px;"><b>来源题：</b>${esc((s.question_text || '-'))}</div></td>
+                    <td><div class="tag-chain"><b>${esc(s.new_tag)}</b></div>
+                        <div class="meta">${esc([s.new_tag_domain, s.new_tag_grade, s.new_tag_chapter].filter(Boolean).join(' / '))}</div></td>
+                    <td>${cands.length} 条${narrow ? ` <span style="color:#b45309;">(${narrow} 疑似过窄)</span>` : ''}</td>
+                    <td><span class="st-badge ${stb[1]}">${stb[0]}</span></td>
+                    <td><button class="btn btn-primary btn-sm" onclick="openEnhanceDetail('${esc(s.id)}')">查看详情</button></td>
+                </tr>`;
+            }).join('');
+            document.getElementById('enhEmpty').style.display = items.length ? 'none' : '';
+            renderEnhancePagination(data.total || 0, enhPage);
+        }
+
+        function renderEnhancePagination(total, page) {
+            const el = document.getElementById('enhPagination');
+            const pages = Math.max(1, Math.ceil(total / ENH_PAGE_SIZE));
+            if (pages <= 1) { el.innerHTML = ''; return; }
+            let html = `<button class="btn btn-sm" ${page <= 1 ? 'disabled' : ''} onclick="loadEnhance(${page - 1})">‹</button>`;
+            for (let i = 1; i <= pages; i++) {
+                if (pages > 9 && i > 2 && i < pages - 1 && Math.abs(i - page) > 1) {
+                    if (i === 3 || i === pages - 2) html += '<span style="padding:4px 8px;">…</span>';
+                    continue;
+                }
+                html += `<button class="btn btn-sm ${i === page ? 'btn-primary' : ''}" onclick="loadEnhance(${i})">${i}</button>`;
+            }
+            html += `<button class="btn btn-sm" ${page >= pages ? 'disabled' : ''} onclick="loadEnhance(${page + 1})">›</button>`;
+            el.innerHTML = html;
+        }
+
+        function openEnhanceDetail(id) {
+            const s = (enhItems || []).find(x => x.id === id);
+            if (!s) { toast('建议不存在', true); return; }
+            detailCtx = { kind: 'enhance', data: s };
+            document.getElementById('detailTitle').textContent = '标签增强建议详情';
+            document.getElementById('detailBody').innerHTML = enhanceDetailBody(s);
+            document.getElementById('detailActions').innerHTML = enhanceActionArea(s);
+            document.getElementById('detailReason').value = '';
+            document.getElementById('detailReasonWrap').style.display = 'none';
+            document.getElementById('detailPrimary').style.display = 'flex';
+            openModal('detailModal');
+        }
+
+        function enhanceDetailBody(s) {
+            const st = ST_LABEL[s.status] || [s.status, 'st-pending'];
+            const oldT = (s.old_tags || []).join('、') || '-';
+            const cands = (s.candidates || []);
+            let h = `<div class="detail-grid">`;
+            h += detailRow('来源题', `<div class="question-cell" style="max-width:none;">${window.renderMathText ? window.renderMathText(s.question_text || '-') : esc(s.question_text || '-')}</div>`);
+            h += detailRow('改前标签', esc(oldT));
+            h += detailRow('新标签 B', `<b>${esc(s.new_tag)}</b>`);
+            h += detailRow('层级', esc([s.new_tag_domain, s.new_tag_grade, s.new_tag_chapter].filter(Boolean).join(' / ') || '-'));
+            h += detailRow('当前状态', `<span class="st-badge ${st[1]}">${st[0]}</span>`);
+            if (s.reject_reason) h += detailRow('驳回原因', `<span style="color:#b91c1c;">${esc(s.reject_reason)}</span>`);
+            h += detailRow('审核人', esc(s.reviewed_by || '-'));
+            h += detailRow('审核时间', fmtDate(s.reviewed_at));
+            h += `</div>`;
+            // 候选判词（带勾选 + 干跑命中）
+            h += `<div style="margin-top:14px;"><div class="kv" style="margin-bottom:6px;">候选强关键词（勾选即通过时并入词库）</div>`;
+            if (!cands.length) {
+                h += `<div style="color:#999; font-size:13px;">无候选判词</div>`;
+            } else {
+                cands.forEach((c, i) => {
+                    const checked = c.too_narrow ? '' : 'checked';
+                    const narrowBadge = c.too_narrow ? ` <span style="color:#b45309; font-size:12px;">（疑似过窄·默认不勾选）</span>` : '';
+                    const hitTxt = (c.hit_samples && c.hit_samples.length)
+                        ? `干跑命中 ${c.hits} 道同类题，如：“${esc(c.hit_samples[0])}”`
+                        : `干跑 0 命中同类题${narrowBadge}`;
+                    h += `<div style="border:1px solid #eee; border-radius:8px; padding:8px 10px; margin-bottom:8px;">
+                        <label style="display:flex; gap:8px; align-items:flex-start; cursor:pointer;">
+                            <input type="checkbox" class="enh-kw" data-kw="${esc(c.keyword)}" ${checked} style="margin-top:3px;">
+                            <span><b>${esc(c.keyword)}</b>${narrowBadge}<br>
+                            <span style="color:#666; font-size:12px;">理由：${esc(c.reason || '-')}</span><br>
+                            <span style="color:#15803d; font-size:12px;">${esc(hitTxt)}</span></span>
+                        </label>
+                    </div>`;
+                });
+            }
+            h += `</div>`;
+            h += reviewHistoryHtml(s.review_history);
+            return h;
+        }
+
+        function enhanceActionArea(s) {
+            const id = s.id;
+            let primary = '';
+            if (s.status === 'pending') {
+                primary += btn('btn-success', '通过', `enhSubmit('approve')`);
+                primary += btn('btn-danger', '驳回', `enhShowReason()`);
+            } else {
+                const cur = ST_LABEL[s.status] ? ST_LABEL[s.status][0] : s.status;
+                const cls = ST_LABEL[s.status] ? ST_LABEL[s.status][1] : '';
+                primary += `<span class="meta" style="margin-right:auto; align-self:center;">当前结果：<span class="st-badge ${cls}">${cur}</span></span>`;
+                primary += btn('btn-success', '改为通过', `enhSubmit('approve')`);
+                primary += btn('btn-danger', '改为驳回', `enhShowReason()`);
+            }
+            return `<div id="detailPrimary" style="display:flex; gap:8px; flex-wrap:wrap; width:100%; justify-content:flex-end;">${primary}</div>`
+                + `<div id="detailReasonWrap" style="display:none; width:100%;">`
+                + `<label style="font-size:13px; font-weight:bold; color:#b91c1c;">驳回原因（必填，便于智能体学习为什么被驳回）</label>`
+                + `<textarea id="detailReason" rows="3" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px; margin-top:6px; box-sizing:border-box;"></textarea>`
+                + `<div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;">`
+                + `<button class="btn btn-sm" onclick="hideDetailReason()">取消</button>`
+                + `<button class="btn btn-danger btn-sm" onclick="enhConfirmReject()">确认驳回</button>`
+                + `</div></div>`;
+        }
+
+        function enhShowReason() {
+            document.getElementById('detailPrimary').style.display = 'none';
+            document.getElementById('detailReasonWrap').style.display = 'block';
+            document.getElementById('detailReason').focus();
+        }
+
+        async function enhSubmit(action) {
+            const s = detailCtx && detailCtx.data;
+            if (!s) return;
+            const id = s.id;
+            const body = { action, admin_note: '', reject_reason: '' };
+            if (action === 'approve') {
+                const checked = Array.from(document.querySelectorAll('#detailModal .enh-kw:checked'))
+                    .map(c => c.getAttribute('data-kw'));
+                body.approved_keywords = checked;
+            } else {
+                const reason = (document.getElementById('detailReason').value || '').trim();
+                if (!reason) { toast('请填写驳回原因', true); return; }
+                body.reject_reason = reason;
+            }
+            try {
+                const r = await apiRequest(`/tag-agent/label-suggestions/${id}/review`, {
+                    method: 'POST', body: JSON.stringify(body),
+                });
+                toast(`操作成功（${r.status}）` + (action === 'approve' ? `，并入 ${r.applied_keywords ? r.applied_keywords.length : 0} 条判词` : ''));
+                closeModal('detailModal');
+                loadEnhance(enhPage);
+            } catch (e) {
+                toast('操作失败：' + e.message, true);
+            }
+        }
+
+        function enhConfirmReject() {
+            const reason = (document.getElementById('detailReason').value || '').trim();
+            if (!reason) { toast('请填写驳回原因', true); return; }
+            enhSubmit('reject');
+        }
+
+        // ══════════ 初始化 ══════════
+        loadStats();
+        loadLibrary(1);
+        // ══════════ Tab5：相似题复用建议（P3）══════════
+        let reuseItems = [];
+        let reusePage = 1;
+        const REUSE_PAGE_SIZE = 20;
+
+        async function loadReuse(page = 1) {
+            reusePage = page;
+            const st = document.getElementById('reuseStatus').value;
+            const params = new URLSearchParams({ page, size: REUSE_PAGE_SIZE });
+            if (st) params.set('status', st);
+            let data;
+            try {
+                data = await apiRequest(`/tag-agent/reuse-suggestions?${params.toString()}`);
+            } catch (e) {
+                toast('加载失败：' + e.message, true);
+                return;
+            }
+            const items = data.items || [];
+            reuseItems = items;
+            const body = document.getElementById('reuseBody');
+            body.innerHTML = items.map(s => {
+                const stb = ST_LABEL[s.status] || [s.status, 'st-pending'];
+                const slots = (s.slot_map || []).map(x => `${esc(x.label || x.slot)}→${esc(x.new_value)}`).join('，') || '-';
+                return `<tr data-page-node-id="5KTTAIFQ880DaADi8plQ2B">
+                    <td data-page-node-id="edjxGAzx5gOQSsVH79tC2X"><div class="question-cell" data-page-node-id="o6W3boWB9S2ZhPBxlJfEGo"><b data-page-node-id="AGQEt88iXKz4x1AYr99FVB">标题：</b>${esc(s.title || '-')}</div>
+                        <div class="question-cell" style="margin-top:4px;" data-page-node-id="SsUHlYbMATOpqdXKQeMKoX">${esc((s.question_text || '-'))}</div></td>
+                    <td data-page-node-id="wVYkF8OeSAPb43eABY6ntR"><div class="question-cell" data-page-node-id="I9M4JrpX44x0Sr3LtbNAOT"><b data-page-node-id="agB0FSDT19EKVCD000C9em">模板：</b>${esc(s.template_title || '-')}</div>
+                        <div class="meta" data-page-node-id="s3pLuD3bAuHeEoog68JnSM">task_id：${esc(s.template_task_id || '-')}</div></td>
+                    <td data-page-node-id="ELJS0AvIkfCHrymwT18Htd"><div class="question-cell" data-page-node-id="a38JLSEyeiWZfGPuOl9tDa">${esc(s.reason || '-')}</div>
+                        <div class="meta" style="margin-top:4px;" data-page-node-id="VBwvkuaE37LYNGENJhFmW6">数据槽：${esc(slots)}</div></td>
+                    <td data-page-node-id="ld3EVPTaKxlOFwwgwMMJsD">${(s.confidence || 0).toFixed(2)}</td>
+                    <td data-page-node-id="iqGyH7e9QtfyxrWkBYdwYW"><span class="st-badge ${stb[1]}" data-page-node-id="I04Oct1ZzyFH0DpjZOSOak">${stb[0]}</span></td>
+                    <td data-page-node-id="7acl1HB4IFBFjafipRNXni"><button class="btn btn-primary btn-sm" onclick="openReuseDetail('${esc(s.id)}')" data-page-node-id="PAI90iNjNcET8tKfyfFiC4">查看详情</button></td>
+                </tr>`;
+            }).join('');
+            document.getElementById('reuseEmpty').style.display = items.length ? 'none' : '';
+            renderReusePagination(data.total || 0, reusePage);
+        }
+
+        function renderReusePagination(total, page) {
+            const el = document.getElementById('reusePagination');
+            const pages = Math.max(1, Math.ceil(total / REUSE_PAGE_SIZE));
+            if (pages <= 1) { el.innerHTML = ''; return; }
+            let html = `<button class="btn btn-sm" ${page <= 1 ? 'disabled' : ''} onclick="loadReuse(${page - 1})" data-page-node-id="v5ev0pINeoBSuovUrlvAeB">‹</button>`;
+            for (let i = 1; i <= pages; i++) {
+                if (pages > 9 && i > 2 && i < pages - 1 && Math.abs(i - page) > 1) {
+                    if (i === 3 || i === pages - 2) html += '<span style="padding:4px 8px;" data-page-node-id="aiFYflsVogj1pqIA2lBKGS">…</span>';
+                    continue;
+                }
+                html += `<button class="btn btn-sm ${i === page ? 'btn-primary' : ''}" onclick="loadReuse(${i})" data-page-node-id="waVkqwwd8kSL520Jl6IVfj">${i}</button>`;
+            }
+            html += `<button class="btn btn-sm" ${page >= pages ? 'disabled' : ''} onclick="loadReuse(${page + 1})">›</button>`;
+            el.innerHTML = html;
+        }
+
+        function openReuseDetail(id) {
+            const s = (reuseItems || []).find(x => x.id === id);
+            if (!s) { toast('建议不存在', true); return; }
+            detailCtx = { kind: 'reuse', data: s };
+            document.getElementById('detailTitle').textContent = '相似题复用建议详情';
+            document.getElementById('detailBody').innerHTML = reuseDetailBody(s);
+            document.getElementById('detailActions').innerHTML = reuseActionArea(s);
+            document.getElementById('detailReason').value = '';
+            document.getElementById('detailReasonWrap').style.display = 'none';
+            document.getElementById('detailPrimary').style.display = 'flex';
+            openModal('detailModal');
+        }
+
+        function reuseDetailBody(s) {
+            const st = ST_LABEL[s.status] || [s.status, 'st-pending'];
+            let h = `<div class="detail-grid" data-page-node-id="pXIJFupWwD7v2dBixnPqGs">`;
+            h += detailRow('新题', `<div class="question-cell" style="max-width:none;" data-page-node-id="is5yYT8YpZRBGbrHBbZwaX">${window.renderMathText ? window.renderMathText(s.question_text || '-') : esc(s.question_text || '-')}</div>`);
+            h += detailRow('新题标题', esc(s.title || '-'));
+            h += detailRow('模板题', `<b data-page-node-id="X3vOqTA7IuBnwke4RASIsB">${esc(s.template_title || '-')}</b><div class="meta" data-page-node-id="sMjU0x16f91UElpBOi2ptN">task_id：${esc(s.template_task_id || '-')}</div>`);
+            h += detailRow('解法指纹', esc(s.method_signature || '-'));
+            h += detailRow('置信度', (s.confidence || 0).toFixed(2));
+            h += detailRow('命中理由', esc(s.reason || '-'));
+            h += detailRow('当前状态', `<span class="st-badge ${st[1]}" data-page-node-id="pu9yqhPtXPnkuoVbUkyjOW">${st[0]}</span>`);
+            if (s.reject_reason) h += detailRow('驳回原因', `<span style="color:#b91c1c;" data-page-node-id="CKjB0pBevojgZX60hmdQGu">${esc(s.reject_reason)}</span>`);
+            h += detailRow('审核人', esc(s.reviewed_by || '-'));
+            h += detailRow('审核时间', fmtDate(s.reviewed_at));
+            h += `</div>`;
+            const slots = (s.slot_map || []);
+            h += `<div style="margin-top:14px;" data-page-node-id="cy9Zc1aKBIoPG2y4W8SS4Y"><div class="kv" style="margin-bottom:6px;" data-page-node-id="mIicfAdSgb99tHj6fLdrA4">数据槽映射（模板占位符 → 新题数值）</div>`;
+            if (!slots.length) h += `<div style="color:#999; font-size:13px;" data-page-node-id="IRA8FfyooTN1OYPHlecO4Z">无数据槽</div>`;
+            else slots.forEach(x => {
+                h += `<div style="border:1px solid #eee; border-radius:8px; padding:8px 10px; margin-bottom:6px;" data-page-node-id="JnB6vbWGmz8lZowzt18LvR">
+                    <b data-page-node-id="1GqsqxCss3I2tzezJkKzlx">${esc(x.label || x.slot)}</b>（${esc(x.slot)}） → <span style="color:#2f5fde;" data-page-node-id="oMEH995onALEIaK8ritNXb">${esc(x.new_value)}</span></div>`;
+            });
+            h += `</div>`;
+            h += reviewHistoryHtml(s.review_history);
+            return h;
+        }
+
+        function reuseActionArea(s) {
+            const id = s.id;
+            let primary = '';
+            if (s.status === 'pending') {
+                primary += btn('btn-success', '采用复用', `reuseSubmit('approve')`);
+                primary += btn('btn-danger', '驳回', `reuseShowReason()`);
+            } else {
+                const cur = ST_LABEL[s.status] ? ST_LABEL[s.status][0] : s.status;
+                const cls = ST_LABEL[s.status] ? ST_LABEL[s.status][1] : '';
+                primary += `<span class="meta" style="margin-right:auto; align-self:center;" data-page-node-id="Icq8JMzOu24IHA5ZE137XA">当前结果：<span class="st-badge ${cls}" data-page-node-id="1XNAsCPekrUQ5n59qoprVu">${cur}</span></span>`;
+                primary += btn('btn-success', '改为采用', `reuseSubmit('approve')`);
+                primary += btn('btn-danger', '改为驳回', `reuseShowReason()`);
+            }
+            return `<div id="detailPrimary" style="display:flex; gap:8px; flex-wrap:wrap; width:100%; justify-content:flex-end;" data-page-node-id="ijGjtzeVBcHY1EqA70rB27">${primary}</div>`
+                + `<div id="detailReasonWrap" style="display:none; width:100%;" data-page-node-id="NHelxnIRYux60ugFHXv6sr">`
+                + `<label style="font-size:13px; font-weight:bold; color:#b91c1c;" data-page-node-id="jkPaCbec0XBp4wtjrsu7e4">驳回原因（必填，便于智能体学习为什么被驳回）</label>`
+                + `<textarea id="detailReason" rows="3" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px; margin-top:6px; box-sizing:border-box;"></textarea>`
+                + `<div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;" data-page-node-id="i7DJ86p9m3M4OyxZKQ9SBR">`
+                + `<button class="btn btn-sm" onclick="hideDetailReason()" data-page-node-id="mWtf1dY3kpTmNoY75dMxrr">取消</button>`
+                + `<button class="btn btn-danger btn-sm" onclick="reuseConfirmReject()" data-page-node-id="HAau3GR0r07FB4HgEt5pyD">确认驳回</button>`
+                + `</div></div>`;
+        }
+
+        function reuseShowReason() {
+            document.getElementById('detailPrimary').style.display = 'none';
+            document.getElementById('detailReasonWrap').style.display = 'block';
+            document.getElementById('detailReason').focus();
+        }
+
+        async function reuseSubmit(action) {
+            const s = detailCtx && detailCtx.data;
+            if (!s) return;
+            const id = s.id;
+            const body = { action, admin_note: '', reject_reason: '' };
+            if (action === 'reject') {
+                const reason = (document.getElementById('detailReason').value || '').trim();
+                if (!reason) { toast('请填写驳回原因', true); return; }
+                body.reject_reason = reason;
+            }
+            try {
+                const r = await apiRequest(`/tag-agent/reuse-suggestions/${id}/review`, {
+                    method: 'POST', body: JSON.stringify(body),
+                });
+                toast(`操作成功（${r.status}）` + (action === 'approve' ? '，已用模板骨架渲染复用产物' : ''));
+                closeModal('detailModal');
+                loadReuse(reusePage);
+            } catch (e) {
+                toast('操作失败：' + e.message, true);
+            }
+        }
+
+        function reuseConfirmReject() {
+            const reason = (document.getElementById('detailReason').value || '').trim();
+            if (!reason) { toast('请填写驳回原因', true); return; }
+            reuseSubmit('reject');
+        }
+
+        // ══════════ Tab6：题型提示词沉淀（P3 §10.9）══════════
+        let patternItems = [];
+        let patternPage = 1;
+        const PATTERN_PAGE_SIZE = 20;
+
+        async function loadPattern(page = 1) {
+            patternPage = page;
+            const st = document.getElementById('patternStatus').value;
+            const params = new URLSearchParams({ page, size: PATTERN_PAGE_SIZE });
+            if (st) params.set('status', st);
+            let data;
+            try {
+                data = await apiRequest(`/tag-agent/pattern-suggestions?${params.toString()}`);
+            } catch (e) {
+                toast('加载失败：' + e.message, true);
+                return;
+            }
+            const items = data.items || [];
+            patternItems = items;
+            const body = document.getElementById('patternBody');
+            body.innerHTML = items.map(s => {
+                const stb = ST_LABEL[s.status] || [s.status, 'st-pending'];
+                return `<tr data-page-node-id="Fy3idKLOmvVoqq8hH4zEJF">
+                    <td data-page-node-id="4cmHzpHTVdvyn1m9tHFJWw"><div class="question-cell" data-page-node-id="jXLodeWhj5XlMyLPLiXxzL"><b data-page-node-id="7CxJEUx8Ax7Aj7dAu1uOk8">${esc(s.method_signature || '-')}</b></div></td>
+                    <td data-page-node-id="rbAfYEcwMGXbBtBo0RphQK">${esc(s.question_type_hint || '-')}</td>
+                    <td data-page-node-id="WvnAAQigQoguBQKCRKGNAm"><span class="st-badge ${stb[1]}" data-page-node-id="XaPtgflQxdcr8QcFhvb92o">${stb[0]}</span></td>
+                    <td data-page-node-id="XDbprrDFU2keIdJOUCfhIe"><button class="btn btn-primary btn-sm" onclick="openPatternDetail('${esc(s.id)}')" data-page-node-id="GWAw9KRoBJU8GqQtM1PwwS">查看草稿</button></td>
+                </tr>`;
+            }).join('');
+            document.getElementById('patternEmpty').style.display = items.length ? 'none' : '';
+            renderPatternPagination(data.total || 0, patternPage);
+        }
+
+        function renderPatternPagination(total, page) {
+            const el = document.getElementById('patternPagination');
+            const pages = Math.max(1, Math.ceil(total / PATTERN_PAGE_SIZE));
+            if (pages <= 1) { el.innerHTML = ''; return; }
+            let html = `<button class="btn btn-sm" ${page <= 1 ? 'disabled' : ''} onclick="loadPattern(${page - 1})" data-page-node-id="clV8DlCATonMmkvYmH5bGq">‹</button>`;
+            for (let i = 1; i <= pages; i++) {
+                if (pages > 9 && i > 2 && i < pages - 1 && Math.abs(i - page) > 1) {
+                    if (i === 3 || i === pages - 2) html += '<span style="padding:4px 8px;" data-page-node-id="CZLNJSGX462rwzZsTyaZ8X">…</span>';
+                    continue;
+                }
+                html += `<button class="btn btn-sm ${i === page ? 'btn-primary' : ''}" onclick="loadPattern(${i})" data-page-node-id="9pFvFMdHFQLlTUKAtqqWMR">${i}</button>`;
+            }
+            html += `<button class="btn btn-sm" ${page >= pages ? 'disabled' : ''} onclick="loadPattern(${page + 1})">›</button>`;
+            el.innerHTML = html;
+        }
+
+        function openPatternDetail(id) {
+            const s = (patternItems || []).find(x => x.id === id);
+            if (!s) { toast('草稿不存在', true); return; }
+            detailCtx = { kind: 'pattern', data: s };
+            document.getElementById('detailTitle').textContent = '题型提示词草稿详情';
+            document.getElementById('detailBody').innerHTML = patternDetailBody(s);
+            document.getElementById('detailActions').innerHTML = patternActionArea(s);
+            document.getElementById('detailReason').value = '';
+            document.getElementById('detailReasonWrap').style.display = 'none';
+            document.getElementById('detailPrimary').style.display = 'flex';
+            openModal('detailModal');
+        }
+
+        function patternDetailBody(s) {
+            const st = ST_LABEL[s.status] || [s.status, 'st-pending'];
+            let h = `<div class="detail-grid" data-page-node-id="aDUYTv2rx6MOiOqB5jPct3">`;
+            h += detailRow('解法指纹', esc(s.method_signature || '-'));
+            h += detailRow('触发词提示', esc(s.question_type_hint || '-'));
+            h += detailRow('最佳产物来源', esc(s.source_task_id || '-'));
+            h += detailRow('当前状态', `<span class="st-badge ${st[1]}" data-page-node-id="vnR0D6h8HRy9MTDj02WnJ4">${st[0]}</span>`);
+            if (s.reject_reason) h += detailRow('驳回原因', `<span style="color:#b91c1c;" data-page-node-id="POm8XVtx3kSj1C60EwH54W">${esc(s.reject_reason)}</span>`);
+            h += detailRow('审核人', esc(s.reviewed_by || '-'));
+            h += detailRow('审核时间', fmtDate(s.reviewed_at));
+            h += `</div>`;
+            h += `<div style="margin-top:14px;" data-page-node-id="K7L7ilx28ThxHXcArVEQDi"><div class="kv" style="margin-bottom:6px;" data-page-node-id="DtwFrKLHBmGxhc6n7niEnB">题型提示词草稿（Markdown）</div>`;
+            h += `<pre style="white-space:pre-wrap; word-break:break-word; background:#fafafa; border:1px solid #eee; border-radius:8px; padding:12px; font-size:12px; max-height:320px; overflow:auto;" data-page-node-id="l4v18Y4VRCSgHoshHH35xg">${esc(s.draft_markdown || '-')}</pre>`;
+            h += `</div>`;
+            h += reviewHistoryHtml(s.review_history);
+            return h;
+        }
+
+        function patternActionArea(s) {
+            const id = s.id;
+            let primary = '';
+            if (s.status === 'pending') {
+                primary += btn('btn-success', '通过并写入', `patternSubmit('approve')`);
+                primary += btn('btn-danger', '驳回', `patternShowReason()`);
+            } else {
+                const cur = ST_LABEL[s.status] ? ST_LABEL[s.status][0] : s.status;
+                const cls = ST_LABEL[s.status] ? ST_LABEL[s.status][1] : '';
+                primary += `<span class="meta" style="margin-right:auto; align-self:center;" data-page-node-id="d1RBzdWh9D7HoWZNByrLYE">当前结果：<span class="st-badge ${cls}" data-page-node-id="Mf6VwiJqTxaCIiKr9pGVLR">${cur}</span></span>`;
+                primary += btn('btn-success', '改为通过', `patternSubmit('approve')`);
+                primary += btn('btn-danger', '改为驳回', `patternShowReason()`);
+            }
+            return `<div id="detailPrimary" style="display:flex; gap:8px; flex-wrap:wrap; width:100%; justify-content:flex-end;" data-page-node-id="qrhpBFSEsmzDn6EEl4KsRA">${primary}</div>`
+                + `<div id="detailReasonWrap" style="display:none; width:100%;" data-page-node-id="j3X3wKOeFNKIbI6zjpEhjz">`
+                + `<label style="font-size:13px; font-weight:bold; color:#b91c1c;" data-page-node-id="BVRsoGWOzaZEDA9GfS9uKm">驳回原因（必填）</label>`
+                + `<textarea id="detailReason" rows="3" style="width:100%; padding:8px; border:1px solid #d9d9d9; border-radius:6px; margin-top:6px; box-sizing:border-box;"></textarea>`
+                + `<div style="display:flex; gap:8px; justify-content:flex-end; margin-top:8px;" data-page-node-id="UAHHbFMHgNjq0LDjJou11s">`
+                + `<button class="btn btn-sm" onclick="hideDetailReason()" data-page-node-id="ovPuuhEDaDoTVyMvwTmU2R">取消</button>`
+                + `<button class="btn btn-danger btn-sm" onclick="patternConfirmReject()" data-page-node-id="cWOnHy6Z10nHVRufW6zg5O">确认驳回</button>`
+                + `</div></div>`;
+        }
+
+        function patternShowReason() {
+            document.getElementById('detailPrimary').style.display = 'none';
+            document.getElementById('detailReasonWrap').style.display = 'block';
+            document.getElementById('detailReason').focus();
+        }
+
+        async function patternSubmit(action) {
+            const s = detailCtx && detailCtx.data;
+            if (!s) return;
+            const id = s.id;
+            const body = { action, admin_note: '', reject_reason: '' };
+            if (action === 'reject') {
+                const reason = (document.getElementById('detailReason').value || '').trim();
+                if (!reason) { toast('请填写驳回原因', true); return; }
+                body.reject_reason = reason;
+            }
+            try {
+                const r = await apiRequest(`/tag-agent/pattern-suggestions/${id}/review`, {
+                    method: 'POST', body: JSON.stringify(body),
+                });
+                toast(`操作成功（${r.status}）` + (action === 'approve' ? `，已写入 ${r.written_path || 'scene_patterns'}` : ''));
+                closeModal('detailModal');
+                loadPattern(patternPage);
+            } catch (e) {
+                toast('操作失败：' + e.message, true);
+            }
+        }
+
+        function patternConfirmReject() {
+            const reason = (document.getElementById('detailReason').value || '').trim();
+            if (!reason) { toast('请填写驳回原因', true); return; }
+            patternSubmit('reject');
+        }
+
+    </script>
+</body>
+</html>

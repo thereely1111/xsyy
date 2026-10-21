@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七种数学美学装饰卡汇总</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/webp" href="/xsyy-logo.webp">
+    <style>
+        :root {
+            /* 全局配色变量 */
+            --bg-page: #f5f2ea;      /* 米色底 */
+            --card-bg: #ffffff;      /* 卡片白 */
+            --ink: #2c2c2c;          /* 墨色 */
+            --red: #b84e46;          /* 砖红/印章红 */
+            --blue: #5e7987;         /* 黛蓝 */
+            --green: #6b826b;        /* 柳染 */
+            --yellow: #e6b450;       /* 姜黄 */
+            --wood: #a88462;         /* 檀木色 */
+            --shadow: 0 8px 24px rgba(140, 130, 120, 0.12); /* 柔和阴影 */
+        }
+
+        body {
+            background-color: var(--bg-page);
+            font-family: "Noto Serif SC", serif; /* 衬线体更具书卷气 */
+            padding: 40px;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--ink);
+            font-weight: normal;
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+        }
+
+        /* 画廊网格布局 (仅用于展示) */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- 卡片基础样式 --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            cursor: default;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* =======================================================
+           1. 黄金螺旋 (The Golden Ratio) - 几何美学
+           ======================================================= */
+        .art-golden-ratio {
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .art-golden-ratio svg {
+            width: 75%;
+            height: auto;
+        }
+        .gr-label {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            font-family: "Times New Roman", serif;
+            font-style: italic;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* =======================================================
+           2. 七巧板 (The Tangram) - 传统智慧
+           ======================================================= */
+        .art-tangram {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        /* 背景装饰圆 */
+        .art-tangram::before {
+            content: '';
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background: #fdf6ec; 
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .art-tangram svg {
+            z-index: 1;
+            width: 100px;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.05));
+        }
+
+        /* =======================================================
+           3. 正弦波 (The Sine Wave) - 抽象极简 (去框感)
+           ======================================================= */
+        .art-wave {
+            height: 160px;
+            background: transparent; /* 透明背景 */
+            box-shadow: none;        /* 无阴影 */
+            border: 2px dashed rgba(0,0,0,0.08); /* 虚线框 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .art-wave svg {
+            width: 100%;
+            height: 60px;
+            fill: none;
+            stroke: var(--ink);
+            stroke-width: 1.5;
+        }
+
+        /* =======================================================
+           4. 算盘 (The Abacus) - 文化符号
+           ======================================================= */
+        .art-abacus {
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 30px;
+        }
+        .abacus-rod {
+            height: 2px;
+            background: #e0e0e0;
+            margin: 18px 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .bead {
+            width: 24px;
+            height: 16px;
+            background: var(--wood);
+            border-radius: 8px;
+            box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
+        }
+        .bead.active {
+            transform: translateY(-5px); /* 拨上去的珠子 */
+            background: var(--red);      /* 强调色 */
+        }
+        /* 算盘边框装饰 */
+        .art-abacus::before, .art-abacus::after {
+            content:''; position:absolute; top:25px; bottom:25px; width:4px; background:#f0f0f0; border-radius:2px;
+        }
+        .art-abacus::before { left:15px; }
+        .art-abacus::after { right:15px; }
+
+        /* =======================================================
+           5. 维恩图 (The Venn Diagram) - 逻辑集合
+           ======================================================= */
+        .art-venn {
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .venn-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            position: absolute;
+            mix-blend-mode: multiply; /* 色彩叠加混合 */
+        }
+        .vc-1 { background-color: #a4c2f4; left: 75px; top: 50px; opacity: 0.8; }
+        .vc-2 { background-color: #ea9999; right: 75px; top: 50px; opacity: 0.8; }
+        .vc-3 { background-color: #ffe599; bottom: 45px; opacity: 0.8; }
+        .venn-label {
+            position: absolute; bottom: 15px; font-size: 12px; color: #ccc; letter-spacing: 2px;
+        }
+
+        /* =======================================================
+           6. 空间几何 (Wireframe Geometry) - 空间想象
+           ======================================================= */
+        .art-geometry {
+            height: 200px;
+            background: #fcfcfc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .art-geometry svg {
+            width: 110px;
+            height: 110px;
+            stroke: var(--blue);
+            stroke-width: 1.2;
+            fill: none;
+            stroke-linejoin: round;
+        }
+        .dashed { stroke-dasharray: 4, 3; opacity: 0.4; }
+
+        /* =======================================================
+           7. 正态分布 (Normal Distribution) - 统计规律
+           ======================================================= */
+        .art-stats {
+            height: 160px;
+            /* 点阵背景 */
+            background-image: radial-gradient(#ddd 1.5px, transparent 1.5px);
+            background-size: 16px 16px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 20px;
+        }
+        .art-stats svg {
+            width: 85%;
+            height: 80px;
+            overflow: visible;
+        }
+        .stat-area { fill: rgba(184, 78, 70, 0.08); }
+        .stat-line { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+        .stat-axis { stroke: #ccc; stroke-dasharray: 3,3; stroke-width: 1; }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            .gallery-grid {
+                gap: 20px;
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            /* 适当调整在单列情况下的卡片高度或显示效果（保持原有比例即可） */
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>纯插画装饰卡片库</h1>
+
+    <div class="gallery-grid">
+
+        <!-- 1. 黄金螺旋 -->
+        <div class="card art-golden-ratio">
+            <svg viewBox="0 0 100 65">
+                <rect x="0.5" y="0.5" width="99" height="64" fill="none" stroke="#e0e0e0" stroke-width="0.5"/>
+                <rect x="0.5" y="0.5" width="64" height="64" fill="#fafafa" stroke="#eee" stroke-width="0.5"/>
+                <!-- 螺旋线 -->
+                <path d="M64.5 64.5 A 64 64 0 0 1 0.5 0.5" fill="none" stroke="#b84e46" stroke-width="1"/>
+                <path d="M64.5 64.5 A 25 25 0 0 1 89.5 39.5" fill="none" stroke="#333" stroke-width="0.5" opacity="0.4"/>
+                <path d="M89.5 39.5 A 15 15 0 0 1 74.5 24.5" fill="none" stroke="#333" stroke-width="0.5" opacity="0.4"/>
+                <path d="M74.5 24.5 A 9 9 0 0 1 65.5 33.5" fill="none" stroke="#333" stroke-width="0.5" opacity="0.4"/>
+            </svg>
+            <span class="gr-label">Golden Ratio</span>
+        </div>
+
+        <!-- 2. 七巧板 -->
+        <div class="card art-tangram">
+            <svg viewBox="0 0 100 100">
+                <polygon points="0,0 100,0 50,50" fill="#e07a5f" />
+                <polygon points="0,0 0,100 50,50" fill="#3d405b" />
+                <polygon points="50,50 100,100 100,50" fill="#81b29a" />
+                <polygon points="50,50 75,75 50,100 25,75" fill="#f2cc8f" />
+                <polygon points="25,75 50,100 25,100 0,75" fill="#e07a5f" opacity="0.8"/>
+            </svg>
+        </div>
+
+        <!-- 3. 正弦波 (无框/水印风) -->
+        <div class="card art-wave">
+            <svg viewBox="0 0 300 100" preserveAspectRatio="none">
+                <path d="M0,50 Q75,100 150,50 T300,50" opacity="0.1"></path>
+                <path d="M0,50 Q75,0 150,50 T300,50" opacity="0.6"></path>
+                <circle cx="225" cy="25" r="4" fill="#b84e46" />
+            </svg>
+        </div>
+
+        <!-- 4. 算盘 -->
+        <div class="card art-abacus">
+            <div class="abacus-rod">
+                <div class="bead"></div><div class="bead"></div><div class="bead active"></div><div class="bead"></div><div class="bead"></div>
+            </div>
+            <div class="abacus-rod">
+                <div class="bead active"></div><div class="bead active"></div><div class="bead"></div><div class="bead"></div><div class="bead"></div>
+            </div>
+            <div class="abacus-rod">
+                <div class="bead"></div><div class="bead"></div><div class="bead"></div><div class="bead active"></div><div class="bead active"></div>
+            </div>
+        </div>
+
+        <!-- 5. 维恩图 -->
+        <div class="card art-venn">
+            <div class="venn-circle vc-1"></div>
+            <div class="venn-circle vc-2"></div>
+            <div class="venn-circle vc-3"></div>
+            <div class="venn-label">A ∩ B ∩ C</div>
+        </div>
+
+        <!-- 6. 空间几何 (线框) -->
+        <div class="card art-geometry">
+            <svg viewBox="0 0 100 100">
+                <rect x="25" y="35" width="40" height="40" />
+                <rect x="40" y="20" width="40" height="40" class="dashed" />
+                <line x1="25" y1="35" x2="40" y2="20" class="dashed"/>
+                <line x1="65" y1="35" x2="80" y2="20" />
+                <line x1="25" y1="75" x2="40" y2="60" class="dashed"/>
+                <line x1="65" y1="75" x2="80" y2="60" />
+            </svg>
+        </div>
+
+        <!-- 7. 正态分布 (统计) -->
+        <div class="card art-stats">
+            <svg viewBox="0 0 200 80">
+                <path d="M0,80 Q50,80 70,50 Q100,-10 130,50 Q150,80 200,80" class="stat-line" />
+                <path d="M0,80 Q50,80 70,50 Q100,-10 130,50 Q150,80 200,80 L200,80 L0,80" class="stat-area" />
+                <line x1="100" y1="20" x2="100" y2="80" class="stat-axis" />
+            </svg>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "knowledge_tags": {
+    "version": "图形与几何",
+    "grade": "八上",
+    "main_tag": "三角形",
+    "sub_tags": [
+      "三角形的高、中线与角平分线"
+    ]
+  },
+  "needs_tag_selection": false,
+  "knowledge_tags_updated_at": "2026-08-25T09:22:38.522073Z",
+  "preview_image": "Preview.webp",
+  "knowledge_tags_confirmed": true,
+  "title": "三角形内角计算",
+  "question": "△DEF三个内角度数之比∠D:∠E:∠F=1:3:5，EP平分∠DEF，∠DEP=n°；规定MN=2n，求线段MN的长度。",
+  "prompt": "△DEF三个内角度数之比∠D:∠E:∠F=1:3:5，EP平分∠DEF，∠DEP=n°；规定MN=2n，求线段MN的长度。"
+}
