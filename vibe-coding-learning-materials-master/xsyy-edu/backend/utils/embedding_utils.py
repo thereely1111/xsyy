@@ -77,7 +77,7 @@ def _call_aliyun_embedding(texts: List[str]) -> List[List[float]]:
         return []
 
     api_key = os.getenv("OPENSEARCH_API_KEY")
-    endpoint = os.getenv("OPENSEARCH_ENDPOINT", "default-d2rn.platform-cn-shanghai.opensearch.aliyuncs.com")
+    endpoint = os.getenv("OPENSEARCH_ENDPOINT", "")  # 填写：OpenSearch 实例域名
     app_group = os.getenv("OPENSEARCH_APP_GROUP", "default")
     model_name = os.getenv("OPENSEARCH_MODEL", "ops-text-embedding-001")
     input_type = os.getenv("OPENSEARCH_INPUT_TYPE", "document")
@@ -85,6 +85,8 @@ def _call_aliyun_embedding(texts: List[str]) -> List[List[float]]:
 
     if not api_key:
         return []  # 未配置 OPENSEARCH_API_KEY，静默返回空列表
+    if not endpoint:
+        raise RuntimeError("OPENSEARCH_ENDPOINT 未配置，请在 .env 中填写 OpenSearch 实例域名")
 
     config = open_api_models.Config(
         bearer_token=api_key,

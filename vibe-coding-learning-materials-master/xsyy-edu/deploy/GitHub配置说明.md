@@ -38,7 +38,7 @@
 
 | Secret 名称 | 说明 | 示例 |
 |------------|------|------|
-| `DEV_HOST` | 开发服务器 IP 地址 | `192.168.1.100` |
+| `DEV_HOST` | 开发服务器 IP 地址 | `<内网地址>` |
 | `DEV_USER` | 开发服务器用户名 | `ubuntu` 或 `root` |
 | `DEV_SSH_KEY` | SSH 私钥（见下方说明） | `-----BEGIN OPENSSH PRIVATE KEY-----...` |
 
